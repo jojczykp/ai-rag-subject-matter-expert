@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: ai-subject-matter-expert
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
