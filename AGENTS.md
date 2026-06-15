@@ -2,12 +2,13 @@
 
 ## Repository Agents
 
-This repository defines four project-scoped Codex custom agents in `.codex/agents/`:
+This repository defines five project-scoped Codex custom agents in `.codex/agents/`:
 
 - `orchestrator`: coordinates end-to-end feature development across the other agents.
 - `architect`: proposes system design changes and implementation plans.
 - `developer`: implements production code and fixes production defects.
 - `tester`: creates tests, runs verification, and triages test failures.
+- `documenter`: keeps Markdown documentation and project guidance in sync with the codebase.
 
 ## Collaboration Flow
 
@@ -15,11 +16,13 @@ This repository defines four project-scoped Codex custom agents in `.codex/agent
 - Use `architect` for non-trivial feature design, architecture changes, API boundaries, data flow, or migration planning.
 - Use `developer` to implement production code according to the accepted design or requested behavior.
 - Use `tester` to create or update tests and run the relevant verification command.
-- `orchestrator` should preserve detailed user constraints and route work to `architect`, `developer`, and `tester` as needed.
+- Use `documenter` when project setup, commands, dependencies, agents, architecture, behavior, or verification requirements change.
+- `orchestrator` should preserve detailed user constraints and route work to `architect`, `developer`, `tester`, and `documenter` as needed.
 - If tests fail, `tester` should determine whether the failure is caused by production code or test code.
 - If production code is defective, `tester` should hand the failure details to `developer`, and `developer` should fix production code.
 - If the test is incorrect, stale, or brittle, `tester` should fix the test.
 - Repeat developer/tester handoff until the relevant test suite passes or a clear external blocker is identified.
+- Before final handoff, check whether README.md, AGENTS.md, or other Markdown files need updates for the completed change.
 
 ## Project Verification
 
