@@ -1,4 +1,4 @@
-package com.example.aisme
+package org.alterbit.aisme
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController

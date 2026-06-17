@@ -1,4 +1,4 @@
-package com.example.aisme
+package org.alterbit.aisme
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

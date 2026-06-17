@@ -1,4 +1,4 @@
-package com.example.aisme
+package org.alterbit.aisme
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
