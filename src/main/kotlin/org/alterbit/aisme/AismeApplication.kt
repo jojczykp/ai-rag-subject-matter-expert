@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class AiSubjectMatterExpertApplication
+class AismeApplication
 
 fun main(args: Array<String>) {
-    runApplication<AiSubjectMatterExpertApplication>(*args)
+    runApplication<AismeApplication>(*args)
 }
