@@ -4,6 +4,8 @@ AI Subject Matter Expert is a Kotlin Spring Boot service. The current
 application exposes a root status endpoint and Spring Boot Actuator health and
 info endpoints.
 
+This project is vibe-coded with Codex using GPT-5.
+
 ## Requirements
 
 - JDK 26
@@ -75,3 +77,14 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 - `developer` implements production code and fixes production defects.
 - `tester` creates tests, runs verification, and triages failures.
 - `documenter` keeps Markdown documentation and project guidance in sync.
+
+## Design Documents
+
+- [Product Requirements Document](docs/PRD.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
+- [ADR-001: Embedding Generation Strategy](docs/ADR-001-embedding-generation-strategy.md)
+- [ADR-002: Persistence And Vector Search](docs/ADR-002-persistence-and-vector-search.md)
+- [ADR-003: Model Runtime Integration](docs/ADR-003-model-runtime-integration.md)
+- [ADR-004: Integration Testing Strategy](docs/ADR-004-integration-testing-strategy.md)
+- [ADR-005: Static Subject Document Scope](docs/ADR-005-static-subject-document-scope.md)
