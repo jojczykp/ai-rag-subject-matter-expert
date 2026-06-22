@@ -114,11 +114,11 @@ Use one statically configured embedding model:
 ```yaml
 aisme:
   embedding-model:
-    id: local-nomic-embed
-    runtime: OLLAMA
-    base-url: http://localhost:11434
-    model-name: nomic-embed-text
-    dimensions: 768
+    id: local-bge-small
+    runtime: ONNX
+    model-path: ./models/bge-small-en-v1.5/model.onnx
+    tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+    dimensions: 384
 ```
 
 Rationale:

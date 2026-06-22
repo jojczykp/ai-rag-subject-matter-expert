@@ -88,3 +88,4 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 - [ADR-003: Model Runtime Integration](docs/ADR-003-model-runtime-integration.md)
 - [ADR-004: Integration Testing Strategy](docs/ADR-004-integration-testing-strategy.md)
 - [ADR-005: Static Subject Document Scope](docs/ADR-005-static-subject-document-scope.md)
+- [ADR-006: Local Embedding Runtime](docs/ADR-006-local-embedding-runtime.md)

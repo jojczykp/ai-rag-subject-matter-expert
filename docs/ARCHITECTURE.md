@@ -17,6 +17,7 @@ this document by marking the matching checklist items as complete.
 - [ADR-003: Model Runtime Integration](ADR-003-model-runtime-integration.md)
 - [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
 - [ADR-005: Static Subject Document Scope](ADR-005-static-subject-document-scope.md)
+- [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
 
 ## Current Product Scope
 
@@ -192,7 +193,9 @@ integration details are owned by
 
 Use retrieval-augmented generation as the initial grounding strategy. See
 [ADR-001: Embedding Generation Strategy](ADR-001-embedding-generation-strategy.md)
-for the accepted statically configured embedding model decision.
+for the accepted statically configured embedding model decision and
+[ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md) for the
+local embedding runtime decision.
 
 ## Persistence And Database Access
 
@@ -269,11 +272,11 @@ aisme:
       base-url: http://localhost:11434
       available-offline: false
   embedding-model:
-    id: local-nomic-embed
-    runtime: OLLAMA
-    base-url: http://localhost:11434
-    model-name: nomic-embed-text
-    dimensions: 768
+    id: local-bge-small
+    runtime: ONNX
+    model-path: ./models/bge-small-en-v1.5/model.onnx
+    tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+    dimensions: 384
   chat:
     timeout: 60s
   model-availability:

@@ -39,7 +39,8 @@ not need to share the embedding model or embedding vector space.
 Prefer a local embedding model when available, because it keeps document
 indexing and query embedding generation independent from cloud providers. Use
 keyword or full-text retrieval as a temporary fallback only if embedding support
-is not implemented yet.
+is not implemented yet. The preferred local runtime is documented in
+[ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md).
 
 ## Options Considered
 

@@ -31,7 +31,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add Spring Data JDBC repositories for ordinary persistence.
 - [ ] Add Spring `JdbcClient` queries for pgvector retrieval.
 - [ ] Add statically configured `aisme.embedding-model` configuration.
-- [ ] Add statically configured embedding model integration.
+- [ ] Add local ONNX embedding model integration.
+- [ ] Configure local model and tokenizer paths for `BAAI/bge-small-en-v1.5`.
 - [ ] Store embedding model id, version, dimensions, and chunking strategy
       version with indexed embeddings.
 - [ ] Add re-indexing behavior for stale or missing embeddings.
