@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
         "aisme.documents.location=classpath:/custom-documents/",
     ],
 )
-class SubjectDocumentsPropertiesOverrideTests(
+class SubjectDocumentsPropertiesOverrideTest(
     private val properties: SubjectDocumentsProperties,
 ) {
     @Test

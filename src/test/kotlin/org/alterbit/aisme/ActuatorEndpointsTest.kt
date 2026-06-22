@@ -8,17 +8,25 @@ import org.springframework.test.web.servlet.get
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class HealthControllerTests(
+class ActuatorEndpointsTest(
     private val mockMvc: MockMvc,
 ) {
     @Test
-    fun `root endpoint returns service status`() {
-        mockMvc.get("/")
+    fun `actuator health endpoint is available`() {
+        mockMvc.get("/actuator/health")
             .andExpect {
                 status { isOk() }
-                jsonPath("$.message") {
-                    value("AI Subject Matter Expert service is running")
+                jsonPath("$.status") {
+                    value("UP")
                 }
+            }
+    }
+
+    @Test
+    fun `actuator info endpoint is available`() {
+        mockMvc.get("/actuator/info")
+            .andExpect {
+                status { isOk() }
             }
     }
 }

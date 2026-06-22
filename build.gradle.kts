@@ -40,6 +40,11 @@ tasks.withType<Test> {
 
 kover {
     reports {
+        filters {
+            excludes {
+                classes("org.alterbit.aisme.AismeApplicationKt")
+            }
+        }
         verify {
             rule {
                 minBound(80)

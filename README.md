@@ -1,8 +1,7 @@
 # AI Subject Matter Expert
 
 AI Subject Matter Expert is a Kotlin Spring Boot service. The current
-application exposes a root status endpoint and Spring Boot Actuator health and
-info endpoints.
+application exposes Spring Boot Actuator health and info endpoints.
 
 This project is vibe-coded with Codex using GPT-5.
 
@@ -25,13 +24,13 @@ Run commands from the repository root.
 The service starts on the default Spring Boot port, `8080`.
 
 ```bash
-curl http://localhost:8080/
+curl http://localhost:8080/actuator/health
 ```
 
 Expected response:
 
 ```json
-{"message":"AI Subject Matter Expert service is running"}
+{"status":"UP"}
 ```
 
 Actuator endpoints exposed over HTTP:

@@ -11,6 +11,8 @@ All implementation items are TODO until delivered and verified.
 ## Milestone 1: Static Subject And Document Loading
 
 - [x] Add bundled document location configuration.
+- [x] Use Spring Boot Actuator health and info endpoints for service
+      availability checks.
 - [ ] Add recursive `.txt` discovery under `subject-documents/`.
 - [ ] Use relative classpath resource paths as stable document identities.
 - [ ] Sort discovered resource paths lexicographically before indexing.
