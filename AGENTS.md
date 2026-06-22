@@ -10,6 +10,19 @@ This repository defines five project-scoped Codex custom agents in `.codex/agent
 - `tester`: creates tests, runs verification, and triages test failures.
 - `documenter`: keeps Markdown documentation and project guidance in sync with the codebase.
 
+## Project Context Startup
+
+Before planning or implementing project work, read:
+
+- `README.md`
+- `docs/PRD.md`
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION_PLAN.md`
+- `docs/ADR-*.md`
+
+Use these documents as the source of truth for product scope, architecture,
+accepted decisions, implementation order, and testing expectations.
+
 ## Collaboration Flow
 
 - Use `orchestrator` as the default coordinator for end-to-end feature work, especially when a request includes refactoring, extra tests, design changes, or multiple implementation steps.
