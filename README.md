@@ -3,7 +3,10 @@
 AI Subject Matter Expert is a Kotlin Spring Boot service. The current
 application exposes Spring Boot Actuator health and info endpoints.
 
-This project is vibe-coded with Codex using GPT-5.
+This project is vibe-coded with Codex using GPT-5, project agents, and
+iteratively improved skills. The workflow starts by documenting requirements,
+architecture, and decisions, then implements code according to that documented
+plan.
 
 ## Requirements
 
