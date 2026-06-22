@@ -16,14 +16,14 @@ this document by marking the matching checklist items as complete.
 - [ADR-002: Persistence And Vector Search](ADR-002-persistence-and-vector-search.md)
 - [ADR-003: Model Runtime Integration](ADR-003-model-runtime-integration.md)
 - [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
-- [ADR-005: Static Subject Document Scope](ADR-005-static-subject-document-scope.md)
+- [ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
 
 ## Current Product Scope
 
 The initial product scope is intentionally smaller than the full model-routing
 vision. See
-[ADR-005: Static Subject Document Scope](ADR-005-static-subject-document-scope.md)
+[ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 for the accepted static subject and bundled document scope decision.
 
 The first implementation is a single-subject backend using static bundled

@@ -1,4 +1,4 @@
-# ADR-005: Static Subject Document Scope
+# ADR-005: Subject Document Scope
 
 ## Status
 
