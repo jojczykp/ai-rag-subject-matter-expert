@@ -41,10 +41,23 @@ accepted decisions, implementation order, and testing expectations.
 
 - Use `./gradlew test` for the full test suite when the Gradle wrapper is available.
 - Use narrower Gradle test filters when working on a small behavior change.
+- Use JUnit with Spring Boot Test as the default test framework.
+- Use Kotest assertions for readable Kotlin assertions where practical.
 - Maintain at least 80% unit test coverage for production code.
 - Use `./gradlew koverVerify` to enforce the 80% coverage threshold.
 - Use `./gradlew koverHtmlReport` when a human-readable coverage report is useful.
 - Use `./gradlew check` before final handoff when practical; it includes coverage verification.
+
+## Dependency Management
+
+- Prefer Spring Boot dependency management for libraries covered by the Spring
+  Boot BOM.
+- Do not add explicit versions for Spring Boot-managed dependencies unless a
+  compatibility issue requires it and the reason is documented.
+- For libraries outside Spring Boot dependency management, use the newest stable
+  version that is compatible with the current Spring Boot, Kotlin, Gradle, and
+  Java versions.
+- Verify dependency changes with `./gradlew koverVerify`.
 
 ## Code Style
 

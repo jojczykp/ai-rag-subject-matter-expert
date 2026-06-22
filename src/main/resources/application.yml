@@ -2,6 +2,10 @@ spring:
   application:
     name: ai-subject-matter-expert
 
+aisme:
+  documents:
+    location: classpath:/subject-documents/
+
 management:
   endpoints:
     web:

@@ -10,7 +10,7 @@ All implementation items are TODO until delivered and verified.
 
 ## Milestone 1: Static Subject And Document Loading
 
-- [ ] Add bundled document location configuration.
+- [x] Add bundled document location configuration.
 - [ ] Add recursive `.txt` discovery under `subject-documents/`.
 - [ ] Use relative classpath resource paths as stable document identities.
 - [ ] Sort discovered resource paths lexicographically before indexing.

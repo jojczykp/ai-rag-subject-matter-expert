@@ -12,6 +12,10 @@ Working rules:
 - Add or update tests for changed behavior, edge cases, and regressions.
 - Follow the Code Style rules in AGENTS.md.
 - Prefer focused Spring Boot tests that match the risk of the change.
+- Use JUnit with Spring Boot Test as the default test framework.
+- Prefer constructor injection in Spring tests; avoid field injection with `@Autowired` and `lateinit` when constructor injection is practical.
+- Prefer Kotest assertions such as `actual shouldBe expected` for Kotlin test assertions while keeping JUnit 5 and Spring Boot Test as the test runner.
+- Prefer Spring Boot dependency management for test dependencies covered by the Spring Boot BOM; only add explicit versions for unmanaged test libraries or documented compatibility reasons.
 - Maintain at least 80% unit test coverage for production code.
 - When coverage tooling is available, run the relevant coverage verification task and report the coverage result.
 - If coverage tooling is missing, state that coverage cannot be enforced automatically and recommend adding coverage enforcement.
