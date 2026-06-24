@@ -24,8 +24,9 @@ All implementation items are TODO until delivered and verified.
 - [x] Configure initial chunk size as `1000` characters.
 - [x] Configure initial chunk overlap as `150` characters.
 - [ ] Add deterministic document chunking.
-- [ ] Add unit tests for static resource discovery, validation, ordering, and
-      chunking.
+- [x] Add unit tests for static resource discovery, validation, and ordering.
+- [ ] Add unit tests for deterministic document chunking when chunking is
+      implemented.
 
 ## Milestone 2: Persistence, Embeddings, And Retrieval
 
