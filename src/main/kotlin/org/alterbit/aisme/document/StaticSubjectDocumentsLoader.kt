@@ -1,6 +1,7 @@
 package org.alterbit.aisme.document
 
-import org.springframework.beans.factory.SmartInitializingSingleton
+import org.springframework.boot.ApplicationArguments
+import org.springframework.boot.ApplicationRunner
 import org.springframework.core.io.support.ResourcePatternResolver
 import org.springframework.stereotype.Component
 
@@ -12,8 +13,8 @@ class StaticSubjectDocumentsLoader(
     private val documentValidator: SubjectDocumentValidator,
     private val documentChunker: SubjectDocumentChunker,
     private val resourcePatternResolver: ResourcePatternResolver,
-) : SmartInitializingSingleton {
-    override fun afterSingletonsInstantiated() {
+) : ApplicationRunner {
+    override fun run(args: ApplicationArguments) {
         load()
     }
 
