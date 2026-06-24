@@ -20,9 +20,9 @@ All implementation items are TODO until delivered and verified.
       documents, unreadable documents, and empty documents.
 - [ ] Add fail-fast startup behavior for chunking failures when document
       chunking is implemented.
-- [ ] Add statically configurable chunk size and chunk overlap.
-- [ ] Configure initial chunk size as `1000` characters.
-- [ ] Configure initial chunk overlap as `150` characters.
+- [x] Add statically configurable chunk size and chunk overlap.
+- [x] Configure initial chunk size as `1000` characters.
+- [x] Configure initial chunk overlap as `150` characters.
 - [ ] Add deterministic document chunking.
 - [ ] Add unit tests for static resource discovery, validation, ordering, and
       chunking.

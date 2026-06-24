@@ -9,7 +9,9 @@ class SubjectDocumentsPropertiesDefaultTest(
     private val properties: SubjectDocumentsProperties,
 ) {
     @Test
-    fun `uses default bundled document location`() {
+    fun `uses default document configuration`() {
         properties.location shouldBe "classpath:/subject-documents/"
+        properties.chunkSize shouldBe 1000
+        properties.chunkOverlap shouldBe 150
     }
 }

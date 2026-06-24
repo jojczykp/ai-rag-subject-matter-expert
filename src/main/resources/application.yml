@@ -5,6 +5,8 @@ spring:
 aisme:
   documents:
     location: classpath:/subject-documents/
+    chunk-size: 1000
+    chunk-overlap: 150
 
 management:
   endpoints:
