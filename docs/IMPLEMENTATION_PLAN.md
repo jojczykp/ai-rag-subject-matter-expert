@@ -18,14 +18,14 @@ All implementation items are TODO until delivered and verified.
 - [x] Sort discovered resource paths lexicographically before indexing.
 - [x] Add fail-fast startup behavior for missing folder, no supported
       documents, unreadable documents, and empty documents.
-- [ ] Add fail-fast startup behavior for chunking failures when document
+- [x] Add fail-fast startup behavior for chunking failures when document
       chunking is implemented.
 - [x] Add statically configurable chunk size and chunk overlap.
 - [x] Configure initial chunk size as `1000` characters.
 - [x] Configure initial chunk overlap as `150` characters.
-- [ ] Add deterministic document chunking.
+- [x] Add deterministic document chunking.
 - [x] Add unit tests for static resource discovery, validation, and ordering.
-- [ ] Add unit tests for deterministic document chunking when chunking is
+- [x] Add unit tests for deterministic document chunking when chunking is
       implemented.
 
 ## Milestone 2: Persistence, Embeddings, And Retrieval

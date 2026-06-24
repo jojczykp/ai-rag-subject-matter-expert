@@ -1,6 +1,7 @@
 package org.alterbit.aisme.document
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.string.shouldContain
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -11,15 +12,18 @@ import org.junit.jupiter.api.io.TempDir
 import org.springframework.core.io.AbstractResource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
-class SubjectDocumentsStartupValidatorTest {
+class StaticSubjectDocumentsLoaderTest {
     private val resourcePatternResolver = PathMatchingResourcePatternResolver()
+    private val documentReader = SubjectDocumentReader()
     private val documentValidator = SubjectDocumentValidator()
 
     @Test
-    fun `validates readable non-empty text documents`(@TempDir documentsDirectory: Path) {
+    fun `loads readable non-empty text documents`(@TempDir documentsDirectory: Path) {
         Files.writeString(documentsDirectory.resolve("reference.txt"), "Reference content")
 
-        validator(documentsDirectory).validate()
+        val chunks = loader(documentsDirectory).load()
+
+        chunks shouldHaveSize 1
     }
 
     @Test
@@ -27,7 +31,7 @@ class SubjectDocumentsStartupValidatorTest {
         val missingDirectory = tempDirectory.resolve("missing")
 
         val exception = shouldThrow<SubjectDocumentsException> {
-            validator(missingDirectory).validate()
+            loader(missingDirectory).load()
         }
 
         exception.message shouldContain "does not exist"
@@ -38,7 +42,7 @@ class SubjectDocumentsStartupValidatorTest {
         Files.writeString(documentsDirectory.resolve("ignored.md"), "# Ignored")
 
         val exception = shouldThrow<SubjectDocumentsException> {
-            validator(documentsDirectory).validate()
+            loader(documentsDirectory).load()
         }
 
         exception.message shouldContain "No supported .txt"
@@ -49,14 +53,14 @@ class SubjectDocumentsStartupValidatorTest {
         Files.writeString(documentsDirectory.resolve("empty.txt"), "   ")
 
         val exception = shouldThrow<SubjectDocumentsException> {
-            validator(documentsDirectory).validate()
+            loader(documentsDirectory).load()
         }
 
         exception.message shouldContain "empty"
     }
 
     @Test
-    fun `fails when a discovered document is unreadable`(@TempDir documentsDirectory: Path) {
+    fun `fails when a discovered document is unreadable`() {
         val unreadableDocument = SubjectDocumentResource(
             relativePath = "reference.txt",
             resource = UnreadableResource,
@@ -69,16 +73,18 @@ class SubjectDocumentsStartupValidatorTest {
         exception.message shouldContain "not readable"
     }
 
-    private fun validator(
+    private fun loader(
         documentsDirectory: Path,
-    ): SubjectDocumentsStartupValidator =
-        SubjectDocumentsStartupValidator(
+    ): StaticSubjectDocumentsLoader =
+        StaticSubjectDocumentsLoader(
             properties = properties(documentsDirectory),
             discovery = SubjectDocumentsDiscovery(
                 properties = properties(documentsDirectory),
                 resourcePatternResolver = resourcePatternResolver,
             ),
+            documentReader = documentReader,
             documentValidator = documentValidator,
+            documentChunker = SubjectDocumentChunker(properties(documentsDirectory)),
             resourcePatternResolver = resourcePatternResolver,
         )
 
