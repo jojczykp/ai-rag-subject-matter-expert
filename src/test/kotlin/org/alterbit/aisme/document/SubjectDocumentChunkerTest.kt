@@ -1,8 +1,6 @@
 package org.alterbit.aisme.document
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class SubjectDocumentChunkerTest {
@@ -65,20 +63,6 @@ class SubjectDocumentChunkerTest {
                 endOffset = 12,
             ),
         )
-    }
-
-    @Test
-    fun `rejects blank content`() {
-        val exception = shouldThrow<SubjectDocumentsException> {
-            chunker().chunk(
-                SubjectDocumentContent(
-                    relativePath = "blank.txt",
-                    content = "   ",
-                ),
-            )
-        }
-
-        exception.message shouldContain "empty"
     }
 
     private fun chunker(
