@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component
 @Component
 class StaticSubjectDocumentsLoader(
     private val properties: SubjectDocumentsProperties,
+    private val resourcePatternResolver: ResourcePatternResolver,
     private val discovery: SubjectDocumentsDiscovery,
     private val documentReader: SubjectDocumentReader,
     private val documentValidator: SubjectDocumentValidator,
     private val documentChunker: SubjectDocumentChunker,
-    private val resourcePatternResolver: ResourcePatternResolver,
 ) : ApplicationRunner {
     override fun run(args: ApplicationArguments) {
         load()

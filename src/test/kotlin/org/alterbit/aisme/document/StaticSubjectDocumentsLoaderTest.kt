@@ -78,6 +78,7 @@ class StaticSubjectDocumentsLoaderTest {
     ): StaticSubjectDocumentsLoader =
         StaticSubjectDocumentsLoader(
             properties = properties(documentsDirectory),
+            resourcePatternResolver = resourcePatternResolver,
             discovery = SubjectDocumentsDiscovery(
                 properties = properties(documentsDirectory),
                 resourcePatternResolver = resourcePatternResolver,
@@ -85,7 +86,6 @@ class StaticSubjectDocumentsLoaderTest {
             documentReader = documentReader,
             documentValidator = documentValidator,
             documentChunker = SubjectDocumentChunker(properties(documentsDirectory)),
-            resourcePatternResolver = resourcePatternResolver,
         )
 
     private fun properties(documentsDirectory: Path): SubjectDocumentsProperties =
