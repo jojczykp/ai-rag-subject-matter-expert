@@ -12,8 +12,7 @@ class SubjectDocumentsDiscovery(
 ) {
     fun discover(): List<SubjectDocumentResource> =
         resourcePatternResolver
-            .getResources("${normalizedLocation()}**/*.txt")
-            .filter { it.isReadable }
+            .getResources("${properties.normalizedLocation()}**/*.txt")
             .map { resource ->
                 SubjectDocumentResource(
                     relativePath = relativePath(resource.url.toString()),
@@ -22,11 +21,8 @@ class SubjectDocumentsDiscovery(
             }
             .sortedBy { it.relativePath }
 
-    private fun normalizedLocation(): String =
-        properties.location.trimEnd('/') + "/"
-
     private fun relativePath(resourceUrl: String): String {
-        val normalizedLocation = normalizedLocation()
+        val normalizedLocation = properties.normalizedLocation()
         val rootPath = normalizedLocation.substringAfter("classpath:", normalizedLocation)
         val resourcePath = resourceUrl.substringAfter(rootPath)
         return URLDecoder.decode(resourcePath, StandardCharsets.UTF_8)

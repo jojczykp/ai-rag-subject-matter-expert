@@ -16,8 +16,10 @@ All implementation items are TODO until delivered and verified.
 - [x] Add recursive `.txt` discovery under `subject-documents/`.
 - [x] Use relative classpath resource paths as stable document identities.
 - [x] Sort discovered resource paths lexicographically before indexing.
-- [ ] Add fail-fast startup behavior for missing folder, no supported
-      documents, unreadable documents, empty documents, and chunking failures.
+- [x] Add fail-fast startup behavior for missing folder, no supported
+      documents, unreadable documents, and empty documents.
+- [ ] Add fail-fast startup behavior for chunking failures when document
+      chunking is implemented.
 - [ ] Add statically configurable chunk size and chunk overlap.
 - [ ] Configure initial chunk size as `1000` characters.
 - [ ] Configure initial chunk overlap as `150` characters.

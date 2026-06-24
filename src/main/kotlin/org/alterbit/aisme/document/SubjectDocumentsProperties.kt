@@ -5,4 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "aisme.documents")
 data class SubjectDocumentsProperties(
     val location: String = "classpath:/subject-documents/",
-)
+) {
+    fun normalizedLocation(): String =
+        location.trimEnd('/') + "/"
+}
