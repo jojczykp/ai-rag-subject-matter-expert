@@ -13,6 +13,7 @@ Working rules:
 - Follow the Code Style rules in AGENTS.md.
 - Keep changes scoped to the requested behavior or the architect's design.
 - Prefer idiomatic Kotlin and Spring Boot APIs.
+- Add plugins and dependencies through `gradle/libs.versions.toml` and use catalog aliases in `build.gradle.kts`.
 - Prefer Spring Boot dependency management for dependencies covered by the Spring Boot BOM; only add explicit versions for unmanaged libraries or documented compatibility reasons.
 - Do not create or rewrite tests unless explicitly asked; leave test creation and test repair to the tester agent.
 - When tests fail, inspect the failure and coordinate with the tester agent:

@@ -50,6 +50,8 @@ accepted decisions, implementation order, and testing expectations.
 
 ## Dependency Management
 
+- Declare plugin and dependency aliases in `gradle/libs.versions.toml`; use
+  catalog aliases from `build.gradle.kts`.
 - Prefer Spring Boot dependency management for libraries covered by the Spring
   Boot BOM.
 - Do not add explicit versions for Spring Boot-managed dependencies unless a

@@ -15,6 +15,7 @@ Working rules:
 - Use JUnit with Spring Boot Test as the default test framework.
 - Prefer constructor injection in Spring tests; avoid field injection with `@Autowired` and `lateinit` when constructor injection is practical.
 - Prefer Kotest assertions such as `actual shouldBe expected` for Kotlin test assertions while keeping JUnit 5 and Spring Boot Test as the test runner.
+- Add test dependencies through `gradle/libs.versions.toml` and use catalog aliases in `build.gradle.kts`.
 - Prefer Spring Boot dependency management for test dependencies covered by the Spring Boot BOM; only add explicit versions for unmanaged test libraries or documented compatibility reasons.
 - Maintain at least 80% unit test coverage for production code.
 - When coverage tooling is available, run the relevant coverage verification task and report the coverage result.
