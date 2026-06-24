@@ -13,9 +13,9 @@ All implementation items are TODO until delivered and verified.
 - [x] Add bundled document location configuration.
 - [x] Use Spring Boot Actuator health and info endpoints for service
       availability checks.
-- [ ] Add recursive `.txt` discovery under `subject-documents/`.
-- [ ] Use relative classpath resource paths as stable document identities.
-- [ ] Sort discovered resource paths lexicographically before indexing.
+- [x] Add recursive `.txt` discovery under `subject-documents/`.
+- [x] Use relative classpath resource paths as stable document identities.
+- [x] Sort discovered resource paths lexicographically before indexing.
 - [ ] Add fail-fast startup behavior for missing folder, no supported
       documents, unreadable documents, empty documents, and chunking failures.
 - [ ] Add statically configurable chunk size and chunk overlap.
