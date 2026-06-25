@@ -208,37 +208,8 @@ for the accepted database access and vector search decision.
 
 The initial database model stores bundled source document metadata, deterministic
 chunks, and one embedding per chunk for the statically configured embedding
-model.
-
-```mermaid
-erDiagram
-    SOURCE_DOCUMENT ||--o{ DOCUMENT_CHUNK : contains
-    DOCUMENT_CHUNK ||--o| CHUNK_EMBEDDING : has
-
-    SOURCE_DOCUMENT {
-        uuid id
-        string resource_path
-        string content_hash
-        timestamp indexed_at
-    }
-
-    DOCUMENT_CHUNK {
-        uuid id
-        uuid source_document_id
-        int chunk_index
-        text content
-        string chunking_strategy_version
-    }
-
-    CHUNK_EMBEDDING {
-        uuid id
-        uuid document_chunk_id
-        vector embedding
-        string embedding_model_id
-        string embedding_model_version
-        int embedding_dimensions
-    }
-```
+model. The schema diagram is maintained in
+[Database Schema](DATABASE_SCHEMA.md).
 
 ## Configuration
 

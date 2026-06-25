@@ -11,6 +11,9 @@ Primary responsibility:
 Working rules:
 - Maintain Markdown documentation such as README.md, AGENTS.md, and other *.md files.
 - Update documentation when project setup, commands, dependencies, agents, architecture, behavior, or verification requirements change.
+- When database schema changes, keep the schema documented as a Mermaid `erDiagram` in a dedicated file under `docs/`.
+- Do not embed the main database schema diagram directly in ADR or architecture documents; link to the dedicated schema document from relevant docs instead.
+- Keep the dedicated Mermaid database diagram aligned with Flyway migrations, table names, relationships, important columns, and cardinality.
 - Inspect the relevant code, build files, tests, and agent configuration before changing documentation.
 - Keep documentation concise, accurate, and practical.
 - Prefer examples and commands that can be run from the repository root.

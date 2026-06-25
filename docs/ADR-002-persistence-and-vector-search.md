@@ -62,7 +62,8 @@ Initial table responsibilities:
 
 Because ADR-001 selects one statically configured embedding model, the initial
 schema should use one embedding table rather than provider-specific embedding
-tables.
+tables. The current schema diagram is maintained in
+[Database Schema](DATABASE_SCHEMA.md).
 
 ## Vector Search
 
