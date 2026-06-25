@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "aisme.documents")
 data class SubjectDocumentsProperties(
     val location: String = "classpath:/subject-documents/",
-    val chunkSize: Int = 1000,
-    val chunkOverlap: Int = 150,
+    val chunkSize: Int = 700,
+    val chunkOverlap: Int = 100,
 ) {
     init {
         require(chunkSize > 0) { "aisme.documents.chunk-size must be greater than 0" }

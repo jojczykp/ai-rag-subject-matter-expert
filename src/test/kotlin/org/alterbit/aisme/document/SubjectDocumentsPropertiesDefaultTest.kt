@@ -11,7 +11,7 @@ class SubjectDocumentsPropertiesDefaultTest(
     @Test
     fun `uses default document configuration`() {
         properties.location shouldBe "classpath:/subject-documents/"
-        properties.chunkSize shouldBe 1000
-        properties.chunkOverlap shouldBe 150
+        properties.chunkSize shouldBe 700
+        properties.chunkOverlap shouldBe 100
     }
 }

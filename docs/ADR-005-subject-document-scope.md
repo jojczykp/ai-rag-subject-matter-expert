@@ -47,8 +47,8 @@ Initial scope:
 - [ ] Fail application startup when chunking or indexing fails.
 - [ ] Use statically configurable chunk size and chunk overlap.
 - [ ] Use character-count based chunking initially.
-- [ ] Use `1000` characters as the initial default chunk size.
-- [ ] Use `150` characters as the initial default chunk overlap.
+- [ ] Use `700` characters as the initial default chunk size.
+- [ ] Use `100` characters as the initial default chunk overlap.
 - [ ] Keep chunk size and overlap values in application configuration.
 
 ## Rationale

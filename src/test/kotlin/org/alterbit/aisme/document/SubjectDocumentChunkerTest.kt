@@ -66,8 +66,8 @@ class SubjectDocumentChunkerTest {
     }
 
     private fun chunker(
-        chunkSize: Int = 1000,
-        chunkOverlap: Int = 150,
+        chunkSize: Int = 700,
+        chunkOverlap: Int = 100,
     ): SubjectDocumentChunker =
         SubjectDocumentChunker(
             SubjectDocumentsProperties(
