@@ -1,0 +1,5 @@
+Roasting
+
+Roasting cooks food with dry oven heat. It concentrates flavor, drives off moisture, and creates browning. Vegetables roast better when cut into similar sizes and spread out on the pan. Crowding the pan causes steaming instead of browning.
+
+Roasting can reduce water weight, so calorie density per cooked gram may differ from raw ingredients. For simple demo calculations, use the food state specified in the ingredient file: cooked values for cooked ingredients and raw values for raw ingredients.

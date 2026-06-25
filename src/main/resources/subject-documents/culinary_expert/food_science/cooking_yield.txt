@@ -1,0 +1,5 @@
+Cooking yield and measurement
+
+Many foods gain or lose water during cooking. Rice and pasta gain water. Meat and roasted vegetables lose water. For best precision, use nutrition values that match the measured state: raw when weighed raw, cooked when weighed cooked.
+
+A simple demo system can still work well if every ingredient file clearly states whether values are raw, cooked, or dry.

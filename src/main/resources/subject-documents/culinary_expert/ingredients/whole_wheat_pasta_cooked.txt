@@ -1,0 +1,25 @@
+Ingredient: Whole wheat pasta, cooked
+Category: grain
+Tags: whole grain
+
+Nutrition per 100 g
+Calories: 124 kcal
+Protein: 5.3 g
+Carbohydrates: 26.5 g
+Fat: 0.5 g
+Fiber: 3.9 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+tomato, olive oil, tuna, vegetables
+
+Common cooking or serving methods
+boiling
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

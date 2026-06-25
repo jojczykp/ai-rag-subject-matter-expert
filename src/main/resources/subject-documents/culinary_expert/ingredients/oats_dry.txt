@@ -1,0 +1,25 @@
+Ingredient: Oats, dry
+Category: grain
+Tags: breakfast, fiber
+
+Nutrition per 100 g
+Calories: 389 kcal
+Protein: 16.9 g
+Carbohydrates: 66.3 g
+Fat: 6.9 g
+Fiber: 10.6 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+milk, berries, banana, cinnamon
+
+Common cooking or serving methods
+porridge, overnight oats
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

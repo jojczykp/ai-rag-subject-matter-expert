@@ -1,0 +1,25 @@
+Ingredient: Avocado, raw
+Category: fruit fat
+Tags: healthy fat, energy dense
+
+Nutrition per 100 g
+Calories: 160 kcal
+Protein: 2.0 g
+Carbohydrates: 8.5 g
+Fat: 14.7 g
+Fiber: 6.7 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+egg, bread, lime, tomato
+
+Common cooking or serving methods
+salad, spread
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

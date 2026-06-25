@@ -1,0 +1,10 @@
+Calorie and macro calculation rules
+
+For ingredients measured in grams, calculate nutrition by multiplying the per-100 g value by grams / 100.
+Example: 150 g cooked chicken breast with 165 kcal per 100 g gives 165 * 1.5 = 247.5 kcal.
+
+For a full dish, calculate each ingredient separately and sum calories, protein, carbohydrates, fat, and fiber. Round final calories to the nearest 5 or 10 kcal for user-facing answers, but keep precise numbers internally.
+
+Oils, butter, nuts, cheese, and nut butters are energy dense. Even 10-20 g can change the final dish substantially.
+
+If the user gives vague portions such as one spoon, one handful, or one piece, either use a stated assumption or ask for grams if precision matters.

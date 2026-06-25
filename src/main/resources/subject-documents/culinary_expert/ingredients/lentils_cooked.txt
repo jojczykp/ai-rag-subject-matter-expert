@@ -1,0 +1,25 @@
+Ingredient: Lentils, cooked
+Category: legume
+Tags: vegan, fiber rich
+
+Nutrition per 100 g
+Calories: 116 kcal
+Protein: 9.0 g
+Carbohydrates: 20.1 g
+Fat: 0.4 g
+Fiber: 7.9 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+tomato, cumin, carrot, spinach
+
+Common cooking or serving methods
+soup, stew, salad
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

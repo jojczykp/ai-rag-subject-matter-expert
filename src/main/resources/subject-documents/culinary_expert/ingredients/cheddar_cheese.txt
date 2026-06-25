@@ -1,0 +1,25 @@
+Ingredient: Cheddar cheese
+Category: dairy
+Tags: energy dense, vegetarian
+
+Nutrition per 100 g
+Calories: 403 kcal
+Protein: 25.0 g
+Carbohydrates: 1.3 g
+Fat: 33.0 g
+Fiber: 0.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+apple, bread, egg, potato
+
+Common cooking or serving methods
+melting, grating
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

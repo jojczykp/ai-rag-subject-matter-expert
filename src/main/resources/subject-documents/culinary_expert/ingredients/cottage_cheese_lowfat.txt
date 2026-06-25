@@ -1,0 +1,25 @@
+Ingredient: Low-fat cottage cheese
+Category: dairy
+Tags: high protein, vegetarian
+
+Nutrition per 100 g
+Calories: 82 kcal
+Protein: 11.0 g
+Carbohydrates: 3.4 g
+Fat: 2.3 g
+Fiber: 0.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+tomato, cucumber, berries, whole grain bread
+
+Common cooking or serving methods
+cold meal, spread
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

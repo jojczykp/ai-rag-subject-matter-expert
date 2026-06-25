@@ -1,0 +1,25 @@
+Ingredient: Wholegrain bread
+Category: grain
+Tags: whole grain
+
+Nutrition per 100 g
+Calories: 247 kcal
+Protein: 13.0 g
+Carbohydrates: 41.0 g
+Fat: 4.2 g
+Fiber: 7.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+egg, cottage cheese, avocado, tomato
+
+Common cooking or serving methods
+toast, sandwich
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

@@ -1,0 +1,25 @@
+Ingredient: Mixed berries
+Category: fruit
+Tags: fiber, low calorie
+
+Nutrition per 100 g
+Calories: 50 kcal
+Protein: 0.7 g
+Carbohydrates: 12.0 g
+Fat: 0.3 g
+Fiber: 4.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+yogurt, oats, cottage cheese
+
+Common cooking or serving methods
+breakfast bowl, dessert
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

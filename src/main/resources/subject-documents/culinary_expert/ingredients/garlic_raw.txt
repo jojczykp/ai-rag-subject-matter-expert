@@ -1,0 +1,25 @@
+Ingredient: Garlic, raw
+Category: aromatic
+Tags: aromatic
+
+Nutrition per 100 g
+Calories: 149 kcal
+Protein: 6.4 g
+Carbohydrates: 33.1 g
+Fat: 0.5 g
+Fiber: 2.1 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+chicken, olive oil, tomato, yogurt
+
+Common cooking or serving methods
+mince, roast
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

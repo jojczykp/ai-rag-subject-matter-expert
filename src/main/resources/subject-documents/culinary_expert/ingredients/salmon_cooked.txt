@@ -1,0 +1,25 @@
+Ingredient: Salmon, cooked
+Category: fish
+Tags: omega 3, high protein
+
+Nutrition per 100 g
+Calories: 206 kcal
+Protein: 22.0 g
+Carbohydrates: 0.0 g
+Fat: 12.0 g
+Fiber: 0.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+lemon, dill, rice, asparagus, soy sauce
+
+Common cooking or serving methods
+baking, pan searing, steaming
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

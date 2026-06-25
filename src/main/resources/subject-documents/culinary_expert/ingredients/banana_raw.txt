@@ -1,0 +1,25 @@
+Ingredient: Banana, raw
+Category: fruit
+Tags: quick carb
+
+Nutrition per 100 g
+Calories: 89 kcal
+Protein: 1.1 g
+Carbohydrates: 22.8 g
+Fat: 0.3 g
+Fiber: 2.6 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+oats, yogurt, peanut butter
+
+Common cooking or serving methods
+smoothie, snack
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

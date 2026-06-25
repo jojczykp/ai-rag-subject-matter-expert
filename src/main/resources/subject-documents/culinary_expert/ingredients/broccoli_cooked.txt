@@ -1,0 +1,25 @@
+Ingredient: Broccoli, cooked
+Category: vegetable
+Tags: low calorie, fiber
+
+Nutrition per 100 g
+Calories: 35 kcal
+Protein: 2.4 g
+Carbohydrates: 7.2 g
+Fat: 0.4 g
+Fiber: 3.3 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+chicken, garlic, lemon, tofu
+
+Common cooking or serving methods
+steaming, stir frying
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

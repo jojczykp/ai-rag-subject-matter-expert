@@ -1,0 +1,25 @@
+Ingredient: Butter
+Category: fat
+Tags: energy dense
+
+Nutrition per 100 g
+Calories: 717 kcal
+Protein: 0.9 g
+Carbohydrates: 0.1 g
+Fat: 81.0 g
+Fiber: 0.0 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+bread, egg, mushrooms, potato
+
+Common cooking or serving methods
+saute, baking
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

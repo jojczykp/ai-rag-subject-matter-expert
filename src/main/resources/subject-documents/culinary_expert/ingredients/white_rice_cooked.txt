@@ -1,0 +1,25 @@
+Ingredient: White rice, cooked
+Category: grain
+Tags: carb base, gluten free
+
+Nutrition per 100 g
+Calories: 130 kcal
+Protein: 2.7 g
+Carbohydrates: 28.2 g
+Fat: 0.3 g
+Fiber: 0.4 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+chicken, beans, tofu, salmon
+
+Common cooking or serving methods
+boiling, steaming
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

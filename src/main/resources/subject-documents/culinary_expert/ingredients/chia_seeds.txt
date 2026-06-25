@@ -1,0 +1,25 @@
+Ingredient: Chia seeds
+Category: seeds
+Tags: fiber rich
+
+Nutrition per 100 g
+Calories: 486 kcal
+Protein: 16.5 g
+Carbohydrates: 42.1 g
+Fat: 30.7 g
+Fiber: 34.4 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+yogurt, milk, berries
+
+Common cooking or serving methods
+pudding, topping
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.

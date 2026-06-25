@@ -1,0 +1,25 @@
+Ingredient: Quinoa, cooked
+Category: grain
+Tags: gluten free, complete protein
+
+Nutrition per 100 g
+Calories: 120 kcal
+Protein: 4.4 g
+Carbohydrates: 21.3 g
+Fat: 1.9 g
+Fiber: 2.8 g
+
+Common serving assumptions
+Use gram weights when possible. For calorie calculation, multiply each nutrient value by grams / 100.
+
+Pairs well with
+feta, cucumber, chickpeas, herbs
+
+Common cooking or serving methods
+salad, bowl
+
+Culinary notes
+This ingredient can be used as part of a meal plan when its category and tags match the user's requirements. Energy-dense ingredients such as oils, nuts, butter, cheese, peanut butter, and chocolate should be measured carefully because small quantities add many calories.
+
+Substitution logic
+When replacing this ingredient, prefer another ingredient from the same category with similar protein, carbohydrate, fat, and culinary role.
