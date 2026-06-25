@@ -22,6 +22,9 @@ kotlin {
 }
 
 dependencies {
+    runtimeOnly(libs.flyway.core)
+    runtimeOnly(libs.flyway.database.postgresql)
+
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.jackson.module.kotlin)

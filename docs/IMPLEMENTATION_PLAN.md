@@ -30,9 +30,9 @@ All implementation items are TODO until delivered and verified.
 
 ## Milestone 2: Persistence, Embeddings, And Retrieval
 
-- [ ] Add Flyway migrations under `src/main/resources/db/migration`.
+- [x] Add Flyway migrations under `src/main/resources/db/migration`.
 - [ ] Add PostgreSQL + pgvector persistence support.
-- [ ] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
+- [x] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
 - [ ] Add Spring Data JDBC repositories for ordinary persistence.
 - [ ] Add Spring `JdbcClient` queries for pgvector retrieval.
 - [ ] Add statically configured `aisme.embedding-model` configuration.
