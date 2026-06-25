@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: ${AISME_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aisme}
+    username: ${AISME_DATASOURCE_USERNAME:aisme}
+    password: ${AISME_DATASOURCE_PASSWORD:aisme}
+  flyway:
+    enabled: true

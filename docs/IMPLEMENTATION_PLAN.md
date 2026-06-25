@@ -31,7 +31,7 @@ All implementation items are TODO until delivered and verified.
 ## Milestone 2: Persistence, Embeddings, And Retrieval
 
 - [x] Add Flyway migrations under `src/main/resources/db/migration`.
-- [ ] Add PostgreSQL + pgvector persistence support.
+- [x] Add PostgreSQL + pgvector persistence support.
 - [x] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
 - [ ] Add Spring Data JDBC repositories for ordinary persistence.
 - [ ] Add Spring `JdbcClient` queries for pgvector retrieval.
@@ -42,7 +42,7 @@ All implementation items are TODO until delivered and verified.
       version with indexed embeddings.
 - [ ] Add re-indexing behavior for stale or missing embeddings.
 - [ ] Add `RelevantChunkRetriever`.
-- [ ] Add Testcontainers integration tests with the pgvector image selected in
+- [x] Add Testcontainers integration tests with the pgvector image selected in
       ADR-002.
 
 ## Milestone 3: Provider-Neutral Chat API

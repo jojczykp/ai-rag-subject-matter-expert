@@ -22,9 +22,10 @@ kotlin {
 }
 
 dependencies {
-    runtimeOnly(libs.flyway.core)
-    runtimeOnly(libs.flyway.database.postgresql)
+    runtimeOnly(libs.postgresql)
 
+    implementation(libs.flyway.core)
+    implementation(libs.flyway.database.postgresql)
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.jackson.module.kotlin)
@@ -34,6 +35,8 @@ dependencies {
     testImplementation(libs.spring.boot.starter.webmvc.test)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.testcontainers.junit.jupiter)
+    testImplementation(libs.testcontainers.postgresql)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

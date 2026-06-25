@@ -41,6 +41,30 @@ Actuator endpoints exposed over HTTP:
 - `/actuator/health`
 - `/actuator/info`
 
+## PostgreSQL Profile
+
+Local PostgreSQL with pgvector can be started through Docker Compose:
+
+```bash
+docker compose up -d postgres
+```
+
+Run the application with the `postgres` profile to enable datasource and Flyway
+configuration:
+
+```bash
+SPRING_PROFILES_ACTIVE=postgres ./gradlew bootRun
+```
+
+The default local connection is:
+
+```text
+jdbc:postgresql://localhost:5432/aisme
+```
+
+Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
+`AISME_DATASOURCE_PASSWORD` when needed.
+
 ## Verification
 
 Run the unit tests:
