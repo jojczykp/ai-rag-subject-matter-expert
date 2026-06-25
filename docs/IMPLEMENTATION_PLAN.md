@@ -106,6 +106,8 @@ All implementation items are TODO until delivered and verified.
 
 ## Future Milestone: Dynamic Subjects And Documents
 
+- [ ] Add first-class structured CSV document support.
+- [ ] Parse structured CSV rows into deterministic searchable chunks.
 - [ ] Add multiple subject support.
 - [ ] Add subject creation, update, and deletion.
 - [ ] Add runtime document upload.

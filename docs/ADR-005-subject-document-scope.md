@@ -68,6 +68,7 @@ and retrieval foundation is still being built.
 - [ ] Let users upload content to subjects at runtime.
 - [ ] Support dynamic document ingestion pipelines.
 - [ ] Support Markdown documents.
+- [ ] Support structured CSV documents.
 - [ ] Support PDF documents.
 - [ ] Support Word documents.
 - [ ] Expose citations and source references in chat answers.
