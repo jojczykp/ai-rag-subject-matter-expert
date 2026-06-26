@@ -39,7 +39,10 @@ accepted decisions, implementation order, and testing expectations.
 
 ## Project Verification
 
-- Use `./gradlew test` for the full test suite when the Gradle wrapper is available.
+- Use `./gradlew test` for the project test suite.
+- Name Spring Boot, Testcontainers, and other integration-style tests
+  `*IntegrationTest` so their scope is clear while keeping the Gradle setup
+  simple.
 - Use narrower Gradle test filters when working on a small behavior change.
 - Use JUnit with Spring Boot Test as the default test framework.
 - Use Kotest assertions for readable Kotlin assertions where practical.

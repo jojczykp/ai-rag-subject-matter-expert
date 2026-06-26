@@ -12,10 +12,10 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
-@Testcontainers(disabledWithoutDocker = true)
-@ActiveProfiles("postgres")
+@Testcontainers
+@ActiveProfiles("db")
 @SpringBootTest
-class FlywayMigrationPostgresTest(
+class DatabaseSchemaIntegrationTest(
     private val jdbcClient: JdbcClient,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,

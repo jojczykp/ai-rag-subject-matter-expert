@@ -41,7 +41,7 @@ Actuator endpoints exposed over HTTP:
 - `/actuator/health`
 - `/actuator/info`
 
-## PostgreSQL Profile
+## Database Profile
 
 Local PostgreSQL with pgvector can be started through Docker Compose:
 
@@ -49,11 +49,11 @@ Local PostgreSQL with pgvector can be started through Docker Compose:
 docker compose up -d postgres
 ```
 
-Run the application with the `postgres` profile to enable datasource and Flyway
+Run the application with the `db` profile to enable datasource and Flyway
 configuration:
 
 ```bash
-SPRING_PROFILES_ACTIVE=postgres ./gradlew bootRun
+SPRING_PROFILES_ACTIVE=db ./gradlew bootRun
 ```
 
 The default local connection is:
@@ -72,6 +72,11 @@ Run the unit tests:
 ```bash
 ./gradlew test
 ```
+
+Some tests named `*IntegrationTest` use Testcontainers and run through the same
+test task when Docker is available.
+
+Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
 
 This project uses Kover for code coverage and enforces a minimum 80% coverage
 threshold for production code:

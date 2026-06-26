@@ -43,7 +43,20 @@ Optional verification should include expensive or runtime-heavy tests:
       runtime setup.
 - [ ] Manual smoke tests against real cloud providers.
 
-Use JUnit tags before introducing separate Gradle source sets or tasks:
+Keep the Gradle setup simple while the project is small:
+
+```bash
+./gradlew test
+./gradlew check
+```
+
+`test` runs the project test suite. Integration-style tests stay under
+`src/test` and use `*IntegrationTest` in the file and class name so their scope
+is visible without a separate source set. A dedicated `integrationTest` source
+set can be introduced later if the test suite becomes large enough to justify
+the extra Gradle configuration.
+
+Use JUnit tags for optional runtime-heavy tests when they are introduced:
 
 ```kotlin
 @Tag("optional")
@@ -52,18 +65,14 @@ Use JUnit tags before introducing separate Gradle source sets or tasks:
 @Tag("cloud-smoke")
 ```
 
-Default Gradle verification should exclude optional tags. A dedicated Gradle
-task for optional integration tests can be added when the tagged test set grows
-large enough to justify it.
-
 ## Test Categories
 
 ### Database And Retrieval
 
-- [ ] Use Testcontainers for integration tests that need PostgreSQL.
-- [ ] Use the pgvector image selected in ADR-002.
-- [ ] Verify Flyway migrations.
-- [ ] Verify document chunk persistence.
+- [x] Use Testcontainers for integration tests that need PostgreSQL.
+- [x] Use the pgvector image selected in ADR-002.
+- [x] Verify Flyway migrations.
+- [x] Verify document chunk persistence.
 - [ ] Verify embedding metadata persistence.
 - [ ] Verify vector similarity search behavior.
 
@@ -111,11 +120,11 @@ large enough to justify it.
 - [ ] Optional expensive tests are not required to satisfy coverage.
 - [ ] Unit tests should run without Docker.
 - [ ] CI and default integration-test verification require Docker once
-      Testcontainers-based persistence tests are added.
+      Testcontainers-based persistence tests must run on every build.
 
 ## Naming Conventions
 
 - [ ] Use `*Test` for unit tests.
-- [ ] Use `*IntegrationTest` for Spring Boot, Testcontainers, and MockServer
+- [x] Use `*IntegrationTest` for Spring Boot, Testcontainers, and MockServer
       integration tests included in default verification.
 - [ ] Use `*OptionalIT` for expensive optional runtime tests.
