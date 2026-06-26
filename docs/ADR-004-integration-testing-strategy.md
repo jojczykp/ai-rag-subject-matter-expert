@@ -74,7 +74,7 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 - [x] Verify Flyway migrations.
 - [x] Verify document chunk persistence.
 - [ ] Verify embedding metadata persistence.
-- [ ] Verify vector similarity search behavior.
+- [x] Verify vector similarity search behavior.
 
 ### Application Flow
 

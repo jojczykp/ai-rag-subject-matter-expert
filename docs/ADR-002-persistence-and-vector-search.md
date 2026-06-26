@@ -30,7 +30,7 @@ latest pgvector version verified when this ADR was accepted.
 - [ ] pgvector for embedding storage and vector similarity search.
 - [ ] Flyway for database schema migrations.
 - [ ] Spring Data JDBC for ordinary persistence of simple application data.
-- [ ] Spring `JdbcClient` for explicit pgvector queries in
+- [x] Spring `JdbcClient` for explicit pgvector queries in
       `RelevantChunkRetriever`.
 - [ ] Flyway migrations under `src/main/resources/db/migration`.
 - [ ] Testcontainers with `pgvector/pgvector:0.8.2-pg18` for persistence
@@ -67,8 +67,8 @@ tables. The current schema diagram is maintained in
 
 ## Vector Search
 
-- [ ] Use cosine distance as the initial similarity metric.
-- [ ] Start with exact vector search.
+- [x] Use cosine distance as the initial similarity metric.
+- [x] Start with exact vector search.
 - [ ] Add an approximate pgvector index, such as HNSW, only when data size or
       latency makes it necessary.
 - [ ] Define the pgvector column dimensions from the statically configured
@@ -159,11 +159,11 @@ persistence style outside Spring Data conventions.
 ## Consequences
 
 - [ ] Schema changes go through Flyway migrations.
-- [ ] Vector search SQL stays close to `RelevantChunkRetriever`.
+- [x] Vector search SQL stays close to `RelevantChunkRetriever`.
 - [ ] Embedding model metadata is stored with indexed document chunks.
 - [ ] Document chunks are re-indexed when the configured embedding model
       changes.
 - [ ] Document chunks are re-indexed when embedding dimensions or chunking
       strategy changes.
-- [ ] Integration tests verify migrations, chunk persistence, and vector
+- [x] Integration tests verify migrations, chunk persistence, and vector
       similarity queries with Testcontainers.

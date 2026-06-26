@@ -21,9 +21,9 @@ class DatabaseSchemaIntegrationTest(
     @Test
     fun `applies migrations to PostgreSQL with pgvector through application startup`() {
         jdbcClient
-            .sql("SELECT COUNT(*) FROM source_document")
-            .query(Int::class.java)
-            .single() shouldBe 0
+            .sql("SELECT to_regclass('public.source_document') IS NOT NULL")
+            .query(Boolean::class.java)
+            .single() shouldBe true
 
         jdbcClient
             .sql("SELECT vector_dims('[1,2,3]'::vector)")
