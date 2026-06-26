@@ -41,7 +41,7 @@ Actuator endpoints exposed over HTTP:
 - `/actuator/health`
 - `/actuator/info`
 
-## Database Profile
+## Database
 
 Local PostgreSQL with pgvector can be started through Docker Compose:
 
@@ -49,11 +49,10 @@ Local PostgreSQL with pgvector can be started through Docker Compose:
 docker compose up -d postgres
 ```
 
-Run the application with the `db` profile to enable datasource and Flyway
-configuration:
+Run the application:
 
 ```bash
-SPRING_PROFILES_ACTIVE=db ./gradlew bootRun
+./gradlew bootRun
 ```
 
 The default local connection is:
