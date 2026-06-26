@@ -3,9 +3,11 @@ package org.alterbit.aisme
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 
+@ActiveProfiles("no-db")
 @SpringBootTest
 @AutoConfigureMockMvc
 class ActuatorEndpointsTest(

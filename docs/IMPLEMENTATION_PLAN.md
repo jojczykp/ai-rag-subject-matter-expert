@@ -33,7 +33,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Flyway migrations under `src/main/resources/db/migration`.
 - [x] Add PostgreSQL + pgvector persistence support.
 - [x] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
-- [ ] Add Spring Data JDBC repositories for ordinary persistence.
+- [x] Add Spring Data JDBC repositories for ordinary persistence.
 - [ ] Add Spring `JdbcClient` queries for pgvector retrieval.
 - [ ] Add statically configured `aisme.embedding-model` configuration.
 - [ ] Add local ONNX embedding model integration.
