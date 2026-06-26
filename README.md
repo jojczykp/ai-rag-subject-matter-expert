@@ -46,7 +46,7 @@ Actuator endpoints exposed over HTTP:
 Local PostgreSQL with pgvector can be started through Docker Compose:
 
 ```bash
-docker compose up -d postgres
+docker compose up -d db
 ```
 
 Run the application:
