@@ -26,7 +26,19 @@ Start the database:
 docker compose up -d db
 ```
 
-Then run the application:
+Download the local embedding model if it is not already present:
+
+```bash
+mkdir -p models/bge-small-en-v1.5
+curl -L \
+  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx \
+  -o models/bge-small-en-v1.5/model.onnx
+curl -L \
+  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json \
+  -o models/bge-small-en-v1.5/tokenizer.json
+```
+
+Run the application:
 
 ```bash
 ./gradlew bootRun
@@ -57,12 +69,6 @@ Local PostgreSQL with pgvector can be started through Docker Compose:
 docker compose up -d db
 ```
 
-Run the application:
-
-```bash
-./gradlew bootRun
-```
-
 The default local connection is:
 
 ```text
@@ -84,18 +90,8 @@ aisme:
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 ```
 
-If the files are missing, download the example embedding model from
-[BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5):
-
-```bash
-mkdir -p models/bge-small-en-v1.5
-curl -L \
-  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx \
-  -o models/bge-small-en-v1.5/model.onnx
-curl -L \
-  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json \
-  -o models/bge-small-en-v1.5/tokenizer.json
-```
+The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
+See `Build And Run` for the download commands.
 
 These files are local runtime assets. They are intentionally excluded from git
 because model binaries are large and can be replaced independently from
