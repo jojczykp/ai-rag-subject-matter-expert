@@ -57,7 +57,7 @@ Initial table responsibilities:
 - [ ] `document_chunk` stores extracted chunk text and chunk metadata.
 - [ ] `chunk_embedding` stores one vector per chunk for the statically
       configured embedding model.
-- [ ] `chunk_embedding` stores embedding model id, embedding model version,
+- [x] `chunk_embedding` stores embedding model id, embedding model version,
       embedding dimensions, and chunking strategy version.
 
 Because ADR-001 selects one statically configured embedding model, the initial

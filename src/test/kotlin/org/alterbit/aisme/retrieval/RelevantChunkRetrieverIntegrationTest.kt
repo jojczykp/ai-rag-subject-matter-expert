@@ -1,16 +1,17 @@
 package org.alterbit.aisme.retrieval
 
 import io.kotest.matchers.shouldBe
-import java.sql.Timestamp
 import java.time.Instant
 import java.util.UUID
+import org.alterbit.aisme.embedding.EmbeddingVector
+import org.alterbit.aisme.persistence.ChunkEmbeddingStore
 import org.alterbit.aisme.persistence.DocumentChunkRecord
 import org.alterbit.aisme.persistence.DocumentChunkRepository
+import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
 import org.alterbit.aisme.persistence.SourceDocumentRecord
 import org.alterbit.aisme.persistence.SourceDocumentRepository
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -20,9 +21,9 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 @SpringBootTest
 class RelevantChunkRetrieverIntegrationTest(
-    private val jdbcClient: JdbcClient,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
+    private val chunkEmbeddingStore: ChunkEmbeddingStore,
     private val relevantChunkRetriever: RelevantChunkRetriever,
 ) {
     @Test
@@ -54,17 +55,17 @@ class RelevantChunkRetrieverIntegrationTest(
 
         saveEmbedding(
             documentChunkId = requireNotNull(closestChunk.id),
-            embedding = embedding(firstDimension = 1.0),
+            values = embedding(firstDimension = 1.0),
             embeddingModelId = EMBEDDING_MODEL_ID,
         )
         saveEmbedding(
             documentChunkId = requireNotNull(distantChunk.id),
-            embedding = embedding(secondDimension = 1.0),
+            values = embedding(secondDimension = 1.0),
             embeddingModelId = EMBEDDING_MODEL_ID,
         )
         saveEmbedding(
             documentChunkId = requireNotNull(wrongModelChunk.id),
-            embedding = embedding(firstDimension = 1.0),
+            values = embedding(firstDimension = 1.0),
             embeddingModelId = "different-model",
         )
 
@@ -101,40 +102,22 @@ class RelevantChunkRetrieverIntegrationTest(
 
     private fun saveEmbedding(
         documentChunkId: UUID,
-        embedding: List<Double>,
+        values: List<Double>,
         embeddingModelId: String,
     ) {
-        jdbcClient
-            .sql(
-                """
-                INSERT INTO chunk_embedding (
-                    document_chunk_id,
-                    embedding,
-                    embedding_model_id,
-                    embedding_model_version,
-                    embedding_dimensions,
-                    chunking_strategy_version,
-                    embedded_at
-                )
-                VALUES (
-                    :documentChunkId,
-                    CAST(:embedding AS vector),
-                    :embeddingModelId,
-                    :embeddingModelVersion,
-                    :embeddingDimensions,
-                    :chunkingStrategyVersion,
-                    :embeddedAt
-                )
-                """,
-            )
-            .param("documentChunkId", documentChunkId)
-            .param("embedding", embedding.toPgVector())
-            .param("embeddingModelId", embeddingModelId)
-            .param("embeddingModelVersion", EMBEDDING_MODEL_VERSION)
-            .param("embeddingDimensions", EMBEDDING_DIMENSIONS)
-            .param("chunkingStrategyVersion", CHUNKING_STRATEGY_VERSION)
-            .param("embeddedAt", Timestamp.from(Instant.parse("2026-01-01T00:00:00Z")))
-            .update()
+        chunkEmbeddingStore.save(
+            SaveChunkEmbeddingRequest(
+                documentChunkId = documentChunkId,
+                embedding = EmbeddingVector(
+                    values = values,
+                    modelId = embeddingModelId,
+                    modelVersion = EMBEDDING_MODEL_VERSION,
+                    dimensions = EMBEDDING_DIMENSIONS,
+                ),
+                chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
+                embeddedAt = Instant.parse("2026-01-01T00:00:00Z"),
+            ),
+        )
     }
 
     private fun embedding(
@@ -148,9 +131,6 @@ class RelevantChunkRetrieverIntegrationTest(
                 else -> 0.0
             }
         }
-
-    private fun List<Double>.toPgVector(): String =
-        joinToString(prefix = "[", postfix = "]", separator = ",")
 
     companion object {
         private const val EMBEDDING_DIMENSIONS = 384

@@ -73,7 +73,7 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 - [x] Use the pgvector image selected in ADR-002.
 - [x] Verify Flyway migrations.
 - [x] Verify document chunk persistence.
-- [ ] Verify embedding metadata persistence.
+- [x] Verify embedding metadata persistence.
 - [x] Verify vector similarity search behavior.
 
 ### Application Flow

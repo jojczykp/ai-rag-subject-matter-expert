@@ -30,7 +30,7 @@ is configured separately and is responsible for:
 
 - [ ] generating embeddings for bundled document chunks during indexing
 - [ ] generating embeddings for user queries during retrieval
-- [ ] exposing embedding model metadata needed to validate stored vectors
+- [x] exposing embedding model metadata needed to validate stored vectors
 
 Document chunk embeddings and query embeddings must use the same statically
 configured embedding model. Chat models receive retrieved text chunks and do
@@ -140,9 +140,9 @@ This is acceptable only as a temporary implementation step.
 
 ## Consequences
 
-- [ ] Store the embedding model id or version with indexed chunk embeddings.
-- [ ] Store embedding dimensions with indexed chunk embeddings.
-- [ ] Store the chunking strategy version used to create indexed chunks.
+- [x] Store the embedding model id or version with indexed chunk embeddings.
+- [x] Store embedding dimensions with indexed chunk embeddings.
+- [x] Store the chunking strategy version used to create indexed chunks.
 - [ ] Re-index documents when the configured embedding model changes.
 - [ ] Re-index documents when embedding dimensions or chunking strategy changes.
 - [ ] Keep embedding generation separate from chat model selection.
@@ -150,7 +150,7 @@ This is acceptable only as a temporary implementation step.
 - [ ] Keep `RelevantChunkRetriever` responsible for query embedding generation
       and vector lookup.
 - [ ] Use PostgreSQL + pgvector for vector storage and similarity search.
-- [ ] Add tests that prove document and query embeddings use compatible model
+- [x] Add tests that prove document and query embeddings use compatible model
       metadata.
 - [ ] Add integration tests for vector search with Testcontainers and pgvector.
 

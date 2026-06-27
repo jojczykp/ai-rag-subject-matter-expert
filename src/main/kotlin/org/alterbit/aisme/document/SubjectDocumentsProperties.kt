@@ -16,4 +16,7 @@ data class SubjectDocumentsProperties(
 
     fun normalizedLocation(): String =
         location.trimEnd('/') + "/"
+
+    fun chunkingStrategyVersion(): String =
+        "character-count-v1:size=$chunkSize:overlap=$chunkOverlap"
 }

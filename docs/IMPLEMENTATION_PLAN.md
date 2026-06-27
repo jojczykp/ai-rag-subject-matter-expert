@@ -38,7 +38,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add statically configured `aisme.embedding-model` configuration.
 - [x] Add local ONNX embedding model integration.
 - [x] Configure local model and tokenizer paths for `BAAI/bge-small-en-v1.5`.
-- [ ] Store embedding model id, version, dimensions, and chunking strategy
+- [x] Store embedding model id, version, dimensions, and chunking strategy
       version with indexed embeddings.
 - [ ] Add re-indexing behavior for stale or missing embeddings.
 - [x] Add `RelevantChunkRetriever`.

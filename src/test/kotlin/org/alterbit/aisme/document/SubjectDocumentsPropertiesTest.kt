@@ -1,10 +1,21 @@
 package org.alterbit.aisme.document
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class SubjectDocumentsPropertiesTest {
+    @Test
+    fun `derives chunking strategy version from chunking configuration`() {
+        val properties = SubjectDocumentsProperties(
+            chunkSize = 700,
+            chunkOverlap = 100,
+        )
+
+        properties.chunkingStrategyVersion() shouldBe "character-count-v1:size=700:overlap=100"
+    }
+
     @Test
     fun `rejects non-positive chunk size`() {
         val exception = shouldThrow<IllegalArgumentException> {
