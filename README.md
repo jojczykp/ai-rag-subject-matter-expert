@@ -20,6 +20,14 @@ and Kover for coverage verification. The wrapper currently uses Gradle 9.5.1.
 
 Run commands from the repository root.
 
+Start the database:
+
+```bash
+docker compose up -d db
+```
+
+Then run the application:
+
 ```bash
 ./gradlew bootRun
 ```
@@ -63,6 +71,21 @@ jdbc:postgresql://localhost:5432/aisme
 
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
+
+## Local Embedding Model
+
+The default embedding runtime is local ONNX. Model files are configured outside
+the application JAR and are ignored by git:
+
+```yaml
+aisme:
+  embedding-model:
+    model-path: ./models/bge-small-en-v1.5/model.onnx
+    tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+```
+
+The ONNX client loads these files during startup, so the application fails fast
+when the configured model or tokenizer file is missing.
 
 ## Verification
 

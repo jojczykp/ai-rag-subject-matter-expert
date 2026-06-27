@@ -24,12 +24,12 @@ retrieval.
 
 Initial recommended model direction:
 
-- [ ] Use a Hugging Face sentence-transformer style embedding model exported to
+- [x] Use a Hugging Face sentence-transformer style embedding model exported to
       ONNX.
-- [ ] Prefer `BAAI/bge-small-en-v1.5` as the first practical local model.
-- [ ] Use `384` embedding dimensions for the initial local ONNX model.
-- [ ] Store model files outside the application JAR.
-- [ ] Configure model and tokenizer paths through application configuration.
+- [x] Prefer `BAAI/bge-small-en-v1.5` as the first practical local model.
+- [x] Use `384` embedding dimensions for the initial local ONNX model.
+- [x] Store model files outside the application JAR.
+- [x] Configure model and tokenizer paths through application configuration.
 - [ ] Keep Ollama embeddings as an alternative runtime, not the default
       embedded embedding path.
 
@@ -54,7 +54,7 @@ Benefits:
 
 - [ ] Runs locally without requiring Ollama or a cloud provider.
 - [ ] Works offline after model files are present.
-- [ ] Fits JVM applications through ONNX Runtime.
+- [x] Fits JVM applications through ONNX Runtime.
 - [ ] Keeps retrieval independent from user-selected chat models.
 
 Tradeoffs:
@@ -100,7 +100,7 @@ This is not the default embedding runtime.
 - [ ] pgvector dimensions must match the configured ONNX embedding model.
 - [ ] Changing the ONNX model or dimensions requires re-indexing documents.
 - [ ] Startup indexing can calculate embeddings internally without Ollama.
-- [ ] Documentation must describe where local embedding model files live.
+- [x] Documentation must describe where local embedding model files live.
 - [ ] Tests should use a fake or lightweight embedding implementation unless
       they specifically verify ONNX runtime behavior.
 

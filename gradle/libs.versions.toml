@@ -1,8 +1,10 @@
 [versions]
 dependency-management = "1.1.7"
+hf-tokenizers = "0.36.0"
 kotest = "6.2.1"
 kotlin = "2.4.0"
 kover = "0.9.8"
+onnxruntime = "1.26.0"
 spring-boot = "4.1.0"
 testcontainers = "1.21.4"
 
@@ -16,11 +18,13 @@ spring-dependency-management = { id = "io.spring.dependency-management", version
 [libraries]
 flyway-core = { module = "org.flywaydb:flyway-core" }
 flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql" }
+hf-tokenizers = { module = "ai.djl.huggingface:tokenizers", version.ref = "hf-tokenizers" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
+onnxruntime = { module = "com.microsoft.onnxruntime:onnxruntime", version.ref = "onnxruntime" }
 postgresql = { module = "org.postgresql:postgresql" }
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-boot-starter-data-jdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }

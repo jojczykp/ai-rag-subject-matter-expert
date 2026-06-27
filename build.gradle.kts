@@ -26,6 +26,8 @@ dependencies {
 
     implementation(libs.flyway.core)
     implementation(libs.flyway.database.postgresql)
+    implementation(libs.hf.tokenizers)
+    implementation(libs.onnxruntime)
     implementation(libs.spring.boot.flyway)
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.data.jdbc)
@@ -44,6 +46,11 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.bootRun {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
 kover {
