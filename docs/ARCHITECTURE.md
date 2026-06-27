@@ -244,6 +244,7 @@ aisme:
       available-offline: false
   embedding-model:
     id: local-bge-small
+    version: "1.5"
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json

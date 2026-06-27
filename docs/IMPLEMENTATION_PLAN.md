@@ -35,7 +35,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
 - [x] Add Spring Data JDBC repositories for ordinary persistence.
 - [x] Add Spring `JdbcClient` queries for pgvector retrieval.
-- [ ] Add statically configured `aisme.embedding-model` configuration.
+- [x] Add statically configured `aisme.embedding-model` configuration.
 - [ ] Add local ONNX embedding model integration.
 - [ ] Configure local model and tokenizer paths for `BAAI/bge-small-en-v1.5`.
 - [ ] Store embedding model id, version, dimensions, and chunking strategy
