@@ -5,7 +5,7 @@ import java.time.Instant
 import java.util.UUID
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingVector
-import org.alterbit.aisme.persistence.ChunkEmbeddingStore
+import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRecord
 import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
@@ -26,7 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 class RelevantChunkRetrieverIntegrationTest(
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
-    private val chunkEmbeddingStore: ChunkEmbeddingStore,
+    private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
     private val relevantChunkRetriever: RelevantChunkRetriever,
 ) {
     @Test
@@ -110,7 +110,7 @@ class RelevantChunkRetrieverIntegrationTest(
         values: List<Double>,
         embeddingModelId: String,
     ) {
-        chunkEmbeddingStore.save(
+        chunkEmbeddingRepository.save(
             SaveChunkEmbeddingRequest(
                 documentChunkId = documentChunkId,
                 embedding = EmbeddingVector(

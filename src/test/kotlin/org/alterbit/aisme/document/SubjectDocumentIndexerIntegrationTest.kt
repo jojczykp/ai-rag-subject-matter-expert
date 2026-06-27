@@ -5,7 +5,7 @@ import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
 import org.alterbit.aisme.embedding.EmbeddingVector
-import org.alterbit.aisme.persistence.ChunkEmbeddingStore
+import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SourceDocumentRepository
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 class SubjectDocumentIndexerIntegrationTest(
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
-    private val chunkEmbeddingStore: ChunkEmbeddingStore,
+    private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
     private val jdbcClient: JdbcClient,
 ) {
     @Test
@@ -84,7 +84,7 @@ class SubjectDocumentIndexerIntegrationTest(
             embeddingModelProperties = embeddingModelProperties,
             sourceDocumentRepository = sourceDocumentRepository,
             documentChunkRepository = documentChunkRepository,
-            chunkEmbeddingStore = chunkEmbeddingStore,
+            chunkEmbeddingRepository = chunkEmbeddingRepository,
             embeddingClient = embeddingClient,
         )
 

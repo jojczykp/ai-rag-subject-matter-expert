@@ -6,7 +6,7 @@ import java.time.Instant
 import java.util.UUID
 import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
-import org.alterbit.aisme.persistence.ChunkEmbeddingStore
+import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRecord
 import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
@@ -23,7 +23,7 @@ class SubjectDocumentIndexer(
     private val embeddingModelProperties: EmbeddingModelProperties,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
-    private val chunkEmbeddingStore: ChunkEmbeddingStore,
+    private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
     private val embeddingClient: EmbeddingClient,
 ) {
     @Transactional
@@ -111,7 +111,7 @@ class SubjectDocumentIndexer(
     ) {
         val chunkId = requireNotNull(chunk.id)
         val embeddingModel = embeddingModelProperties.metadata
-        if (chunkEmbeddingStore.hasCurrentEmbedding(chunkId, embeddingModel, chunkingStrategyVersion)) {
+        if (chunkEmbeddingRepository.hasCurrentEmbedding(chunkId, embeddingModel, chunkingStrategyVersion)) {
             return
         }
 
@@ -120,7 +120,7 @@ class SubjectDocumentIndexer(
             "embedding model metadata must match configured embedding model"
         }
 
-        chunkEmbeddingStore.save(
+        chunkEmbeddingRepository.save(
             SaveChunkEmbeddingRequest(
                 documentChunkId = chunkId,
                 embedding = embedding,

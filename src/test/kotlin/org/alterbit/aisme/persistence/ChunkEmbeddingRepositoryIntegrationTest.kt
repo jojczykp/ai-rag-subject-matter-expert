@@ -17,11 +17,11 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 @ActiveProfiles("skip-startup-indexing")
 @SpringBootTest
-class ChunkEmbeddingStoreIntegrationTest(
+class ChunkEmbeddingRepositoryIntegrationTest(
     private val jdbcClient: JdbcClient,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
-    private val chunkEmbeddingStore: ChunkEmbeddingStore,
+    private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
 ) {
     @Test
     fun `stores embedding model metadata and chunking strategy version`() {
@@ -43,7 +43,7 @@ class ChunkEmbeddingStoreIntegrationTest(
             ),
         )
 
-        chunkEmbeddingStore.save(
+        chunkEmbeddingRepository.save(
             SaveChunkEmbeddingRequest(
                 documentChunkId = requireNotNull(chunk.id),
                 embedding = EmbeddingVector(

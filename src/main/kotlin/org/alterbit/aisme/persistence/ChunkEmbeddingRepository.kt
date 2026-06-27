@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("!no-db")
-class ChunkEmbeddingStore(
+class ChunkEmbeddingRepository(
     private val jdbcClient: JdbcClient,
 ) {
     fun hasCurrentEmbedding(
