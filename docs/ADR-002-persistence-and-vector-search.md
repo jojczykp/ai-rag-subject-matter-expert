@@ -81,14 +81,14 @@ to verify before introducing approximate-search tuning.
 
 ## Indexing And Transactions
 
-- [ ] Read bundled documents from application resources.
-- [ ] Create or update `source_document` and `document_chunk` rows during
+- [x] Read bundled documents from application resources.
+- [x] Create or update `source_document` and `document_chunk` rows during
       indexing.
-- [ ] Create embeddings when they are missing or stale.
-- [ ] Treat embeddings as stale when embedding model id, embedding model
+- [x] Create embeddings when they are missing or stale.
+- [x] Treat embeddings as stale when embedding model id, embedding model
       version, embedding dimensions, or chunking strategy version changes.
-- [ ] Write document metadata and chunks transactionally.
-- [ ] Rebuild embeddings transactionally per document or per indexing run.
+- [x] Write document metadata and chunks transactionally.
+- [x] Rebuild embeddings transactionally per document or per indexing run.
 - [ ] Avoid marking a new embedding version active until its indexing work has
       completed successfully.
 
@@ -160,10 +160,8 @@ persistence style outside Spring Data conventions.
 
 - [ ] Schema changes go through Flyway migrations.
 - [x] Vector search SQL stays close to `RelevantChunkRetriever`.
-- [ ] Embedding model metadata is stored with indexed document chunks.
-- [ ] Document chunks are re-indexed when the configured embedding model
-      changes.
-- [ ] Document chunks are re-indexed when embedding dimensions or chunking
-      strategy changes.
+- [x] Embedding model metadata is stored with indexed document chunks.
+- [x] Embeddings are re-indexed when the configured embedding model changes.
+- [x] Chunks and embeddings are re-indexed when the chunking strategy changes.
 - [x] Integration tests verify migrations, chunk persistence, and vector
       similarity queries with Testcontainers.

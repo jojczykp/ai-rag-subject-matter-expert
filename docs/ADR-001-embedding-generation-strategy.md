@@ -143,13 +143,13 @@ This is acceptable only as a temporary implementation step.
 - [x] Store the embedding model id or version with indexed chunk embeddings.
 - [x] Store embedding dimensions with indexed chunk embeddings.
 - [x] Store the chunking strategy version used to create indexed chunks.
-- [ ] Re-index documents when the configured embedding model changes.
-- [ ] Re-index documents when embedding dimensions or chunking strategy changes.
+- [x] Re-index documents when the configured embedding model changes.
+- [x] Re-index documents when embedding dimensions or chunking strategy changes.
 - [ ] Keep embedding generation separate from chat model selection.
 - [ ] Allow users to switch chat models without re-indexing documents.
 - [ ] Keep `RelevantChunkRetriever` responsible for query embedding generation
       and vector lookup.
-- [ ] Use PostgreSQL + pgvector for vector storage and similarity search.
+- [x] Use PostgreSQL + pgvector for vector storage and similarity search.
 - [x] Add tests that prove document and query embeddings use compatible model
       metadata.
 - [ ] Add integration tests for vector search with Testcontainers and pgvector.

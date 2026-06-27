@@ -208,7 +208,8 @@ for the accepted database access and vector search decision.
 
 The initial database model stores bundled source document metadata, deterministic
 chunks, and one embedding per chunk for the statically configured embedding
-model. The schema diagram is maintained in
+model. Startup indexing refreshes missing or stale embeddings when the configured
+embedding model metadata or chunking strategy changes. The schema diagram is maintained in
 [Database Schema](DATABASE_SCHEMA.md).
 
 ## Configuration

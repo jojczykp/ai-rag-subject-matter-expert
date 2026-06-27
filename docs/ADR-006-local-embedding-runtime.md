@@ -99,7 +99,7 @@ This is not the default embedding runtime.
 
 - [ ] pgvector dimensions must match the configured ONNX embedding model.
 - [ ] Changing the ONNX model or dimensions requires re-indexing documents.
-- [ ] Startup indexing can calculate embeddings internally without Ollama.
+- [x] Startup indexing can calculate embeddings internally without Ollama.
 - [x] Documentation must describe where local embedding model files live.
 - [ ] Tests should use a fake or lightweight embedding implementation unless
       they specifically verify ONNX runtime behavior.

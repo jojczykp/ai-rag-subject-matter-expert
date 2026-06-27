@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("!no-db")
+@Profile("!no-db & !fake-embedding-client")
 class OnnxEmbeddingClient private constructor(
     private val properties: EmbeddingModelProperties,
     private val model: LoadedEmbeddingModel,

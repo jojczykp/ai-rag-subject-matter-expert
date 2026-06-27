@@ -40,7 +40,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Configure local model and tokenizer paths for `BAAI/bge-small-en-v1.5`.
 - [x] Store embedding model id, version, dimensions, and chunking strategy
       version with indexed embeddings.
-- [ ] Add re-indexing behavior for stale or missing embeddings.
+- [x] Add re-indexing behavior for stale or missing embeddings.
 - [x] Add `RelevantChunkRetriever`.
 - [x] Add Testcontainers integration tests with the pgvector image selected in
       ADR-002.

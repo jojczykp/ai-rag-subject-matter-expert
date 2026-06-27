@@ -1,7 +1,5 @@
 package org.alterbit.aisme.document
 
-import org.springframework.boot.ApplicationArguments
-import org.springframework.boot.ApplicationRunner
 import org.springframework.core.io.support.ResourcePatternResolver
 import org.springframework.stereotype.Component
 
@@ -13,11 +11,7 @@ class StaticSubjectDocumentsLoader(
     private val documentReader: SubjectDocumentReader,
     private val documentValidator: SubjectDocumentValidator,
     private val documentChunker: SubjectDocumentChunker,
-) : ApplicationRunner {
-    override fun run(args: ApplicationArguments) {
-        load()
-    }
-
+) {
     fun load(): List<SubjectDocumentChunk> {
         val location = properties.normalizedLocation()
         val root = resourcePatternResolver.getResource(location)
