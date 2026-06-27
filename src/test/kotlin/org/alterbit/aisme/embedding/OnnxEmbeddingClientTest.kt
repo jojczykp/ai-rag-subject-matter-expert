@@ -11,7 +11,11 @@ class OnnxEmbeddingClientTest {
     @Test
     fun `rejects blank text`() {
         val client = OnnxEmbeddingClient(
-            properties = EmbeddingModelProperties(dimensions = 1),
+            properties = EmbeddingModelProperties(
+                id = "test-model",
+                version = "test-version",
+                dimensions = 1,
+            ),
             loader = OnnxEmbeddingModelLoader { FakeLoadedEmbeddingModel(listOf(1.0)) },
         )
 
@@ -39,11 +43,16 @@ class OnnxEmbeddingClientTest {
     @Test
     fun `returns embedding vector with configured model metadata`() {
         val model = FakeLoadedEmbeddingModel(listOf(0.6, 0.8))
+        val metadata = EmbeddingModelMetadata(
+            id = "test-model",
+            version = "test-version",
+            dimensions = 2,
+        )
         val client = OnnxEmbeddingClient(
             properties = EmbeddingModelProperties(
-                id = "test-model",
-                version = "test-version",
-                dimensions = 2,
+                id = metadata.id,
+                version = metadata.version,
+                dimensions = metadata.dimensions,
             ),
             loader = OnnxEmbeddingModelLoader { model },
         )
@@ -52,9 +61,7 @@ class OnnxEmbeddingClientTest {
 
         embedding shouldBe EmbeddingVector(
             values = listOf(0.6, 0.8),
-            modelId = "test-model",
-            modelVersion = "test-version",
-            dimensions = 2,
+            model = metadata,
         )
         model.embeddedTexts shouldBe listOf("hello")
     }
@@ -64,7 +71,11 @@ class OnnxEmbeddingClientTest {
         var loadCount = 0
         val model = FakeLoadedEmbeddingModel(listOf(1.0))
         val client = OnnxEmbeddingClient(
-            properties = EmbeddingModelProperties(dimensions = 1),
+            properties = EmbeddingModelProperties(
+                id = "test-model",
+                version = "test-version",
+                dimensions = 1,
+            ),
             loader = OnnxEmbeddingModelLoader {
                 loadCount += 1
                 model
@@ -82,7 +93,11 @@ class OnnxEmbeddingClientTest {
     @Test
     fun `rejects embedding vector with unexpected dimensions`() {
         val client = OnnxEmbeddingClient(
-            properties = EmbeddingModelProperties(dimensions = 3),
+            properties = EmbeddingModelProperties(
+                id = "test-model",
+                version = "test-version",
+                dimensions = 3,
+            ),
             loader = OnnxEmbeddingModelLoader { FakeLoadedEmbeddingModel(listOf(0.1, 0.2)) },
         )
 
@@ -97,7 +112,11 @@ class OnnxEmbeddingClientTest {
     fun `closes loaded model`() {
         val model = FakeLoadedEmbeddingModel(listOf(1.0))
         val client = OnnxEmbeddingClient(
-            properties = EmbeddingModelProperties(dimensions = 1),
+            properties = EmbeddingModelProperties(
+                id = "test-model",
+                version = "test-version",
+                dimensions = 1,
+            ),
             loader = OnnxEmbeddingModelLoader { model },
         )
 

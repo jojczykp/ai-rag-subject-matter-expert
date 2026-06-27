@@ -2,6 +2,7 @@ package org.alterbit.aisme.persistence
 
 import io.kotest.matchers.shouldBe
 import java.time.Instant
+import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -45,9 +46,11 @@ class ChunkEmbeddingStoreIntegrationTest(
                 documentChunkId = requireNotNull(chunk.id),
                 embedding = EmbeddingVector(
                     values = embedding(firstDimension = 1.0),
-                    modelId = EMBEDDING_MODEL_ID,
-                    modelVersion = EMBEDDING_MODEL_VERSION,
-                    dimensions = EMBEDDING_DIMENSIONS,
+                    model = EmbeddingModelMetadata(
+                        id = EMBEDDING_MODEL_ID,
+                        version = EMBEDDING_MODEL_VERSION,
+                        dimensions = EMBEDDING_DIMENSIONS,
+                    ),
                 ),
                 chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
                 embeddedAt = Instant.parse("2026-01-01T00:00:00Z"),

@@ -14,10 +14,8 @@ class OnnxEmbeddingClientIntegrationTest {
 
         val embedding = client.embed("How do I boil rice?")
 
-        embedding.modelId shouldBe properties.id
-        embedding.modelVersion shouldBe properties.version
-        embedding.dimensions shouldBe properties.dimensions
-        embedding.values shouldHaveSize properties.dimensions
+        embedding.model shouldBe properties.metadata
+        embedding.values shouldHaveSize properties.metadata.dimensions
         embedding.values.sumOf { abs(it) } shouldBeGreaterThan 0.0
 
         client.close()

@@ -245,10 +245,10 @@ aisme:
   embedding-model:
     id: local-bge-small
     version: "1.5"
+    dimensions: 384
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-    dimensions: 384
   chat:
     timeout: 60s
   model-availability:

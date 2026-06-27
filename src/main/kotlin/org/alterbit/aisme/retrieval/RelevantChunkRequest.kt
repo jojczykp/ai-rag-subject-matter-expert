@@ -1,10 +1,10 @@
 package org.alterbit.aisme.retrieval
 
+import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+
 data class RelevantChunkRequest(
     val embedding: List<Double>,
-    val embeddingModelId: String,
-    val embeddingModelVersion: String,
-    val embeddingDimensions: Int,
+    val embeddingModel: EmbeddingModelMetadata,
     val chunkingStrategyVersion: String,
     val limit: Int,
 )

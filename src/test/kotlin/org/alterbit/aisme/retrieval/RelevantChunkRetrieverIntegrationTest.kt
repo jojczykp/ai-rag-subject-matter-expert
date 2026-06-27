@@ -3,6 +3,7 @@ package org.alterbit.aisme.retrieval
 import io.kotest.matchers.shouldBe
 import java.time.Instant
 import java.util.UUID
+import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.persistence.ChunkEmbeddingStore
 import org.alterbit.aisme.persistence.DocumentChunkRecord
@@ -72,9 +73,11 @@ class RelevantChunkRetrieverIntegrationTest(
         val chunks = relevantChunkRetriever.retrieve(
             RelevantChunkRequest(
                 embedding = embedding(firstDimension = 1.0),
-                embeddingModelId = EMBEDDING_MODEL_ID,
-                embeddingModelVersion = EMBEDDING_MODEL_VERSION,
-                embeddingDimensions = EMBEDDING_DIMENSIONS,
+                embeddingModel = EmbeddingModelMetadata(
+                    id = EMBEDDING_MODEL_ID,
+                    version = EMBEDDING_MODEL_VERSION,
+                    dimensions = EMBEDDING_DIMENSIONS,
+                ),
                 chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
                 limit = 10,
             ),
@@ -110,9 +113,11 @@ class RelevantChunkRetrieverIntegrationTest(
                 documentChunkId = documentChunkId,
                 embedding = EmbeddingVector(
                     values = values,
-                    modelId = embeddingModelId,
-                    modelVersion = EMBEDDING_MODEL_VERSION,
-                    dimensions = EMBEDDING_DIMENSIONS,
+                    model = EmbeddingModelMetadata(
+                        id = embeddingModelId,
+                        version = EMBEDDING_MODEL_VERSION,
+                        dimensions = EMBEDDING_DIMENSIONS,
+                    ),
                 ),
                 chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
                 embeddedAt = Instant.parse("2026-01-01T00:00:00Z"),

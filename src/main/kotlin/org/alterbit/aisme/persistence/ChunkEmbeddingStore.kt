@@ -13,7 +13,7 @@ class ChunkEmbeddingStore(
 ) {
     fun save(request: SaveChunkEmbeddingRequest) {
         require(request.embedding.values.isNotEmpty()) { "embedding values must not be empty" }
-        require(request.embedding.values.size == request.embedding.dimensions) {
+        require(request.embedding.values.size == request.embedding.model.dimensions) {
             "embedding values size must match embedding dimensions"
         }
         require(request.chunkingStrategyVersion.isNotBlank()) { "chunkingStrategyVersion must not be blank" }
@@ -22,9 +22,9 @@ class ChunkEmbeddingStore(
             .sql(SAVE_CHUNK_EMBEDDING_SQL)
             .param("documentChunkId", request.documentChunkId)
             .param("embedding", request.embedding.values.toPgVector())
-            .param("embeddingModelId", request.embedding.modelId)
-            .param("embeddingModelVersion", request.embedding.modelVersion)
-            .param("embeddingDimensions", request.embedding.dimensions)
+            .param("embeddingModelId", request.embedding.model.id)
+            .param("embeddingModelVersion", request.embedding.model.version)
+            .param("embeddingDimensions", request.embedding.model.dimensions)
             .param("chunkingStrategyVersion", request.chunkingStrategyVersion)
             .param("embeddedAt", Timestamp.from(request.embeddedAt))
             .update()

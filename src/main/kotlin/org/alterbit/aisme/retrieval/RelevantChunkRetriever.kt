@@ -14,16 +14,16 @@ class RelevantChunkRetriever(
     fun retrieve(request: RelevantChunkRequest): List<RelevantChunk> {
         require(request.embedding.isNotEmpty()) { "embedding must not be empty" }
         require(request.limit > 0) { "limit must be greater than 0" }
-        require(request.embedding.size == request.embeddingDimensions) {
+        require(request.embedding.size == request.embeddingModel.dimensions) {
             "embedding size must match embeddingDimensions"
         }
 
         return jdbcClient
             .sql(RETRIEVE_RELEVANT_CHUNKS_SQL)
             .param("embedding", request.embedding.toPgVector())
-            .param("embeddingModelId", request.embeddingModelId)
-            .param("embeddingModelVersion", request.embeddingModelVersion)
-            .param("embeddingDimensions", request.embeddingDimensions)
+            .param("embeddingModelId", request.embeddingModel.id)
+            .param("embeddingModelVersion", request.embeddingModel.version)
+            .param("embeddingDimensions", request.embeddingModel.dimensions)
             .param("chunkingStrategyVersion", request.chunkingStrategyVersion)
             .param("limit", request.limit)
             .query(::mapRelevantChunk)

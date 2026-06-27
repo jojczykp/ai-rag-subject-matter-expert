@@ -41,15 +41,13 @@ class OnnxEmbeddingClient private constructor(
         require(text.isNotBlank()) { "text must not be blank" }
 
         val values = model.embed(text)
-        require(values.size == properties.dimensions) {
-            "ONNX embedding dimensions ${values.size} did not match configured dimensions ${properties.dimensions}"
+        require(values.size == properties.metadata.dimensions) {
+            "ONNX embedding dimensions ${values.size} did not match configured dimensions ${properties.metadata.dimensions}"
         }
 
         return EmbeddingVector(
             values = values,
-            modelId = properties.id,
-            modelVersion = properties.version,
-            dimensions = properties.dimensions,
+            model = properties.metadata,
         )
     }
 
