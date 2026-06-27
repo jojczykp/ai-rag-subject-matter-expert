@@ -84,6 +84,23 @@ aisme:
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 ```
 
+If the files are missing, download the example embedding model from
+[BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5):
+
+```bash
+mkdir -p models/bge-small-en-v1.5
+curl -L \
+  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx \
+  -o models/bge-small-en-v1.5/model.onnx
+curl -L \
+  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json \
+  -o models/bge-small-en-v1.5/tokenizer.json
+```
+
+These files are local runtime assets. They are intentionally excluded from git
+because model binaries are large and can be replaced independently from
+application code.
+
 The ONNX client loads these files during startup, so the application fails fast
 when the configured model or tokenizer file is missing.
 
