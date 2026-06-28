@@ -48,7 +48,7 @@ All implementation items are TODO until delivered and verified.
 ## Milestone 3: Provider-Neutral Chat API
 
 - [x] Add provider-neutral chat request and response DTOs.
-- [ ] Add `AiModelClient` interface.
+- [x] Add `AiModelClient` interface.
 - [ ] Add fake model client for deterministic application-flow tests.
 - [ ] Add `ModelRegistry` backed by static `aisme.models` configuration.
 - [ ] Require `modelId` on chat requests.

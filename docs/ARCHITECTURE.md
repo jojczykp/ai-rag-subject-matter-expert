@@ -166,7 +166,7 @@ model for each request.
 `AiModelClient` is the internal provider-neutral interface. Each runtime gets
 an adapter that implements this interface.
 
-- [ ] Add `AiModelClient`.
+- [x] Add `AiModelClient`.
 - [x] Add request and response DTOs.
 - [ ] Add synchronous chat support.
 - [ ] Add structured error handling.
@@ -177,7 +177,7 @@ Draft interface:
 
 ```kotlin
 interface AiModelClient {
-    fun chat(request: ChatRequest): ChatResponse
+    fun chat(request: AiModelChatRequest): AiModelChatResponse
 }
 ```
 
