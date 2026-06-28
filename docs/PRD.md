@@ -239,7 +239,7 @@ Errors should use a consistent JSON shape:
 - [ ] Add integration tests for REST endpoints and the static document
       indexing/chat flow.
 - [ ] Add integration tests covering persistence and retrieval behavior.
-- [ ] Use fake model clients in tests.
+- [x] Use fake model clients in tests.
 - [ ] Maintain at least 80% unit test coverage.
 
 ## Acceptance Criteria

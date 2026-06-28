@@ -19,7 +19,7 @@ Use layered integration tests:
 - [ ] Testcontainers with an Ollama Docker container for Ollama integration
       tests.
 - [ ] Testcontainers MockServer for cloud and hosted provider protocol tests.
-- [ ] Fake model clients for application-flow integration tests where provider
+- [x] Fake model clients for application-flow integration tests where provider
       protocol behavior is not under test.
 
 Ollama container tests should be optional or tagged when model download/runtime
@@ -80,7 +80,7 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 
 - [ ] Add integration tests for REST endpoints.
 - [ ] Add integration tests for static document indexing and chat flow.
-- [ ] Use fake model clients to keep app-flow tests deterministic.
+- [x] Use fake model clients to keep app-flow tests deterministic.
 - [ ] Avoid real cloud, Ollama, or embedded model calls when the test is not
       verifying provider protocol behavior.
 

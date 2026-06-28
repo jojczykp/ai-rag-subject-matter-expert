@@ -138,5 +138,5 @@ Rationale:
 - [ ] Chat requests fail validation when `modelId` is missing.
 - [ ] Model responses use the provider-neutral availability states defined in
       this ADR.
-- [ ] Tests can use fake model clients for application flow and adapter-level
+- [x] Tests can use fake model clients for application flow and adapter-level
       tests for provider behavior.
