@@ -167,7 +167,7 @@ model for each request.
 an adapter that implements this interface.
 
 - [ ] Add `AiModelClient`.
-- [ ] Add request and response DTOs.
+- [x] Add request and response DTOs.
 - [ ] Add synchronous chat support.
 - [ ] Add structured error handling.
 - [ ] Add configurable timeout behavior.

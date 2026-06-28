@@ -136,7 +136,7 @@ Endpoint names are proposed and may be refined during technical design.
 - [ ] Request body includes `message`.
 - [ ] Request body includes `modelId`.
 - [ ] Response body includes `answer`.
-- [ ] Response body includes model metadata.
+- [ ] Response body includes `modelId`.
 - [ ] Response is returned as a single non-streaming JSON response.
 - [ ] The initial API does not create or update persisted chat history.
 
