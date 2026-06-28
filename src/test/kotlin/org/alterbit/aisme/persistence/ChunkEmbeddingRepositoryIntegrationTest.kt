@@ -83,13 +83,11 @@ class ChunkEmbeddingRepositoryIntegrationTest(
             }
             .single()
 
-        metadata shouldBe StoredEmbeddingMetadata(
-            modelId = EMBEDDING_MODEL_ID,
-            modelVersion = EMBEDDING_MODEL_VERSION,
-            dimensions = EMBEDDING_DIMENSIONS,
-            chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
-            storedDimensions = EMBEDDING_DIMENSIONS,
-        )
+        metadata.modelId shouldBe EMBEDDING_MODEL_ID
+        metadata.modelVersion shouldBe EMBEDDING_MODEL_VERSION
+        metadata.dimensions shouldBe EMBEDDING_DIMENSIONS
+        metadata.chunkingStrategyVersion shouldBe CHUNKING_STRATEGY_VERSION
+        metadata.storedDimensions shouldBe EMBEDDING_DIMENSIONS
     }
 
     private fun embedding(firstDimension: Double): List<Double> =

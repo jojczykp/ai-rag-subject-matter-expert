@@ -8,15 +8,15 @@ import org.junit.jupiter.api.Test
 class AiModelContextChunkTest {
     @Test
     fun `creates model context chunk`() {
-        AiModelContextChunk(
-            content = "Use two parts water for one part rice.",
-            resourcePath = "subject-documents/culinary_expert/rice.txt",
-            chunkIndex = 0,
-        ) shouldBe AiModelContextChunk(
+        val chunk = AiModelContextChunk(
             content = "Use two parts water for one part rice.",
             resourcePath = "subject-documents/culinary_expert/rice.txt",
             chunkIndex = 0,
         )
+
+        chunk.content shouldBe "Use two parts water for one part rice."
+        chunk.resourcePath shouldBe "subject-documents/culinary_expert/rice.txt"
+        chunk.chunkIndex shouldBe 0
     }
 
     @Test

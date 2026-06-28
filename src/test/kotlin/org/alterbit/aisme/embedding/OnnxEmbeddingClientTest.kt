@@ -59,10 +59,8 @@ class OnnxEmbeddingClientTest {
 
         val embedding = client.embed("hello")
 
-        embedding shouldBe EmbeddingVector(
-            values = listOf(0.6, 0.8),
-            model = metadata,
-        )
+        embedding.values shouldBe listOf(0.6, 0.8)
+        embedding.model shouldBe metadata
         model.embeddedTexts shouldBe listOf("hello")
     }
 

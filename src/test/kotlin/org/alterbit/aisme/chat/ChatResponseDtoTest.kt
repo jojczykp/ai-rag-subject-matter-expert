@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test
 class ChatResponseDtoTest {
     @Test
     fun `creates provider-neutral chat response`() {
-        ChatResponseDto(
-            modelId = "local-llama",
-            answer = "Use a two-to-one water to rice ratio.",
-        ) shouldBe ChatResponseDto(
+        val response = ChatResponseDto(
             modelId = "local-llama",
             answer = "Use a two-to-one water to rice ratio.",
         )
+
+        response.modelId shouldBe "local-llama"
+        response.answer shouldBe "Use a two-to-one water to rice ratio."
     }
 
     @Test

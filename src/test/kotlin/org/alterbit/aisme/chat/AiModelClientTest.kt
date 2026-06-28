@@ -19,10 +19,10 @@ class AiModelClientTest {
             ),
         )
 
-        client.chat(request) shouldBe AiModelChatResponse(
-            answer = "local-llama: How should I cook rice? (1 chunks)",
-            modelId = "local-llama",
-        )
+        val response = client.chat(request)
+
+        response.answer shouldBe "local-llama: How should I cook rice? (1 chunks)"
+        response.modelId shouldBe "local-llama"
     }
 
     private class EchoAiModelClient : AiModelClient {

@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test
 class AiModelChatResponseTest {
     @Test
     fun `creates provider-neutral model response`() {
-        AiModelChatResponse(
-            modelId = "local-llama",
-            answer = "Use a two-to-one water to rice ratio.",
-        ) shouldBe AiModelChatResponse(
+        val response = AiModelChatResponse(
             modelId = "local-llama",
             answer = "Use a two-to-one water to rice ratio.",
         )
+
+        response.modelId shouldBe "local-llama"
+        response.answer shouldBe "Use a two-to-one water to rice ratio."
     }
 
     @Test
