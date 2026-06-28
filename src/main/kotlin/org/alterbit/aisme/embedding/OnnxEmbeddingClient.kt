@@ -12,11 +12,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.Path
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("!no-db & !fake-embedding-client")
 class OnnxEmbeddingClient private constructor(
     private val properties: EmbeddingModelProperties,
     private val model: LoadedEmbeddingModel,

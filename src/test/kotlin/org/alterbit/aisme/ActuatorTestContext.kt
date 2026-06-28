@@ -1,0 +1,8 @@
+package org.alterbit.aisme
+
+import org.springframework.boot.SpringBootConfiguration
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+
+@SpringBootConfiguration
+@EnableAutoConfiguration
+class ActuatorTestContext

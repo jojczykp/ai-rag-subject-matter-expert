@@ -5,13 +5,13 @@ import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
 import org.alterbit.aisme.embedding.EmbeddingVector
+import org.alterbit.aisme.DatabaseTestContext
 import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SourceDocumentRepository
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.simple.JdbcClient
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -19,8 +19,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-@ActiveProfiles("skip-startup-indexing", "fake-embedding-client")
-@SpringBootTest
+@SpringBootTest(classes = [DatabaseTestContext::class])
 class SubjectDocumentIndexerIntegrationTest(
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,

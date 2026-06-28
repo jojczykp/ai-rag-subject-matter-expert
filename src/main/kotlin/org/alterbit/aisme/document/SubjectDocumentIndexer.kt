@@ -12,12 +12,10 @@ import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
 import org.alterbit.aisme.persistence.SourceDocumentRecord
 import org.alterbit.aisme.persistence.SourceDocumentRepository
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-@Profile("!no-db")
 class SubjectDocumentIndexer(
     private val documentsProperties: SubjectDocumentsProperties,
     private val embeddingModelProperties: EmbeddingModelProperties,

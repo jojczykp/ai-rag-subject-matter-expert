@@ -3,12 +3,10 @@ package org.alterbit.aisme.persistence
 import java.sql.Timestamp
 import java.util.UUID
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
-import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("!no-db")
 class ChunkEmbeddingRepository(
     private val jdbcClient: JdbcClient,
 ) {

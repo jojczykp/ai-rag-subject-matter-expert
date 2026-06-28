@@ -2,12 +2,10 @@ package org.alterbit.aisme.retrieval
 
 import java.sql.ResultSet
 import java.util.UUID
-import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("!no-db")
 class RelevantChunkRetriever(
     private val jdbcClient: JdbcClient,
 ) {
