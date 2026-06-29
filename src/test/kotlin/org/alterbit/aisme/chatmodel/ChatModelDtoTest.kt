@@ -31,10 +31,24 @@ class ChatModelDtoTest {
         dto.promptsMayLeaveLocalMachine shouldBe true
     }
 
+    @Test
+    fun `maps all supported availability states`() {
+        ChatModelAvailability.entries.forEach { availability ->
+            val dto = descriptor(
+                mode = ChatModelMode.LOCAL_SERVER,
+                availableOffline = false,
+                availability = availability,
+            ).toDto()
+
+            dto.availability shouldBe availability
+        }
+    }
+
     private fun descriptor(
         runtime: ChatModelRuntime = ChatModelRuntime.OLLAMA,
         mode: ChatModelMode,
         availableOffline: Boolean,
+        availability: ChatModelAvailability = ChatModelAvailability.CONFIGURED,
     ): ChatModelDescriptor =
         ChatModelDescriptor(
             id = "local-ollama-llama",
@@ -42,7 +56,7 @@ class ChatModelDtoTest {
             runtime = runtime,
             mode = mode,
             availableOffline = availableOffline,
-            availability = ChatModelAvailability.CONFIGURED,
+            availability = availability,
             baseUrl = "http://localhost:11434",
         )
 }

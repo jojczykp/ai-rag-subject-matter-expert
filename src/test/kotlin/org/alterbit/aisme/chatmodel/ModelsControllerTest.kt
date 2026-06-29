@@ -65,6 +65,9 @@ class ModelsControllerTest(
                 jsonPath("$.models[1].id") {
                     value("cloud-gpt")
                 }
+                jsonPath("$.models[1].availability") {
+                    value("CONFIGURED")
+                }
                 jsonPath("$.models[1].promptsMayLeaveLocalMachine") {
                     value(true)
                 }

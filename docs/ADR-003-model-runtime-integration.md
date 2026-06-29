@@ -100,14 +100,16 @@ this Spring Boot backend.
 
 ## Model Availability States
 
-Use these provider-neutral availability states in model responses:
+Use these provider-neutral availability states in model responses. Until runtime
+availability checks are implemented, configured models are reported as
+`CONFIGURED`.
 
-- [ ] `CONFIGURED`: model is configured, but runtime availability has not been
+- [x] `CONFIGURED`: model is configured, but runtime availability has not been
       confirmed.
-- [ ] `AVAILABLE`: model passed the current availability check.
-- [ ] `UNAVAILABLE`: model is configured but the runtime is not reachable or
+- [x] `AVAILABLE`: model passed the current availability check.
+- [x] `UNAVAILABLE`: model is configured but the runtime is not reachable or
       not currently usable.
-- [ ] `MISCONFIGURED`: required model configuration is missing or invalid.
+- [x] `MISCONFIGURED`: required model configuration is missing or invalid.
 
 ## Configuration Shape
 
@@ -151,7 +153,7 @@ Rationale:
       runtime mode, availability, and user-facing labels.
 - [x] `ChatModelRegistry` reads configured models from `aisme.chat-models`.
 - [x] Chat requests fail validation when `modelId` is missing.
-- [ ] Model responses use the provider-neutral availability states defined in
+- [x] Model responses use the provider-neutral availability states defined in
       this ADR.
 - [x] Tests can use fake model clients for application flow and adapter-level
       tests for provider behavior.

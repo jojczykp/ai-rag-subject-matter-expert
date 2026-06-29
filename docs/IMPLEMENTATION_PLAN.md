@@ -56,7 +56,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add `POST /chat`.
 - [x] Add `AiChatService`.
 - [x] Add model availability status and privacy labels to model responses.
-- [ ] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
+- [x] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
       model availability states.
 - [ ] Add consistent error responses with `code`, `message`, and optional
       `details`.
