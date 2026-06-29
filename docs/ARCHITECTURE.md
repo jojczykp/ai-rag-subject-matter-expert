@@ -58,7 +58,7 @@ the accepted runtime integration decision.
 
 ```text
 User model selection
-  -> ModelRegistry
+  -> ChatModelRegistry
   -> AiChatService
   -> RelevantChunkRetriever
   -> AiModelClient
@@ -76,14 +76,14 @@ model runtimes. Runtime-specific decisions are documented in
 
 ## Core Components
 
-### ModelRegistry
+### ChatModelRegistry
 
 The model registry is the source of truth for available models. It should know
 which models are configured, which are currently available, and what each model
 can do. The initial subject is implicit and represented by the bundled resource
 documents.
 
-- [x] Add `ModelRegistry`.
+- [x] Add `ChatModelRegistry`.
 - [x] Add static configuration for known models.
 - [ ] Add runtime availability checks.
 - [ ] Add model capability metadata.
@@ -95,30 +95,30 @@ documents.
 Example model descriptor:
 
 ```kotlin
-data class ModelDescriptor(
+data class ChatModelDescriptor(
     val id: String,
     val displayName: String,
-    val runtime: ModelRuntime,
-    val mode: ModelMode,
+    val runtime: ChatModelRuntime,
+    val mode: ChatModelMode,
     val availableOffline: Boolean,
-    val availability: ModelAvailability,
+    val availability: ChatModelAvailability,
     val baseUrl: String?,
 )
 
-enum class ModelRuntime {
+enum class ChatModelRuntime {
     SPRING_AI,
     OLLAMA,
     HUGGING_FACE_ENDPOINT,
     EMBEDDED_OFFLINE,
 }
 
-enum class ModelMode {
+enum class ChatModelMode {
     ONLINE,
     LOCAL_SERVER,
     EMBEDDED_OFFLINE,
 }
 
-enum class ModelAvailability {
+enum class ChatModelAvailability {
     CONFIGURED,
     AVAILABLE,
     UNAVAILABLE,
@@ -138,7 +138,7 @@ documents.
 - [ ] Require a selected model id with each chat request.
 - [ ] Retrieve relevant chunks from the single configured subject's bundled
       resource documents.
-- [ ] Resolve the selected model through `ModelRegistry`.
+- [ ] Resolve the selected model through `ChatModelRegistry`.
 - [ ] Route chat requests to the matching `AiModelClient`.
 - [ ] Return provider-neutral responses.
 - [ ] Add tests for model selection and routing.
@@ -230,7 +230,7 @@ Configuration should make model availability and runtime mode explicit.
 - [ ] Add `application-local.yml` for local server models.
 - [ ] Add `application-cloud.yml` for cloud-hosted models.
 - [ ] Add `application-offline.yml` for embedded offline models.
-- [ ] Add configuration properties for `aisme.models`.
+- [ ] Add configuration properties for `aisme.chat-models`.
 - [ ] Add environment variable support for cloud credentials.
 - [ ] Add validation for missing required provider settings.
 - [ ] Document all configuration properties in README.md.
@@ -246,7 +246,7 @@ spring:
 ```yaml
 aisme:
   documents-location: classpath:/subject-documents/
-  models:
+  chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama
       runtime: OLLAMA
@@ -311,7 +311,7 @@ integration tests should use Docker-backed services or HTTP protocol mocks. See
 for the accepted integration testing decision.
 
 - [ ] Unit test static resource document discovery.
-- [ ] Unit test `ModelRegistry`.
+- [ ] Unit test `ChatModelRegistry`.
 - [ ] Unit test `AiChatService` routing.
 - [ ] Add Spring Boot configuration tests for each profile.
 - [ ] Add integration tests for REST endpoints and the static document

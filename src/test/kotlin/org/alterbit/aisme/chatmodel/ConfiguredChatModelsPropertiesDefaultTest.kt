@@ -1,4 +1,4 @@
-package org.alterbit.aisme.model
+package org.alterbit.aisme.chatmodel
 
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -7,27 +7,27 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class ConfiguredModelsPropertiesDefaultTest {
+class ConfiguredChatModelsPropertiesDefaultTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
     fun `uses default configured model`() {
         contextRunner.run { context ->
-            val properties = context.getBean(ConfiguredModelsProperties::class.java)
+            val properties = context.getBean(ConfiguredChatModelsProperties::class.java)
 
-            properties.models shouldHaveSize 1
-            val model = properties.models.single()
+            properties.chatModels shouldHaveSize 1
+            val model = properties.chatModels.single()
             model.id shouldBe "local-ollama-llama"
             model.displayName shouldBe "Local Ollama Llama"
-            model.runtime shouldBe ModelRuntime.OLLAMA
-            model.mode shouldBe ModelMode.LOCAL_SERVER
+            model.runtime shouldBe ChatModelRuntime.OLLAMA
+            model.mode shouldBe ChatModelMode.LOCAL_SERVER
             model.availableOffline shouldBe false
             model.baseUrl shouldBe "http://localhost:11434"
         }
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(ConfiguredModelsProperties::class)
+    @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
     private class PropertiesConfiguration
 }

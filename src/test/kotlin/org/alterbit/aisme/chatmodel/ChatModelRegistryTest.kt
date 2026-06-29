@@ -1,4 +1,4 @@
-package org.alterbit.aisme.model
+package org.alterbit.aisme.chatmodel
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldHaveSize
@@ -6,32 +6,32 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class ModelRegistryTest {
+class ChatModelRegistryTest {
     @Test
     fun `lists configured models in configuration order`() {
-        val registry = ModelRegistry(
-            ConfiguredModelsProperties(
-                models = listOf(
+        val registry = ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                chatModels = listOf(
                     configuredModel(id = "first-model"),
                     configuredModel(id = "second-model"),
                 ),
             ),
         )
 
-        val models = registry.models()
+        val chatModels = registry.chatModels()
 
-        models shouldHaveSize 2
-        models[0].id shouldBe "first-model"
-        models[1].id shouldBe "second-model"
-        models[0].availability shouldBe ModelAvailability.CONFIGURED
-        models[1].availability shouldBe ModelAvailability.CONFIGURED
+        chatModels shouldHaveSize 2
+        chatModels[0].id shouldBe "first-model"
+        chatModels[1].id shouldBe "second-model"
+        chatModels[0].availability shouldBe ChatModelAvailability.CONFIGURED
+        chatModels[1].availability shouldBe ChatModelAvailability.CONFIGURED
     }
 
     @Test
     fun `finds configured model by id`() {
-        val registry = ModelRegistry(
-            ConfiguredModelsProperties(
-                models = listOf(
+        val registry = ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                chatModels = listOf(
                     configuredModel(id = "local-ollama-llama"),
                 ),
             ),
@@ -41,23 +41,23 @@ class ModelRegistryTest {
 
         model?.id shouldBe "local-ollama-llama"
         model?.displayName shouldBe "Local Ollama Llama"
-        model?.runtime shouldBe ModelRuntime.OLLAMA
-        model?.mode shouldBe ModelMode.LOCAL_SERVER
+        model?.runtime shouldBe ChatModelRuntime.OLLAMA
+        model?.mode shouldBe ChatModelMode.LOCAL_SERVER
         model?.availableOffline shouldBe false
-        model?.availability shouldBe ModelAvailability.CONFIGURED
+        model?.availability shouldBe ChatModelAvailability.CONFIGURED
         model?.baseUrl shouldBe "http://localhost:11434"
     }
 
     @Test
     fun `returns null when configured model is not found`() {
-        val registry = ModelRegistry(ConfiguredModelsProperties())
+        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
         registry.findById("missing-model") shouldBe null
     }
 
     @Test
     fun `requires configured model by id`() {
-        val registry = ModelRegistry(ConfiguredModelsProperties())
+        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
         val model = registry.requireById("local-ollama-llama")
 
@@ -66,9 +66,9 @@ class ModelRegistryTest {
 
     @Test
     fun `throws when required model is not found`() {
-        val registry = ModelRegistry(ConfiguredModelsProperties())
+        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
-        val exception = shouldThrow<ModelNotFoundException> {
+        val exception = shouldThrow<ChatModelNotFoundException> {
             registry.requireById("missing-model")
         }
 
@@ -78,18 +78,18 @@ class ModelRegistryTest {
     @Test
     fun `rejects empty configured model list`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ModelRegistry(ConfiguredModelsProperties(models = emptyList()))
+            ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = emptyList()))
         }
 
-        exception.message shouldContain "aisme.models"
+        exception.message shouldContain "aisme.chat-models"
     }
 
     @Test
     fun `rejects duplicate configured model ids`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ModelRegistry(
-                ConfiguredModelsProperties(
-                    models = listOf(
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
                         configuredModel(id = "duplicate-model"),
                         configuredModel(id = "duplicate-model"),
                     ),
@@ -100,12 +100,12 @@ class ModelRegistryTest {
         exception.message shouldContain "duplicate"
     }
 
-    private fun configuredModel(id: String): ConfiguredModelProperties =
-        ConfiguredModelProperties(
+    private fun configuredModel(id: String): ConfiguredChatModelProperties =
+        ConfiguredChatModelProperties(
             id = id,
             displayName = "Local Ollama Llama",
-            runtime = ModelRuntime.OLLAMA,
-            mode = ModelMode.LOCAL_SERVER,
+            runtime = ChatModelRuntime.OLLAMA,
+            mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
             baseUrl = "http://localhost:11434",
         )

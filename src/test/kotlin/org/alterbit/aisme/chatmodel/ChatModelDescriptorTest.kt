@@ -1,29 +1,29 @@
-package org.alterbit.aisme.model
+package org.alterbit.aisme.chatmodel
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class ModelDescriptorTest {
+class ChatModelDescriptorTest {
     @Test
     fun `creates model descriptor`() {
-        val descriptor = ModelDescriptor(
+        val descriptor = ChatModelDescriptor(
             id = "local-ollama-llama",
             displayName = "Local Ollama Llama",
-            runtime = ModelRuntime.OLLAMA,
-            mode = ModelMode.LOCAL_SERVER,
+            runtime = ChatModelRuntime.OLLAMA,
+            mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
-            availability = ModelAvailability.CONFIGURED,
+            availability = ChatModelAvailability.CONFIGURED,
             baseUrl = "http://localhost:11434",
         )
 
         descriptor.id shouldBe "local-ollama-llama"
         descriptor.displayName shouldBe "Local Ollama Llama"
-        descriptor.runtime shouldBe ModelRuntime.OLLAMA
-        descriptor.mode shouldBe ModelMode.LOCAL_SERVER
+        descriptor.runtime shouldBe ChatModelRuntime.OLLAMA
+        descriptor.mode shouldBe ChatModelMode.LOCAL_SERVER
         descriptor.availableOffline shouldBe false
-        descriptor.availability shouldBe ModelAvailability.CONFIGURED
+        descriptor.availability shouldBe ChatModelAvailability.CONFIGURED
         descriptor.baseUrl shouldBe "http://localhost:11434"
     }
 
@@ -58,14 +58,14 @@ class ModelDescriptorTest {
         id: String = "local-ollama-llama",
         displayName: String = "Local Ollama Llama",
         baseUrl: String? = "http://localhost:11434",
-    ): ModelDescriptor =
-        ModelDescriptor(
+    ): ChatModelDescriptor =
+        ChatModelDescriptor(
             id = id,
             displayName = displayName,
-            runtime = ModelRuntime.OLLAMA,
-            mode = ModelMode.LOCAL_SERVER,
+            runtime = ChatModelRuntime.OLLAMA,
+            mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
-            availability = ModelAvailability.CONFIGURED,
+            availability = ChatModelAvailability.CONFIGURED,
             baseUrl = baseUrl,
         )
 }

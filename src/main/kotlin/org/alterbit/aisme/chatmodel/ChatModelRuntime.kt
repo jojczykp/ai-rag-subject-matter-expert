@@ -1,6 +1,6 @@
-package org.alterbit.aisme.model
+package org.alterbit.aisme.chatmodel
 
-enum class ModelRuntime {
+enum class ChatModelRuntime {
     SPRING_AI,
     OLLAMA,
     HUGGING_FACE_ENDPOINT,

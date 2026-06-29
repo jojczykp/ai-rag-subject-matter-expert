@@ -1,12 +1,12 @@
-package org.alterbit.aisme.model
+package org.alterbit.aisme.chatmodel
 
-data class ModelDescriptor(
+data class ChatModelDescriptor(
     val id: String,
     val displayName: String,
-    val runtime: ModelRuntime,
-    val mode: ModelMode,
+    val runtime: ChatModelRuntime,
+    val mode: ChatModelMode,
     val availableOffline: Boolean,
-    val availability: ModelAvailability,
+    val availability: ChatModelAvailability,
     val baseUrl: String?,
 ) {
     init {

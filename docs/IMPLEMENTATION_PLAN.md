@@ -50,7 +50,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add provider-neutral chat request and response DTOs.
 - [x] Add `AiModelClient` interface.
 - [x] Add fake model client for deterministic application-flow tests.
-- [x] Add `ModelRegistry` backed by static `aisme.models` configuration.
+- [x] Add `ChatModelRegistry` backed by static `aisme.chat-models` configuration.
 - [ ] Require `modelId` on chat requests.
 - [ ] Add `GET /models`.
 - [ ] Add `POST /chat`.

@@ -21,7 +21,7 @@ adapters behind the internal `AiModelClient` interface.
 
 Configured models are defined statically in application configuration. Chat
 requests must include `modelId`; there is no default chat model in the initial
-scope. The model list is configured directly under `aisme.models`.
+scope. The model list is configured directly under `aisme.chat-models`.
 
 Runtime integration follows the component flow documented in
 [Architecture](ARCHITECTURE.md).
@@ -100,7 +100,7 @@ Use a direct list for configured models:
 
 ```yaml
 aisme:
-  models:
+  chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama
       runtime: OLLAMA
@@ -132,9 +132,9 @@ Rationale:
 - [ ] Controllers and use-case services depend on internal DTOs and
       `AiModelClient`, not provider SDKs.
 - [ ] Provider-specific classes stay outside controller and domain code.
-- [x] `ModelRegistry` becomes the source of truth for configured models,
+- [x] `ChatModelRegistry` becomes the source of truth for configured models,
       runtime mode, availability, and user-facing labels.
-- [x] `ModelRegistry` reads configured models from `aisme.models`.
+- [x] `ChatModelRegistry` reads configured models from `aisme.chat-models`.
 - [ ] Chat requests fail validation when `modelId` is missing.
 - [ ] Model responses use the provider-neutral availability states defined in
       this ADR.
