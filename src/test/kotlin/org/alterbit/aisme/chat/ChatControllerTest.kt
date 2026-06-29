@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chat
 
+import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
 import org.junit.jupiter.api.Test
@@ -50,6 +51,77 @@ class ChatControllerTest(
             }
         }
     }
+
+    @Test
+    fun `returns consistent error when model id is missing`() {
+        mockMvc.post("/chat") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """
+                {
+                  "message": "How should I cook rice?"
+                }
+            """.trimIndent()
+        }.andExpect {
+            status { isBadRequest() }
+            jsonPath("$.code") {
+                value("INVALID_REQUEST")
+            }
+            jsonPath("$.message") {
+                value("Request body is invalid.")
+            }
+            jsonPath("$.details.reason") {
+                exists()
+            }
+        }
+    }
+
+    @Test
+    fun `returns consistent error when message is blank`() {
+        mockMvc.post("/chat") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """
+                {
+                  "modelId": "local-ollama-llama",
+                  "message": " "
+                }
+            """.trimIndent()
+        }.andExpect {
+            status { isBadRequest() }
+            jsonPath("$.code") {
+                value("INVALID_REQUEST")
+            }
+            jsonPath("$.message") {
+                value("Request body is invalid.")
+            }
+            jsonPath("$.details.reason") {
+                exists()
+            }
+        }
+    }
+
+    @Test
+    fun `returns consistent error when model is not configured`() {
+        mockMvc.post("/chat") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """
+                {
+                  "modelId": "missing-model",
+                  "message": "How should I cook rice?"
+                }
+            """.trimIndent()
+        }.andExpect {
+            status { isNotFound() }
+            jsonPath("$.code") {
+                value("MODEL_NOT_FOUND")
+            }
+            jsonPath("$.message") {
+                value("Configured chat model was not found.")
+            }
+            jsonPath("$.details.modelId") {
+                value("missing-model")
+            }
+        }
+    }
 }
 
 @SpringBootConfiguration
@@ -57,6 +129,7 @@ class ChatControllerTest(
 @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
 @Import(
     AiChatService::class,
+    ApiExceptionHandler::class,
     ChatController::class,
     ChatModelRegistry::class,
     ChatControllerTestConfiguration::class,

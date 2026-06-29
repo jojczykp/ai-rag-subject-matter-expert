@@ -1,3 +1,5 @@
 package org.alterbit.aisme.chat
 
-class AiModelClientNotFoundException(modelId: String) : RuntimeException("AI model client not found: $modelId")
+class AiModelClientNotFoundException(
+    val modelId: String,
+) : RuntimeException("AI model client not found: $modelId")

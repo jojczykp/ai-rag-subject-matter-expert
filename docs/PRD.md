@@ -196,8 +196,8 @@ Errors should use a consistent JSON shape:
 
 ### Reliability
 
-- [ ] Return consistent error response shapes.
-- [ ] Error responses include `code`, `message`, and optional `details`.
+- [x] Return consistent error response shapes.
+- [x] Error responses include `code`, `message`, and optional `details`.
 - [ ] Handle model provider failures gracefully.
 - [ ] Keep service health independent from model availability.
 

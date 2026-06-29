@@ -58,7 +58,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add model availability status and privacy labels to model responses.
 - [x] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
       model availability states.
-- [ ] Add consistent error responses with `code`, `message`, and optional
+- [x] Add consistent error responses with `code`, `message`, and optional
       `details`.
 - [ ] Add configurable chat timeout with `60s` default.
 - [ ] Add configurable model availability timeout with `5s` default.
