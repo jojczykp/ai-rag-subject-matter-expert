@@ -56,20 +56,20 @@ class ChatModelRegistryTest {
     }
 
     @Test
-    fun `requires configured model by id`() {
+    fun `gets configured model by id or throws`() {
         val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
-        val model = registry.requireById("local-ollama-llama")
+        val model = registry.getByIdOrThrow("local-ollama-llama")
 
         model.id shouldBe "local-ollama-llama"
     }
 
     @Test
-    fun `throws when required model is not found`() {
+    fun `throws when getting missing configured model by id`() {
         val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
         val exception = shouldThrow<ChatModelNotFoundException> {
-            registry.requireById("missing-model")
+            registry.getByIdOrThrow("missing-model")
         }
 
         exception.message shouldContain "missing-model"

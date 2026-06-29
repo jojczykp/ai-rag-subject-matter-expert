@@ -20,6 +20,6 @@ class ChatModelRegistry(
     fun findById(modelId: String): ChatModelDescriptor? =
         modelsById[modelId]
 
-    fun requireById(modelId: String): ChatModelDescriptor =
+    fun getByIdOrThrow(modelId: String): ChatModelDescriptor =
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 }

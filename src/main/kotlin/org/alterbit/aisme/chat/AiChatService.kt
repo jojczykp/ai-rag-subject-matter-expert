@@ -17,11 +17,11 @@ class AiChatService(
         .associateBy { it.modelId }
 
     fun chat(request: ChatRequestDto): ChatResponseDto {
-        chatModelRegistry.requireById(request.modelId)
+        val chatModel = chatModelRegistry.getByIdOrThrow(request.modelId)
 
-        val modelResponse = aiModelClient(request.modelId).chat(
+        val modelResponse = aiModelClientByModelIdOrThrow(chatModel.id).chat(
             AiModelChatRequest(
-                modelId = request.modelId,
+                modelId = chatModel.id,
                 message = request.message,
                 contextChunks = emptyList(),
             ),
@@ -33,6 +33,6 @@ class AiChatService(
         )
     }
 
-    private fun aiModelClient(modelId: String): AiModelClient =
+    private fun aiModelClientByModelIdOrThrow(modelId: String): AiModelClient =
         aiModelClientsByModelId[modelId] ?: throw AiModelClientNotFoundException(modelId)
 }
