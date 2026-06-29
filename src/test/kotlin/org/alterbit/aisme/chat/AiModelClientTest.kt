@@ -21,11 +21,14 @@ class AiModelClientTest {
 
         val response = client.chat(request)
 
+        client.modelId shouldBe "local-llama"
         response.answer shouldBe "local-llama: How should I cook rice? (1 chunks)"
         response.modelId shouldBe "local-llama"
     }
 
     private class EchoAiModelClient : AiModelClient {
+        override val modelId: String = "local-llama"
+
         override fun chat(request: AiModelChatRequest): AiModelChatResponse =
             AiModelChatResponse(
                 answer = "${request.modelId}: ${request.message} (${request.contextChunks.size} chunks)",

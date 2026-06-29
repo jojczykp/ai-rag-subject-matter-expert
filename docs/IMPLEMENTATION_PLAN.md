@@ -53,8 +53,8 @@ All implementation items are TODO until delivered and verified.
 - [x] Add `ChatModelRegistry` backed by static `aisme.chat-models` configuration.
 - [x] Require `modelId` on chat requests.
 - [x] Add `GET /models`.
-- [ ] Add `POST /chat`.
-- [ ] Add `AiChatService`.
+- [x] Add `POST /chat`.
+- [x] Add `AiChatService`.
 - [x] Add model availability status and privacy labels to model responses.
 - [ ] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
       model availability states.

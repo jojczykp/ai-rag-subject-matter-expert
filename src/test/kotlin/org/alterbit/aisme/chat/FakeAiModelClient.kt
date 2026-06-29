@@ -1,6 +1,7 @@
 package org.alterbit.aisme.chat
 
 class FakeAiModelClient(
+    override val modelId: String = "local-ollama-llama",
     private val responseFactory: (AiModelChatRequest) -> AiModelChatResponse = ::defaultResponse,
 ) : AiModelClient {
     private val recordedRequests = mutableListOf<AiModelChatRequest>()

@@ -17,6 +17,7 @@ class FakeAiModelClientTest {
             ),
         )
 
+        client.modelId shouldBe "local-ollama-llama"
         response.answer shouldBe "Fake answer for: How should I cook rice?"
         response.modelId shouldBe "local-llama"
     }
@@ -35,7 +36,9 @@ class FakeAiModelClientTest {
 
     @Test
     fun `uses custom response factory`() {
-        val client = FakeAiModelClient { request ->
+        val client = FakeAiModelClient(
+            modelId = "local-llama",
+        ) { request ->
             AiModelChatResponse(
                 answer = "Context chunks: ${request.contextChunks.size}",
                 modelId = request.modelId,

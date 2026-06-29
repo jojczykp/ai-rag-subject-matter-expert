@@ -24,7 +24,7 @@ Initial scope:
 - [ ] Store bundled documents under a resource folder such as
       `src/main/resources/subject-documents/`.
 - [ ] Support plain text `.txt` documents as the first input format.
-- [ ] Provide `POST /chat` for asking questions.
+- [x] Provide `POST /chat` for asking questions.
 - [x] Provide `GET /models` for listing configured models.
 - [ ] Do not provide `/subjects` endpoints.
 - [ ] Do not provide `/documents` endpoints.

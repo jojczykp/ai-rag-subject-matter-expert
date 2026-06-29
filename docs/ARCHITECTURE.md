@@ -134,13 +134,13 @@ the initial product scope, it routes every chat request through the single
 configured subject and relevant chunks retrieved from bundled resource
 documents.
 
-- [ ] Add `AiChatService`.
+- [x] Add `AiChatService`.
 - [x] Require a selected model id with each chat request.
 - [ ] Retrieve relevant chunks from the single configured subject's bundled
       resource documents.
-- [ ] Resolve the selected model through `ChatModelRegistry`.
-- [ ] Route chat requests to the matching `AiModelClient`.
-- [ ] Return provider-neutral responses.
+- [x] Resolve the selected model through `ChatModelRegistry`.
+- [x] Route chat requests to the matching `AiModelClient`.
+- [x] Return provider-neutral responses.
 - [ ] Add tests for model selection and routing.
 
 ### StaticSubjectDocumentService

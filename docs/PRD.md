@@ -132,12 +132,12 @@ Endpoint names are proposed and may be refined during technical design.
 
 ### Chat API
 
-- [ ] `POST /chat` asks a question against the configured subject.
-- [ ] Request body includes `message`.
+- [x] `POST /chat` asks a question against the configured subject.
+- [x] Request body includes `message`.
 - [x] Request body includes `modelId`.
-- [ ] Response body includes `answer`.
-- [ ] Response body includes `modelId`.
-- [ ] Response is returned as a single non-streaming JSON response.
+- [x] Response body includes `answer`.
+- [x] Response body includes `modelId`.
+- [x] Response is returned as a single non-streaming JSON response.
 - [ ] The initial API does not create or update persisted chat history.
 
 ### Model API
@@ -177,7 +177,7 @@ Errors should use a consistent JSON shape:
 
 ### Subject-Aware Chat
 
-- [ ] Require a non-empty user message.
+- [x] Require a non-empty user message.
 - [ ] Use only bundled documents from the predefined subject.
 - [ ] Retrieve only the chunks relevant to the user's message.
 - [ ] Return a useful response when no documents are configured.
@@ -187,7 +187,7 @@ Errors should use a consistent JSON shape:
 ### Model Selection
 
 - [x] Require `modelId` for chat requests.
-- [ ] Validate requested `modelId`.
+- [x] Validate requested `modelId`.
 - [x] Return a validation error when `modelId` is missing.
 - [ ] Allow model availability to vary by environment.
 - [ ] Support future online, local server, and embedded offline model runtimes.

@@ -144,7 +144,7 @@ Rationale:
 
 ## Consequences
 
-- [ ] Controllers and use-case services depend on internal DTOs and
+- [x] Controllers and use-case services depend on internal DTOs and
       `AiModelClient`, not provider SDKs.
 - [ ] Provider-specific classes stay outside controller and domain code.
 - [x] `ChatModelRegistry` becomes the source of truth for configured models,
