@@ -92,6 +92,17 @@ documents.
 - [ ] Add user-facing descriptions.
 - [ ] Add tests for model discovery and filtering.
 
+Runtime availability checks should be delegated to a separate
+`ChatModelAvailabilityService`, not implemented directly in the registry or
+controller. `ChatModelRegistry` should keep owning configured model metadata,
+while availability checkers enrich descriptors with current runtime state for
+`GET /models` and chat validation. Provider-specific checkers should stay behind
+that service, for example Ollama, cloud, and embedded-runtime checkers.
+`GET /models` should use availability checks to inform callers; `POST /chat`
+should enforce that the selected model is usable before calling it. Short-lived
+availability caching can be added inside `ChatModelAvailabilityService` if
+checks become slow or noisy.
+
 Example model descriptor:
 
 ```kotlin
