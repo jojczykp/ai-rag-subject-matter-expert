@@ -83,12 +83,13 @@ which models are configured, which are currently available, and what each model
 can do. The initial subject is implicit and represented by the bundled resource
 documents.
 
-- [ ] Add `ModelRegistry`.
-- [ ] Add static configuration for known models.
+- [x] Add `ModelRegistry`.
+- [x] Add static configuration for known models.
 - [ ] Add runtime availability checks.
 - [ ] Add model capability metadata.
-- [ ] Add online/offline mode metadata.
-- [ ] Add user-facing display names and descriptions.
+- [x] Add online/offline mode metadata.
+- [x] Add user-facing display names.
+- [ ] Add user-facing descriptions.
 - [ ] Add tests for model discovery and filtering.
 
 Example model descriptor:
@@ -100,6 +101,8 @@ data class ModelDescriptor(
     val runtime: ModelRuntime,
     val mode: ModelMode,
     val availableOffline: Boolean,
+    val availability: ModelAvailability,
+    val baseUrl: String?,
 )
 
 enum class ModelRuntime {
@@ -113,6 +116,13 @@ enum class ModelMode {
     ONLINE,
     LOCAL_SERVER,
     EMBEDDED_OFFLINE,
+}
+
+enum class ModelAvailability {
+    CONFIGURED,
+    AVAILABLE,
+    UNAVAILABLE,
+    MISCONFIGURED,
 }
 ```
 

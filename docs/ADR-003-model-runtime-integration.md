@@ -125,16 +125,16 @@ aisme:
 Rationale:
 
 - [ ] `modelId` is required on chat requests, so a default model is not needed.
-- [ ] The current model registry only needs a list of configured models.
+- [x] The current model registry only needs a list of configured models.
 
 ## Consequences
 
 - [ ] Controllers and use-case services depend on internal DTOs and
       `AiModelClient`, not provider SDKs.
 - [ ] Provider-specific classes stay outside controller and domain code.
-- [ ] `ModelRegistry` becomes the source of truth for configured models,
+- [x] `ModelRegistry` becomes the source of truth for configured models,
       runtime mode, availability, and user-facing labels.
-- [ ] `ModelRegistry` reads configured models from `aisme.models`.
+- [x] `ModelRegistry` reads configured models from `aisme.models`.
 - [ ] Chat requests fail validation when `modelId` is missing.
 - [ ] Model responses use the provider-neutral availability states defined in
       this ADR.
