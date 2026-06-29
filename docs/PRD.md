@@ -142,12 +142,12 @@ Endpoint names are proposed and may be refined during technical design.
 
 ### Model API
 
-- [ ] `GET /models` lists available models.
-- [ ] Model list indicates online, local server, or embedded offline mode.
-- [ ] Model list indicates availability status.
-- [ ] Model availability status is one of `CONFIGURED`, `AVAILABLE`,
+- [x] `GET /models` lists available models.
+- [x] Model list indicates online, local server, or embedded offline mode.
+- [x] Model list indicates availability status.
+- [x] Model availability status is one of `CONFIGURED`, `AVAILABLE`,
       `UNAVAILABLE`, or `MISCONFIGURED`.
-- [ ] Model list indicates whether prompts may leave the local machine.
+- [x] Model list indicates whether prompts may leave the local machine.
 
 ### Error Responses
 

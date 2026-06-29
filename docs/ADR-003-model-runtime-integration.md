@@ -35,7 +35,7 @@ Runtime integration follows the component flow documented in
 - [ ] Support Hugging Face Inference Endpoint / TGI.
 - [ ] Configure credentials through environment variables or secret storage.
 - [ ] Return clear errors for missing API keys or unavailable endpoints.
-- [ ] Mark online models so users know prompts may leave the local machine.
+- [x] Mark online models so users know prompts may leave the local machine.
 
 ### Local Server
 

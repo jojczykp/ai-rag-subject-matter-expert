@@ -271,9 +271,9 @@ aisme:
 Users should understand whether a model requires network access and whether
 their data leaves the local machine.
 
-- [ ] Show all configured models.
-- [ ] Show model availability status.
-- [ ] Label models as online, local server, or embedded offline.
+- [x] Show all configured models.
+- [x] Show model availability status.
+- [x] Label models as online, local server, or embedded offline.
 - [ ] Warn before sending prompts to online providers.
 - [ ] Explain when a local model server is unavailable.
 - [ ] Explain when an embedded model cannot be loaded.

@@ -52,10 +52,10 @@ All implementation items are TODO until delivered and verified.
 - [x] Add fake model client for deterministic application-flow tests.
 - [x] Add `ChatModelRegistry` backed by static `aisme.chat-models` configuration.
 - [x] Require `modelId` on chat requests.
-- [ ] Add `GET /models`.
+- [x] Add `GET /models`.
 - [ ] Add `POST /chat`.
 - [ ] Add `AiChatService`.
-- [ ] Add model availability status and privacy labels to model responses.
+- [x] Add model availability status and privacy labels to model responses.
 - [ ] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
       model availability states.
 - [ ] Add consistent error responses with `code`, `message`, and optional
