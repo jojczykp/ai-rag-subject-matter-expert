@@ -62,6 +62,10 @@ All implementation items are TODO until delivered and verified.
       `details`.
 - [ ] Add configurable chat timeout with `60s` default.
 - [ ] Add configurable model availability timeout with `5s` default.
+- [ ] Add `ChatModelAvailabilityService`.
+- [ ] Use `ChatModelAvailabilityService` in `GET /models`.
+- [ ] Use `ChatModelAvailabilityService` in `POST /chat`.
+- [ ] Add short-lived availability caching if checks are slow or noisy.
 - [ ] Do not retry chat generation automatically.
 - [ ] Add integration tests for `/models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
@@ -75,7 +79,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add Ollama adapter behind `AiModelClient`.
 - [ ] Support Ollama running at `http://localhost:11434`.
 - [ ] Support user-configured Ollama base URLs.
-- [ ] Add model availability checks.
+- [ ] Add Ollama model availability checker behind
+      `ChatModelAvailabilityService`.
 - [ ] Add MockServer or fake-client tests for adapter behavior where practical.
 - [ ] Add optional tagged Testcontainers Ollama tests.
 
