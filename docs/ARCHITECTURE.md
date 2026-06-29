@@ -135,7 +135,7 @@ configured subject and relevant chunks retrieved from bundled resource
 documents.
 
 - [ ] Add `AiChatService`.
-- [ ] Require a selected model id with each chat request.
+- [x] Require a selected model id with each chat request.
 - [ ] Retrieve relevant chunks from the single configured subject's bundled
       resource documents.
 - [ ] Resolve the selected model through `ChatModelRegistry`.

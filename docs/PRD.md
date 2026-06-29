@@ -134,7 +134,7 @@ Endpoint names are proposed and may be refined during technical design.
 
 - [ ] `POST /chat` asks a question against the configured subject.
 - [ ] Request body includes `message`.
-- [ ] Request body includes `modelId`.
+- [x] Request body includes `modelId`.
 - [ ] Response body includes `answer`.
 - [ ] Response body includes `modelId`.
 - [ ] Response is returned as a single non-streaming JSON response.
@@ -186,9 +186,9 @@ Errors should use a consistent JSON shape:
 
 ### Model Selection
 
-- [ ] Require `modelId` for chat requests.
+- [x] Require `modelId` for chat requests.
 - [ ] Validate requested `modelId`.
-- [ ] Return a validation error when `modelId` is missing.
+- [x] Return a validation error when `modelId` is missing.
 - [ ] Allow model availability to vary by environment.
 - [ ] Support future online, local server, and embedded offline model runtimes.
 

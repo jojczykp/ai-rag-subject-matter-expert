@@ -1,11 +1,16 @@
 package org.alterbit.aisme.chat
 
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class ChatRequestDtoTest {
+    private val objectMapper = jacksonObjectMapper()
+
     @Test
     fun `creates provider-neutral chat request`() {
         val request = ChatRequestDto(
@@ -30,11 +35,41 @@ class ChatRequestDtoTest {
     }
 
     @Test
+    fun `rejects missing model id when deserialized from json`() {
+        val exception = shouldThrow<JsonMappingException> {
+            objectMapper.readValue<ChatRequestDto>(
+                """
+                {
+                  "message": "How should I cook rice?"
+                }
+                """.trimIndent(),
+            )
+        }
+
+        exception.message shouldContain "modelId"
+    }
+
+    @Test
     fun `rejects blank message`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatRequestDto(
                 modelId = "local-llama",
                 message = " ",
+            )
+        }
+
+        exception.message shouldContain "message"
+    }
+
+    @Test
+    fun `rejects missing message when deserialized from json`() {
+        val exception = shouldThrow<JsonMappingException> {
+            objectMapper.readValue<ChatRequestDto>(
+                """
+                {
+                  "modelId": "local-llama"
+                }
+                """.trimIndent(),
             )
         }
 

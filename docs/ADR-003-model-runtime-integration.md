@@ -83,6 +83,21 @@ Future embedded runtime options:
 - [ ] Keep retry behavior for availability checks as a future enhancement.
 - [ ] Keep request cancellation support as a future enhancement.
 
+## JSON Serialization
+
+- [x] Use Jackson for Spring MVC request and response binding.
+- [ ] Keep `kotlinx.serialization` as a future option only if the application
+      explicitly standardizes on Kotlin-first serialization.
+
+Rationale:
+
+Spring MVC uses Jackson as its default JSON mapper, and the current REST DTO
+tests should verify the same binding behavior that controllers will use at
+runtime. `kotlinx.serialization` is more Kotlin-native, but using it for Spring
+MVC would require explicit converter configuration and separate verification of
+request validation and error responses. Jackson is the pragmatic default for
+this Spring Boot backend.
+
 ## Model Availability States
 
 Use these provider-neutral availability states in model responses:
@@ -124,7 +139,7 @@ aisme:
 
 Rationale:
 
-- [ ] `modelId` is required on chat requests, so a default model is not needed.
+- [x] `modelId` is required on chat requests, so a default model is not needed.
 - [x] The current model registry only needs a list of configured models.
 
 ## Consequences
@@ -135,7 +150,7 @@ Rationale:
 - [x] `ChatModelRegistry` becomes the source of truth for configured models,
       runtime mode, availability, and user-facing labels.
 - [x] `ChatModelRegistry` reads configured models from `aisme.chat-models`.
-- [ ] Chat requests fail validation when `modelId` is missing.
+- [x] Chat requests fail validation when `modelId` is missing.
 - [ ] Model responses use the provider-neutral availability states defined in
       this ADR.
 - [x] Tests can use fake model clients for application flow and adapter-level
