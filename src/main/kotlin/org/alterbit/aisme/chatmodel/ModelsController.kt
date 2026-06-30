@@ -6,10 +6,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ModelsController(
     private val chatModelRegistry: ChatModelRegistry,
+    private val chatModelAvailabilityService: ChatModelAvailabilityService,
 ) {
     @GetMapping("/models")
     fun models(): ModelsResponseDto =
         ModelsResponseDto(
-            models = chatModelRegistry.chatModels().map { it.toDto() },
+            models = chatModelAvailabilityService
+                .withAvailability(chatModelRegistry.chatModels())
+                .map { it.toDto() },
         )
 }

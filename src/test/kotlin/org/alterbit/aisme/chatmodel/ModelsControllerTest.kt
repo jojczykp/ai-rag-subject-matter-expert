@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chatmodel
 
+import java.time.Duration
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -7,7 +8,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
@@ -53,7 +56,7 @@ class ModelsControllerTest(
                     value("LOCAL_SERVER")
                 }
                 jsonPath("$.models[0].availability") {
-                    value("CONFIGURED")
+                    value("AVAILABLE")
                 }
                 jsonPath("$.models[0].availableOffline") {
                     value(false)
@@ -84,9 +87,27 @@ class ModelsControllerTest(
         FlywayAutoConfiguration::class,
     ],
 )
-@EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
+@EnableConfigurationProperties(
+    ChatModelAvailabilityProperties::class,
+    ConfiguredChatModelsProperties::class,
+)
 @Import(
+    ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
     ModelsController::class,
+    ModelsControllerTestConfiguration::class,
 )
 class ModelsControllerTestContext
+
+@TestConfiguration
+class ModelsControllerTestConfiguration {
+    @Bean
+    fun chatModelAvailabilityChecker(): ChatModelAvailabilityChecker =
+        object : ChatModelAvailabilityChecker {
+            override fun supports(model: ChatModelDescriptor): Boolean =
+                model.id == "local-ollama-llama"
+
+            override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+                ChatModelAvailability.AVAILABLE
+        }
+}
