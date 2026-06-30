@@ -61,15 +61,7 @@ Actuator endpoints exposed over HTTP:
 - `/actuator/health`
 - `/actuator/info`
 
-## Database
-
-Local PostgreSQL with pgvector can be started through Docker Compose:
-
-```bash
-docker compose up -d db
-```
-
-The default local connection is:
+The default local database connection is:
 
 ```text
 jdbc:postgresql://localhost:5432/aisme
@@ -132,6 +124,26 @@ depends on coverage verification:
 ```bash
 ./gradlew check
 ```
+
+## Run
+
+To view the models available:
+
+```bash
+curl http://localhost:8080/models
+```
+
+
+To send sample query:
+
+```bash
+curl http://localhost:8080/chat -d '
+{
+  "modelId": "local-ollama-llama",
+  "message": "How should I cook rice?"
+}'
+```
+
 
 ## Project Agents
 
