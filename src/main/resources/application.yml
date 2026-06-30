@@ -24,6 +24,8 @@ aisme:
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
   chat:
     timeout: 60s
+  model-availability:
+    timeout: 5s
   chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama

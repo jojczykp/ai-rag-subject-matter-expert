@@ -61,7 +61,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add consistent error responses with `code`, `message`, and optional
       `details`.
 - [x] Add configurable chat timeout with `60s` default.
-- [ ] Add configurable model availability timeout with `5s` default.
+- [x] Add configurable model availability timeout with `5s` default.
 - [ ] Add `ChatModelAvailabilityService`.
 - [ ] Use `ChatModelAvailabilityService` in `GET /models`.
 - [ ] Use `ChatModelAvailabilityService` in `POST /chat`.
