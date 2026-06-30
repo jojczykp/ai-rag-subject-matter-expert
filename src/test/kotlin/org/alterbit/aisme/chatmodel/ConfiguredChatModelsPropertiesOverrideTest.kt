@@ -3,6 +3,7 @@ package org.alterbit.aisme.chatmodel
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
@@ -26,7 +27,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
     @Test
     fun `uses configured models`() {
         contextRunner.run { context ->
-            val properties = context.getBean(ConfiguredChatModelsProperties::class.java)
+            val properties = context.getBean<ConfiguredChatModelsProperties>()
 
             properties.chatModels shouldHaveSize 2
             val cloudModel = properties.chatModels[0]

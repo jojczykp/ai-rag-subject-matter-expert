@@ -2,6 +2,7 @@ package org.alterbit.aisme.document
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
@@ -13,7 +14,7 @@ class SubjectDocumentsPropertiesDefaultTest {
     @Test
     fun `uses default document configuration`() {
         contextRunner.run { context ->
-            val properties = context.getBean(SubjectDocumentsProperties::class.java)
+            val properties = context.getBean<SubjectDocumentsProperties>()
 
             properties.location shouldBe "classpath:/subject-documents/"
             properties.chunkSize shouldBe 700

@@ -2,6 +2,7 @@ package org.alterbit.aisme.embedding
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
@@ -13,7 +14,7 @@ class EmbeddingModelPropertiesDefaultTest {
     @Test
     fun `uses default embedding model configuration`() {
         contextRunner.run { context ->
-            val properties = context.getBean(EmbeddingModelProperties::class.java)
+            val properties = context.getBean<EmbeddingModelProperties>()
 
             properties.id shouldBe "local-bge-small"
             properties.version shouldBe "1.5"
