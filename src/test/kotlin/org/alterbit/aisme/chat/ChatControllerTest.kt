@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chat
 
+import java.time.Clock
 import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
@@ -152,6 +153,10 @@ class ChatControllerTestContext
 
 @TestConfiguration
 class ChatControllerTestConfiguration {
+    @Bean
+    fun clock(): Clock =
+        Clock.systemUTC()
+
     @Bean
     fun aiModelClient(): AiModelClient =
         FakeAiModelClient(modelId = "local-ollama-llama")

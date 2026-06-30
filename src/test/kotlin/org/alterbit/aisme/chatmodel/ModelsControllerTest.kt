@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chatmodel
 
+import java.time.Clock
 import java.time.Duration
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
@@ -101,6 +102,10 @@ class ModelsControllerTestContext
 
 @TestConfiguration
 class ModelsControllerTestConfiguration {
+    @Bean
+    fun clock(): Clock =
+        Clock.systemUTC()
+
     @Bean
     fun chatModelAvailabilityChecker(): ChatModelAvailabilityChecker =
         object : ChatModelAvailabilityChecker {

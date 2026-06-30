@@ -2,7 +2,10 @@ package org.alterbit.aisme.chatmodel
 
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import java.time.Clock
 import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
 import org.junit.jupiter.api.Test
 
 class ChatModelAvailabilityServiceTest {
@@ -11,6 +14,7 @@ class ChatModelAvailabilityServiceTest {
         val service = ChatModelAvailabilityService(
             properties = ChatModelAvailabilityProperties(timeout = Duration.ofSeconds(5)),
             checkers = emptyList(),
+            clock = Clock.systemUTC(),
         )
 
         val model = service.withAvailability(chatModel())
@@ -27,6 +31,7 @@ class ChatModelAvailabilityServiceTest {
         val service = ChatModelAvailabilityService(
             properties = ChatModelAvailabilityProperties(timeout = Duration.ofSeconds(2)),
             checkers = listOf(checker),
+            clock = Clock.systemUTC(),
         )
 
         val model = service.withAvailability(chatModel(runtime = ChatModelRuntime.OLLAMA))
@@ -34,6 +39,56 @@ class ChatModelAvailabilityServiceTest {
         model.availability shouldBe ChatModelAvailability.AVAILABLE
         checker.checkedModels shouldContainExactly listOf("local-ollama-llama")
         checker.checkedTimeouts shouldContainExactly listOf(Duration.ofSeconds(2))
+    }
+
+    @Test
+    fun `uses cached availability within cache ttl`() {
+        val clock = MutableClock(Instant.parse("2026-06-30T10:00:00Z"))
+        val checker = RecordingAvailabilityChecker(
+            supportedRuntime = ChatModelRuntime.OLLAMA,
+            availability = ChatModelAvailability.AVAILABLE,
+        )
+        val service = ChatModelAvailabilityService(
+            properties = ChatModelAvailabilityProperties(
+                timeout = Duration.ofSeconds(2),
+                cacheTtl = Duration.ofSeconds(5),
+            ),
+            checkers = listOf(checker),
+            clock = clock,
+        )
+
+        service.withAvailability(chatModel(runtime = ChatModelRuntime.OLLAMA))
+        clock.advanceBy(Duration.ofSeconds(4))
+        val model = service.withAvailability(chatModel(runtime = ChatModelRuntime.OLLAMA))
+
+        model.availability shouldBe ChatModelAvailability.AVAILABLE
+        checker.checkedModels shouldContainExactly listOf("local-ollama-llama")
+    }
+
+    @Test
+    fun `refreshes cached availability after cache ttl expires`() {
+        val clock = MutableClock(Instant.parse("2026-06-30T10:00:00Z"))
+        val checker = RecordingAvailabilityChecker(
+            supportedRuntime = ChatModelRuntime.OLLAMA,
+            availability = ChatModelAvailability.AVAILABLE,
+        )
+        val service = ChatModelAvailabilityService(
+            properties = ChatModelAvailabilityProperties(
+                timeout = Duration.ofSeconds(2),
+                cacheTtl = Duration.ofSeconds(5),
+            ),
+            checkers = listOf(checker),
+            clock = clock,
+        )
+
+        service.withAvailability(chatModel(runtime = ChatModelRuntime.OLLAMA))
+        clock.advanceBy(Duration.ofSeconds(5))
+        service.withAvailability(chatModel(runtime = ChatModelRuntime.OLLAMA))
+
+        checker.checkedModels shouldContainExactly listOf(
+            "local-ollama-llama",
+            "local-ollama-llama",
+        )
     }
 
     @Test
@@ -45,6 +100,7 @@ class ChatModelAvailabilityServiceTest {
         val service = ChatModelAvailabilityService(
             properties = ChatModelAvailabilityProperties(timeout = Duration.ofSeconds(5)),
             checkers = listOf(checker),
+            clock = Clock.systemUTC(),
         )
 
         val models = service.withAvailability(
@@ -75,6 +131,23 @@ class ChatModelAvailabilityServiceTest {
             checkedModels += model.id
             checkedTimeouts += timeout
             return availability
+        }
+    }
+
+    private class MutableClock(
+        private var currentInstant: Instant,
+    ) : Clock() {
+        override fun getZone(): ZoneId =
+            ZoneId.of("UTC")
+
+        override fun withZone(zone: ZoneId): Clock =
+            this
+
+        override fun instant(): Instant =
+            currentInstant
+
+        fun advanceBy(duration: Duration) {
+            currentInstant = currentInstant.plus(duration)
         }
     }
 }

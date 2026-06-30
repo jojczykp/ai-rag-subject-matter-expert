@@ -13,6 +13,7 @@ class ChatModelAvailabilityPropertiesOverrideTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
             "aisme.model-availability.timeout=2s",
+            "aisme.model-availability.cache-ttl=3s",
         )
 
     @Test
@@ -21,6 +22,7 @@ class ChatModelAvailabilityPropertiesOverrideTest {
             val properties = context.getBean<ChatModelAvailabilityProperties>()
 
             properties.timeout shouldBe Duration.ofSeconds(2)
+            properties.cacheTtl shouldBe Duration.ofSeconds(3)
         }
     }
 

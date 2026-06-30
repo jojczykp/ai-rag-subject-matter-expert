@@ -18,6 +18,7 @@ class ChatModelAvailabilityPropertiesDefaultTest {
             val properties = context.getBean<ChatModelAvailabilityProperties>()
 
             properties.timeout shouldBe Duration.ofSeconds(5)
+            properties.cacheTtl shouldBe Duration.ofSeconds(5)
         }
     }
 

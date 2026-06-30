@@ -23,4 +23,22 @@ class ChatModelAvailabilityPropertiesTest {
 
         exception.message shouldContain "aisme.model-availability.timeout"
     }
+
+    @Test
+    fun `rejects zero cache ttl`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelAvailabilityProperties(cacheTtl = Duration.ZERO)
+        }
+
+        exception.message shouldContain "aisme.model-availability.cache-ttl"
+    }
+
+    @Test
+    fun `rejects negative cache ttl`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelAvailabilityProperties(cacheTtl = Duration.ofSeconds(-1))
+        }
+
+        exception.message shouldContain "aisme.model-availability.cache-ttl"
+    }
 }

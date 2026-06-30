@@ -26,6 +26,7 @@ aisme:
     timeout: 60s
   model-availability:
     timeout: 5s
+    cache-ttl: 5s
   chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama

@@ -171,5 +171,6 @@ class AiChatServiceTest {
                         availability
                 },
             ),
+            clock = java.time.Clock.systemUTC(),
         )
 }
