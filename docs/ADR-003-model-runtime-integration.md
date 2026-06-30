@@ -79,7 +79,7 @@ Future embedded runtime options:
 - [x] Use configurable chat timeouts with `60s` as the initial default.
 - [x] Use configurable model availability timeouts with `5s` as the initial
       default.
-- [ ] Do not retry chat generation automatically in the initial implementation.
+- [x] Do not retry chat generation automatically in the initial implementation.
 - [ ] Keep retry behavior for availability checks as a future enhancement.
 - [ ] Keep request cancellation support as a future enhancement.
 

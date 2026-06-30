@@ -134,6 +134,29 @@ class AiChatServiceTest {
         modelClient.requests shouldContainExactly emptyList()
     }
 
+    @Test
+    fun `does not retry chat generation automatically`() {
+        val modelClient = FailingAiModelClient(modelId = "local-ollama-llama")
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
+            chatProperties = ChatProperties(),
+            aiModelClients = listOf(modelClient),
+        )
+
+        val exception = shouldThrow<IllegalStateException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception.message shouldBe "model call failed"
+        modelClient.callCount shouldBe 1
+    }
+
     private fun chatModelRegistry(): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
@@ -173,4 +196,15 @@ class AiChatServiceTest {
             ),
             clock = java.time.Clock.systemUTC(),
         )
+
+    private class FailingAiModelClient(
+        override val modelId: String,
+    ) : AiModelClient {
+        var callCount = 0
+
+        override fun chat(request: AiModelChatRequest): AiModelChatResponse {
+            callCount += 1
+            throw IllegalStateException("model call failed")
+        }
+    }
 }

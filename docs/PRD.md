@@ -215,7 +215,7 @@ Errors should use a consistent JSON shape:
 
 - [ ] Non-chat endpoints should respond without invoking AI models.
 - [x] Chat APIs should have configurable timeouts.
-- [ ] Do not retry chat generation automatically in the initial scope.
+- [x] Do not retry chat generation automatically in the initial scope.
 - [ ] Document extraction and indexing should avoid repeated expensive work per
       chat request.
 - [ ] Chat requests should not send all bundled document content to the model by

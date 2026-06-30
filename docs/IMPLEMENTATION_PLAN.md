@@ -66,7 +66,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Use `ChatModelAvailabilityService` in `GET /models`.
 - [x] Use `ChatModelAvailabilityService` in `POST /chat`.
 - [x] Add short-lived availability caching if checks are slow or noisy.
-- [ ] Do not retry chat generation automatically.
+- [x] Do not retry chat generation automatically.
 - [ ] Add integration tests for `/models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
 - [ ] Keep Kover coverage at or above 80% in default verification.
