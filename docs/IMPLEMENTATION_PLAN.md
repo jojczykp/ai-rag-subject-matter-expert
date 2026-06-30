@@ -69,7 +69,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Do not retry chat generation automatically.
 - [x] Add integration tests for `/models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
-- [ ] Keep Kover coverage at or above 80% in default verification.
+- [x] Keep Kover coverage at or above 80% in default verification.
 
 ## Milestone 4: Local Ollama Runtime
 
