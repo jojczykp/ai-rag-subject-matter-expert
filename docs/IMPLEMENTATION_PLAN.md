@@ -101,11 +101,25 @@ All implementation items are TODO until delivered and verified.
 - [ ] Decide the concrete llama.cpp integration mechanism.
 - [ ] Add GGUF model asset directory configuration.
 - [ ] Add offline model metadata support.
+- [x] Add embedded offline model availability checker behind
+      `ChatModelAvailabilityService`.
+- [ ] Extend embedded offline availability checks to verify configured model
+      asset existence.
+- [ ] Extend embedded offline availability checks to verify model metadata
+      validity.
+- [ ] Extend embedded offline availability checks to include checksum validation
+      results.
 - [ ] Add embedded adapter behind `AiModelClient`.
+- [ ] Extend embedded offline availability checks to verify runtime loadability
+      once the embedded adapter exists.
 - [ ] Add model checksum validation.
 - [ ] Add license and hardware requirement metadata.
 - [ ] Add offline profile configuration.
 - [ ] Add offline startup tests with lightweight fakes.
+- [ ] Add embedded offline availability tests for `GET /models`.
+- [ ] Add embedded offline availability tests for `POST /chat`.
+- [ ] Document that embedded offline availability is metadata-only until asset
+      configuration and runtime loading are implemented.
 - [ ] Add optional tagged embedded runtime tests when a practical fixture
       exists.
 
