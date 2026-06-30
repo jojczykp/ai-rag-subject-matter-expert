@@ -8,6 +8,6 @@ data class ChatProperties(
     val timeout: Duration = Duration.ofSeconds(60),
 ) {
     init {
-        require(!timeout.isNegative && !timeout.isZero) { "aisme.chat.timeout must be greater than zero" }
+        require(timeout.isPositive) { "aisme.chat.timeout must be greater than zero" }
     }
 }

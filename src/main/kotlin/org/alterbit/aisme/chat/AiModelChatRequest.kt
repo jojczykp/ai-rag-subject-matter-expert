@@ -11,6 +11,6 @@ data class AiModelChatRequest(
     init {
         require(modelId.isNotBlank()) { "modelId must not be blank" }
         require(message.isNotBlank()) { "message must not be blank" }
-        require(!timeout.isNegative && !timeout.isZero) { "timeout must be greater than zero" }
+        require(timeout.isPositive) { "timeout must be greater than zero" }
     }
 }
