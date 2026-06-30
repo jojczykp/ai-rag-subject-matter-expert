@@ -5,10 +5,16 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
+import org.alterbit.aisme.chatmodel.ChatModelAvailability
+import org.alterbit.aisme.chatmodel.ChatModelAvailabilityChecker
+import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
+import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
+import org.alterbit.aisme.chatmodel.ChatModelDescriptor
 import org.alterbit.aisme.chatmodel.ChatModelMode
 import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
 import org.junit.jupiter.api.Test
@@ -20,6 +26,7 @@ class AiChatServiceTest {
         val cloudModelClient = FakeAiModelClient(modelId = "cloud-gpt")
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(45)),
             aiModelClients = listOf(localModelClient, cloudModelClient),
         )
@@ -48,6 +55,7 @@ class AiChatServiceTest {
     fun `rejects unknown chat model id`() {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             aiModelClients = listOf(FakeAiModelClient(modelId = "local-ollama-llama")),
         )
@@ -68,6 +76,7 @@ class AiChatServiceTest {
     fun `rejects configured chat model without matching model client`() {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             aiModelClients = listOf(FakeAiModelClient(modelId = "other-model")),
         )
@@ -89,6 +98,7 @@ class AiChatServiceTest {
         val exception = shouldThrow<IllegalArgumentException> {
             AiChatService(
                 chatModelRegistry = chatModelRegistry(),
+                chatModelAvailabilityService = chatModelAvailabilityService(),
                 chatProperties = ChatProperties(),
                 aiModelClients = listOf(
                     FakeAiModelClient(modelId = "local-ollama-llama"),
@@ -98,6 +108,30 @@ class AiChatServiceTest {
         }
 
         exception.message shouldContain "duplicate"
+    }
+
+    @Test
+    fun `rejects unavailable model before calling model client`() {
+        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.UNAVAILABLE),
+            chatProperties = ChatProperties(),
+            aiModelClients = listOf(modelClient),
+        )
+
+        val exception = shouldThrow<ChatModelUnavailableException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception.modelId shouldBe "local-ollama-llama"
+        exception.availability shouldBe ChatModelAvailability.UNAVAILABLE
+        modelClient.requests shouldContainExactly emptyList()
     }
 
     private fun chatModelRegistry(): ChatModelRegistry =
@@ -120,6 +154,22 @@ class AiChatServiceTest {
                         availableOffline = false,
                     ),
                 ),
+            ),
+        )
+
+    private fun chatModelAvailabilityService(
+        availability: ChatModelAvailability = ChatModelAvailability.AVAILABLE,
+    ): ChatModelAvailabilityService =
+        ChatModelAvailabilityService(
+            properties = ChatModelAvailabilityProperties(timeout = Duration.ofSeconds(5)),
+            checkers = listOf(
+                object : ChatModelAvailabilityChecker {
+                    override fun supports(model: ChatModelDescriptor): Boolean =
+                        model.id == "local-ollama-llama"
+
+                    override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+                        availability
+                },
             ),
         )
 }

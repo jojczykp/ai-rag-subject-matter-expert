@@ -1,6 +1,8 @@
 package org.alterbit.aisme.chat
 
 import org.alterbit.aisme.api.ApiExceptionHandler
+import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
+import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
 import org.junit.jupiter.api.Test
@@ -135,12 +137,14 @@ class ChatControllerTest(
 )
 @EnableConfigurationProperties(
     ChatProperties::class,
+    ChatModelAvailabilityProperties::class,
     ConfiguredChatModelsProperties::class,
 )
 @Import(
     AiChatService::class,
     ApiExceptionHandler::class,
     ChatController::class,
+    ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
     ChatControllerTestConfiguration::class,
 )

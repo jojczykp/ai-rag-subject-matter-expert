@@ -64,7 +64,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add configurable model availability timeout with `5s` default.
 - [x] Add `ChatModelAvailabilityService`.
 - [x] Use `ChatModelAvailabilityService` in `GET /models`.
-- [ ] Use `ChatModelAvailabilityService` in `POST /chat`.
+- [x] Use `ChatModelAvailabilityService` in `POST /chat`.
 - [ ] Add short-lived availability caching if checks are slow or noisy.
 - [ ] Do not retry chat generation automatically.
 - [ ] Add integration tests for `/models`, `/chat`, static document indexing,

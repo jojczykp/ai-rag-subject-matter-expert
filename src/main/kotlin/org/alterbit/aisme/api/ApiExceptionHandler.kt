@@ -2,6 +2,7 @@ package org.alterbit.aisme.api
 
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
+import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -34,6 +35,18 @@ class ApiExceptionHandler {
             code = ApiErrorCode.MODEL_NOT_FOUND,
             message = "Configured chat model was not found.",
             details = mapOf("modelId" to exception.modelId),
+        )
+
+    @ExceptionHandler(ChatModelUnavailableException::class)
+    fun handleChatModelUnavailable(exception: ChatModelUnavailableException): ResponseEntity<ApiErrorResponse> =
+        error(
+            status = HttpStatus.SERVICE_UNAVAILABLE,
+            code = ApiErrorCode.MODEL_UNAVAILABLE,
+            message = "Configured chat model is not available.",
+            details = mapOf(
+                "modelId" to exception.modelId,
+                "availability" to exception.availability.name,
+            ),
         )
 
     @ExceptionHandler(AiModelClientNotFoundException::class)
