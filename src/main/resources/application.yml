@@ -22,6 +22,8 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  chat:
+    timeout: 60s
   chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama

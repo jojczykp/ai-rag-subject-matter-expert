@@ -1,6 +1,7 @@
 package org.alterbit.aisme.chat
 
 import io.kotest.matchers.shouldBe
+import java.time.Duration
 import org.junit.jupiter.api.Test
 
 class AiModelClientTest {
@@ -17,6 +18,7 @@ class AiModelClientTest {
                     chunkIndex = 0,
                 ),
             ),
+            timeout = Duration.ofSeconds(60),
         )
 
         val response = client.chat(request)

@@ -191,7 +191,7 @@ an adapter that implements this interface.
 - [x] Add request and response DTOs.
 - [ ] Add synchronous chat support.
 - [ ] Add structured error handling.
-- [ ] Add configurable timeout behavior.
+- [x] Add configurable timeout behavior.
 - [ ] Add tests for each adapter contract.
 
 Draft interface:

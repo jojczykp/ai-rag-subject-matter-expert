@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.time.Duration
 import org.alterbit.aisme.chatmodel.ChatModelMode
 import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
@@ -19,6 +20,7 @@ class AiChatServiceTest {
         val cloudModelClient = FakeAiModelClient(modelId = "cloud-gpt")
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatProperties = ChatProperties(timeout = Duration.ofSeconds(45)),
             aiModelClients = listOf(localModelClient, cloudModelClient),
         )
 
@@ -36,6 +38,7 @@ class AiChatServiceTest {
                 modelId = "local-ollama-llama",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
+                timeout = Duration.ofSeconds(45),
             ),
         )
         cloudModelClient.requests shouldContainExactly emptyList()
@@ -45,6 +48,7 @@ class AiChatServiceTest {
     fun `rejects unknown chat model id`() {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatProperties = ChatProperties(),
             aiModelClients = listOf(FakeAiModelClient(modelId = "local-ollama-llama")),
         )
 
@@ -64,6 +68,7 @@ class AiChatServiceTest {
     fun `rejects configured chat model without matching model client`() {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
+            chatProperties = ChatProperties(),
             aiModelClients = listOf(FakeAiModelClient(modelId = "other-model")),
         )
 
@@ -84,6 +89,7 @@ class AiChatServiceTest {
         val exception = shouldThrow<IllegalArgumentException> {
             AiChatService(
                 chatModelRegistry = chatModelRegistry(),
+                chatProperties = ChatProperties(),
                 aiModelClients = listOf(
                     FakeAiModelClient(modelId = "local-ollama-llama"),
                     FakeAiModelClient(modelId = "local-ollama-llama"),

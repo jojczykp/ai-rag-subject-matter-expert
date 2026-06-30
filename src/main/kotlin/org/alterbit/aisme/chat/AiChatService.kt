@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class AiChatService(
     private val chatModelRegistry: ChatModelRegistry,
+    private val chatProperties: ChatProperties,
     aiModelClients: List<AiModelClient>,
 ) {
     private val aiModelClientsByModelId: Map<String, AiModelClient> = aiModelClients
@@ -24,6 +25,7 @@ class AiChatService(
                 modelId = chatModel.id,
                 message = request.message,
                 contextChunks = emptyList(),
+                timeout = chatProperties.timeout,
             ),
         )
 

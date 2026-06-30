@@ -126,7 +126,10 @@ class ChatControllerTest(
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
-@EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
+@EnableConfigurationProperties(
+    ChatProperties::class,
+    ConfiguredChatModelsProperties::class,
+)
 @Import(
     AiChatService::class,
     ApiExceptionHandler::class,

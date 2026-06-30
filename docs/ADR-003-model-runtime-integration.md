@@ -76,7 +76,7 @@ Future embedded runtime options:
 
 - [ ] Use synchronous non-streaming chat initially.
 - [ ] Keep streaming chat responses as future scope.
-- [ ] Use configurable chat timeouts with `60s` as the initial default.
+- [x] Use configurable chat timeouts with `60s` as the initial default.
 - [ ] Use configurable model availability timeouts with `5s` as the initial
       default.
 - [ ] Do not retry chat generation automatically in the initial implementation.

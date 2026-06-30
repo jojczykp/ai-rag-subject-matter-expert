@@ -2,6 +2,7 @@ package org.alterbit.aisme.chat
 
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import java.time.Duration
 import org.junit.jupiter.api.Test
 
 class FakeAiModelClientTest {
@@ -14,6 +15,7 @@ class FakeAiModelClientTest {
                 modelId = "local-llama",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
+                timeout = Duration.ofSeconds(60),
             ),
         )
 
@@ -69,5 +71,6 @@ class FakeAiModelClientTest {
             modelId = "local-llama",
             message = message,
             contextChunks = contextChunks,
+            timeout = Duration.ofSeconds(60),
         )
 }
