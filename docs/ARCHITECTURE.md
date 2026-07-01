@@ -62,8 +62,10 @@ User model selection
   -> AiChatService
   -> RelevantChunkRetriever
   -> AiModelClient
+       -> OllamaAiModelClient
+            -> Ollama local server runtime
        -> SpringAiModelClient
-            -> provider-backed model runtime
+            -> cloud provider-backed model runtime
        -> EmbeddedModelClient
             -> offline model runtime
 ```
@@ -186,19 +188,23 @@ model for each request.
 ### AiModelClient
 
 `AiModelClient` is the internal provider-neutral interface. Each runtime gets
-an adapter that implements this interface.
+an adapter that implements this interface. A client instance represents one
+configured application model. Provider components can create multiple client
+instances from `aisme.chat-models` when one runtime supports multiple models.
 
 - [x] Add `AiModelClient`.
 - [x] Add request and response DTOs.
-- [ ] Add synchronous chat support.
-- [ ] Add structured error handling.
+- [x] Add synchronous chat support.
+- [x] Add structured error handling.
 - [x] Add configurable timeout behavior.
-- [ ] Add tests for each adapter contract.
+- [x] Add tests for implemented adapter contracts.
 
 Draft interface:
 
 ```kotlin
 interface AiModelClient {
+    val modelId: String
+
     fun chat(request: AiModelChatRequest): AiModelChatResponse
 }
 ```
@@ -336,7 +342,7 @@ for the accepted integration testing decision.
 - [ ] Document the single-subject static-resource scope in README.md.
 - [ ] Document where bundled subject documents live.
 - [ ] Document supported model runtimes in README.md.
-- [ ] Document local Ollama setup in README.md.
+- [x] Document local Ollama setup in README.md.
 - [ ] Document cloud provider environment variables in README.md.
 - [ ] Document embedded offline model installation in README.md.
 - [ ] Document model selection behavior in README.md.

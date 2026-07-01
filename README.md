@@ -107,8 +107,8 @@ aisme:
 ```
 
 The application-owned `aisme.chat-models` configuration is the source of truth
-for selectable chat models. Spring AI Ollama settings are handled by the future
-Ollama adapter instead of duplicated in a separate Spring profile.
+for selectable chat models. Spring AI Ollama settings are handled by the Ollama
+adapter instead of duplicated in a separate Spring profile.
 
 ## Verification
 

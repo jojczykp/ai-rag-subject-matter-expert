@@ -1,0 +1,114 @@
+package org.alterbit.aisme.chat.ollama
+
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import java.time.Duration
+import java.time.Instant
+import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chatmodel.ChatModelMode
+import org.alterbit.aisme.chatmodel.ChatModelRegistry
+import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
+import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.junit.jupiter.api.Test
+import org.springframework.ai.ollama.api.OllamaApi
+
+class OllamaAiModelClientProviderTest {
+    @Test
+    fun `creates one client per configured ollama model`() {
+        val factory = FakeOllamaChatApiFactory()
+        val provider = OllamaAiModelClientProvider(
+            chatModelRegistry = chatModelRegistry(
+                ollamaModel(id = "local-llama", modelName = "llama3.2"),
+                springAiModel(id = "cloud-gpt"),
+                ollamaModel(id = "local-qwen", baseUrl = "http://localhost:11435", modelName = "qwen2.5"),
+            ),
+            chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
+            ollamaChatApiFactory = factory,
+        )
+
+        provider.clients().map { it.modelId } shouldContainExactly listOf("local-llama", "local-qwen")
+        factory.createdClients shouldContainExactly listOf(
+            CreatedOllamaClient(
+                baseUrl = "http://localhost:11434",
+                timeout = Duration.ofSeconds(30),
+            ),
+            CreatedOllamaClient(
+                baseUrl = "http://localhost:11435",
+                timeout = Duration.ofSeconds(30),
+            ),
+        )
+    }
+
+    @Test
+    fun `rejects ollama model without base url`() {
+        val exception = shouldThrow<IllegalStateException> {
+            OllamaAiModelClientProvider(
+                chatModelRegistry = chatModelRegistry(ollamaModel(baseUrl = null)),
+                chatProperties = ChatProperties(),
+                ollamaChatApiFactory = FakeOllamaChatApiFactory(),
+            )
+        }
+
+        exception.message shouldContain "requires baseUrl"
+    }
+
+    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+        ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = models.toList()))
+
+    private fun ollamaModel(
+        id: String = "local-llama",
+        baseUrl: String? = "http://localhost:11434",
+        modelName: String? = "llama3.2",
+    ): ConfiguredChatModelProperties =
+        ConfiguredChatModelProperties(
+            id = id,
+            displayName = "Local Llama",
+            runtime = ChatModelRuntime.OLLAMA,
+            mode = ChatModelMode.LOCAL_SERVER,
+            availableOffline = false,
+            baseUrl = baseUrl,
+            modelName = modelName,
+        )
+
+    private fun springAiModel(id: String): ConfiguredChatModelProperties =
+        ConfiguredChatModelProperties(
+            id = id,
+            displayName = "Cloud GPT",
+            runtime = ChatModelRuntime.SPRING_AI,
+            mode = ChatModelMode.ONLINE,
+            availableOffline = false,
+        )
+
+    private class FakeOllamaChatApiFactory : OllamaChatApiFactory {
+        val createdClients = mutableListOf<CreatedOllamaClient>()
+
+        override fun create(baseUrl: String, timeout: Duration): OllamaChatApi {
+            createdClients += CreatedOllamaClient(baseUrl = baseUrl, timeout = timeout)
+            return OllamaChatApi { request ->
+                OllamaApi.ChatResponse(
+                    request.model(),
+                    Instant.EPOCH,
+                    OllamaApi.Message.builder(OllamaApi.Message.Role.ASSISTANT)
+                        .content("Fake Ollama answer")
+                        .build(),
+                    "stop",
+                    true,
+                    0L,
+                    0L,
+                    0,
+                    0L,
+                    0,
+                    0L,
+                )
+            }
+        }
+    }
+
+    private data class CreatedOllamaClient(
+        val baseUrl: String,
+        val timeout: Duration,
+    )
+}

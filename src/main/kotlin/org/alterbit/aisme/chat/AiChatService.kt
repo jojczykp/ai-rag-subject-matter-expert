@@ -12,22 +12,14 @@ class AiChatService(
     private val chatModelRegistry: ChatModelRegistry,
     private val chatModelAvailabilityService: ChatModelAvailabilityService,
     private val chatProperties: ChatProperties,
-    aiModelClients: List<AiModelClient>,
+    private val aiModelClients: AiModelClients,
 ) {
-    private val aiModelClientsByModelId: Map<String, AiModelClient> = aiModelClients
-        .also { clients ->
-            require(clients.map { it.modelId }.distinct().size == clients.size) {
-                "AI model clients must not contain duplicate model ids"
-            }
-        }
-        .associateBy { it.modelId }
-
     fun chat(request: ChatRequestDto): ChatResponseDto {
         val chatModel = chatModelAvailabilityService
             .withAvailability(chatModelRegistry.getByIdOrThrow(request.modelId))
             .also(::requireCallableModel)
 
-        val modelResponse = aiModelClientByModelIdOrThrow(chatModel.id).chat(
+        val modelResponse = aiModelClients.getByModelIdOrThrow(chatModel.id).chat(
             AiModelChatRequest(
                 modelId = chatModel.id,
                 message = request.message,
@@ -41,9 +33,6 @@ class AiChatService(
             answer = modelResponse.answer,
         )
     }
-
-    private fun aiModelClientByModelIdOrThrow(modelId: String): AiModelClient =
-        aiModelClientsByModelId[modelId] ?: throw AiModelClientNotFoundException(modelId)
 
     private fun requireCallableModel(model: ChatModelDescriptor) {
         if (model.availability == ChatModelAvailability.UNAVAILABLE ||

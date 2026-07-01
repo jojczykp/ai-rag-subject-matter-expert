@@ -76,12 +76,12 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Spring AI Ollama dependency or adapter dependency selected during
       implementation.
 - [x] Add local Ollama model configuration under `aisme.chat-models`.
-- [ ] Add Ollama adapter behind `AiModelClient`.
-- [ ] Support Ollama running at `http://localhost:11434`.
-- [ ] Support user-configured Ollama base URLs.
+- [x] Add Ollama adapter behind `AiModelClient`.
+- [x] Support Ollama running at `http://localhost:11434`.
+- [x] Support user-configured Ollama base URLs.
 - [ ] Add Ollama model availability checker behind
       `ChatModelAvailabilityService`.
-- [ ] Add MockServer or fake-client tests for adapter behavior where practical.
+- [x] Add MockServer or fake-client tests for adapter behavior where practical.
 - [ ] Add optional tagged Testcontainers Ollama tests.
 
 ## Milestone 5: Cloud Runtime Adapters

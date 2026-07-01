@@ -39,9 +39,9 @@ Runtime integration follows the component flow documented in
 
 ### Local Server
 
-- [ ] Use Ollama as the first supported local server runtime.
-- [ ] Support Ollama running at `http://localhost:11434`.
-- [ ] Support user-configured Ollama base URLs.
+- [x] Use Ollama as the first supported local server runtime.
+- [x] Support Ollama running at `http://localhost:11434`.
+- [x] Support user-configured Ollama base URLs.
 - [ ] Support selecting different Ollama models per request.
 - [ ] Add model availability and health checks.
 
@@ -149,7 +149,7 @@ Rationale:
 
 - [x] Controllers and use-case services depend on internal DTOs and
       `AiModelClient`, not provider SDKs.
-- [ ] Provider-specific classes stay outside controller and domain code.
+- [x] Provider-specific classes stay outside controller and domain code.
 - [x] `ChatModelRegistry` becomes the source of truth for configured models,
       runtime mode, availability, and user-facing labels.
 - [x] `ChatModelRegistry` reads configured models from `aisme.chat-models`.

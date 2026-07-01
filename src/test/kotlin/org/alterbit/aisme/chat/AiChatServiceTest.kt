@@ -28,7 +28,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(45)),
-            aiModelClients = listOf(localModelClient, cloudModelClient),
+            aiModelClients = aiModelClients(localModelClient, cloudModelClient),
         )
 
         val response = service.chat(
@@ -57,7 +57,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
-            aiModelClients = listOf(FakeAiModelClient(modelId = "local-ollama-llama")),
+            aiModelClients = aiModelClients(FakeAiModelClient(modelId = "local-ollama-llama")),
         )
 
         val exception = shouldThrow<ChatModelNotFoundException> {
@@ -78,7 +78,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
-            aiModelClients = listOf(FakeAiModelClient(modelId = "other-model")),
+            aiModelClients = aiModelClients(FakeAiModelClient(modelId = "other-model")),
         )
 
         val exception = shouldThrow<AiModelClientNotFoundException> {
@@ -100,7 +100,7 @@ class AiChatServiceTest {
                 chatModelRegistry = chatModelRegistry(),
                 chatModelAvailabilityService = chatModelAvailabilityService(),
                 chatProperties = ChatProperties(),
-                aiModelClients = listOf(
+                aiModelClients = aiModelClients(
                     FakeAiModelClient(modelId = "local-ollama-llama"),
                     FakeAiModelClient(modelId = "local-ollama-llama"),
                 ),
@@ -117,7 +117,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.UNAVAILABLE),
             chatProperties = ChatProperties(),
-            aiModelClients = listOf(modelClient),
+            aiModelClients = aiModelClients(modelClient),
         )
 
         val exception = shouldThrow<ChatModelUnavailableException> {
@@ -141,7 +141,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
-            aiModelClients = listOf(modelClient),
+            aiModelClients = aiModelClients(modelClient),
         )
 
         val exception = shouldThrow<IllegalStateException> {
@@ -196,6 +196,9 @@ class AiChatServiceTest {
             ),
             clock = java.time.Clock.systemUTC(),
         )
+
+    private fun aiModelClients(vararg clients: AiModelClient): AiModelClients =
+        AiModelClients(listOf(AiModelClientProvider { clients.toList() }))
 
     private class FailingAiModelClient(
         override val modelId: String,

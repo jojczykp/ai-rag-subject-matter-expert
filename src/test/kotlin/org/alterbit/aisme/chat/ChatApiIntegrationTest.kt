@@ -125,6 +125,7 @@ class ChatApiIntegrationTest(
 )
 @Import(
     AiChatService::class,
+    AiModelClients::class,
     ApiExceptionHandler::class,
     ChatController::class,
     ChatModelAvailabilityService::class,
@@ -139,6 +140,17 @@ class ChatApiIntegrationTestConfiguration {
     @Bean
     fun clock(): Clock =
         Clock.systemUTC()
+
+    @Bean
+    fun aiModelClientProvider(
+        @Qualifier("localAiModelClient")
+        localAiModelClient: FakeAiModelClient,
+        @Qualifier("cloudAiModelClient")
+        cloudAiModelClient: FakeAiModelClient,
+    ): AiModelClientProvider =
+        AiModelClientProvider {
+            listOf(localAiModelClient, cloudAiModelClient)
+        }
 
     @Bean
     fun localAiModelClient(): FakeAiModelClient =

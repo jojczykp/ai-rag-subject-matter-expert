@@ -143,6 +143,7 @@ class ChatControllerTest(
 )
 @Import(
     AiChatService::class,
+    AiModelClients::class,
     ApiExceptionHandler::class,
     ChatController::class,
     ChatModelAvailabilityService::class,
@@ -158,6 +159,8 @@ class ChatControllerTestConfiguration {
         Clock.systemUTC()
 
     @Bean
-    fun aiModelClient(): AiModelClient =
-        FakeAiModelClient(modelId = "local-ollama-llama")
+    fun aiModelClientProvider(): AiModelClientProvider =
+        AiModelClientProvider {
+            listOf(FakeAiModelClient(modelId = "local-ollama-llama"))
+        }
 }
