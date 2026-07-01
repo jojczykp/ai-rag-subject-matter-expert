@@ -73,7 +73,7 @@ All implementation items are TODO until delivered and verified.
 
 ## Milestone 4: Local Ollama Runtime
 
-- [ ] Add Spring AI Ollama dependency or adapter dependency selected during
+- [x] Add Spring AI Ollama dependency or adapter dependency selected during
       implementation.
 - [ ] Add local profile configuration.
 - [ ] Add Ollama adapter behind `AiModelClient`.

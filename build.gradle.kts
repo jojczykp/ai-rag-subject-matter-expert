@@ -21,6 +21,12 @@ kotlin {
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(libs.spring.ai.bom.get().toString())
+    }
+}
+
 dependencies {
     runtimeOnly(libs.postgresql)
 
@@ -28,6 +34,7 @@ dependencies {
     implementation(libs.flyway.database.postgresql)
     implementation(libs.hf.tokenizers)
     implementation(libs.onnxruntime)
+    implementation(libs.spring.ai.starter.model.ollama)
     implementation(libs.spring.boot.flyway)
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.data.jdbc)
