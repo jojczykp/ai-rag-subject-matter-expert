@@ -8,6 +8,7 @@ fun chatModel(
     availableOffline: Boolean = false,
     availability: ChatModelAvailability = ChatModelAvailability.CONFIGURED,
     baseUrl: String? = "http://localhost:11434",
+    modelName: String? = "llama3.2",
 ): ChatModelDescriptor =
     ChatModelDescriptor(
         id = id,
@@ -17,4 +18,5 @@ fun chatModel(
         availableOffline = availableOffline,
         availability = availability,
         baseUrl = baseUrl,
+        modelName = modelName,
     )

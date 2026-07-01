@@ -34,6 +34,7 @@ aisme:
       mode: LOCAL_SERVER
       available-offline: false
       base-url: http://localhost:11434
+      model-name: llama3.2
 
 management:
   endpoints:

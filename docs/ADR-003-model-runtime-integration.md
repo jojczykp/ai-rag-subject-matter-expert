@@ -123,6 +123,7 @@ aisme:
       runtime: OLLAMA
       mode: LOCAL_SERVER
       base-url: http://localhost:11434
+      model-name: llama3.2
       available-offline: false
 ```
 

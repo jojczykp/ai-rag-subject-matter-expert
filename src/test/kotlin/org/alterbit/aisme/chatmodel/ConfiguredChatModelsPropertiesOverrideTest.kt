@@ -37,6 +37,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             cloudModel.mode shouldBe ChatModelMode.ONLINE
             cloudModel.availableOffline shouldBe false
             cloudModel.baseUrl shouldBe null
+            cloudModel.modelName shouldBe null
 
             val embeddedModel = properties.chatModels[1]
             embeddedModel.id shouldBe "embedded-llama"
@@ -45,6 +46,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             embeddedModel.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
             embeddedModel.availableOffline shouldBe true
             embeddedModel.baseUrl shouldBe null
+            embeddedModel.modelName shouldBe null
         }
     }
 

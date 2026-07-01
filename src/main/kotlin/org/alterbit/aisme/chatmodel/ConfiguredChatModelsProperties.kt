@@ -12,6 +12,7 @@ data class ConfiguredChatModelsProperties(
             mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
             baseUrl = "http://localhost:11434",
+            modelName = "llama3.2",
         ),
     ),
 )
@@ -23,11 +24,13 @@ data class ConfiguredChatModelProperties(
     val mode: ChatModelMode,
     val availableOffline: Boolean,
     val baseUrl: String? = null,
+    val modelName: String? = null,
 ) {
     init {
         require(id.isNotBlank()) { "aisme.chat-models.id must not be blank" }
         require(displayName.isNotBlank()) { "aisme.chat-models.display-name must not be blank" }
         require(baseUrl == null || baseUrl.isNotBlank()) { "aisme.chat-models.base-url must not be blank when configured" }
+        require(modelName == null || modelName.isNotBlank()) { "aisme.chat-models.model-name must not be blank when configured" }
     }
 
     fun toDescriptor(): ChatModelDescriptor =
@@ -39,5 +42,6 @@ data class ConfiguredChatModelProperties(
             availableOffline = availableOffline,
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = baseUrl,
+            modelName = modelName,
         )
 }

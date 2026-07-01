@@ -46,6 +46,7 @@ class ChatModelRegistryTest {
         model?.availableOffline shouldBe false
         model?.availability shouldBe ChatModelAvailability.CONFIGURED
         model?.baseUrl shouldBe "http://localhost:11434"
+        model?.modelName shouldBe "llama3.2"
     }
 
     @Test
@@ -108,5 +109,6 @@ class ChatModelRegistryTest {
             mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
             baseUrl = "http://localhost:11434",
+            modelName = "llama3.2",
         )
 }

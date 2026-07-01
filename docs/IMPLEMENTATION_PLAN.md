@@ -75,7 +75,7 @@ All implementation items are TODO until delivered and verified.
 
 - [x] Add Spring AI Ollama dependency or adapter dependency selected during
       implementation.
-- [ ] Add local profile configuration.
+- [x] Add local Ollama model configuration under `aisme.chat-models`.
 - [ ] Add Ollama adapter behind `AiModelClient`.
 - [ ] Support Ollama running at `http://localhost:11434`.
 - [ ] Support user-configured Ollama base URLs.

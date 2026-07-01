@@ -25,6 +25,7 @@ class ConfiguredChatModelsPropertiesDefaultTest {
             model.mode shouldBe ChatModelMode.LOCAL_SERVER
             model.availableOffline shouldBe false
             model.baseUrl shouldBe "http://localhost:11434"
+            model.modelName shouldBe "llama3.2"
         }
     }
 

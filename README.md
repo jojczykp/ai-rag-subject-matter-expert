@@ -92,6 +92,24 @@ application code.
 The ONNX client loads these files during startup, so the application fails fast
 when the configured model or tokenizer file is missing.
 
+## Local Ollama Model
+
+The default chat model entry points to Ollama at `http://localhost:11434`:
+
+```yaml
+aisme:
+  chat-models:
+    - id: local-ollama-llama
+      runtime: OLLAMA
+      mode: LOCAL_SERVER
+      base-url: http://localhost:11434
+      model-name: llama3.2
+```
+
+The application-owned `aisme.chat-models` configuration is the source of truth
+for selectable chat models. Spring AI Ollama settings are handled by the future
+Ollama adapter instead of duplicated in a separate Spring profile.
+
 ## Verification
 
 Run the unit tests:

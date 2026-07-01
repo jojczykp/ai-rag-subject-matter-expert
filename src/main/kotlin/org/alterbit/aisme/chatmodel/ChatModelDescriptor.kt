@@ -8,10 +8,12 @@ data class ChatModelDescriptor(
     val availableOffline: Boolean,
     val availability: ChatModelAvailability,
     val baseUrl: String?,
+    val modelName: String?,
 ) {
     init {
         require(id.isNotBlank()) { "model id must not be blank" }
         require(displayName.isNotBlank()) { "model display name must not be blank" }
         require(baseUrl == null || baseUrl.isNotBlank()) { "model baseUrl must not be blank when configured" }
+        require(modelName == null || modelName.isNotBlank()) { "model modelName must not be blank when configured" }
     }
 }

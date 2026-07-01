@@ -58,5 +58,6 @@ class ChatModelDtoTest {
             availableOffline = availableOffline,
             availability = availability,
             baseUrl = "http://localhost:11434",
+            modelName = "llama3.2",
         )
 }

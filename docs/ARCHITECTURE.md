@@ -114,6 +114,7 @@ data class ChatModelDescriptor(
     val availableOffline: Boolean,
     val availability: ChatModelAvailability,
     val baseUrl: String?,
+    val modelName: String?,
 )
 
 enum class ChatModelRuntime {
@@ -257,13 +258,6 @@ spring:
 ```yaml
 aisme:
   documents-location: classpath:/subject-documents/
-  chat-models:
-    - id: local-ollama-llama
-      display-name: Local Ollama Llama
-      runtime: OLLAMA
-      mode: LOCAL_SERVER
-      base-url: http://localhost:11434
-      available-offline: false
   embedding-model:
     id: local-bge-small
     version: "1.5"
@@ -271,6 +265,14 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  chat-models:
+    - id: local-ollama-llama
+      display-name: Local Ollama Llama
+      runtime: OLLAMA
+      mode: LOCAL_SERVER
+      base-url: http://localhost:11434
+      model-name: llama3.2
+      available-offline: false
   chat:
     timeout: 60s
   model-availability:

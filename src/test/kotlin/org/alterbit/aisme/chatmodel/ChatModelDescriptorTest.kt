@@ -16,6 +16,7 @@ class ChatModelDescriptorTest {
             availableOffline = false,
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = "http://localhost:11434",
+            modelName = "llama3.2",
         )
 
         descriptor.id shouldBe "local-ollama-llama"
@@ -25,6 +26,7 @@ class ChatModelDescriptorTest {
         descriptor.availableOffline shouldBe false
         descriptor.availability shouldBe ChatModelAvailability.CONFIGURED
         descriptor.baseUrl shouldBe "http://localhost:11434"
+        descriptor.modelName shouldBe "llama3.2"
     }
 
     @Test
@@ -54,10 +56,20 @@ class ChatModelDescriptorTest {
         exception.message shouldContain "baseUrl"
     }
 
+    @Test
+    fun `rejects blank model name when configured`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            descriptor(modelName = " ")
+        }
+
+        exception.message shouldContain "modelName"
+    }
+
     private fun descriptor(
         id: String = "local-ollama-llama",
         displayName: String = "Local Ollama Llama",
         baseUrl: String? = "http://localhost:11434",
+        modelName: String? = "llama3.2",
     ): ChatModelDescriptor =
         ChatModelDescriptor(
             id = id,
@@ -67,5 +79,6 @@ class ChatModelDescriptorTest {
             availableOffline = false,
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = baseUrl,
+            modelName = modelName,
         )
 }
