@@ -29,8 +29,8 @@ class OnnxEmbeddingClientTest {
     @Test
     fun `fails clearly when configured model file is missing`(@TempDir tempDirectory: Path) {
         val exception = shouldThrow<EmbeddingException> {
-            OnnxEmbeddingClient(
-                EmbeddingModelProperties(
+            DefaultOnnxEmbeddingModelLoader().load(
+                properties = EmbeddingModelProperties(
                     modelPath = tempDirectory.resolve("missing-model.onnx").toString(),
                     tokenizerPath = tempDirectory.resolve("missing-tokenizer.json").toString(),
                 ),

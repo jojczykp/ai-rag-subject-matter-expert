@@ -11,29 +11,14 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.Path
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class OnnxEmbeddingClient private constructor(
+class OnnxEmbeddingClient(
     private val properties: EmbeddingModelProperties,
-    private val model: LoadedEmbeddingModel,
+    loader: OnnxEmbeddingModelLoader,
 ) : EmbeddingClient {
-    @Autowired
-    constructor(
-        properties: EmbeddingModelProperties,
-    ) : this(
-        properties = properties,
-        model = DefaultOnnxEmbeddingModelLoader(properties).load(),
-    )
-
-    internal constructor(
-        properties: EmbeddingModelProperties,
-        loader: OnnxEmbeddingModelLoader,
-    ) : this(
-        properties = properties,
-        model = loader.load(),
-    )
+    private val model: LoadedEmbeddingModel = loader.load(properties)
 
     override fun embed(text: String): EmbeddingVector {
         require(text.isNotBlank()) { "text must not be blank" }
@@ -55,20 +40,19 @@ class OnnxEmbeddingClient private constructor(
     }
 }
 
-internal interface LoadedEmbeddingModel {
+interface LoadedEmbeddingModel {
     fun embed(text: String): List<Double>
 
     fun close()
 }
 
-internal fun interface OnnxEmbeddingModelLoader {
-    fun load(): LoadedEmbeddingModel
+fun interface OnnxEmbeddingModelLoader {
+    fun load(properties: EmbeddingModelProperties): LoadedEmbeddingModel
 }
 
-private class DefaultOnnxEmbeddingModelLoader(
-    private val properties: EmbeddingModelProperties,
-) : OnnxEmbeddingModelLoader {
-    override fun load(): LoadedEmbeddingModel {
+@Component
+class DefaultOnnxEmbeddingModelLoader : OnnxEmbeddingModelLoader {
+    override fun load(properties: EmbeddingModelProperties): LoadedEmbeddingModel {
         require(properties.runtime == EmbeddingModelRuntime.ONNX) {
             "Unsupported embedding model runtime: ${properties.runtime}"
         }

@@ -10,7 +10,10 @@ class OnnxEmbeddingClientIntegrationTest {
     @Test
     fun `generates embedding with configured local ONNX model`() {
         val properties = EmbeddingModelProperties()
-        val client = OnnxEmbeddingClient(properties)
+        val client = OnnxEmbeddingClient(
+            properties = properties,
+            loader = DefaultOnnxEmbeddingModelLoader(),
+        )
 
         val embedding = client.embed("How do I boil rice?")
 
