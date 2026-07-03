@@ -83,7 +83,7 @@ All implementation items are TODO until delivered and verified.
       `ChatModelAvailabilityService`.
 - [x] Add MockServer or fake-client tests for adapter behavior where practical.
 - [x] Add optional tagged Testcontainers Ollama tests.
-- [ ] Add optional model-backed Ollama container test for application chat flow
+- [x] Add optional model-backed Ollama container test for application chat flow
       after choosing how test models are supplied.
 
 ## Milestone 5: Cloud Runtime Adapters

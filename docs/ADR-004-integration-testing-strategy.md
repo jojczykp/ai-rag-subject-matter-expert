@@ -39,7 +39,7 @@ normal local development and CI:
 Optional verification should include expensive or runtime-heavy tests:
 
 - [x] Ollama container smoke tests that require Ollama Docker image startup.
-- [ ] Ollama model tests that require model pull or model runtime startup.
+- [x] Ollama model tests that require model pull or model runtime startup.
 - [ ] Embedded runtime tests that require local model files or heavy native
       runtime setup.
 - [ ] Manual smoke tests against real cloud providers.
@@ -95,8 +95,9 @@ Run optional Ollama container tests through the dedicated Gradle task:
 
 - [x] Use Testcontainers with an Ollama Docker container.
 - [x] Verify the Ollama container starts and responds to `/api/tags`.
-- [ ] Verify request mapping to Ollama.
-- [ ] Verify response mapping from Ollama.
+- [x] Verify request mapping to Ollama.
+- [x] Verify response mapping from Ollama.
+- [x] Verify application chat flow against a pulled Ollama test model.
 - [x] Verify local-server availability and failure behavior with unit tests.
 - [x] Keep expensive Ollama tests optional or tagged.
 
