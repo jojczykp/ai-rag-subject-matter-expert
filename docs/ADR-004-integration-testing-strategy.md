@@ -16,7 +16,7 @@ credentials, network access, or heavyweight model downloads.
 Use layered integration tests:
 
 - [ ] Testcontainers PostgreSQL with pgvector for database and retrieval tests.
-- [ ] Testcontainers with an Ollama Docker container for Ollama integration
+- [x] Testcontainers with an Ollama Docker container for Ollama integration
       tests.
 - [ ] Testcontainers MockServer for cloud and hosted provider protocol tests.
 - [x] Fake model clients for application-flow integration tests where provider
@@ -38,7 +38,8 @@ normal local development and CI:
 
 Optional verification should include expensive or runtime-heavy tests:
 
-- [ ] Ollama container tests that require model pull or model runtime startup.
+- [x] Ollama container smoke tests that require Ollama Docker image startup.
+- [ ] Ollama model tests that require model pull or model runtime startup.
 - [ ] Embedded runtime tests that require local model files or heavy native
       runtime setup.
 - [ ] Manual smoke tests against real cloud providers.
@@ -65,6 +66,12 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 @Tag("cloud-smoke")
 ```
 
+Run optional Ollama container tests through the dedicated Gradle task:
+
+```bash
+./gradlew ollamaTest
+```
+
 ## Test Categories
 
 ### Database And Retrieval
@@ -86,11 +93,12 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 
 ### Ollama
 
-- [ ] Use Testcontainers with an Ollama Docker container.
+- [x] Use Testcontainers with an Ollama Docker container.
+- [x] Verify the Ollama container starts and responds to `/api/tags`.
 - [ ] Verify request mapping to Ollama.
 - [ ] Verify response mapping from Ollama.
 - [ ] Verify local-server availability and failure behavior.
-- [ ] Keep expensive Ollama tests optional or tagged.
+- [x] Keep expensive Ollama tests optional or tagged.
 
 ### Cloud And Hosted Providers
 

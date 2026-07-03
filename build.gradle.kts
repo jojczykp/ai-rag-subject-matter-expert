@@ -51,9 +51,29 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks.withType<Test>().configureEach {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("ollama")
+    }
+}
+
+tasks.register<Test>("ollamaTest") {
+    group = "verification"
+    description = "Runs optional Ollama Testcontainers tests."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    shouldRunAfter(tasks.test)
+    onlyIf {
+        gradle.startParameter.taskNames.any { it == "ollamaTest" || it.endsWith(":ollamaTest") }
+    }
+
+    useJUnitPlatform {
+        includeTags("ollama")
+    }
 }
 
 tasks.bootRun {

@@ -123,6 +123,19 @@ test task when Docker is available.
 
 Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
 
+Optional Ollama container smoke tests are tagged separately because they pull
+and start the Ollama Docker image. Run them explicitly:
+
+```bash
+./gradlew ollamaTest
+```
+
+The default test image is `ollama/ollama:latest`. Override it when needed:
+
+```bash
+./gradlew ollamaTest -Daisme.ollama.test.image=ollama/ollama:latest
+```
+
 This project uses Kover for code coverage and enforces a minimum 80% coverage
 threshold for production code:
 
