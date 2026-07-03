@@ -97,7 +97,7 @@ Run optional Ollama container tests through the dedicated Gradle task:
 - [x] Verify the Ollama container starts and responds to `/api/tags`.
 - [ ] Verify request mapping to Ollama.
 - [ ] Verify response mapping from Ollama.
-- [ ] Verify local-server availability and failure behavior.
+- [x] Verify local-server availability and failure behavior with unit tests.
 - [x] Keep expensive Ollama tests optional or tagged.
 
 ### Cloud And Hosted Providers

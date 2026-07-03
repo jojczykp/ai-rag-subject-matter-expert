@@ -20,11 +20,23 @@ class SpringAiOllamaChatApiFactory : OllamaChatApiFactory {
         val restClientBuilder = RestClient.builder()
             .requestFactory(requestFactory)
 
-        return OllamaChatApi(
-            OllamaApi.builder()
+        val ollamaApi = OllamaApi.builder()
                 .baseUrl(baseUrl)
                 .restClientBuilder(restClientBuilder)
-                .build()::chat,
-        )
+                .build()
+
+        return SpringAiOllamaChatApi(ollamaApi)
     }
+}
+
+private class SpringAiOllamaChatApi(
+    private val ollamaApi: OllamaApi,
+) : OllamaChatApi {
+    override fun chat(request: OllamaApi.ChatRequest): OllamaApi.ChatResponse =
+        ollamaApi.chat(request)
+
+    override fun modelNames(): Set<String> =
+        ollamaApi.listModels().models()
+            .flatMap { model -> listOfNotNull(model.name(), model.model()) }
+            .toSet()
 }

@@ -134,5 +134,8 @@ class OllamaAiModelClientTest {
                 0L,
             )
         }
+
+        override fun modelNames(): Set<String> =
+            emptySet()
     }
 }

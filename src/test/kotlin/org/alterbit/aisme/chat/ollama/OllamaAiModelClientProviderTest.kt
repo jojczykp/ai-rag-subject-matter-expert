@@ -87,24 +87,30 @@ class OllamaAiModelClientProviderTest {
 
         override fun create(baseUrl: String, timeout: Duration): OllamaChatApi {
             createdClients += CreatedOllamaClient(baseUrl = baseUrl, timeout = timeout)
-            return OllamaChatApi { request ->
-                OllamaApi.ChatResponse(
-                    request.model(),
-                    Instant.EPOCH,
-                    OllamaApi.Message.builder(OllamaApi.Message.Role.ASSISTANT)
-                        .content("Fake Ollama answer")
-                        .build(),
-                    "stop",
-                    true,
-                    0L,
-                    0L,
-                    0,
-                    0L,
-                    0,
-                    0L,
-                )
-            }
+            return FakeOllamaChatApi()
         }
+    }
+
+    private class FakeOllamaChatApi : OllamaChatApi {
+        override fun chat(request: OllamaApi.ChatRequest): OllamaApi.ChatResponse =
+            OllamaApi.ChatResponse(
+                request.model(),
+                Instant.EPOCH,
+                OllamaApi.Message.builder(OllamaApi.Message.Role.ASSISTANT)
+                    .content("Fake Ollama answer")
+                    .build(),
+                "stop",
+                true,
+                0L,
+                0L,
+                0,
+                0L,
+                0,
+                0L,
+            )
+
+        override fun modelNames(): Set<String> =
+            emptySet()
     }
 
     private data class CreatedOllamaClient(

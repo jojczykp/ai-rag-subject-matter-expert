@@ -79,7 +79,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Ollama adapter behind `AiModelClient`.
 - [x] Support Ollama running at `http://localhost:11434`.
 - [x] Support user-configured Ollama base URLs.
-- [ ] Add Ollama model availability checker behind
+- [x] Add Ollama model availability checker behind
       `ChatModelAvailabilityService`.
 - [x] Add MockServer or fake-client tests for adapter behavior where practical.
 - [x] Add optional tagged Testcontainers Ollama tests.
