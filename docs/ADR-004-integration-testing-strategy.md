@@ -72,6 +72,13 @@ Run optional Ollama container tests through the dedicated Gradle task:
 ./gradlew ollamaTest
 ```
 
+Run optional OpenAI-compatible adapter flow tests through the dedicated Gradle
+task:
+
+```bash
+./gradlew openAiCompatibleTest
+```
+
 ## Test Categories
 
 ### Database And Retrieval
@@ -106,6 +113,7 @@ Run optional Ollama container tests through the dedicated Gradle task:
 - [ ] Use Testcontainers MockServer.
 - [ ] Verify request and response mapping.
 - [ ] Verify authentication headers.
+- [x] Verify OpenAI-compatible application chat flow with a local mock provider.
 - [ ] Verify timeout handling.
 - [ ] Verify provider error translation.
 - [ ] Avoid calling real external APIs in automated tests by default.

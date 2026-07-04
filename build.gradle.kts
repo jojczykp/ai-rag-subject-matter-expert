@@ -57,7 +57,22 @@ tasks.withType<Test>().configureEach {
 
 tasks.test {
     useJUnitPlatform {
-        excludeTags("ollama")
+        excludeTags("ollama", "openai-compatible")
+    }
+}
+
+tasks.register<Test>("openAiCompatibleTest") {
+    group = "verification"
+    description = "Runs optional OpenAI-compatible adapter flow tests."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    shouldRunAfter(tasks.test)
+    onlyIf {
+        gradle.startParameter.taskNames.any { it == "openAiCompatibleTest" || it.endsWith(":openAiCompatibleTest") }
+    }
+
+    useJUnitPlatform {
+        includeTags("openai-compatible")
     }
 }
 

@@ -171,6 +171,13 @@ chat-flow test. Run them explicitly:
 ./gradlew ollamaTest
 ```
 
+Optional OpenAI-compatible adapter flow tests are also tagged separately. They
+use a local mock HTTP server, not a real cloud provider:
+
+```bash
+./gradlew openAiCompatibleTest
+```
+
 The default test image is `ollama/ollama:latest`, and the default model-backed
 test model is `tinyllama:latest`. Override them when needed:
 

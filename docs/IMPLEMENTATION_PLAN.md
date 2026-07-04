@@ -93,6 +93,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add cloud profile configuration.
 - [ ] Add credential validation.
 - [ ] Add timeout and provider-error mapping.
+- [x] Add tagged OpenAI-compatible application-flow test with a local mock
+      provider.
 - [ ] Add Testcontainers MockServer tests for cloud provider request/response
       mapping.
 - [ ] Keep real cloud provider tests as explicitly enabled manual smoke tests
