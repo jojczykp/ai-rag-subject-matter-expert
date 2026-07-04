@@ -168,6 +168,7 @@ class AiChatServiceTest {
                         mode = ChatModelMode.LOCAL_SERVER,
                         availableOffline = false,
                         baseUrl = "http://localhost:11434",
+                        modelName = "llama3.2",
                     ),
                     ConfiguredChatModelProperties(
                         id = "cloud-gpt",

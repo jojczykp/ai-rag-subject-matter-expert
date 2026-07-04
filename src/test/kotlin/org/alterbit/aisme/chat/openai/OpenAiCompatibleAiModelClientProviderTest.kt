@@ -43,7 +43,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
 
     @Test
     fun `rejects OpenAI-compatible model without base url`() {
-        val exception = shouldThrow<IllegalStateException> {
+        val exception = shouldThrow<IllegalArgumentException> {
             OpenAiCompatibleAiModelClientProvider(
                 chatModelRegistry = chatModelRegistry(openAiModel(baseUrl = null)),
                 chatProperties = ChatProperties(),
@@ -51,12 +51,13 @@ class OpenAiCompatibleAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "requires baseUrl"
+        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "is required"
     }
 
     @Test
     fun `rejects OpenAI-compatible model without api key`() {
-        val exception = shouldThrow<IllegalStateException> {
+        val exception = shouldThrow<IllegalArgumentException> {
             OpenAiCompatibleAiModelClientProvider(
                 chatModelRegistry = chatModelRegistry(openAiModel(apiKey = null)),
                 chatProperties = ChatProperties(),
@@ -64,7 +65,8 @@ class OpenAiCompatibleAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "requires apiKey"
+        exception.message shouldContain "aisme.chat-models[0].api-key"
+        exception.message shouldContain "is required"
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =

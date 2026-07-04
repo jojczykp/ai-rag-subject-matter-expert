@@ -101,14 +101,120 @@ class ChatModelRegistryTest {
         exception.message shouldContain "duplicate"
     }
 
-    private fun configuredModel(id: String): ConfiguredChatModelProperties =
+    @Test
+    fun `rejects ollama model without base url`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(configuredModel(baseUrl = null)),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "is required"
+        exception.message shouldContain "OLLAMA"
+    }
+
+    @Test
+    fun `rejects ollama model without model name`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(configuredModel(modelName = null)),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].model-name"
+        exception.message shouldContain "is required"
+        exception.message shouldContain "OLLAMA"
+    }
+
+    @Test
+    fun `rejects OpenAI-compatible model without api key`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        configuredModel(
+                            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
+                            mode = ChatModelMode.ONLINE,
+                            baseUrl = "https://api.example.com/v1",
+                            modelName = "gpt-4.1-mini",
+                            apiKey = null,
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].api-key"
+        exception.message shouldContain "is required"
+        exception.message shouldContain "OPENAI_COMPATIBLE"
+    }
+
+    @Test
+    fun `rejects Hugging Face endpoint model without base url`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        configuredModel(
+                            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                            mode = ChatModelMode.ONLINE,
+                            baseUrl = null,
+                            modelName = null,
+                            apiKey = "test-api-key",
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "is required"
+        exception.message shouldContain "HUGGING_FACE_ENDPOINT"
+    }
+
+    @Test
+    fun `allows Hugging Face endpoint model without api key`() {
+        val registry = ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                chatModels = listOf(
+                    configuredModel(
+                        id = "local-tgi",
+                        runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                        mode = ChatModelMode.LOCAL_SERVER,
+                        baseUrl = "http://localhost:8080",
+                        modelName = null,
+                        apiKey = null,
+                    ),
+                ),
+            ),
+        )
+
+        val model = registry.getByIdOrThrow("local-tgi")
+
+        model.apiKey shouldBe null
+    }
+
+    private fun configuredModel(
+        id: String = "local-ollama-llama",
+        runtime: ChatModelRuntime = ChatModelRuntime.OLLAMA,
+        mode: ChatModelMode = ChatModelMode.LOCAL_SERVER,
+        baseUrl: String? = "http://localhost:11434",
+        modelName: String? = "llama3.2",
+        apiKey: String? = null,
+    ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             displayName = "Local Ollama Llama",
-            runtime = ChatModelRuntime.OLLAMA,
-            mode = ChatModelMode.LOCAL_SERVER,
+            runtime = runtime,
+            mode = mode,
             availableOffline = false,
-            baseUrl = "http://localhost:11434",
-            modelName = "llama3.2",
+            baseUrl = baseUrl,
+            modelName = modelName,
+            apiKey = apiKey,
         )
 }

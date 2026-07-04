@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.post
         "aisme.chat-models[0].mode=LOCAL_SERVER",
         "aisme.chat-models[0].available-offline=false",
         "aisme.chat-models[0].base-url=http://localhost:11434",
+        "aisme.chat-models[0].model-name=llama3.2",
     ],
 )
 @AutoConfigureMockMvc

@@ -44,7 +44,7 @@ class OllamaAiModelClientProviderTest {
 
     @Test
     fun `rejects ollama model without base url`() {
-        val exception = shouldThrow<IllegalStateException> {
+        val exception = shouldThrow<IllegalArgumentException> {
             OllamaAiModelClientProvider(
                 chatModelRegistry = chatModelRegistry(ollamaModel(baseUrl = null)),
                 chatProperties = ChatProperties(),
@@ -52,7 +52,8 @@ class OllamaAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "requires baseUrl"
+        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "is required"
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =

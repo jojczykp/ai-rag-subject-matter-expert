@@ -43,7 +43,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
 
     @Test
     fun `rejects Hugging Face endpoint model without base url`() {
-        val exception = shouldThrow<IllegalStateException> {
+        val exception = shouldThrow<IllegalArgumentException> {
             HuggingFaceTgiAiModelClientProvider(
                 chatModelRegistry = chatModelRegistry(huggingFaceModel(baseUrl = null)),
                 chatProperties = ChatProperties(),
@@ -51,7 +51,8 @@ class HuggingFaceTgiAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "requires baseUrl"
+        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "is required"
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =

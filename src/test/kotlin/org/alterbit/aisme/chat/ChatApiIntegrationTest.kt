@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.post
         "aisme.chat-models[0].mode=LOCAL_SERVER",
         "aisme.chat-models[0].available-offline=false",
         "aisme.chat-models[0].base-url=http://localhost:11434",
+        "aisme.chat-models[0].model-name=llama3.2",
         "aisme.chat-models[1].id=cloud-gpt",
         "aisme.chat-models[1].display-name=Cloud GPT",
         "aisme.chat-models[1].runtime=SPRING_AI",
