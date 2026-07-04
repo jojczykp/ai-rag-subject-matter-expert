@@ -110,6 +110,26 @@ The application-owned `aisme.chat-models` configuration is the source of truth
 for selectable chat models. Spring AI Ollama settings are handled by the Ollama
 adapter instead of duplicated in a separate Spring profile.
 
+## OpenAI-Compatible Cloud Model
+
+OpenAI-compatible chat providers can be configured as selectable online models:
+
+```yaml
+aisme:
+  chat-models:
+    - id: cloud-gpt
+      display-name: Cloud GPT
+      runtime: OPENAI_COMPATIBLE
+      mode: ONLINE
+      available-offline: false
+      base-url: https://api.openai.com/v1
+      model-name: gpt-4.1-mini
+      api-key: ${OPENAI_API_KEY}
+```
+
+The adapter sends non-streaming chat-completion requests to
+`/chat/completions` with bearer-token authentication.
+
 ## Verification
 
 Run the unit tests:

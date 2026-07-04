@@ -117,10 +117,12 @@ data class ChatModelDescriptor(
     val availability: ChatModelAvailability,
     val baseUrl: String?,
     val modelName: String?,
+    val apiKey: String?,
 )
 
 enum class ChatModelRuntime {
     SPRING_AI,
+    OPENAI_COMPATIBLE,
     OLLAMA,
     HUGGING_FACE_ENDPOINT,
     EMBEDDED_OFFLINE,

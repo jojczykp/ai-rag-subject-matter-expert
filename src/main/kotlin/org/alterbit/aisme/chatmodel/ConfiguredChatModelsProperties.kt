@@ -25,12 +25,14 @@ data class ConfiguredChatModelProperties(
     val availableOffline: Boolean,
     val baseUrl: String? = null,
     val modelName: String? = null,
+    val apiKey: String? = null,
 ) {
     init {
         require(id.isNotBlank()) { "aisme.chat-models.id must not be blank" }
         require(displayName.isNotBlank()) { "aisme.chat-models.display-name must not be blank" }
         require(baseUrl == null || baseUrl.isNotBlank()) { "aisme.chat-models.base-url must not be blank when configured" }
         require(modelName == null || modelName.isNotBlank()) { "aisme.chat-models.model-name must not be blank when configured" }
+        require(apiKey == null || apiKey.isNotBlank()) { "aisme.chat-models.api-key must not be blank when configured" }
     }
 
     fun toDescriptor(): ChatModelDescriptor =
@@ -43,5 +45,6 @@ data class ConfiguredChatModelProperties(
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = baseUrl,
             modelName = modelName,
+            apiKey = apiKey,
         )
 }

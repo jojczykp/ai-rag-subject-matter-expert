@@ -17,6 +17,7 @@ class ChatModelDescriptorTest {
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = "http://localhost:11434",
             modelName = "llama3.2",
+            apiKey = null,
         )
 
         descriptor.id shouldBe "local-ollama-llama"
@@ -27,6 +28,7 @@ class ChatModelDescriptorTest {
         descriptor.availability shouldBe ChatModelAvailability.CONFIGURED
         descriptor.baseUrl shouldBe "http://localhost:11434"
         descriptor.modelName shouldBe "llama3.2"
+        descriptor.apiKey shouldBe null
     }
 
     @Test
@@ -65,11 +67,21 @@ class ChatModelDescriptorTest {
         exception.message shouldContain "modelName"
     }
 
+    @Test
+    fun `rejects blank api key when configured`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            descriptor(apiKey = " ")
+        }
+
+        exception.message shouldContain "apiKey"
+    }
+
     private fun descriptor(
         id: String = "local-ollama-llama",
         displayName: String = "Local Ollama Llama",
         baseUrl: String? = "http://localhost:11434",
         modelName: String? = "llama3.2",
+        apiKey: String? = null,
     ): ChatModelDescriptor =
         ChatModelDescriptor(
             id = id,
@@ -80,5 +92,6 @@ class ChatModelDescriptorTest {
             availability = ChatModelAvailability.CONFIGURED,
             baseUrl = baseUrl,
             modelName = modelName,
+            apiKey = apiKey,
         )
 }

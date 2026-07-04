@@ -9,6 +9,7 @@ fun chatModel(
     availability: ChatModelAvailability = ChatModelAvailability.CONFIGURED,
     baseUrl: String? = "http://localhost:11434",
     modelName: String? = "llama3.2",
+    apiKey: String? = null,
 ): ChatModelDescriptor =
     ChatModelDescriptor(
         id = id,
@@ -19,4 +20,5 @@ fun chatModel(
         availability = availability,
         baseUrl = baseUrl,
         modelName = modelName,
+        apiKey = apiKey,
     )

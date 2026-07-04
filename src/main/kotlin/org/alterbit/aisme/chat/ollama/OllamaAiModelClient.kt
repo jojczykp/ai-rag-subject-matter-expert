@@ -3,6 +3,7 @@ package org.alterbit.aisme.chat.ollama
 import org.alterbit.aisme.chat.AiModelChatRequest
 import org.alterbit.aisme.chat.AiModelChatResponse
 import org.alterbit.aisme.chat.AiModelClient
+import org.alterbit.aisme.chat.toSingleUserPromptText
 import org.alterbit.aisme.chatmodel.ChatModelDescriptor
 import org.springframework.ai.ollama.api.OllamaApi
 
@@ -39,30 +40,12 @@ class OllamaAiModelClient(
             .messages(
                 listOf(
                     OllamaApi.Message.builder(OllamaApi.Message.Role.USER)
-                        .content(request.toPromptText())
+                        .content(request.toSingleUserPromptText())
                         .build(),
                 ),
             )
             .stream(false)
             .build()
-
-    private fun AiModelChatRequest.toPromptText(): String {
-        if (contextChunks.isEmpty()) {
-            return message
-        }
-
-        val context = contextChunks.joinToString(separator = "\n\n") { chunk ->
-            "[${chunk.resourcePath}#${chunk.chunkIndex}]\n${chunk.content}"
-        }
-
-        return buildString {
-            appendLine("Context:")
-            appendLine(context)
-            appendLine()
-            appendLine("Question:")
-            append(message)
-        }
-    }
 }
 
 fun ChatModelDescriptor.requireBaseUrl(): String =

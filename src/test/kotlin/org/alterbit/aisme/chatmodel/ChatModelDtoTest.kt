@@ -59,5 +59,6 @@ class ChatModelDtoTest {
             availability = availability,
             baseUrl = "http://localhost:11434",
             modelName = "llama3.2",
+            apiKey = null,
         )
 }

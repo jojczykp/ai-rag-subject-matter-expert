@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat.ollama
+package org.alterbit.aisme.chat.openai
 
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.AiModelClientProvider
@@ -8,17 +8,21 @@ import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.springframework.stereotype.Component
 
 @Component
-class OllamaAiModelClientProvider(
+class OpenAiCompatibleAiModelClientProvider(
     chatModelRegistry: ChatModelRegistry,
     chatProperties: ChatProperties,
-    ollamaChatApiFactory: OllamaChatApiFactory,
+    openAiCompatibleChatApiFactory: OpenAiCompatibleChatApiFactory,
 ) : AiModelClientProvider {
     private val clients: List<AiModelClient> = chatModelRegistry.chatModels()
-        .filter { it.runtime == ChatModelRuntime.OLLAMA }
+        .filter { it.runtime == ChatModelRuntime.OPENAI_COMPATIBLE }
         .map { model ->
-            OllamaAiModelClient(
+            OpenAiCompatibleAiModelClient(
                 model = model,
-                chatApi = ollamaChatApiFactory.create(model.requireBaseUrl(), chatProperties.timeout),
+                chatApi = openAiCompatibleChatApiFactory.create(
+                    baseUrl = model.requireOpenAiCompatibleBaseUrl(),
+                    apiKey = model.requireOpenAiCompatibleApiKey(),
+                    timeout = chatProperties.timeout,
+                ),
             )
         }
 

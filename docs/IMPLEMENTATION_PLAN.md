@@ -88,7 +88,7 @@ All implementation items are TODO until delivered and verified.
 
 ## Milestone 5: Cloud Runtime Adapters
 
-- [ ] Add OpenAI-compatible cloud adapter.
+- [x] Add OpenAI-compatible cloud adapter.
 - [ ] Add Hugging Face Inference Endpoint / TGI adapter.
 - [ ] Add cloud profile configuration.
 - [ ] Add credential validation.
