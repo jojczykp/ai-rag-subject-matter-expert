@@ -90,7 +90,6 @@ All implementation items are TODO until delivered and verified.
 
 - [x] Add OpenAI-compatible cloud adapter.
 - [x] Add Hugging Face Inference Endpoint / TGI adapter.
-- [ ] Add cloud profile configuration.
 - [ ] Add credential validation.
 - [ ] Add timeout and provider-error mapping.
 - [x] Add tagged OpenAI-compatible application-flow test with a local mock
