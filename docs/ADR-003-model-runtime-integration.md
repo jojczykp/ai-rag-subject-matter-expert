@@ -33,7 +33,7 @@ Runtime integration follows the component flow documented in
 - [ ] Use Spring AI where possible.
 - [ ] Support OpenAI-compatible chat providers.
 - [x] Support OpenAI-compatible chat-completion providers.
-- [ ] Support Hugging Face Inference Endpoint / TGI.
+- [x] Support Hugging Face Inference Endpoint / TGI-compatible `/generate`.
 - [x] Configure credentials through application configuration, with environment
       variables or secret storage as the intended source.
 - [ ] Return clear errors for missing API keys or unavailable endpoints.
@@ -70,8 +70,8 @@ Future embedded runtime options:
 
 - [ ] Decide the exact Spring AI dependencies once implementation starts.
 - [x] Decide the first OpenAI-compatible provider configuration shape.
-- [ ] Decide the first Hugging Face integration path: Inference Endpoint, TGI,
-      or both.
+- [x] Use the TGI-compatible `/generate` API as the first Hugging Face
+      integration path.
 - [ ] Decide the concrete embedded llama.cpp integration approach.
 
 ## Runtime Defaults

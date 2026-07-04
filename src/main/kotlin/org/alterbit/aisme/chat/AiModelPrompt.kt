@@ -5,9 +5,7 @@ fun AiModelChatRequest.toSingleUserPromptText(): String {
         return message
     }
 
-    val context = contextChunks.joinToString(separator = "\n\n") { chunk ->
-        "[${chunk.resourcePath}#${chunk.chunkIndex}]\n${chunk.content}"
-    }
+    val context = contextChunks.joinToString(separator = "\n\n") { it.content }
 
     return buildString {
         appendLine("Context:")

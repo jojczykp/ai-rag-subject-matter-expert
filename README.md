@@ -130,6 +130,26 @@ aisme:
 The adapter sends non-streaming chat-completion requests to
 `/chat/completions` with bearer-token authentication.
 
+## Hugging Face Inference Endpoint / TGI Model
+
+Hugging Face Inference Endpoints or self-hosted TGI-compatible servers can be
+configured as selectable online models:
+
+```yaml
+aisme:
+  chat-models:
+    - id: hf-mistral
+      display-name: Hugging Face Mistral
+      runtime: HUGGING_FACE_ENDPOINT
+      mode: ONLINE
+      available-offline: false
+      base-url: https://example.endpoints.huggingface.cloud
+      api-key: ${HF_API_KEY}
+```
+
+The adapter sends non-streaming TGI-compatible requests to `/generate`.
+`api-key` is optional for unsecured local TGI servers.
+
 ## Verification
 
 Run the unit tests:

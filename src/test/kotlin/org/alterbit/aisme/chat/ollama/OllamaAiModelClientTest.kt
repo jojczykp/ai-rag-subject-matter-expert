@@ -56,7 +56,6 @@ class OllamaAiModelClientTest {
         chatApi.requests.single().messages().single().role() shouldBe OllamaApi.Message.Role.USER
         chatApi.requests.single().messages().single().content() shouldBe """
             Context:
-            [subject-documents/culinary_expert/rice.txt#0]
             Use two parts water for one part rice.
 
             Question:

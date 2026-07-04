@@ -51,7 +51,6 @@ class OpenAiCompatibleAiModelClientTest {
         chatApi.requests.single().messages.single().role shouldBe "user"
         chatApi.requests.single().messages.single().content shouldBe """
             Context:
-            [subject-documents/culinary_expert/rice.txt#0]
             Use two parts water for one part rice.
 
             Question:

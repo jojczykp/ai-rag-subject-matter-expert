@@ -64,6 +64,10 @@ User model selection
   -> AiModelClient
        -> OllamaAiModelClient
             -> Ollama local server runtime
+       -> OpenAiCompatibleAiModelClient
+            -> OpenAI-compatible chat-completion providers
+       -> HuggingFaceTgiAiModelClient
+            -> Hugging Face Inference Endpoint / TGI-compatible runtime
        -> SpringAiModelClient
             -> cloud provider-backed model runtime
        -> EmbeddedModelClient
@@ -280,6 +284,13 @@ aisme:
       mode: LOCAL_SERVER
       base-url: http://localhost:11434
       model-name: llama3.2
+      available-offline: false
+    - id: hf-mistral
+      display-name: Hugging Face Mistral
+      runtime: HUGGING_FACE_ENDPOINT
+      mode: ONLINE
+      base-url: https://example.endpoints.huggingface.cloud
+      api-key: ${HF_API_KEY}
       available-offline: false
   chat:
     timeout: 60s
