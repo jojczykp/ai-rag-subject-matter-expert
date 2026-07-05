@@ -1,4 +1,4 @@
-# ADR-007: Embedded Llama Runtime
+# ADR-007: Llama Runtime
 
 ## Status
 
@@ -29,7 +29,7 @@ The application will:
 
 - [x] Require GGUF model files as external local assets, not files bundled into
       the executable JAR.
-- [x] Configure the embedded llama runtime behind an explicit `enabled` flag;
+- [x] Configure the llama runtime runtime behind an explicit `enabled` flag;
       when enabled, require asset directory, `llama-server` executable path,
       host, and port.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,

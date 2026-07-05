@@ -92,14 +92,14 @@ application code.
 The ONNX client loads these files during startup, so the application fails fast
 when the configured model or tokenizer file is missing.
 
-## Embedded Offline Llama Assets
+## Llama Runtime Assets
 
 Embedded offline chat will use local llama.cpp assets. The default asset
 configuration points to external files outside the application JAR:
 
 ```yaml
 aisme:
-  embedded-llama:
+  llama-runtime:
     enabled: false
     config:
       asset-directory: ./models/llama
@@ -287,4 +287,4 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 - [ADR-004: Integration Testing Strategy](docs/ADR-004-integration-testing-strategy.md)
 - [ADR-005: Subject Document Scope](docs/ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](docs/ADR-006-local-embedding-runtime.md)
-- [ADR-007: Embedded Llama Runtime](docs/ADR-007-embedded-llama-runtime.md)
+- [ADR-007: Llama Runtime](docs/ADR-007-llama-runtime.md)

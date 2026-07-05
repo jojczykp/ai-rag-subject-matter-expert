@@ -18,7 +18,7 @@ this document by marking the matching checklist items as complete.
 - [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
 - [ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
-- [ADR-007: Embedded Llama Runtime](ADR-007-embedded-llama-runtime.md)
+- [ADR-007: Llama Runtime](ADR-007-llama-runtime.md)
 
 ## Current Product Scope
 
@@ -278,7 +278,7 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  embedded-llama:
+  llama-runtime:
     enabled: false
     config:
       asset-directory: ./models/llama

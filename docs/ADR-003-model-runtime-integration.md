@@ -53,7 +53,7 @@ Runtime integration follows the component flow documented in
       direction.
 - [x] Use application-managed `llama-server` as a child process for the first
       embedded offline mechanism. See
-      [ADR-007: Embedded Llama Runtime](ADR-007-embedded-llama-runtime.md).
+      [ADR-007: Llama Runtime](ADR-007-llama-runtime.md).
 - [x] Keep model files as external application assets, not bundled inside the
       executable JAR.
 - [x] Add model asset directory configuration.
@@ -75,7 +75,7 @@ Future embedded runtime options:
 - [x] Decide the first OpenAI-compatible provider configuration shape.
 - [x] Use the TGI-compatible `/generate` API as the first Hugging Face
       integration path.
-- [x] Decide the concrete embedded llama.cpp integration approach.
+- [x] Decide the concrete llama runtime.cpp integration approach.
 
 ## Runtime Defaults
 

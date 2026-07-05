@@ -7,14 +7,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class EmbeddedLlamaPropertiesDefaultTest {
+class LlamaRuntimePropertiesDefaultTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
-    fun `keeps embedded llama disabled by default`() {
+    fun `keeps llama runtime disabled by default`() {
         contextRunner.run { context ->
-            val properties = context.getBean<EmbeddedLlamaProperties>()
+            val properties = context.getBean<LlamaRuntimeProperties>()
 
             properties.enabled shouldBe false
             properties.config shouldBe null
@@ -22,6 +22,6 @@ class EmbeddedLlamaPropertiesDefaultTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(EmbeddedLlamaProperties::class)
+    @EnableConfigurationProperties(LlamaRuntimeProperties::class)
     private class PropertiesConfiguration
 }

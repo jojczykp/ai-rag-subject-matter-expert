@@ -22,7 +22,7 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  embedded-llama:
+  llama-runtime:
     enabled: false
     config:
       asset-directory: ./models/llama
