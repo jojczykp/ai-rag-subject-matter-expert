@@ -94,8 +94,8 @@ All implementation items are TODO until delivered and verified.
 - [x] Add timeout and provider-error mapping.
 - [x] Add tagged OpenAI-compatible application-flow test with a local mock
       provider.
-- [ ] Keep real cloud provider tests as explicitly enabled manual smoke tests
-      only.
+- [x] Keep real cloud provider tests out of default verification; add only as
+      explicitly enabled manual smoke tests.
 
 ## Milestone 6: Embedded Offline Runtime
 
