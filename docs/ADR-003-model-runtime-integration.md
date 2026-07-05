@@ -49,8 +49,11 @@ Runtime integration follows the component flow documented in
 
 ### Embedded Offline
 
-- [ ] Use llama.cpp with GGUF model files as the selected embedded offline
+- [x] Use llama.cpp with GGUF model files as the selected embedded offline
       direction.
+- [x] Use application-managed `llama-server` as a child process for the first
+      embedded offline mechanism. See
+      [ADR-007: Embedded Llama Runtime](ADR-007-embedded-llama-runtime.md).
 - [ ] Keep model files as external application assets, not bundled inside the
       executable JAR.
 - [ ] Add model asset directory configuration.
@@ -64,7 +67,7 @@ Future embedded runtime options:
 
 - [ ] Evaluate llama.cpp through a native/JVM wrapper.
 - [ ] Evaluate ONNX Runtime for supported local model workloads.
-- [ ] Evaluate running an embedded inference binary as a child process.
+- [x] Evaluate running an embedded inference binary as a child process.
 
 ## Open Decisions
 
@@ -72,7 +75,7 @@ Future embedded runtime options:
 - [x] Decide the first OpenAI-compatible provider configuration shape.
 - [x] Use the TGI-compatible `/generate` API as the first Hugging Face
       integration path.
-- [ ] Decide the concrete embedded llama.cpp integration approach.
+- [x] Decide the concrete embedded llama.cpp integration approach.
 
 ## Runtime Defaults
 

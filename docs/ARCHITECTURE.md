@@ -18,6 +18,7 @@ this document by marking the matching checklist items as complete.
 - [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
 - [ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
+- [ADR-007: Embedded Llama Runtime](ADR-007-embedded-llama-runtime.md)
 
 ## Current Product Scope
 
@@ -71,7 +72,7 @@ User model selection
        -> SpringAiModelClient
             -> cloud provider-backed model runtime
        -> EmbeddedModelClient
-            -> offline model runtime
+            -> application-managed llama-server child process
 ```
 
 ## Runtime Modes
