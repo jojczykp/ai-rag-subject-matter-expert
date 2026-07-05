@@ -12,24 +12,12 @@ class EmbeddedLlamaPropertiesDefaultTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
-    fun `uses default embedded llama configuration`() {
+    fun `keeps embedded llama disabled by default`() {
         contextRunner.run { context ->
             val properties = context.getBean<EmbeddedLlamaProperties>()
 
-            properties.assetDirectory shouldBe "./models/llama"
-            properties.serverExecutablePath shouldBe "./bin/llama-server"
-            properties.host shouldBe "127.0.0.1"
-            properties.port shouldBe 18080
-
-            val model = properties.models.single()
-            model.id shouldBe "embedded-llama"
-            model.displayName shouldBe "Embedded Llama"
-            model.ggufFile shouldBe "models/llama.gguf"
-            model.contextSize shouldBe 4096
-            model.runtimeArguments shouldBe emptyList()
-            model.sha256 shouldBe null
-            model.license shouldBe "TODO"
-            model.hardwareRequirements shouldBe "TODO"
+            properties.enabled shouldBe false
+            properties.config shouldBe null
         }
     }
 

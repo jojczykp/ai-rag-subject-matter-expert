@@ -1,14 +1,49 @@
 package org.alterbit.aisme.chat.embedded
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class EmbeddedLlamaPropertiesTest {
     @Test
+    fun `is disabled by default without nested config`() {
+        val properties = EmbeddedLlamaProperties()
+
+        properties.enabled shouldBe false
+        properties.config shouldBe null
+    }
+
+    @Test
+    fun `rejects enabled properties without nested config`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            EmbeddedLlamaProperties(enabled = true)
+        }
+
+        exception.message shouldContain "config"
+    }
+
+    @Test
+    fun `requires enabled properties before returning nested config`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            EmbeddedLlamaProperties().requireEnabledConfig()
+        }
+
+        exception.message shouldContain "enabled"
+    }
+
+    @Test
+    fun `returns nested config when enabled`() {
+        val config = enabledConfig()
+        val properties = EmbeddedLlamaProperties(enabled = true, config = config)
+
+        properties.requireEnabledConfig() shouldBe config
+    }
+
+    @Test
     fun `rejects blank asset directory`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(assetDirectory = " ")
+            enabledConfig(assetDirectory = " ")
         }
 
         exception.message shouldContain "asset-directory"
@@ -17,7 +52,7 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects blank server executable path`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(serverExecutablePath = " ")
+            enabledConfig(serverExecutablePath = " ")
         }
 
         exception.message shouldContain "server-executable-path"
@@ -26,7 +61,7 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects blank host`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(host = " ")
+            enabledConfig(host = " ")
         }
 
         exception.message shouldContain "host"
@@ -35,16 +70,25 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects invalid port`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(port = 0)
+            enabledConfig(port = 0)
         }
 
         exception.message shouldContain "port"
     }
 
     @Test
+    fun `rejects empty model list`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            enabledConfig(models = emptyList())
+        }
+
+        exception.message shouldContain "models"
+    }
+
+    @Test
     fun `rejects duplicate model ids`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(
+            enabledConfig(
                 models = listOf(
                     embeddedModel(id = "duplicate-model"),
                     embeddedModel(id = "duplicate-model"),
@@ -126,6 +170,21 @@ class EmbeddedLlamaPropertiesTest {
 
         exception.message shouldContain "hardware-requirements"
     }
+
+    private fun enabledConfig(
+        assetDirectory: String = "./models/llama",
+        serverExecutablePath: String = "./bin/llama-server",
+        host: String = "127.0.0.1",
+        port: Int = 18080,
+        models: List<EmbeddedLlamaModelProperties> = listOf(embeddedModel()),
+    ): EnabledEmbeddedLlamaProperties =
+        EnabledEmbeddedLlamaProperties(
+            assetDirectory = assetDirectory,
+            serverExecutablePath = serverExecutablePath,
+            host = host,
+            port = port,
+            models = models,
+        )
 
     private fun embeddedModel(
         id: String = "embedded-llama",

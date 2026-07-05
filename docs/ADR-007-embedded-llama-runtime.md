@@ -29,8 +29,9 @@ The application will:
 
 - [x] Require GGUF model files as external local assets, not files bundled into
       the executable JAR.
-- [x] Configure the embedded llama asset directory, `llama-server` executable
-      path, host, and port.
+- [x] Configure the embedded llama runtime behind an explicit `enabled` flag;
+      when enabled, require asset directory, `llama-server` executable path,
+      host, and port.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,
       license, and hardware requirement metadata.
 - [ ] Start the configured `llama-server` process for embedded offline models
@@ -102,8 +103,8 @@ first embedded chat runtime.
 
 ## Consequences
 
-- [x] Embedded runtime asset configuration includes asset directory,
-      executable path, host, and port.
+- [x] Embedded runtime asset configuration is disabled by default; enabled
+      configuration includes asset directory, executable path, host, and port.
 - [x] Embedded model metadata must include model file paths, runtime arguments,
       and metadata.
 - [ ] Availability checks must verify executable and model file existence before
