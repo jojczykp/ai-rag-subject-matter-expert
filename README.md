@@ -104,11 +104,21 @@ aisme:
     server-executable-path: ./bin/llama-server
     host: 127.0.0.1
     port: 18080
+    models:
+      - id: embedded-llama
+        display-name: Embedded Llama
+        gguf-file: models/llama.gguf
+        context-size: 4096
+        runtime-arguments: []
+        license: TODO
+        hardware-requirements: TODO
 ```
 
 `asset-directory` is the base directory for local GGUF model files and related
 metadata. `server-executable-path` points to the local `llama-server` binary
 that the application will manage when the embedded runtime is implemented.
+Model metadata describes GGUF files relative to `asset-directory`, runtime
+arguments, optional checksum, license, and hardware requirements.
 
 ## Local Ollama Model
 

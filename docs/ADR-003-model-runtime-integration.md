@@ -57,7 +57,7 @@ Runtime integration follows the component flow documented in
 - [x] Keep model files as external application assets, not bundled inside the
       executable JAR.
 - [x] Add model asset directory configuration.
-- [ ] Add model metadata files for bundled or predownloaded models.
+- [x] Add static model metadata configuration for predownloaded models.
 - [ ] Validate model file checksums before use.
 - [ ] Expose model license and redistribution metadata.
 - [ ] Report hardware requirements before loading a model.

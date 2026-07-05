@@ -101,7 +101,7 @@ All implementation items are TODO until delivered and verified.
 
 - [x] Decide the concrete llama.cpp integration mechanism.
 - [x] Add GGUF model asset directory configuration.
-- [ ] Add offline model metadata support.
+- [x] Add offline model metadata support.
 - [x] Add embedded offline model availability checker behind
       `ChatModelAvailabilityService`.
 - [ ] Extend embedded offline availability checks to verify configured model

@@ -15,6 +15,15 @@ class EmbeddedLlamaPropertiesOverrideTest {
             "aisme.embedded-llama.server-executable-path=/opt/aisme/bin/llama-server",
             "aisme.embedded-llama.host=127.0.0.2",
             "aisme.embedded-llama.port=19090",
+            "aisme.embedded-llama.models[0].id=embedded-mistral",
+            "aisme.embedded-llama.models[0].display-name=Embedded Mistral",
+            "aisme.embedded-llama.models[0].gguf-file=mistral/mistral-7b-instruct-q4.gguf",
+            "aisme.embedded-llama.models[0].context-size=8192",
+            "aisme.embedded-llama.models[0].runtime-arguments[0]=--threads",
+            "aisme.embedded-llama.models[0].runtime-arguments[1]=8",
+            "aisme.embedded-llama.models[0].sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            "aisme.embedded-llama.models[0].license=Apache-2.0",
+            "aisme.embedded-llama.models[0].hardware-requirements=8 GB RAM",
         )
 
     @Test
@@ -26,6 +35,15 @@ class EmbeddedLlamaPropertiesOverrideTest {
             properties.serverExecutablePath shouldBe "/opt/aisme/bin/llama-server"
             properties.host shouldBe "127.0.0.2"
             properties.port shouldBe 19090
+            val model = properties.models.single()
+            model.id shouldBe "embedded-mistral"
+            model.displayName shouldBe "Embedded Mistral"
+            model.ggufFile shouldBe "mistral/mistral-7b-instruct-q4.gguf"
+            model.contextSize shouldBe 8192
+            model.runtimeArguments shouldBe listOf("--threads", "8")
+            model.sha256 shouldBe "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+            model.license shouldBe "Apache-2.0"
+            model.hardwareRequirements shouldBe "8 GB RAM"
         }
     }
 

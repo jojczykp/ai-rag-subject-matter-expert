@@ -20,6 +20,16 @@ class EmbeddedLlamaPropertiesDefaultTest {
             properties.serverExecutablePath shouldBe "./bin/llama-server"
             properties.host shouldBe "127.0.0.1"
             properties.port shouldBe 18080
+
+            val model = properties.models.single()
+            model.id shouldBe "embedded-llama"
+            model.displayName shouldBe "Embedded Llama"
+            model.ggufFile shouldBe "models/llama.gguf"
+            model.contextSize shouldBe 4096
+            model.runtimeArguments shouldBe emptyList()
+            model.sha256 shouldBe null
+            model.license shouldBe "TODO"
+            model.hardwareRequirements shouldBe "TODO"
         }
     }
 

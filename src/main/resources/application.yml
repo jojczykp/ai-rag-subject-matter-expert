@@ -27,6 +27,14 @@ aisme:
     server-executable-path: ./bin/llama-server
     host: 127.0.0.1
     port: 18080
+    models:
+      - id: embedded-llama
+        display-name: Embedded Llama
+        gguf-file: models/llama.gguf
+        context-size: 4096
+        runtime-arguments: []
+        license: TODO
+        hardware-requirements: TODO
   chat:
     timeout: 60s
   model-availability:
