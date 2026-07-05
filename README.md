@@ -200,6 +200,12 @@ Generate the HTML coverage report when a local report is useful:
 ./gradlew koverHtmlReport
 ```
 
+The generated report is available at:
+
+```text
+build/reports/kover/html/index.html
+```
+
 Run the full Gradle check before final handoff when practical. The `check` task
 depends on coverage verification:
 
