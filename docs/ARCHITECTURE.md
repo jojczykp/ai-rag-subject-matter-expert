@@ -310,7 +310,7 @@ aisme:
       available-offline: false
   chat:
     timeout: 60s
-  model-availability:
+  chat-model-availability:
     timeout: 5s
 ```
 

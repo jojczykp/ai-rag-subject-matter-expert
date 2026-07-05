@@ -39,7 +39,7 @@ aisme:
           hardware-requirements: TODO
   chat:
     timeout: 60s
-  model-availability:
+  chat-model-availability:
     timeout: 5s
     cache-ttl: 5s
   chat-models:
