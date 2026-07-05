@@ -278,6 +278,11 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  embedded-llama:
+    asset-directory: ./models/llama
+    server-executable-path: ./bin/llama-server
+    host: 127.0.0.1
+    port: 18080
   chat-models:
     - id: local-ollama-llama
       display-name: Local Ollama Llama

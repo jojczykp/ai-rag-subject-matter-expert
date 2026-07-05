@@ -54,9 +54,9 @@ Runtime integration follows the component flow documented in
 - [x] Use application-managed `llama-server` as a child process for the first
       embedded offline mechanism. See
       [ADR-007: Embedded Llama Runtime](ADR-007-embedded-llama-runtime.md).
-- [ ] Keep model files as external application assets, not bundled inside the
+- [x] Keep model files as external application assets, not bundled inside the
       executable JAR.
-- [ ] Add model asset directory configuration.
+- [x] Add model asset directory configuration.
 - [ ] Add model metadata files for bundled or predownloaded models.
 - [ ] Validate model file checksums before use.
 - [ ] Expose model license and redistribution metadata.

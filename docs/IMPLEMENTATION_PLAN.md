@@ -100,7 +100,7 @@ All implementation items are TODO until delivered and verified.
 ## Milestone 6: Embedded Offline Runtime
 
 - [x] Decide the concrete llama.cpp integration mechanism.
-- [ ] Add GGUF model asset directory configuration.
+- [x] Add GGUF model asset directory configuration.
 - [ ] Add offline model metadata support.
 - [x] Add embedded offline model availability checker behind
       `ChatModelAvailabilityService`.

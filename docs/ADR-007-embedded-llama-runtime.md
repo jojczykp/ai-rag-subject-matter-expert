@@ -27,10 +27,11 @@ Use `llama-server` as an embedded child process managed by the application.
 
 The application will:
 
-- [ ] Require GGUF model files as external local assets, not files bundled into
+- [x] Require GGUF model files as external local assets, not files bundled into
       the executable JAR.
-- [ ] Configure the `llama-server` executable path, model path, host, port, and
-      runtime arguments.
+- [x] Configure the embedded llama asset directory, `llama-server` executable
+      path, host, and port.
+- [ ] Configure per-model GGUF file paths and runtime arguments.
 - [ ] Start the configured `llama-server` process for embedded offline models
       when the embedded runtime is enabled.
 - [ ] Wait for a local readiness endpoint before marking the model available.
@@ -100,8 +101,10 @@ first embedded chat runtime.
 
 ## Consequences
 
-- [ ] Embedded model configuration must include executable path, model path,
-      runtime arguments, and metadata.
+- [x] Embedded runtime asset configuration includes asset directory,
+      executable path, host, and port.
+- [ ] Embedded model metadata must include model file paths, runtime arguments,
+      and metadata.
 - [ ] Availability checks must verify executable and model file existence before
       attempting runtime loadability.
 - [ ] Optional embedded runtime tests should be tagged because they may require

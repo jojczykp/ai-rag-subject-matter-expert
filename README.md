@@ -92,6 +92,24 @@ application code.
 The ONNX client loads these files during startup, so the application fails fast
 when the configured model or tokenizer file is missing.
 
+## Embedded Offline Llama Assets
+
+Embedded offline chat will use local llama.cpp assets. The default asset
+configuration points to external files outside the application JAR:
+
+```yaml
+aisme:
+  embedded-llama:
+    asset-directory: ./models/llama
+    server-executable-path: ./bin/llama-server
+    host: 127.0.0.1
+    port: 18080
+```
+
+`asset-directory` is the base directory for local GGUF model files and related
+metadata. `server-executable-path` points to the local `llama-server` binary
+that the application will manage when the embedded runtime is implemented.
+
 ## Local Ollama Model
 
 The default chat model entry points to Ollama at `http://localhost:11434`:
