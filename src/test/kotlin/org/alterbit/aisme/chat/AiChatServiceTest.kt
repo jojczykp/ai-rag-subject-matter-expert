@@ -4,7 +4,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.net.SocketTimeoutException
 import java.time.Duration
+import java.util.concurrent.CancellationException
 import org.alterbit.aisme.chatmodel.ChatModelAvailability
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityChecker
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
@@ -18,6 +20,7 @@ import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
 import org.junit.jupiter.api.Test
+import org.springframework.web.client.ResourceAccessException
 
 class AiChatServiceTest {
     @Test
@@ -135,7 +138,7 @@ class AiChatServiceTest {
     }
 
     @Test
-    fun `does not retry chat generation automatically`() {
+    fun `maps model client failure to provider error`() {
         val modelClient = FailingAiModelClient(modelId = "local-ollama-llama")
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
@@ -144,7 +147,7 @@ class AiChatServiceTest {
             aiModelClients = aiModelClients(modelClient),
         )
 
-        val exception = shouldThrow<IllegalStateException> {
+        val exception = shouldThrow<AiModelProviderException> {
             service.chat(
                 ChatRequestDto(
                     modelId = "local-ollama-llama",
@@ -153,8 +156,93 @@ class AiChatServiceTest {
             )
         }
 
-        exception.message shouldBe "model call failed"
+        exception.modelId shouldBe "local-ollama-llama"
+        exception.provider shouldBe "Ollama"
         modelClient.callCount shouldBe 1
+    }
+
+    @Test
+    fun `maps model client timeout to provider timeout`() {
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
+            chatProperties = ChatProperties(),
+            aiModelClients = aiModelClients(
+                FailingAiModelClient(
+                    modelId = "local-ollama-llama",
+                    failure = ResourceAccessException("Read timed out", SocketTimeoutException("Read timed out")),
+                ),
+            ),
+        )
+
+        val exception = shouldThrow<AiModelProviderTimeoutException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception.modelId shouldBe "local-ollama-llama"
+        exception.provider shouldBe "Ollama"
+    }
+
+    @Test
+    fun `does not remap provider exception from model client`() {
+        val providerException = AiModelProviderException(
+            modelId = "local-ollama-llama",
+            provider = "Custom provider",
+            message = "custom provider failure",
+        )
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
+            chatProperties = ChatProperties(),
+            aiModelClients = aiModelClients(
+                FailingAiModelClient(
+                    modelId = "local-ollama-llama",
+                    failure = providerException,
+                ),
+            ),
+        )
+
+        val exception = shouldThrow<AiModelProviderException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception shouldBe providerException
+    }
+
+    @Test
+    fun `does not map request cancellation`() {
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
+            chatProperties = ChatProperties(),
+            aiModelClients = aiModelClients(
+                FailingAiModelClient(
+                    modelId = "local-ollama-llama",
+                    failure = CancellationException("request cancelled"),
+                ),
+            ),
+        )
+
+        val exception = shouldThrow<CancellationException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception.message shouldBe "request cancelled"
     }
 
     private fun chatModelRegistry(): ChatModelRegistry =
@@ -203,12 +291,13 @@ class AiChatServiceTest {
 
     private class FailingAiModelClient(
         override val modelId: String,
+        private val failure: RuntimeException = IllegalStateException("model call failed"),
     ) : AiModelClient {
         var callCount = 0
 
         override fun chat(request: AiModelChatRequest): AiModelChatResponse {
             callCount += 1
-            throw IllegalStateException("model call failed")
+            throw failure
         }
     }
 }

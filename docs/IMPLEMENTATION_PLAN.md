@@ -91,7 +91,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add OpenAI-compatible cloud adapter.
 - [x] Add Hugging Face Inference Endpoint / TGI adapter.
 - [x] Add runtime-specific chat model configuration validation.
-- [ ] Add timeout and provider-error mapping.
+- [x] Add timeout and provider-error mapping.
 - [x] Add tagged OpenAI-compatible application-flow test with a local mock
       provider.
 - [ ] Add Testcontainers MockServer tests for cloud provider request/response

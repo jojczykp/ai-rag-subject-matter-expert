@@ -1,6 +1,8 @@
 package org.alterbit.aisme.api
 
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
+import org.alterbit.aisme.chat.AiModelProviderException
+import org.alterbit.aisme.chat.AiModelProviderTimeoutException
 import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
 import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
@@ -58,6 +60,24 @@ class ApiExceptionHandler {
             details = mapOf("modelId" to exception.modelId),
         )
 
+    @ExceptionHandler(AiModelProviderTimeoutException::class)
+    fun handleAiModelProviderTimeout(exception: AiModelProviderTimeoutException): ResponseEntity<ApiErrorResponse> =
+        error(
+            status = HttpStatus.GATEWAY_TIMEOUT,
+            code = ApiErrorCode.PROVIDER_TIMEOUT,
+            message = "AI model provider timed out.",
+            details = exception.providerDetails(),
+        )
+
+    @ExceptionHandler(AiModelProviderException::class)
+    fun handleAiModelProviderError(exception: AiModelProviderException): ResponseEntity<ApiErrorResponse> =
+        error(
+            status = HttpStatus.BAD_GATEWAY,
+            code = ApiErrorCode.PROVIDER_ERROR,
+            message = "AI model provider failed.",
+            details = exception.providerDetails(),
+        )
+
     @ExceptionHandler(Exception::class)
     fun handleUnexpected(exception: Exception): ResponseEntity<ApiErrorResponse> =
         error(
@@ -88,4 +108,10 @@ class ApiExceptionHandler {
         } else {
             mapOf("reason" to this)
         }
+
+    private fun AiModelProviderException.providerDetails(): Map<String, String> =
+        mapOf(
+            "modelId" to modelId,
+            "provider" to provider,
+        )
 }

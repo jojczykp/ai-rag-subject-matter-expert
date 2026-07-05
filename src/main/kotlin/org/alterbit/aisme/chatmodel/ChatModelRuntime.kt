@@ -1,9 +1,11 @@
 package org.alterbit.aisme.chatmodel
 
-enum class ChatModelRuntime {
-    SPRING_AI,
-    OPENAI_COMPATIBLE,
-    OLLAMA,
-    HUGGING_FACE_ENDPOINT,
-    EMBEDDED_OFFLINE,
+enum class ChatModelRuntime(
+    val providerLabel: String,
+) {
+    SPRING_AI("Spring AI"),
+    OPENAI_COMPATIBLE("OpenAI-compatible"),
+    OLLAMA("Ollama"),
+    HUGGING_FACE_ENDPOINT("Hugging Face TGI"),
+    EMBEDDED_OFFLINE("Embedded offline"),
 }

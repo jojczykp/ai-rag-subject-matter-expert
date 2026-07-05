@@ -89,6 +89,20 @@ class OllamaAiModelClientTest {
         exception.message shouldContain "requires modelName"
     }
 
+    @Test
+    fun `rejects blank provider response`() {
+        val client = OllamaAiModelClient(
+            model = ollamaModel(),
+            chatApi = FakeOllamaChatApi(answer = " "),
+        )
+
+        val exception = shouldThrow<IllegalStateException> {
+            client.chat(request())
+        }
+
+        exception.message shouldContain "blank answer"
+    }
+
     private fun request(modelId: String = "local-llama"): AiModelChatRequest =
         AiModelChatRequest(
             modelId = modelId,

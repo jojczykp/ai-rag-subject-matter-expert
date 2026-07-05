@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chat
 
+import java.util.concurrent.CancellationException
 import org.alterbit.aisme.chatmodel.ChatModelAvailability
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
 import org.alterbit.aisme.chatmodel.ChatModelDescriptor
@@ -19,14 +20,27 @@ class AiChatService(
             .withAvailability(chatModelRegistry.getByIdOrThrow(request.modelId))
             .also(::requireCallableModel)
 
-        val modelResponse = aiModelClients.getByModelIdOrThrow(chatModel.id).chat(
-            AiModelChatRequest(
+        val modelResponse = try {
+            aiModelClients.getByModelIdOrThrow(chatModel.id).chat(
+                AiModelChatRequest(
+                    modelId = chatModel.id,
+                    message = request.message,
+                    contextChunks = emptyList(),
+                    timeout = chatProperties.timeout,
+                ),
+            )
+        } catch (ex: CancellationException) {
+            throw ex
+        } catch (ex: AiModelProviderException) {
+            throw ex
+        } catch (ex: AiModelClientNotFoundException) {
+            throw ex
+        } catch (ex: RuntimeException) {
+            throw ex.toAiModelProviderException(
                 modelId = chatModel.id,
-                message = request.message,
-                contextChunks = emptyList(),
-                timeout = chatProperties.timeout,
-            ),
-        )
+                provider = chatModel.runtime.providerLabel,
+            )
+        }
 
         return ChatResponseDto(
             modelId = modelResponse.modelId,
