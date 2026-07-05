@@ -20,15 +20,15 @@ class AiChatService(
             .withAvailability(chatModelRegistry.getByIdOrThrow(request.modelId))
             .also(::requireCallableModel)
 
+        val modelRequest = AiModelChatRequest(
+            modelId = chatModel.id,
+            message = request.message,
+            contextChunks = emptyList(),
+            timeout = chatProperties.timeout,
+        )
+
         val modelResponse = try {
-            aiModelClients.getByModelIdOrThrow(chatModel.id).chat(
-                AiModelChatRequest(
-                    modelId = chatModel.id,
-                    message = request.message,
-                    contextChunks = emptyList(),
-                    timeout = chatProperties.timeout,
-                ),
-            )
+            aiModelClients.getByModelIdOrThrow(chatModel.id).chat(modelRequest)
         } catch (ex: CancellationException) {
             throw ex
         } catch (ex: AiModelProviderException) {

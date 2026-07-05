@@ -21,18 +21,17 @@ class OpenAiCompatibleAiModelClient(
             "OpenAI-compatible client for model '${model.id}' cannot handle model '${request.modelId}'"
         }
 
-        val response = chatApi.chat(
-            OpenAiCompatibleChatRequest(
-                model = model.requireOpenAiCompatibleModelName(),
-                messages = listOf(
-                    OpenAiCompatibleChatMessage(
-                        role = "user",
-                        content = request.toSingleUserPromptText(),
-                    ),
+        val providerRequest = OpenAiCompatibleChatRequest(
+            model = model.requireOpenAiCompatibleModelName(),
+            messages = listOf(
+                OpenAiCompatibleChatMessage(
+                    role = "user",
+                    content = request.toSingleUserPromptText(),
                 ),
             ),
         )
-        val answer = response.choices.firstOrNull()
+        val providerResponse = chatApi.chat(providerRequest)
+        val answer = providerResponse.choices.firstOrNull()
             ?.message
             ?.content
             .orEmpty()

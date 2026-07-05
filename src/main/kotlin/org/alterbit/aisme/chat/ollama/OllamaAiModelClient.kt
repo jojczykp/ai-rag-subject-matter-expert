@@ -22,8 +22,9 @@ class OllamaAiModelClient(
             "Ollama client for model '${model.id}' cannot handle model '${request.modelId}'"
         }
 
-        val response = chatApi.chat(toOllamaRequest(request))
-        val answer = response.message().content().orEmpty().trim()
+        val ollamaRequest = toOllamaRequest(request)
+        val ollamaResponse = chatApi.chat(ollamaRequest)
+        val answer = ollamaResponse.message().content().orEmpty().trim()
 
         check(answer.isNotBlank()) {
             "Ollama returned blank answer for model '${model.id}'"

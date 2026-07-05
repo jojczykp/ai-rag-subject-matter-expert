@@ -17,12 +17,11 @@ class HuggingFaceTgiAiModelClient(
             "Hugging Face TGI client for model '${model.id}' cannot handle model '${request.modelId}'"
         }
 
-        val response = chatApi.generate(
-            HuggingFaceTgiGenerateRequest(
-                inputs = request.toSingleUserPromptText(),
-            ),
+        val providerRequest = HuggingFaceTgiGenerateRequest(
+            inputs = request.toSingleUserPromptText(),
         )
-        val answer = response.generatedText.orEmpty().trim()
+        val providerResponse = chatApi.generate(providerRequest)
+        val answer = providerResponse.generatedText.orEmpty().trim()
 
         check(answer.isNotBlank()) {
             "Hugging Face TGI provider returned blank answer for model '${model.id}'"
