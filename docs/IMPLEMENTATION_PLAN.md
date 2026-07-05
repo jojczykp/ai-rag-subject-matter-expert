@@ -81,7 +81,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Support user-configured Ollama base URLs.
 - [x] Add Ollama model availability checker behind
       `ChatModelAvailabilityService`.
-- [x] Add MockServer or fake-client tests for adapter behavior where practical.
+- [x] Add local mock or fake-client tests for adapter behavior where practical.
 - [x] Add optional tagged Testcontainers Ollama tests.
 - [x] Add optional model-backed Ollama container test for application chat flow
       after choosing how test models are supplied.
@@ -94,8 +94,6 @@ All implementation items are TODO until delivered and verified.
 - [x] Add timeout and provider-error mapping.
 - [x] Add tagged OpenAI-compatible application-flow test with a local mock
       provider.
-- [ ] Add Testcontainers MockServer tests for cloud provider request/response
-      mapping.
 - [ ] Keep real cloud provider tests as explicitly enabled manual smoke tests
       only.
 

@@ -18,7 +18,8 @@ Use layered integration tests:
 - [ ] Testcontainers PostgreSQL with pgvector for database and retrieval tests.
 - [x] Testcontainers with an Ollama Docker container for Ollama integration
       tests.
-- [ ] Testcontainers MockServer for cloud and hosted provider protocol tests.
+- [x] Local mock HTTP server tests for cloud and hosted provider protocol
+      tests.
 - [x] Fake model clients for application-flow integration tests where provider
       protocol behavior is not under test.
 
@@ -33,7 +34,7 @@ normal local development and CI:
 - [ ] Unit tests.
 - [ ] Spring Boot application-flow integration tests with fake model clients.
 - [ ] PostgreSQL and pgvector integration tests using Testcontainers.
-- [ ] Cloud and hosted provider adapter tests using Testcontainers MockServer.
+- [x] Cloud and hosted provider adapter tests using local mock HTTP servers.
 - [ ] Kover coverage verification for production code.
 
 Optional verification should include expensive or runtime-heavy tests:
@@ -110,9 +111,9 @@ task:
 
 ### Cloud And Hosted Providers
 
-- [ ] Use Testcontainers MockServer.
-- [ ] Verify request and response mapping.
-- [ ] Verify authentication headers.
+- [x] Use local mock HTTP servers for provider protocol tests.
+- [x] Verify request and response mapping.
+- [x] Verify authentication headers.
 - [x] Verify OpenAI-compatible application chat flow with a local mock provider.
 - [ ] Verify timeout handling.
 - [ ] Verify provider error translation.
@@ -142,6 +143,6 @@ task:
 ## Naming Conventions
 
 - [ ] Use `*Test` for unit tests.
-- [x] Use `*IntegrationTest` for Spring Boot, Testcontainers, and MockServer
+- [x] Use `*IntegrationTest` for Spring Boot and Testcontainers
       integration tests included in default verification.
 - [ ] Use `*OptionalIT` for expensive optional runtime tests.
