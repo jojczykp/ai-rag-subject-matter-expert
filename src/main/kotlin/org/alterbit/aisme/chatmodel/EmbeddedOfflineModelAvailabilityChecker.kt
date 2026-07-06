@@ -23,8 +23,8 @@ class EmbeddedOfflineModelAvailabilityChecker(
         }
 
         val config = llamaRuntimeProperties.config ?: return ChatModelAvailability.MISCONFIGURED
-        val assetDirectory = Path.of(config.assetDirectory)
         val runtimeModel = config.models.find { it.id == model.id } ?: return ChatModelAvailability.MISCONFIGURED
+        val assetDirectory = Path.of(config.assetDirectory)
         val ggufFile = assetDirectory.resolveConfiguredPath(runtimeModel.ggufFile)
         val serverExecutable = Path.of(config.serverExecutablePath)
 

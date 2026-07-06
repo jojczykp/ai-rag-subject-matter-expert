@@ -106,7 +106,7 @@ All implementation items are TODO until delivered and verified.
       `ChatModelAvailabilityService`.
 - [x] Extend embedded offline availability checks to verify configured model
       asset existence.
-- [ ] Extend embedded offline availability checks to verify model metadata
+- [x] Extend embedded offline availability checks to verify model metadata
       validity.
 - [ ] Extend embedded offline availability checks to include checksum validation
       results.
