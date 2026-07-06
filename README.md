@@ -16,15 +16,9 @@ plan.
 The Gradle build uses the Java 26 toolchain, Kotlin 2.4.0, Spring Boot 4.1.0,
 and Kover for coverage verification. The wrapper currently uses Gradle 9.5.1.
 
-## Build And Run
+## Build
 
 Run commands from the repository root.
-
-Start the database:
-
-```bash
-docker compose up -d db
-```
 
 Download the local embedding model if it is not already present:
 
@@ -38,6 +32,104 @@ curl -L \
   -o models/bge-small-en-v1.5/tokenizer.json
 ```
 
+Download example offline llama assets if you want to enable the bundled
+`llama-runtime-example` chat model:
+
+```bash
+mkdir -p models/llama/models
+curl -L \
+  https://huggingface.co/QuantFactory/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/TinyLlama-1.1B-Chat-v1.0.Q4_K_M.gguf \
+  -o models/llama/models/llama.gguf
+```
+
+Download a prebuilt `llama-server` for macOS Apple Silicon and copy it into the
+configured project-local path:
+
+```bash
+mkdir -p models/llama/bin
+curl -L \
+  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-arm64.tar.gz \
+  -o /tmp/llama-bin-macos-arm64.tar.gz
+tar -xzf /tmp/llama-bin-macos-arm64.tar.gz -C /tmp
+cp /tmp/llama-b9892/llama-server models/llama/bin/llama-server
+chmod +x models/llama/bin/llama-server
+```
+
+For macOS Intel, use the x64 archive instead:
+
+```bash
+mkdir -p models/llama/bin
+curl -L \
+  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-x64.tar.gz \
+  -o /tmp/llama-bin-macos-x64.tar.gz
+tar -xzf /tmp/llama-bin-macos-x64.tar.gz -C /tmp
+cp /tmp/llama-b9892/llama-server models/llama/bin/llama-server
+chmod +x models/llama/bin/llama-server
+```
+
+Download a prebuilt `llama-server` for Linux Ubuntu x64:
+
+```bash
+mkdir -p models/llama/bin
+curl -L \
+  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-ubuntu-x64.tar.gz \
+  -o /tmp/llama-bin-ubuntu-x64.tar.gz
+tar -xzf /tmp/llama-bin-ubuntu-x64.tar.gz -C /tmp
+cp /tmp/llama-b9892/llama-server models/llama/bin/llama-server
+chmod +x models/llama/bin/llama-server
+```
+
+On Windows PowerShell, download the CPU x64 archive and copy
+`llama-server.exe`:
+
+```powershell
+New-Item -ItemType Directory -Force models\llama\bin | Out-Null
+Invoke-WebRequest `
+  -Uri https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-win-cpu-x64.zip `
+  -OutFile $env:TEMP\llama-bin-win-cpu-x64.zip
+Expand-Archive -Force $env:TEMP\llama-bin-win-cpu-x64.zip $env:TEMP\llama-bin-win-cpu-x64
+Copy-Item $env:TEMP\llama-bin-win-cpu-x64\llama-server.exe models\llama\bin\llama-server.exe
+```
+
+When running on Windows, set
+`aisme.llama-runtime.config.server-executable-path` to
+`./models/llama/bin/llama-server.exe`.
+
+Optionally calculate the model checksum and copy it into
+`aisme.llama-runtime.config.models[0].sha256`:
+
+```bash
+# macOS
+shasum -a 256 models/llama/models/llama.gguf
+```
+
+```bash
+# Linux
+sha256sum models/llama/models/llama.gguf
+```
+
+```powershell
+# Windows PowerShell
+Get-FileHash models\llama\models\llama.gguf -Algorithm SHA256
+```
+
+To make the example model selectable, set both `aisme.llama-runtime.enabled`
+and the `llama-runtime-example` chat model entry to `true`.
+
+Build the application:
+
+```bash
+./gradlew build
+```
+
+## Run
+
+Start the database:
+
+```bash
+docker compose up -d db
+```
+
 Run the application:
 
 ```bash
@@ -45,6 +137,8 @@ Run the application:
 ```
 
 The service starts on the default Spring Boot port, `8080`.
+
+Check application health:
 
 ```bash
 curl http://localhost:8080/actuator/health
@@ -56,10 +150,28 @@ Expected response:
 {"status":"UP"}
 ```
 
-Actuator endpoints exposed over HTTP:
+View application info:
 
-- `/actuator/health`
-- `/actuator/info`
+```bash
+curl http://localhost:8080/actuator/info
+```
+
+View the configured models:
+
+```bash
+curl http://localhost:8080/models
+```
+
+Send a sample chat request:
+
+```bash
+curl http://localhost:8080/chat \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "modelId": "local-ollama-llama",
+    "message": "How should I cook rice?"
+  }'
+```
 
 The default local database connection is:
 
@@ -83,7 +195,7 @@ aisme:
 ```
 
 The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
-See `Build And Run` for the download commands.
+See `Build` for the download commands.
 
 These files are local runtime assets. They are intentionally excluded from git
 because model binaries are large and can be replaced independently from
@@ -103,7 +215,7 @@ aisme:
     enabled: false
     config:
       asset-directory: ./models/llama
-      server-executable-path: ./bin/llama-server
+      server-executable-path: ./models/llama/bin/llama-server
       host: 127.0.0.1
       port: 18080
       models:
@@ -257,26 +369,6 @@ depends on coverage verification:
 ```bash
 ./gradlew check
 ```
-
-## Run
-
-To view the models available:
-
-```bash
-curl http://localhost:8080/models
-```
-
-
-To send sample query:
-
-```bash
-curl http://localhost:8080/chat -d '
-{
-  "modelId": "local-ollama-llama",
-  "message": "How should I cook rice?"
-}'
-```
-
 
 ## Project Agents
 
