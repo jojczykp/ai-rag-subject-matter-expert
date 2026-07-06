@@ -286,7 +286,7 @@ aisme:
       host: 127.0.0.1
       port: 18080
       models:
-        - id: embedded-llama
+        - id: llama-runtime-example
           display-name: Embedded Llama
           gguf-file: models/llama.gguf
           context-size: 4096

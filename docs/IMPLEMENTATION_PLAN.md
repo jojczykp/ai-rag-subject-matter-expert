@@ -104,7 +104,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add offline model metadata support.
 - [x] Add embedded offline model availability checker behind
       `ChatModelAvailabilityService`.
-- [ ] Extend embedded offline availability checks to verify configured model
+- [x] Extend embedded offline availability checks to verify configured model
       asset existence.
 - [ ] Extend embedded offline availability checks to verify model metadata
       validity.
@@ -119,8 +119,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add offline startup tests with lightweight fakes.
 - [ ] Add embedded offline availability tests for `GET /models`.
 - [ ] Add embedded offline availability tests for `POST /chat`.
-- [ ] Document that embedded offline availability is metadata-only until asset
-      configuration and runtime loading are implemented.
+- [ ] Document that embedded offline availability verifies asset existence but
+      does not verify runtime loadability until runtime loading is implemented.
 - [ ] Add optional tagged embedded runtime tests when a practical fixture
       exists.
 
