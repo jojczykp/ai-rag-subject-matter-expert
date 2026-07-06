@@ -109,6 +109,8 @@ first embedded chat runtime.
       and metadata.
 - [x] Availability checks verify executable and model file existence before
       attempting runtime loadability.
+- [x] Availability checks verify configured GGUF SHA-256 checksums at startup
+      when model metadata provides `sha256`.
 - [x] Embedded offline asset availability is calculated once at checker
       creation; local asset changes require application restart.
 - [ ] Optional embedded runtime tests should be tagged because they may require

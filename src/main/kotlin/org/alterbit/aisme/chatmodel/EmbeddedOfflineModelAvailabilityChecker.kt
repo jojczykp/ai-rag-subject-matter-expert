@@ -1,7 +1,9 @@
 package org.alterbit.aisme.chatmodel
 
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.MessageDigest
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EnabledLlamaRuntimeProperties
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
@@ -51,7 +53,8 @@ class EmbeddedOfflineModelAvailabilityChecker(
             Files.isRegularFile(ggufFile) &&
             Files.isReadable(ggufFile) &&
             Files.isRegularFile(serverExecutable) &&
-            Files.isExecutable(serverExecutable)
+            Files.isExecutable(serverExecutable) &&
+            ggufFile.matchesConfiguredChecksum(runtimeModel.sha256)
         ) {
             ChatModelAvailability.AVAILABLE
         } else {
@@ -63,4 +66,23 @@ class EmbeddedOfflineModelAvailabilityChecker(
         val configuredPath = Path.of(path)
         return if (configuredPath.isAbsolute) configuredPath else resolve(configuredPath)
     }
+
+    private fun Path.matchesConfiguredChecksum(expectedSha256: String?): Boolean =
+        expectedSha256 == null || expectedSha256 == sha256()
+
+    private fun Path.sha256(): String? =
+        try {
+            val digest = MessageDigest.getInstance("SHA-256")
+            Files.newInputStream(this).use { input ->
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                var bytesRead = input.read(buffer)
+                while (bytesRead != -1) {
+                    digest.update(buffer, 0, bytesRead)
+                    bytesRead = input.read(buffer)
+                }
+            }
+            digest.digest().joinToString(separator = "") { "%02x".format(it) }
+        } catch (_: IOException) {
+            null
+        }
 }

@@ -126,7 +126,8 @@ hardware requirements.
 
 Embedded offline asset availability is checked when the application starts.
 After changing local GGUF files or the configured `llama-server` binary, restart
-the application to refresh embedded offline availability.
+the application to refresh embedded offline availability. If model metadata
+includes `sha256`, the GGUF checksum is verified during that startup check.
 
 ## Local Ollama Model
 

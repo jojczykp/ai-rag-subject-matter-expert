@@ -108,12 +108,12 @@ All implementation items are TODO until delivered and verified.
       asset existence.
 - [x] Extend embedded offline availability checks to verify model metadata
       validity.
-- [ ] Extend embedded offline availability checks to include checksum validation
+- [x] Extend embedded offline availability checks to include checksum validation
       results.
 - [ ] Add embedded adapter behind `AiModelClient`.
 - [ ] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
-- [ ] Add model checksum validation.
+- [x] Add model checksum validation.
 - [ ] Add license and hardware requirement metadata.
 - [ ] Add offline profile configuration.
 - [ ] Add offline startup tests with lightweight fakes.

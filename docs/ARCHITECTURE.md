@@ -113,9 +113,10 @@ checks become slow or noisy.
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static
 local assets. Updating those files requires restarting the application to
-refresh embedded offline availability. Online and local-server providers remain
-eligible for request-time checks because their reachability can change while
-the application is running.
+refresh embedded offline availability. If `sha256` is configured for a GGUF
+model, the checksum is verified during this startup calculation. Online and
+local-server providers remain eligible for request-time checks because their
+reachability can change while the application is running.
 
 Example model descriptor:
 
