@@ -10,6 +10,7 @@ import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 
 class HuggingFaceTgiAiModelClientProviderTest {
@@ -51,7 +52,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "aisme.chat-models[0].config.base-url"
         exception.message shouldContain "is required"
     }
 
@@ -65,24 +66,30 @@ class HuggingFaceTgiAiModelClientProviderTest {
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Hugging Face Mistral",
-            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-            mode = ChatModelMode.ONLINE,
-            availableOffline = false,
-            baseUrl = baseUrl,
-            modelName = null,
-            apiKey = apiKey,
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Hugging Face Mistral",
+                runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                mode = ChatModelMode.ONLINE,
+                availableOffline = false,
+                baseUrl = baseUrl,
+                modelName = null,
+                apiKey = apiKey,
+            ),
         )
 
     private fun nonHuggingFaceModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Local Llama",
-            runtime = ChatModelRuntime.OLLAMA,
-            mode = ChatModelMode.LOCAL_SERVER,
-            availableOffline = false,
-            baseUrl = "http://localhost:11434",
-            modelName = "llama3.2",
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Local Llama",
+                runtime = ChatModelRuntime.OLLAMA,
+                mode = ChatModelMode.LOCAL_SERVER,
+                availableOffline = false,
+                baseUrl = "http://localhost:11434",
+                modelName = "llama3.2",
+            ),
         )
 
     private class FakeHuggingFaceTgiChatApiFactory : HuggingFaceTgiChatApiFactory {

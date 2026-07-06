@@ -13,18 +13,20 @@ class ConfiguredChatModelsPropertiesOverrideTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
             "aisme.chat-models[0].id=cloud-gpt",
-            "aisme.chat-models[0].display-name=Cloud GPT",
-            "aisme.chat-models[0].runtime=OPENAI_COMPATIBLE",
-            "aisme.chat-models[0].mode=ONLINE",
-            "aisme.chat-models[0].available-offline=false",
-            "aisme.chat-models[0].base-url=https://api.example.com/v1",
-            "aisme.chat-models[0].model-name=gpt-4.1-mini",
-            "aisme.chat-models[0].api-key=test-api-key",
+            "aisme.chat-models[0].enabled=true",
+            "aisme.chat-models[0].config.display-name=Cloud GPT",
+            "aisme.chat-models[0].config.runtime=OPENAI_COMPATIBLE",
+            "aisme.chat-models[0].config.mode=ONLINE",
+            "aisme.chat-models[0].config.available-offline=false",
+            "aisme.chat-models[0].config.base-url=https://api.example.com/v1",
+            "aisme.chat-models[0].config.model-name=gpt-4.1-mini",
+            "aisme.chat-models[0].config.api-key=test-api-key",
             "aisme.chat-models[1].id=embedded-llama",
-            "aisme.chat-models[1].display-name=Embedded Llama",
-            "aisme.chat-models[1].runtime=EMBEDDED_OFFLINE",
-            "aisme.chat-models[1].mode=EMBEDDED_OFFLINE",
-            "aisme.chat-models[1].available-offline=true",
+            "aisme.chat-models[1].enabled=true",
+            "aisme.chat-models[1].config.display-name=Embedded Llama",
+            "aisme.chat-models[1].config.runtime=EMBEDDED_OFFLINE",
+            "aisme.chat-models[1].config.mode=EMBEDDED_OFFLINE",
+            "aisme.chat-models[1].config.available-offline=true",
         )
 
     @Test
@@ -34,24 +36,28 @@ class ConfiguredChatModelsPropertiesOverrideTest {
 
             properties.chatModels shouldHaveSize 2
             val cloudModel = properties.chatModels[0]
+            val cloudConfig = cloudModel.requireEnabledConfig()
             cloudModel.id shouldBe "cloud-gpt"
-            cloudModel.displayName shouldBe "Cloud GPT"
-            cloudModel.runtime shouldBe ChatModelRuntime.OPENAI_COMPATIBLE
-            cloudModel.mode shouldBe ChatModelMode.ONLINE
-            cloudModel.availableOffline shouldBe false
-            cloudModel.baseUrl shouldBe "https://api.example.com/v1"
-            cloudModel.modelName shouldBe "gpt-4.1-mini"
-            cloudModel.apiKey shouldBe "test-api-key"
+            cloudModel.enabled shouldBe true
+            cloudConfig.displayName shouldBe "Cloud GPT"
+            cloudConfig.runtime shouldBe ChatModelRuntime.OPENAI_COMPATIBLE
+            cloudConfig.mode shouldBe ChatModelMode.ONLINE
+            cloudConfig.availableOffline shouldBe false
+            cloudConfig.baseUrl shouldBe "https://api.example.com/v1"
+            cloudConfig.modelName shouldBe "gpt-4.1-mini"
+            cloudConfig.apiKey shouldBe "test-api-key"
 
             val embeddedModel = properties.chatModels[1]
+            val embeddedConfig = embeddedModel.requireEnabledConfig()
             embeddedModel.id shouldBe "embedded-llama"
-            embeddedModel.displayName shouldBe "Embedded Llama"
-            embeddedModel.runtime shouldBe ChatModelRuntime.EMBEDDED_OFFLINE
-            embeddedModel.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
-            embeddedModel.availableOffline shouldBe true
-            embeddedModel.baseUrl shouldBe null
-            embeddedModel.modelName shouldBe null
-            embeddedModel.apiKey shouldBe null
+            embeddedModel.enabled shouldBe true
+            embeddedConfig.displayName shouldBe "Embedded Llama"
+            embeddedConfig.runtime shouldBe ChatModelRuntime.EMBEDDED_OFFLINE
+            embeddedConfig.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
+            embeddedConfig.availableOffline shouldBe true
+            embeddedConfig.baseUrl shouldBe null
+            embeddedConfig.modelName shouldBe null
+            embeddedConfig.apiKey shouldBe null
         }
     }
 

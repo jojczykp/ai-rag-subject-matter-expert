@@ -44,12 +44,40 @@ aisme:
     cache-ttl: 5s
   chat-models:
     - id: local-ollama-llama
-      display-name: Local Ollama Llama
-      runtime: OLLAMA
-      mode: LOCAL_SERVER
-      available-offline: false
-      base-url: http://localhost:11434
-      model-name: llama3.2
+      enabled: true
+      config:
+        display-name: Local Ollama Llama
+        runtime: OLLAMA
+        mode: LOCAL_SERVER
+        available-offline: false
+        base-url: http://localhost:11434
+        model-name: llama3.2
+    - id: openai-compatible-example
+      enabled: false
+      config:
+        display-name: OpenAI-Compatible Cloud Example
+        runtime: OPENAI_COMPATIBLE
+        mode: ONLINE
+        available-offline: false
+        base-url: https://api.example.com/v1
+        model-name: example-chat-model
+        api-key: placeholder-api-key
+    - id: hugging-face-tgi-example
+      enabled: false
+      config:
+        display-name: Hugging Face TGI Example
+        runtime: HUGGING_FACE_ENDPOINT
+        mode: ONLINE
+        available-offline: false
+        base-url: https://example.endpoints.huggingface.cloud
+        api-key: placeholder-api-key
+    - id: llama-runtime-example
+      enabled: false
+      config:
+        display-name: Llama Runtime Example
+        runtime: EMBEDDED_OFFLINE
+        mode: EMBEDDED_OFFLINE
+        available-offline: true
 
 management:
   endpoints:

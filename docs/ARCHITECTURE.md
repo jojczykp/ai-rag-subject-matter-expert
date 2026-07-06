@@ -295,19 +295,40 @@ aisme:
           hardware-requirements: TODO
   chat-models:
     - id: local-ollama-llama
-      display-name: Local Ollama Llama
-      runtime: OLLAMA
-      mode: LOCAL_SERVER
-      base-url: http://localhost:11434
-      model-name: llama3.2
-      available-offline: false
-    - id: hf-mistral
-      display-name: Hugging Face Mistral
-      runtime: HUGGING_FACE_ENDPOINT
-      mode: ONLINE
-      base-url: https://example.endpoints.huggingface.cloud
-      api-key: ${HF_API_KEY}
-      available-offline: false
+      enabled: true
+      config:
+        display-name: Local Ollama Llama
+        runtime: OLLAMA
+        mode: LOCAL_SERVER
+        base-url: http://localhost:11434
+        model-name: llama3.2
+        available-offline: false
+    - id: openai-compatible-example
+      enabled: false
+      config:
+        display-name: OpenAI-Compatible Cloud Example
+        runtime: OPENAI_COMPATIBLE
+        mode: ONLINE
+        base-url: https://api.example.com/v1
+        model-name: example-chat-model
+        api-key: placeholder-api-key
+        available-offline: false
+    - id: hugging-face-tgi-example
+      enabled: false
+      config:
+        display-name: Hugging Face TGI Example
+        runtime: HUGGING_FACE_ENDPOINT
+        mode: ONLINE
+        base-url: https://example.endpoints.huggingface.cloud
+        api-key: placeholder-api-key
+        available-offline: false
+    - id: llama-runtime-example
+      enabled: false
+      config:
+        display-name: Llama Runtime Example
+        runtime: EMBEDDED_OFFLINE
+        mode: EMBEDDED_OFFLINE
+        available-offline: true
   chat:
     timeout: 60s
   chat-model-availability:

@@ -19,6 +19,7 @@ import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
@@ -251,19 +252,25 @@ class AiChatServiceTest {
                 chatModels = listOf(
                     ConfiguredChatModelProperties(
                         id = "local-ollama-llama",
-                        displayName = "Local Ollama Llama",
-                        runtime = ChatModelRuntime.OLLAMA,
-                        mode = ChatModelMode.LOCAL_SERVER,
-                        availableOffline = false,
-                        baseUrl = "http://localhost:11434",
-                        modelName = "llama3.2",
+                        enabled = true,
+                        config = EnabledChatModelProperties(
+                            displayName = "Local Ollama Llama",
+                            runtime = ChatModelRuntime.OLLAMA,
+                            mode = ChatModelMode.LOCAL_SERVER,
+                            availableOffline = false,
+                            baseUrl = "http://localhost:11434",
+                            modelName = "llama3.2",
+                        ),
                     ),
                     ConfiguredChatModelProperties(
                         id = "cloud-gpt",
-                        displayName = "Cloud GPT",
-                        runtime = ChatModelRuntime.SPRING_AI,
-                        mode = ChatModelMode.ONLINE,
-                        availableOffline = false,
+                        enabled = true,
+                        config = EnabledChatModelProperties(
+                            displayName = "Cloud GPT",
+                            runtime = ChatModelRuntime.SPRING_AI,
+                            mode = ChatModelMode.ONLINE,
+                            availableOffline = false,
+                        ),
                     ),
                 ),
             ),

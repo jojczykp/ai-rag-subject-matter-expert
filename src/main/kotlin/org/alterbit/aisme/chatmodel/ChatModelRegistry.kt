@@ -7,11 +7,17 @@ class ChatModelRegistry(
     properties: ConfiguredChatModelsProperties,
 ) {
     private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModels
-        .onEachIndexed { index, model -> model.validateRuntimeConfiguration(index) }
-        .map { it.toDescriptor() }
+        .also { models ->
+            require(models.map { it.id }.distinct().size == models.size) {
+                "aisme.chat-models must not contain duplicate ids"
+            }
+        }
+        .mapIndexed { index, model -> IndexedConfiguredChatModel(index = index, model = model) }
+        .filter { it.model.enabled }
+        .onEach { it.model.validateRuntimeConfiguration(it.index) }
+        .map { it.model.toDescriptor() }
         .also { models ->
             require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
-            require(models.map { it.id }.distinct().size == models.size) { "aisme.chat-models must not contain duplicate ids" }
         }
         .associateBy { it.id }
 
@@ -25,26 +31,27 @@ class ChatModelRegistry(
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 
     private fun ConfiguredChatModelProperties.validateRuntimeConfiguration(index: Int) {
-        val prefix = "aisme.chat-models[$index]"
+        val prefix = "aisme.chat-models[$index].config"
+        val config = requireEnabledConfig()
 
         fun requireConfigured(value: String?, propertyName: String) {
-            require(value != null) { "$prefix.$propertyName is required for $runtime models" }
+            require(value != null) { "$prefix.$propertyName is required for ${config.runtime} models" }
         }
 
-        when (runtime) {
+        when (config.runtime) {
             ChatModelRuntime.OLLAMA -> {
-                requireConfigured(baseUrl, "base-url")
-                requireConfigured(modelName, "model-name")
+                requireConfigured(config.baseUrl, "base-url")
+                requireConfigured(config.modelName, "model-name")
             }
 
             ChatModelRuntime.OPENAI_COMPATIBLE -> {
-                requireConfigured(baseUrl, "base-url")
-                requireConfigured(modelName, "model-name")
-                requireConfigured(apiKey, "api-key")
+                requireConfigured(config.baseUrl, "base-url")
+                requireConfigured(config.modelName, "model-name")
+                requireConfigured(config.apiKey, "api-key")
             }
 
             ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {
-                requireConfigured(baseUrl, "base-url")
+                requireConfigured(config.baseUrl, "base-url")
             }
 
             ChatModelRuntime.SPRING_AI,
@@ -52,4 +59,9 @@ class ChatModelRegistry(
             -> Unit
         }
     }
+
+    private data class IndexedConfiguredChatModel(
+        val index: Int,
+        val model: ConfiguredChatModelProperties,
+    )
 }

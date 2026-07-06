@@ -10,6 +10,7 @@ import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 
 class OpenAiCompatibleAiModelClientProviderTest {
@@ -51,7 +52,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "aisme.chat-models[0].config.base-url"
         exception.message shouldContain "is required"
     }
 
@@ -65,7 +66,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].api-key"
+        exception.message shouldContain "aisme.chat-models[0].config.api-key"
         exception.message shouldContain "is required"
     }
 
@@ -80,24 +81,30 @@ class OpenAiCompatibleAiModelClientProviderTest {
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Cloud GPT",
-            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
-            mode = ChatModelMode.ONLINE,
-            availableOffline = false,
-            baseUrl = baseUrl,
-            modelName = modelName,
-            apiKey = apiKey,
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Cloud GPT",
+                runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
+                mode = ChatModelMode.ONLINE,
+                availableOffline = false,
+                baseUrl = baseUrl,
+                modelName = modelName,
+                apiKey = apiKey,
+            ),
         )
 
     private fun ollamaModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Local Llama",
-            runtime = ChatModelRuntime.OLLAMA,
-            mode = ChatModelMode.LOCAL_SERVER,
-            availableOffline = false,
-            baseUrl = "http://localhost:11434",
-            modelName = "llama3.2",
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Local Llama",
+                runtime = ChatModelRuntime.OLLAMA,
+                mode = ChatModelMode.LOCAL_SERVER,
+                availableOffline = false,
+                baseUrl = "http://localhost:11434",
+                modelName = "llama3.2",
+            ),
         )
 
     private class FakeOpenAiCompatibleChatApiFactory : OpenAiCompatibleChatApiFactory {

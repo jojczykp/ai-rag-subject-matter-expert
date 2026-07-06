@@ -101,13 +101,14 @@ class OpenAiCompatibleChatFlowTest(
         @DynamicPropertySource
         fun openAiCompatibleProperties(registry: DynamicPropertyRegistry) {
             registry.add("aisme.chat-models[0].id") { "mock-openai" }
-            registry.add("aisme.chat-models[0].display-name") { "Mock OpenAI-Compatible Model" }
-            registry.add("aisme.chat-models[0].runtime") { "OPENAI_COMPATIBLE" }
-            registry.add("aisme.chat-models[0].mode") { "ONLINE" }
-            registry.add("aisme.chat-models[0].available-offline") { "false" }
-            registry.add("aisme.chat-models[0].base-url") { "http://localhost:${server.address.port}/v1" }
-            registry.add("aisme.chat-models[0].model-name") { "mock-chat-model" }
-            registry.add("aisme.chat-models[0].api-key") { "test-api-key" }
+            registry.add("aisme.chat-models[0].enabled") { "true" }
+            registry.add("aisme.chat-models[0].config.display-name") { "Mock OpenAI-Compatible Model" }
+            registry.add("aisme.chat-models[0].config.runtime") { "OPENAI_COMPATIBLE" }
+            registry.add("aisme.chat-models[0].config.mode") { "ONLINE" }
+            registry.add("aisme.chat-models[0].config.available-offline") { "false" }
+            registry.add("aisme.chat-models[0].config.base-url") { "http://localhost:${server.address.port}/v1" }
+            registry.add("aisme.chat-models[0].config.model-name") { "mock-chat-model" }
+            registry.add("aisme.chat-models[0].config.api-key") { "test-api-key" }
         }
 
         @JvmStatic

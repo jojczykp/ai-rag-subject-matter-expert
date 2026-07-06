@@ -57,6 +57,21 @@ class ChatModelRegistryTest {
     }
 
     @Test
+    fun `ignores disabled configured models`() {
+        val registry = ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                chatModels = listOf(
+                    configuredModel(id = "enabled-model"),
+                    configuredModel(id = "disabled-model", enabled = false),
+                ),
+            ),
+        )
+
+        registry.chatModels().map { it.id } shouldBe listOf("enabled-model")
+        registry.findById("disabled-model") shouldBe null
+    }
+
+    @Test
     fun `gets configured model by id or throws`() {
         val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
 
@@ -102,6 +117,15 @@ class ChatModelRegistryTest {
     }
 
     @Test
+    fun `rejects enabled model without config`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ConfiguredChatModelProperties(id = "missing-config", enabled = true)
+        }
+
+        exception.message shouldContain "config"
+    }
+
+    @Test
     fun `rejects ollama model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
@@ -111,7 +135,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "aisme.chat-models[0].config.base-url"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -126,7 +150,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].model-name"
+        exception.message shouldContain "aisme.chat-models[0].config.model-name"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -149,7 +173,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].api-key"
+        exception.message shouldContain "aisme.chat-models[0].config.api-key"
         exception.message shouldContain "is required"
         exception.message shouldContain "OPENAI_COMPATIBLE"
     }
@@ -172,7 +196,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "aisme.chat-models[0].config.base-url"
         exception.message shouldContain "is required"
         exception.message shouldContain "HUGGING_FACE_ENDPOINT"
     }
@@ -201,6 +225,7 @@ class ChatModelRegistryTest {
 
     private fun configuredModel(
         id: String = "local-ollama-llama",
+        enabled: Boolean = true,
         runtime: ChatModelRuntime = ChatModelRuntime.OLLAMA,
         mode: ChatModelMode = ChatModelMode.LOCAL_SERVER,
         baseUrl: String? = "http://localhost:11434",
@@ -209,12 +234,15 @@ class ChatModelRegistryTest {
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Local Ollama Llama",
-            runtime = runtime,
-            mode = mode,
-            availableOffline = false,
-            baseUrl = baseUrl,
-            modelName = modelName,
-            apiKey = apiKey,
+            enabled = enabled,
+            config = EnabledChatModelProperties(
+                displayName = "Local Ollama Llama",
+                runtime = runtime,
+                mode = mode,
+                availableOffline = false,
+                baseUrl = baseUrl,
+                modelName = modelName,
+                apiKey = apiKey,
+            ),
         )
 }

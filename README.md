@@ -132,10 +132,14 @@ The default chat model entry points to Ollama at `http://localhost:11434`:
 aisme:
   chat-models:
     - id: local-ollama-llama
-      runtime: OLLAMA
-      mode: LOCAL_SERVER
-      base-url: http://localhost:11434
-      model-name: llama3.2
+      enabled: true
+      config:
+        display-name: Local Ollama Llama
+        runtime: OLLAMA
+        mode: LOCAL_SERVER
+        available-offline: false
+        base-url: http://localhost:11434
+        model-name: llama3.2
 ```
 
 The application-owned `aisme.chat-models` configuration is the source of truth
@@ -150,13 +154,15 @@ OpenAI-compatible chat providers can be configured as selectable online models:
 aisme:
   chat-models:
     - id: cloud-gpt
-      display-name: Cloud GPT
-      runtime: OPENAI_COMPATIBLE
-      mode: ONLINE
-      available-offline: false
-      base-url: https://api.openai.com/v1
-      model-name: gpt-4.1-mini
-      api-key: ${OPENAI_API_KEY}
+      enabled: true
+      config:
+        display-name: Cloud GPT
+        runtime: OPENAI_COMPATIBLE
+        mode: ONLINE
+        available-offline: false
+        base-url: https://api.openai.com/v1
+        model-name: gpt-4.1-mini
+        api-key: ${OPENAI_API_KEY}
 ```
 
 The adapter sends non-streaming chat-completion requests to
@@ -171,12 +177,14 @@ configured as selectable online models:
 aisme:
   chat-models:
     - id: hf-mistral
-      display-name: Hugging Face Mistral
-      runtime: HUGGING_FACE_ENDPOINT
-      mode: ONLINE
-      available-offline: false
-      base-url: https://example.endpoints.huggingface.cloud
-      api-key: ${HF_API_KEY}
+      enabled: true
+      config:
+        display-name: Hugging Face Mistral
+        runtime: HUGGING_FACE_ENDPOINT
+        mode: ONLINE
+        available-offline: false
+        base-url: https://example.endpoints.huggingface.cloud
+        api-key: ${HF_API_KEY}
 ```
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.

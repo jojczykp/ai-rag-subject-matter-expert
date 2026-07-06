@@ -19,13 +19,15 @@ class ConfiguredChatModelsPropertiesDefaultTest {
 
             properties.chatModels shouldHaveSize 1
             val model = properties.chatModels.single()
+            val config = model.requireEnabledConfig()
             model.id shouldBe "local-ollama-llama"
-            model.displayName shouldBe "Local Ollama Llama"
-            model.runtime shouldBe ChatModelRuntime.OLLAMA
-            model.mode shouldBe ChatModelMode.LOCAL_SERVER
-            model.availableOffline shouldBe false
-            model.baseUrl shouldBe "http://localhost:11434"
-            model.modelName shouldBe "llama3.2"
+            model.enabled shouldBe true
+            config.displayName shouldBe "Local Ollama Llama"
+            config.runtime shouldBe ChatModelRuntime.OLLAMA
+            config.mode shouldBe ChatModelMode.LOCAL_SERVER
+            config.availableOffline shouldBe false
+            config.baseUrl shouldBe "http://localhost:11434"
+            config.modelName shouldBe "llama3.2"
         }
     }
 

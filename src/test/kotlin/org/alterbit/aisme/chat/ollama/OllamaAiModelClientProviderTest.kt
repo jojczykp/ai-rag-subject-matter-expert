@@ -12,6 +12,7 @@ import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
 import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 import org.springframework.ai.ollama.api.OllamaApi
 
@@ -52,7 +53,7 @@ class OllamaAiModelClientProviderTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].base-url"
+        exception.message shouldContain "aisme.chat-models[0].config.base-url"
         exception.message shouldContain "is required"
     }
 
@@ -66,21 +67,27 @@ class OllamaAiModelClientProviderTest {
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Local Llama",
-            runtime = ChatModelRuntime.OLLAMA,
-            mode = ChatModelMode.LOCAL_SERVER,
-            availableOffline = false,
-            baseUrl = baseUrl,
-            modelName = modelName,
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Local Llama",
+                runtime = ChatModelRuntime.OLLAMA,
+                mode = ChatModelMode.LOCAL_SERVER,
+                availableOffline = false,
+                baseUrl = baseUrl,
+                modelName = modelName,
+            ),
         )
 
     private fun springAiModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            displayName = "Cloud GPT",
-            runtime = ChatModelRuntime.SPRING_AI,
-            mode = ChatModelMode.ONLINE,
-            availableOffline = false,
+            enabled = true,
+            config = EnabledChatModelProperties(
+                displayName = "Cloud GPT",
+                runtime = ChatModelRuntime.SPRING_AI,
+                mode = ChatModelMode.ONLINE,
+                availableOffline = false,
+            ),
         )
 
     private class FakeOllamaChatApiFactory : OllamaChatApiFactory {

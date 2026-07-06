@@ -111,14 +111,15 @@ class OllamaContainerSmokeTest(
         @DynamicPropertySource
         fun ollamaProperties(registry: DynamicPropertyRegistry) {
             registry.add("aisme.chat-models[0].id") { "container-ollama" }
-            registry.add("aisme.chat-models[0].display-name") { "Container Ollama" }
-            registry.add("aisme.chat-models[0].runtime") { "OLLAMA" }
-            registry.add("aisme.chat-models[0].mode") { "LOCAL_SERVER" }
-            registry.add("aisme.chat-models[0].available-offline") { "false" }
-            registry.add("aisme.chat-models[0].base-url") {
+            registry.add("aisme.chat-models[0].enabled") { "true" }
+            registry.add("aisme.chat-models[0].config.display-name") { "Container Ollama" }
+            registry.add("aisme.chat-models[0].config.runtime") { "OLLAMA" }
+            registry.add("aisme.chat-models[0].config.mode") { "LOCAL_SERVER" }
+            registry.add("aisme.chat-models[0].config.available-offline") { "false" }
+            registry.add("aisme.chat-models[0].config.base-url") {
                 "http://${ollama.host}:${ollama.getMappedPort(OLLAMA_PORT)}"
             }
-            registry.add("aisme.chat-models[0].model-name") { testModelName }
+            registry.add("aisme.chat-models[0].config.model-name") { testModelName }
         }
     }
 }
