@@ -110,6 +110,13 @@ should enforce that the selected model is usable before calling it. Short-lived
 availability caching can be added inside `ChatModelAvailabilityService` if
 checks become slow or noisy.
 
+Embedded offline asset availability is computed once when the checker is
+created because GGUF files and the managed `llama-server` executable are static
+local assets. Updating those files requires restarting the application to
+refresh embedded offline availability. Online and local-server providers remain
+eligible for request-time checks because their reachability can change while
+the application is running.
+
 Example model descriptor:
 
 ```kotlin

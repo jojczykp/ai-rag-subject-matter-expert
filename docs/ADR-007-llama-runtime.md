@@ -109,6 +109,8 @@ first embedded chat runtime.
       and metadata.
 - [x] Availability checks verify executable and model file existence before
       attempting runtime loadability.
+- [x] Embedded offline asset availability is calculated once at checker
+      creation; local asset changes require application restart.
 - [ ] Optional embedded runtime tests should be tagged because they may require
       native executables and model files.
 - [ ] Documentation must explain that model files and binaries are local assets

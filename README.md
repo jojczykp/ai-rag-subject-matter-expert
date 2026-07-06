@@ -124,6 +124,10 @@ is implemented. Model metadata describes GGUF files relative to
 `config.asset-directory`, runtime arguments, optional checksum, license, and
 hardware requirements.
 
+Embedded offline asset availability is checked when the application starts.
+After changing local GGUF files or the configured `llama-server` binary, restart
+the application to refresh embedded offline availability.
+
 ## Local Ollama Model
 
 The default chat model entry points to Ollama at `http://localhost:11434`:

@@ -60,6 +60,26 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
+    fun `keeps startup availability result when files change after checker creation`() {
+        val assets = runtimeAssets()
+        val checker = checker(
+            properties = enabledProperties(
+                assetDirectory = assets.assetDirectory,
+                serverExecutablePath = assets.serverExecutable,
+                ggufFile = assets.ggufFile.fileName.toString(),
+            ),
+        )
+        Files.delete(assets.ggufFile)
+
+        val availability = checker.check(
+            model = embeddedModel(),
+            timeout = Duration.ofSeconds(5),
+        )
+
+        availability shouldBe ChatModelAvailability.AVAILABLE
+    }
+
+    @Test
     fun `marks embedded offline model as misconfigured when llama runtime is disabled`() {
         val availability = checker().check(
             model = embeddedModel(),
