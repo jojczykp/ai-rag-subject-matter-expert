@@ -123,8 +123,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add offline startup tests with lightweight fakes.
 - [x] Add embedded offline availability tests for `GET /models`.
 - [x] Add embedded offline availability tests for `POST /chat`.
-- [x] Document that embedded offline availability verifies asset existence but
-      does not verify runtime loadability until runtime loading is implemented.
+- [x] Document that embedded offline availability requires static asset
+      validation and managed `llama-server` readiness.
 - [ ] Add optional tagged embedded runtime tests when a practical fixture
       exists.
 
