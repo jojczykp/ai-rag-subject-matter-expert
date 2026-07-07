@@ -241,6 +241,8 @@ the application to refresh embedded offline availability. If model metadata
 includes `sha256`, the GGUF checksum is verified during that startup check.
 The managed local `llama-server` health endpoint must become ready before an
 embedded model is reported as available.
+Managed `llama-server` lifecycle events and process stdout/stderr are written
+to the application logs.
 
 ## Local Ollama Model
 

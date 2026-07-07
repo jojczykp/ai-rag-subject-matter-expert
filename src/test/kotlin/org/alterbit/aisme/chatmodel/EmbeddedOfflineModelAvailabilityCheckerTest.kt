@@ -14,6 +14,7 @@ import org.alterbit.aisme.chat.embedded.EphemeralLlamaRuntimePortAllocator
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessLauncher
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessManager
+import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessOutputLogger
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeProperties
 import org.alterbit.aisme.chat.embedded.LlamaServerReadinessProbe
 import org.junit.jupiter.api.Test
@@ -299,6 +300,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             portAllocator = EphemeralLlamaRuntimePortAllocator { 19001 },
             processLauncher = FakeLlamaRuntimeProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> runtimeReady },
+            processOutputLogger = LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         ).also { it.run(DefaultApplicationArguments()) }
 
     private fun embeddedModel(): ChatModelDescriptor =

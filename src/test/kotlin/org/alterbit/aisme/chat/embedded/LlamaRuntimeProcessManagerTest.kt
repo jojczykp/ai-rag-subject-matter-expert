@@ -27,6 +27,7 @@ class LlamaRuntimeProcessManagerTest {
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -61,6 +62,7 @@ class LlamaRuntimeProcessManagerTest {
             portAllocator = fixedPortAllocator(19001, 19002),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -109,6 +111,7 @@ class LlamaRuntimeProcessManagerTest {
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -127,6 +130,7 @@ class LlamaRuntimeProcessManagerTest {
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -144,6 +148,7 @@ class LlamaRuntimeProcessManagerTest {
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(ready = false),
+            processOutputLogger = noOpOutputLogger(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -213,6 +218,9 @@ class LlamaRuntimeProcessManagerTest {
         val remainingPorts = ports.toMutableList()
         return EphemeralLlamaRuntimePortAllocator { remainingPorts.removeFirst() }
     }
+
+    private fun noOpOutputLogger(): LlamaRuntimeProcessOutputLogger =
+        LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> })
 
     private class FakeLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
         val commands = mutableListOf<List<String>>()

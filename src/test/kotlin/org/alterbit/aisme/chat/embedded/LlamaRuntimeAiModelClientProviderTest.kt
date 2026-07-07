@@ -142,6 +142,7 @@ class LlamaRuntimeAiModelClientProviderTest {
             portAllocator = fixedPortAllocator(*ports),
             processLauncher = FakeLlamaRuntimeProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> true },
+            processOutputLogger = LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         )
 
     private fun fixedPortAllocator(vararg ports: Int): EphemeralLlamaRuntimePortAllocator {

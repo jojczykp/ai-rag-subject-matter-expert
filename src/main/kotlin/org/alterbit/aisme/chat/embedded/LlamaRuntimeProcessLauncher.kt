@@ -10,7 +10,5 @@ fun interface LlamaRuntimeProcessLauncher {
 class ProcessBuilderLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
     override fun start(command: List<String>): Process =
         ProcessBuilder(command)
-            .redirectErrorStream(true)
-            .redirectOutput(ProcessBuilder.Redirect.DISCARD)
             .start()
 }

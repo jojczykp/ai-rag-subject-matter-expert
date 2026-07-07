@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 import org.alterbit.aisme.chatmodel.ChatModelAvailability
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
@@ -18,7 +19,9 @@ class LlamaRuntimeProcessManager(
     portAllocator: EphemeralLlamaRuntimePortAllocator,
     private val processLauncher: LlamaRuntimeProcessLauncher,
     private val readinessProbe: LlamaServerReadinessProbe,
+    private val processOutputLogger: LlamaRuntimeProcessOutputLogger,
 ) : ApplicationRunner {
+    private val logger = LoggerFactory.getLogger(javaClass)
     private val managedModels: List<ManagedLlamaRuntimeModel> =
         buildManagedModels(
             chatModelRegistry = chatModelRegistry,
@@ -38,12 +41,17 @@ class LlamaRuntimeProcessManager(
 
     override fun run(args: ApplicationArguments) {
         managedModels.forEach { managedModel ->
+            logger.info("Starting managed llama-server process for model '{}'", managedModel.modelId)
+
             val process = processLauncher.start(managedModel.command)
             runningProcesses += process
+            processOutputLogger.attach(managedModel.modelId, process)
             if (readinessProbe.awaitReady(managedModel.baseUrl, STARTUP_TIMEOUT)) {
                 availabilityByModelId[managedModel.modelId] = ChatModelAvailability.AVAILABLE
+                logger.info("Managed llama-server process for model '{}' is ready", managedModel.modelId)
             } else {
                 availabilityByModelId[managedModel.modelId] = ChatModelAvailability.UNAVAILABLE
+                logger.warn("Managed llama-server process for model '{}' did not become ready", managedModel.modelId)
                 if (process.isAlive) {
                     process.destroy()
                 }
@@ -55,6 +63,7 @@ class LlamaRuntimeProcessManager(
     fun stop() {
         runningProcesses.forEach { process ->
             if (process.isAlive) {
+                logger.info("Stopping managed llama-server process")
                 process.destroy()
             }
         }
@@ -71,6 +80,7 @@ class LlamaRuntimeProcessManager(
 
         val config = llamaRuntimeProperties.requireEnabledConfig()
         val runtimeModelsById = config.models.associateBy { it.id }
+
         return chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
             .mapNotNull { chatModel ->

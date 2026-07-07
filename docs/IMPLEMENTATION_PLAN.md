@@ -113,7 +113,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add embedded adapter behind `AiModelClient`.
 - [x] Start managed `llama-server` processes for enabled embedded offline
       models using ephemeral loopback ports.
-- [ ] Introduce structured logging for embedded runtime lifecycle events and
+- [x] Introduce structured logging for embedded runtime lifecycle events and
       collect managed `llama-server` stdout and stderr.
 - [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
