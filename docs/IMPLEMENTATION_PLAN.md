@@ -121,8 +121,8 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add license and hardware requirement metadata.
 - [ ] Add offline profile configuration.
 - [ ] Add offline startup tests with lightweight fakes.
-- [ ] Add embedded offline availability tests for `GET /models`.
-- [ ] Add embedded offline availability tests for `POST /chat`.
+- [x] Add embedded offline availability tests for `GET /models`.
+- [x] Add embedded offline availability tests for `POST /chat`.
 - [x] Document that embedded offline availability verifies asset existence but
       does not verify runtime loadability until runtime loading is implemented.
 - [ ] Add optional tagged embedded runtime tests when a practical fixture
