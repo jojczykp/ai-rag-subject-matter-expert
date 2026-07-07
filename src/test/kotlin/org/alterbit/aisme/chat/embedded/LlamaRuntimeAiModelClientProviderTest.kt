@@ -105,7 +105,6 @@ class LlamaRuntimeAiModelClientProviderTest {
             config = EnabledLlamaRuntimeProperties(
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
-                host = "127.0.0.1",
                 port = 18080,
                 models = models.toList(),
             ),

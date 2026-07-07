@@ -31,7 +31,7 @@ The application will:
       the executable JAR.
 - [x] Configure the llama runtime behind an explicit `enabled` flag;
       when enabled, require asset directory, `llama-server` executable path,
-      host, and port.
+      and port.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,
       license, and hardware requirement metadata.
 - [ ] Start the configured `llama-server` process for embedded offline models

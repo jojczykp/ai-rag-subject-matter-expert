@@ -41,5 +41,9 @@ class LlamaRuntimeAiModelClientProvider(
         clients
 
     private fun EnabledLlamaRuntimeProperties.baseUrl(): String =
-        "http://$host:$port"
+        "http://$LOOPBACK_HOST:$port"
+
+    private companion object {
+        const val LOOPBACK_HOST = "127.0.0.1"
+    }
 }

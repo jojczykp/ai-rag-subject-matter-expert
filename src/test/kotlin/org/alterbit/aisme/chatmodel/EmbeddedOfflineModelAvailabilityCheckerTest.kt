@@ -265,7 +265,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             config = EnabledLlamaRuntimeProperties(
                 assetDirectory = configuredAssetDirectory.toString(),
                 serverExecutablePath = configuredServerExecutablePath.toString(),
-                host = "127.0.0.1",
                 port = 18080,
                 models = listOf(
                     LlamaRuntimeModelProperties(

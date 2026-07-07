@@ -216,7 +216,6 @@ aisme:
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
-      host: 127.0.0.1
       port: 18080
       models:
         - id: llama-runtime-example
