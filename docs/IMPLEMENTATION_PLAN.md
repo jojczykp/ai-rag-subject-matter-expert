@@ -110,7 +110,7 @@ All implementation items are TODO until delivered and verified.
       validity.
 - [x] Extend embedded offline availability checks to include checksum validation
       results.
-- [ ] Add embedded adapter behind `AiModelClient`.
+- [x] Add embedded adapter behind `AiModelClient`.
 - [ ] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
 - [x] Add model checksum validation.

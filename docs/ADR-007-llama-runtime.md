@@ -37,7 +37,7 @@ The application will:
 - [ ] Start the configured `llama-server` process for embedded offline models
       when the embedded runtime is enabled.
 - [ ] Wait for a local readiness endpoint before marking the model available.
-- [ ] Send chat requests to the local `llama-server` OpenAI-compatible HTTP API
+- [x] Send chat requests to the local `llama-server` OpenAI-compatible HTTP API
       using the existing provider-neutral `AiModelClient` abstraction.
 - [ ] Stop the child process during application shutdown.
 - [ ] Treat startup, readiness, timeout, and non-zero-exit failures as embedded

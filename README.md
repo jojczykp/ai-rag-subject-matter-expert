@@ -231,10 +231,11 @@ aisme:
 Set `enabled` to `true` only when the local llama.cpp runtime assets are
 installed. `config.asset-directory` is the base directory for local GGUF model
 files and related metadata. `config.server-executable-path` points to the local
-`llama-server` binary that the application will manage when the embedded runtime
-is implemented. Model metadata describes GGUF files relative to
-`config.asset-directory`, runtime arguments, optional checksum, license, and
-hardware requirements.
+`llama-server` binary. Chat requests for enabled embedded models are sent to the
+local llama-server OpenAI-compatible `/v1/chat/completions` endpoint; starting
+and stopping that process from the application is still planned. Model metadata
+describes GGUF files relative to `config.asset-directory`, runtime arguments,
+optional checksum, license, and hardware requirements.
 
 Embedded offline asset availability is checked when the application starts.
 After changing local GGUF files or the configured `llama-server` binary, restart
