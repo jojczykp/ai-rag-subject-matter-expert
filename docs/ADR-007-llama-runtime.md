@@ -31,15 +31,20 @@ The application will:
       the executable JAR.
 - [x] Configure the llama runtime behind an explicit `enabled` flag;
       when enabled, require asset directory, `llama-server` executable path,
-      and port.
+      and model metadata.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,
       license, and hardware requirement metadata.
-- [ ] Start the configured `llama-server` process for embedded offline models
+- [x] Start the configured `llama-server` process for embedded offline models
       when the embedded runtime is enabled.
+- [x] Allocate loopback ports internally instead of exposing host or port in
+      application configuration.
 - [ ] Wait for a local readiness endpoint before marking the model available.
 - [x] Send chat requests to the local `llama-server` OpenAI-compatible HTTP API
       using the existing provider-neutral `AiModelClient` abstraction.
-- [ ] Stop the child process during application shutdown.
+- [ ] Introduce structured application logging for embedded runtime process
+      lifecycle events and collect managed `llama-server` stdout and stderr
+      into those logs.
+- [x] Stop the child process during application shutdown.
 - [ ] Treat startup, readiness, timeout, and non-zero-exit failures as embedded
       runtime availability or provider errors.
 
@@ -104,7 +109,8 @@ first embedded chat runtime.
 ## Consequences
 
 - [x] Embedded runtime asset configuration is disabled by default; enabled
-      configuration includes asset directory, executable path, host, and port.
+      configuration includes asset directory, executable path, and model
+      metadata.
 - [x] Embedded model metadata must include model file paths, runtime arguments,
       and metadata.
 - [x] Availability checks verify executable and model file existence before
@@ -113,6 +119,8 @@ first embedded chat runtime.
       when model metadata provides `sha256`.
 - [x] Embedded offline asset availability is calculated once at checker
       creation; local asset changes require application restart.
+- [ ] Managed process stdout and stderr should be captured through application
+      logging instead of being discarded or printed directly to the console.
 - [ ] Optional embedded runtime tests should be tagged because they may require
       native executables and model files.
 - [ ] Documentation must explain that model files and binaries are local assets

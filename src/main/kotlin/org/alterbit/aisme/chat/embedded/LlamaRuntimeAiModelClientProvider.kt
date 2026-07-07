@@ -12,25 +12,29 @@ class LlamaRuntimeAiModelClientProvider(
     chatModelRegistry: ChatModelRegistry,
     chatProperties: ChatProperties,
     llamaRuntimeProperties: LlamaRuntimeProperties,
+    llamaRuntimeProcessManager: LlamaRuntimeProcessManager,
     llamaServerChatApiFactory: LlamaServerChatApiFactory,
 ) : AiModelClientProvider {
     private val clients: List<AiModelClient> = if (llamaRuntimeProperties.enabled) {
         val config = llamaRuntimeProperties.requireEnabledConfig()
         val runtimeModelsById = config.models.associateBy { it.id }
-        val chatApi = llamaServerChatApiFactory.create(
-            baseUrl = config.baseUrl(),
-            timeout = chatProperties.timeout,
-        )
 
         chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
             .mapNotNull { model ->
-                runtimeModelsById[model.id]?.let { runtimeModel ->
+                val baseUrl = llamaRuntimeProcessManager.baseUrlForModelId(model.id)
+                val runtimeModel = runtimeModelsById[model.id]
+                if (baseUrl != null && runtimeModel != null) {
                     LlamaRuntimeAiModelClient(
                         model = model,
                         runtimeModel = runtimeModel,
-                        chatApi = chatApi,
+                        chatApi = llamaServerChatApiFactory.create(
+                            baseUrl = baseUrl,
+                            timeout = chatProperties.timeout,
+                        ),
                     )
+                } else {
+                    null
                 }
             }
     } else {
@@ -39,11 +43,4 @@ class LlamaRuntimeAiModelClientProvider(
 
     override fun clients(): List<AiModelClient> =
         clients
-
-    private fun EnabledLlamaRuntimeProperties.baseUrl(): String =
-        "http://$LOOPBACK_HOST:$port"
-
-    private companion object {
-        const val LOOPBACK_HOST = "127.0.0.1"
-    }
 }

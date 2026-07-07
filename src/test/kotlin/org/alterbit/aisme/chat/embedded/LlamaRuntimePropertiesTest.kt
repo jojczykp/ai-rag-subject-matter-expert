@@ -59,15 +59,6 @@ class LlamaRuntimePropertiesTest {
     }
 
     @Test
-    fun `rejects invalid port`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            enabledConfig(port = 0)
-        }
-
-        exception.message shouldContain "port"
-    }
-
-    @Test
     fun `rejects empty model list`() {
         val exception = shouldThrow<IllegalArgumentException> {
             enabledConfig(models = emptyList())
@@ -165,13 +156,11 @@ class LlamaRuntimePropertiesTest {
     private fun enabledConfig(
         assetDirectory: String = "./models/llama",
         serverExecutablePath: String = "./models/llama/bin/llama-server",
-        port: Int = 18080,
         models: List<LlamaRuntimeModelProperties> = listOf(embeddedModel()),
     ): EnabledLlamaRuntimeProperties =
         EnabledLlamaRuntimeProperties(
             assetDirectory = assetDirectory,
             serverExecutablePath = serverExecutablePath,
-            port = port,
             models = models,
         )
 

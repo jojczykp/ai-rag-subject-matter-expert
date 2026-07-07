@@ -111,6 +111,10 @@ All implementation items are TODO until delivered and verified.
 - [x] Extend embedded offline availability checks to include checksum validation
       results.
 - [x] Add embedded adapter behind `AiModelClient`.
+- [x] Start managed `llama-server` processes for enabled embedded offline
+      models using ephemeral loopback ports.
+- [ ] Introduce structured logging for embedded runtime lifecycle events and
+      collect managed `llama-server` stdout and stderr.
 - [ ] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
 - [x] Add model checksum validation.

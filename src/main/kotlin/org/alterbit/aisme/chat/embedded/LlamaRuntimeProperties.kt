@@ -24,7 +24,6 @@ data class LlamaRuntimeProperties(
 data class EnabledLlamaRuntimeProperties(
     val assetDirectory: String,
     val serverExecutablePath: String,
-    val port: Int,
     val models: List<LlamaRuntimeModelProperties>,
 ) {
     init {
@@ -32,7 +31,6 @@ data class EnabledLlamaRuntimeProperties(
         require(serverExecutablePath.isNotBlank()) {
             "aisme.llama-runtime.config.server-executable-path must not be blank"
         }
-        require(port in 1..65535) { "aisme.llama-runtime.config.port must be between 1 and 65535" }
         require(models.isNotEmpty()) { "aisme.llama-runtime.config.models must not be empty" }
         require(models.map { it.id }.distinct().size == models.size) {
             "aisme.llama-runtime.config.models must not contain duplicate ids"

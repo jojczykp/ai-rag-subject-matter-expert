@@ -216,7 +216,6 @@ aisme:
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
-      port: 18080
       models:
         - id: llama-runtime-example
           display-name: Embedded Llama
@@ -230,16 +229,19 @@ aisme:
 Set `enabled` to `true` only when the local llama.cpp runtime assets are
 installed. `config.asset-directory` is the base directory for local GGUF model
 files and related metadata. `config.server-executable-path` points to the local
-`llama-server` binary. Chat requests for enabled embedded models are sent to the
-local llama-server OpenAI-compatible `/v1/chat/completions` endpoint; starting
-and stopping that process from the application is still planned. Model metadata
-describes GGUF files relative to `config.asset-directory`, runtime arguments,
-optional checksum, license, and hardware requirements.
+`llama-server` binary. For enabled embedded models, the application starts one
+managed llama-server process per model on an ephemeral loopback port and sends
+chat requests to its OpenAI-compatible `/v1/chat/completions` endpoint. Model
+metadata describes GGUF files relative to `config.asset-directory`, runtime
+arguments, optional checksum, license, and hardware requirements.
 
 Embedded offline asset availability is checked when the application starts.
 After changing local GGUF files or the configured `llama-server` binary, restart
 the application to refresh embedded offline availability. If model metadata
 includes `sha256`, the GGUF checksum is verified during that startup check.
+Readiness and runtime loadability checks are still planned, so the current
+availability result verifies static assets before process startup rather than a
+fully loaded model.
 
 ## Local Ollama Model
 

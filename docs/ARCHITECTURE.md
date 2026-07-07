@@ -291,7 +291,6 @@ aisme:
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
-      port: 18080
       models:
         - id: llama-runtime-example
           display-name: Embedded Llama

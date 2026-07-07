@@ -14,7 +14,6 @@ class LlamaRuntimePropertiesOverrideTest {
             "aisme.llama-runtime.enabled=true",
             "aisme.llama-runtime.config.asset-directory=/opt/aisme/models/llama",
             "aisme.llama-runtime.config.server-executable-path=/opt/aisme/bin/llama-server",
-            "aisme.llama-runtime.config.port=19090",
             "aisme.llama-runtime.config.models[0].id=embedded-mistral",
             "aisme.llama-runtime.config.models[0].display-name=Embedded Mistral",
             "aisme.llama-runtime.config.models[0].gguf-file=mistral/mistral-7b-instruct-q4.gguf",
@@ -35,7 +34,6 @@ class LlamaRuntimePropertiesOverrideTest {
             properties.enabled shouldBe true
             config.assetDirectory shouldBe "/opt/aisme/models/llama"
             config.serverExecutablePath shouldBe "/opt/aisme/bin/llama-server"
-            config.port shouldBe 19090
             val model = config.models.single()
             model.id shouldBe "embedded-mistral"
             model.displayName shouldBe "Embedded Mistral"
