@@ -21,8 +21,6 @@ class LlamaRuntimePropertiesOverrideTest {
             "aisme.llama-runtime.config.models[0].runtime-arguments[0]=--threads",
             "aisme.llama-runtime.config.models[0].runtime-arguments[1]=8",
             "aisme.llama-runtime.config.models[0].sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-            "aisme.llama-runtime.config.models[0].license=Apache-2.0",
-            "aisme.llama-runtime.config.models[0].hardware-requirements=8 GB RAM",
         )
 
     @Test
@@ -41,8 +39,6 @@ class LlamaRuntimePropertiesOverrideTest {
             model.contextSize shouldBe 8192
             model.runtimeArguments shouldBe listOf("--threads", "8")
             model.sha256 shouldBe "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-            model.license shouldBe "Apache-2.0"
-            model.hardwareRequirements shouldBe "8 GB RAM"
         }
     }
 

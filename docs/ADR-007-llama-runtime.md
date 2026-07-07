@@ -33,7 +33,7 @@ The application will:
       when enabled, require asset directory, `llama-server` executable path,
       and model metadata.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,
-      license, and hardware requirement metadata.
+      and context size.
 - [x] Start the configured `llama-server` process for embedded offline models
       when the embedded runtime is enabled.
 - [x] Allocate loopback ports internally instead of exposing host or port in

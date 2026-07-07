@@ -33,8 +33,6 @@ aisme:
           gguf-file: models/llama.gguf
           context-size: 4096
           runtime-arguments: []
-          license: TODO
-          hardware-requirements: TODO
   chat:
     timeout: 60s
   chat-model-availability:

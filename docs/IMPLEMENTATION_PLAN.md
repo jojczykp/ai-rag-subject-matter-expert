@@ -118,7 +118,6 @@ All implementation items are TODO until delivered and verified.
 - [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
 - [x] Add model checksum validation.
-- [ ] Add license and hardware requirement metadata.
 - [ ] Add offline profile configuration.
 - [ ] Add offline startup tests with lightweight fakes.
 - [x] Add embedded offline availability tests for `GET /models`.
@@ -127,6 +126,11 @@ All implementation items are TODO until delivered and verified.
       validation and managed `llama-server` readiness.
 - [ ] Add optional tagged embedded runtime tests when a practical fixture
       exists.
+
+## Future Milestone: Model Selection Metadata
+
+- [ ] Expose embedded model license and hardware requirements when model
+      selection UX needs them.
 
 ## Future Milestone: Dynamic Subjects And Documents
 

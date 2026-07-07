@@ -297,8 +297,6 @@ aisme:
           gguf-file: models/llama.gguf
           context-size: 4096
           runtime-arguments: []
-          license: TODO
-          hardware-requirements: TODO
   chat-models:
     - id: local-ollama-llama
       enabled: true

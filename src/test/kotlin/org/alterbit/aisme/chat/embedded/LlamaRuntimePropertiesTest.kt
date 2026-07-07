@@ -135,24 +135,6 @@ class LlamaRuntimePropertiesTest {
         exception.message shouldContain "sha256"
     }
 
-    @Test
-    fun `rejects blank license`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            embeddedModel(license = " ")
-        }
-
-        exception.message shouldContain "license"
-    }
-
-    @Test
-    fun `rejects blank hardware requirements`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            embeddedModel(hardwareRequirements = " ")
-        }
-
-        exception.message shouldContain "hardware-requirements"
-    }
-
     private fun enabledConfig(
         assetDirectory: String = "./models/llama",
         serverExecutablePath: String = "./models/llama/bin/llama-server",
@@ -171,8 +153,6 @@ class LlamaRuntimePropertiesTest {
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
         sha256: String? = null,
-        license: String = "TODO",
-        hardwareRequirements: String = "TODO",
     ): LlamaRuntimeModelProperties =
         LlamaRuntimeModelProperties(
             id = id,
@@ -181,7 +161,5 @@ class LlamaRuntimePropertiesTest {
             contextSize = contextSize,
             runtimeArguments = runtimeArguments,
             sha256 = sha256,
-            license = license,
-            hardwareRequirements = hardwareRequirements,
         )
 }

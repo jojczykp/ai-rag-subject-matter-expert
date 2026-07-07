@@ -335,8 +335,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                         ggufFile = configuredGgufFile,
                         contextSize = 4096,
                         sha256 = sha256,
-                        license = "Apache-2.0",
-                        hardwareRequirements = "8 GB RAM",
                     ),
                 ),
             ),

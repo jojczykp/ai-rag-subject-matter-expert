@@ -222,8 +222,6 @@ aisme:
           gguf-file: models/llama.gguf
           context-size: 4096
           runtime-arguments: []
-          license: TODO
-          hardware-requirements: TODO
 ```
 
 Set `enabled` to `true` only when the local llama.cpp runtime assets are
@@ -233,7 +231,7 @@ files and related metadata. `config.server-executable-path` points to the local
 managed llama-server process per model on an ephemeral loopback port and sends
 chat requests to its OpenAI-compatible `/v1/chat/completions` endpoint. Model
 metadata describes GGUF files relative to `config.asset-directory`, runtime
-arguments, optional checksum, license, and hardware requirements.
+arguments, and optional checksums.
 
 Embedded offline asset availability is checked when the application starts.
 After changing local GGUF files or the configured `llama-server` binary, restart

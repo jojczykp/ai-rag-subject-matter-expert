@@ -45,8 +45,6 @@ data class LlamaRuntimeModelProperties(
     val contextSize: Int,
     val runtimeArguments: List<String> = emptyList(),
     val sha256: String? = null,
-    val license: String,
-    val hardwareRequirements: String,
 ) {
     init {
         require(id.isNotBlank()) { "aisme.llama-runtime.config.models.id must not be blank" }
@@ -58,10 +56,6 @@ data class LlamaRuntimeModelProperties(
         }
         require(sha256 == null || sha256.matches(SHA_256_PATTERN)) {
             "aisme.llama-runtime.config.models.sha256 must be a 64-character lowercase hexadecimal value"
-        }
-        require(license.isNotBlank()) { "aisme.llama-runtime.config.models.license must not be blank" }
-        require(hardwareRequirements.isNotBlank()) {
-            "aisme.llama-runtime.config.models.hardware-requirements must not be blank"
         }
     }
 

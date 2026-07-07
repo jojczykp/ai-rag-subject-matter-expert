@@ -156,8 +156,6 @@ class LlamaRuntimeAiModelClientProviderTest {
             displayName = "Embedded Llama",
             ggufFile = "llama.gguf",
             contextSize = 4096,
-            license = "Apache-2.0",
-            hardwareRequirements = "8 GB RAM",
         )
 
     private class FakeLlamaServerChatApiFactory : LlamaServerChatApiFactory {

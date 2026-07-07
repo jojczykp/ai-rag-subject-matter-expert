@@ -210,8 +210,6 @@ class LlamaRuntimeProcessManagerTest {
             ggufFile = ggufFile,
             contextSize = contextSize,
             runtimeArguments = runtimeArguments,
-            license = "Apache-2.0",
-            hardwareRequirements = "8 GB RAM",
         )
 
     private fun fixedPortAllocator(vararg ports: Int): EphemeralLlamaRuntimePortAllocator {
