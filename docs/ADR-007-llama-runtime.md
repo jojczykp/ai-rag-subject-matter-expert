@@ -38,7 +38,7 @@ The application will:
       when the embedded runtime is enabled.
 - [x] Allocate loopback ports internally instead of exposing host or port in
       application configuration.
-- [ ] Wait for a local readiness endpoint before marking the model available.
+- [x] Wait for a local readiness endpoint before marking the model available.
 - [x] Send chat requests to the local `llama-server` OpenAI-compatible HTTP API
       using the existing provider-neutral `AiModelClient` abstraction.
 - [ ] Introduce structured application logging for embedded runtime process
@@ -119,6 +119,8 @@ first embedded chat runtime.
       when model metadata provides `sha256`.
 - [x] Embedded offline asset availability is calculated once at checker
       creation; local asset changes require application restart.
+- [x] Managed process readiness is checked with the local `llama-server`
+      health endpoint before embedded models are marked available.
 - [ ] Managed process stdout and stderr should be captured through application
       logging instead of being discarded or printed directly to the console.
 - [ ] Optional embedded runtime tests should be tagged because they may require

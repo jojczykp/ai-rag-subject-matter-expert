@@ -6,6 +6,8 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.time.Duration
+import org.alterbit.aisme.chatmodel.ChatModelAvailability
 import org.alterbit.aisme.chatmodel.ChatModelMode
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
@@ -24,12 +26,14 @@ class LlamaRuntimeProcessManagerTest {
             llamaRuntimeProperties = LlamaRuntimeProperties(enabled = false),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
         )
 
         manager.run(DefaultApplicationArguments())
 
         launcher.commands shouldContainExactly emptyList()
         manager.baseUrlForModelId("embedded-llama") shouldBe null
+        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.MISCONFIGURED
     }
 
     @Test
@@ -56,12 +60,15 @@ class LlamaRuntimeProcessManagerTest {
             ),
             portAllocator = fixedPortAllocator(19001, 19002),
             processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
         )
 
         manager.run(DefaultApplicationArguments())
 
         manager.baseUrlForModelId("embedded-llama") shouldBe "http://127.0.0.1:19001"
         manager.baseUrlForModelId("embedded-qwen") shouldBe "http://127.0.0.1:19002"
+        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.AVAILABLE
+        manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.AVAILABLE
         launcher.commands shouldContainExactly listOf(
             listOf(
                 "./models/llama/bin/llama-server",
@@ -101,6 +108,7 @@ class LlamaRuntimeProcessManagerTest {
             llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "configured-runtime-model")),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
         )
 
         manager.run(DefaultApplicationArguments())
@@ -118,11 +126,29 @@ class LlamaRuntimeProcessManagerTest {
             llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "embedded-llama")),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
         )
 
         manager.run(DefaultApplicationArguments())
         manager.stop()
 
+        launcher.processes.single().destroyed shouldBe true
+    }
+
+    @Test
+    fun `marks model unavailable and stops process when readiness fails`() {
+        val launcher = FakeLlamaRuntimeProcessLauncher()
+        val manager = LlamaRuntimeProcessManager(
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
+            llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "embedded-llama")),
+            portAllocator = fixedPortAllocator(19001),
+            processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(ready = false),
+        )
+
+        manager.run(DefaultApplicationArguments())
+
+        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.UNAVAILABLE
         launcher.processes.single().destroyed shouldBe true
     }
 
@@ -196,6 +222,13 @@ class LlamaRuntimeProcessManagerTest {
             commands += command
             return FakeProcess().also { processes += it }
         }
+    }
+
+    private class FakeReadinessProbe(
+        private val ready: Boolean = true,
+    ) : LlamaServerReadinessProbe {
+        override fun awaitReady(baseUrl: String, timeout: Duration): Boolean =
+            ready
     }
 
     private class FakeProcess : Process() {

@@ -6,6 +6,7 @@ import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EnabledLlamaRuntimeProperties
+import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessManager
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeProperties
 import org.springframework.stereotype.Component
@@ -13,9 +14,10 @@ import org.springframework.stereotype.Component
 @Component
 class EmbeddedOfflineModelAvailabilityChecker(
     llamaRuntimeProperties: LlamaRuntimeProperties,
+    private val llamaRuntimeProcessManager: LlamaRuntimeProcessManager,
 ) : ChatModelAvailabilityChecker {
-    private val availabilityByModelId: Map<String, ChatModelAvailability> =
-        buildAvailabilityByModelId(llamaRuntimeProperties)
+    private val staticAvailabilityByModelId: Map<String, ChatModelAvailability> =
+        buildStaticAvailabilityByModelId(llamaRuntimeProperties)
 
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.EMBEDDED_OFFLINE
@@ -23,11 +25,13 @@ class EmbeddedOfflineModelAvailabilityChecker(
     override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
         if (model.mode != ChatModelMode.EMBEDDED_OFFLINE || !model.availableOffline) {
             ChatModelAvailability.MISCONFIGURED
+        } else if (staticAvailabilityByModelId[model.id] != ChatModelAvailability.AVAILABLE) {
+            staticAvailabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED
         } else {
-            availabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED
+            llamaRuntimeProcessManager.availabilityForModelId(model.id)
         }
 
-    private fun buildAvailabilityByModelId(
+    private fun buildStaticAvailabilityByModelId(
         llamaRuntimeProperties: LlamaRuntimeProperties,
     ): Map<String, ChatModelAvailability> {
         if (!llamaRuntimeProperties.enabled) {

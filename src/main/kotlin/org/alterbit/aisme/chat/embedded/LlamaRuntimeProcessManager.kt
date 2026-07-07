@@ -2,6 +2,9 @@ package org.alterbit.aisme.chat.embedded
 
 import jakarta.annotation.PreDestroy
 import java.nio.file.Path
+import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
+import org.alterbit.aisme.chatmodel.ChatModelAvailability
 import org.alterbit.aisme.chatmodel.ChatModelRegistry
 import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.springframework.boot.ApplicationArguments
@@ -14,6 +17,7 @@ class LlamaRuntimeProcessManager(
     llamaRuntimeProperties: LlamaRuntimeProperties,
     portAllocator: EphemeralLlamaRuntimePortAllocator,
     private val processLauncher: LlamaRuntimeProcessLauncher,
+    private val readinessProbe: LlamaServerReadinessProbe,
 ) : ApplicationRunner {
     private val managedModels: List<ManagedLlamaRuntimeModel> =
         buildManagedModels(
@@ -21,14 +25,29 @@ class LlamaRuntimeProcessManager(
             llamaRuntimeProperties = llamaRuntimeProperties,
             portAllocator = portAllocator,
         )
+    private val availabilityByModelId = ConcurrentHashMap(
+        managedModels.associate { it.modelId to ChatModelAvailability.CONFIGURED },
+    )
     private val runningProcesses = mutableListOf<Process>()
 
     fun baseUrlForModelId(modelId: String): String? =
         managedModels.firstOrNull { it.modelId == modelId }?.baseUrl
 
+    fun availabilityForModelId(modelId: String): ChatModelAvailability =
+        availabilityByModelId[modelId] ?: ChatModelAvailability.MISCONFIGURED
+
     override fun run(args: ApplicationArguments) {
         managedModels.forEach { managedModel ->
-            runningProcesses += processLauncher.start(managedModel.command)
+            val process = processLauncher.start(managedModel.command)
+            runningProcesses += process
+            if (readinessProbe.awaitReady(managedModel.baseUrl, STARTUP_TIMEOUT)) {
+                availabilityByModelId[managedModel.modelId] = ChatModelAvailability.AVAILABLE
+            } else {
+                availabilityByModelId[managedModel.modelId] = ChatModelAvailability.UNAVAILABLE
+                if (process.isAlive) {
+                    process.destroy()
+                }
+            }
         }
     }
 
@@ -95,5 +114,6 @@ class LlamaRuntimeProcessManager(
 
     private companion object {
         const val LOOPBACK_HOST = "127.0.0.1"
+        val STARTUP_TIMEOUT: Duration = Duration.ofSeconds(30)
     }
 }

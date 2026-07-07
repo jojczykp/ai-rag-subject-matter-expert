@@ -115,7 +115,7 @@ All implementation items are TODO until delivered and verified.
       models using ephemeral loopback ports.
 - [ ] Introduce structured logging for embedded runtime lifecycle events and
       collect managed `llama-server` stdout and stderr.
-- [ ] Extend embedded offline availability checks to verify runtime loadability
+- [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
 - [x] Add model checksum validation.
 - [ ] Add license and hardware requirement metadata.

@@ -1,15 +1,24 @@
 package org.alterbit.aisme.chatmodel
 
 import io.kotest.matchers.shouldBe
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EnabledLlamaRuntimeProperties
+import org.alterbit.aisme.chat.embedded.EphemeralLlamaRuntimePortAllocator
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
+import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessLauncher
+import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessManager
 import org.alterbit.aisme.chat.embedded.LlamaRuntimeProperties
+import org.alterbit.aisme.chat.embedded.LlamaServerReadinessProbe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.springframework.boot.DefaultApplicationArguments
 
 class EmbeddedOfflineModelAvailabilityCheckerTest {
     @field:TempDir
@@ -235,10 +244,62 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         availability shouldBe ChatModelAvailability.MISCONFIGURED
     }
 
+    @Test
+    fun `marks embedded offline model as unavailable when runtime readiness fails`() {
+        val assets = runtimeAssets()
+        val availability = checker(
+            properties = enabledProperties(
+                assetDirectory = assets.assetDirectory,
+                serverExecutablePath = assets.serverExecutable,
+                ggufFile = assets.ggufFile.fileName.toString(),
+            ),
+            runtimeReady = false,
+        ).check(
+            model = embeddedModel(),
+            timeout = Duration.ofSeconds(5),
+        )
+
+        availability shouldBe ChatModelAvailability.UNAVAILABLE
+    }
+
     private fun checker(
         properties: LlamaRuntimeProperties = LlamaRuntimeProperties(),
+        runtimeReady: Boolean = true,
     ): EmbeddedOfflineModelAvailabilityChecker =
-        EmbeddedOfflineModelAvailabilityChecker(properties)
+        EmbeddedOfflineModelAvailabilityChecker(
+            llamaRuntimeProperties = properties,
+            llamaRuntimeProcessManager = processManager(
+                properties = properties,
+                runtimeReady = runtimeReady,
+            ),
+        )
+
+    private fun processManager(
+        properties: LlamaRuntimeProperties,
+        runtimeReady: Boolean,
+    ): LlamaRuntimeProcessManager =
+        LlamaRuntimeProcessManager(
+            chatModelRegistry = ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        ConfiguredChatModelProperties(
+                            id = "llama-runtime-example",
+                            enabled = true,
+                            config = EnabledChatModelProperties(
+                                displayName = "Llama Runtime Example",
+                                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+                                mode = ChatModelMode.EMBEDDED_OFFLINE,
+                                availableOffline = true,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            llamaRuntimeProperties = properties,
+            portAllocator = EphemeralLlamaRuntimePortAllocator { 19001 },
+            processLauncher = FakeLlamaRuntimeProcessLauncher(),
+            readinessProbe = LlamaServerReadinessProbe { _, _ -> runtimeReady },
+        ).also { it.run(DefaultApplicationArguments()) }
 
     private fun embeddedModel(): ChatModelDescriptor =
         chatModel(
@@ -310,5 +371,36 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             }
         }
         return digest.digest().joinToString(separator = "") { "%02x".format(it) }
+    }
+
+    private class FakeLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
+        override fun start(command: List<String>): Process =
+            FakeProcess()
+    }
+
+    private class FakeProcess : Process() {
+        private var destroyed: Boolean = false
+
+        override fun getOutputStream(): OutputStream =
+            ByteArrayOutputStream()
+
+        override fun getInputStream(): InputStream =
+            ByteArrayInputStream(ByteArray(0))
+
+        override fun getErrorStream(): InputStream =
+            ByteArrayInputStream(ByteArray(0))
+
+        override fun waitFor(): Int =
+            0
+
+        override fun exitValue(): Int =
+            if (destroyed) 0 else throw IllegalThreadStateException()
+
+        override fun destroy() {
+            destroyed = true
+        }
+
+        override fun isAlive(): Boolean =
+            !destroyed
     }
 }
