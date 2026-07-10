@@ -5,7 +5,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
-import org.alterbit.aisme.chat.embedded.EnabledEmbeddedLlamaProperties
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
@@ -34,17 +33,12 @@ class EmbeddedOfflineModelAvailabilityChecker(
     private fun buildStaticAvailabilityByModelId(
         embeddedLlamaProperties: EmbeddedLlamaProperties,
     ): Map<String, ChatModelAvailability> {
-        if (!embeddedLlamaProperties.enabled) {
-            return emptyMap()
-        }
-
-        val config = embeddedLlamaProperties.config ?: return emptyMap()
-        return config.models.associate { runtimeModel ->
-            runtimeModel.id to config.availabilityFor(runtimeModel)
+        return embeddedLlamaProperties.enabledModels().associate { runtimeModel ->
+            runtimeModel.id to embeddedLlamaProperties.availabilityFor(runtimeModel)
         }
     }
 
-    private fun EnabledEmbeddedLlamaProperties.availabilityFor(
+    private fun EmbeddedLlamaProperties.availabilityFor(
         runtimeModel: EmbeddedLlamaModelProperties,
     ): ChatModelAvailability {
         val assetDirectory = Path.of(assetDirectory)

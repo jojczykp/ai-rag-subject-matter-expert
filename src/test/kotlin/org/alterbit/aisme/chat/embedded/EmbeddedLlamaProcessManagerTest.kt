@@ -19,11 +19,11 @@ import org.springframework.boot.DefaultApplicationArguments
 
 class EmbeddedLlamaProcessManagerTest {
     @Test
-    fun `does not start processes when embedded llama is disabled`() {
+    fun `does not start processes for disabled embedded llama models`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = EmbeddedLlamaProperties(enabled = false),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = false)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -46,15 +46,17 @@ class EmbeddedLlamaProcessManagerTest {
                 ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-qwen"),
             ),
-            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(
+            embeddedLlamaProperties = embeddedLlamaProperties(
                 runtimeModel(
                     id = "embedded-llama",
+                    enabled = true,
                     ggufFile = "llama.gguf",
                     contextSize = 4096,
                     runtimeArguments = listOf("--threads", "8"),
                 ),
                 runtimeModel(
                     id = "embedded-qwen",
+                    enabled = true,
                     ggufFile = "/opt/models/qwen.gguf",
                     contextSize = 8192,
                 ),
@@ -107,7 +109,7 @@ class EmbeddedLlamaProcessManagerTest {
                 embeddedModel(id = "configured-runtime-model"),
                 embeddedModel(id = "missing-runtime-model"),
             ),
-            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "configured-runtime-model")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "configured-runtime-model", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -126,7 +128,7 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "embedded-llama")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -144,7 +146,7 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "embedded-llama")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(ready = false),
@@ -186,26 +188,25 @@ class EmbeddedLlamaProcessManagerTest {
             ),
         )
 
-    private fun enabledEmbeddedLlamaProperties(
+    private fun embeddedLlamaProperties(
         vararg models: EmbeddedLlamaModelProperties,
     ): EmbeddedLlamaProperties =
         EmbeddedLlamaProperties(
-            enabled = true,
-            config = EnabledEmbeddedLlamaProperties(
-                assetDirectory = "./models/llama",
-                serverExecutablePath = "./models/llama/bin/llama-server",
-                models = models.toList(),
-            ),
+            assetDirectory = "./models/llama",
+            serverExecutablePath = "./models/llama/bin/llama-server",
+            models = models.toList(),
         )
 
     private fun runtimeModel(
         id: String,
+        enabled: Boolean = false,
         ggufFile: String = "llama.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
     ): EmbeddedLlamaModelProperties =
         EmbeddedLlamaModelProperties(
             id = id,
+            enabled = enabled,
             displayName = "Embedded Llama",
             ggufFile = ggufFile,
             contextSize = contextSize,

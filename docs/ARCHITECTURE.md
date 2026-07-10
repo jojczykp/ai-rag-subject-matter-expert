@@ -286,16 +286,15 @@ aisme:
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
   embedded-llama:
-    enabled: false
-    config:
-      asset-directory: ./models/llama
-      server-executable-path: ./models/llama/bin/llama-server
-      models:
-        - id: embedded-llama-example
-          display-name: Embedded Llama
-          gguf-file: models/llama.gguf
-          context-size: 4096
-          runtime-arguments: []
+    asset-directory: ./models/llama
+    server-executable-path: ./models/llama/bin/llama-server
+    models:
+      - id: embedded-llama-example
+        enabled: false
+        display-name: Embedded Llama
+        gguf-file: models/llama.gguf
+        context-size: 4096
+        runtime-arguments: []
   chat-models:
     - id: local-ollama-llama
       enabled: true

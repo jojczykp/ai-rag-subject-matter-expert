@@ -4,42 +4,28 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "aisme.embedded-llama")
 data class EmbeddedLlamaProperties(
-    val enabled: Boolean = false,
-    val config: EnabledEmbeddedLlamaProperties? = null,
-) {
-    init {
-        require(!enabled || config != null) {
-            "aisme.embedded-llama.config is required when aisme.embedded-llama.enabled is true"
-        }
-    }
-
-    fun requireEnabledConfig(): EnabledEmbeddedLlamaProperties {
-        require(enabled) { "aisme.embedded-llama.enabled must be true" }
-        return checkNotNull(config) {
-            "aisme.embedded-llama.config is required when aisme.embedded-llama.enabled is true"
-        }
-    }
-}
-
-data class EnabledEmbeddedLlamaProperties(
     val assetDirectory: String,
     val serverExecutablePath: String,
     val models: List<EmbeddedLlamaModelProperties>,
 ) {
     init {
-        require(assetDirectory.isNotBlank()) { "aisme.embedded-llama.config.asset-directory must not be blank" }
+        require(assetDirectory.isNotBlank()) { "aisme.embedded-llama.asset-directory must not be blank" }
         require(serverExecutablePath.isNotBlank()) {
-            "aisme.embedded-llama.config.server-executable-path must not be blank"
+            "aisme.embedded-llama.server-executable-path must not be blank"
         }
-        require(models.isNotEmpty()) { "aisme.embedded-llama.config.models must not be empty" }
+        require(models.isNotEmpty()) { "aisme.embedded-llama.models must not be empty" }
         require(models.map { it.id }.distinct().size == models.size) {
-            "aisme.embedded-llama.config.models must not contain duplicate ids"
+            "aisme.embedded-llama.models must not contain duplicate ids"
         }
     }
+
+    fun enabledModels(): List<EmbeddedLlamaModelProperties> =
+        models.filter { it.enabled }
 }
 
 data class EmbeddedLlamaModelProperties(
     val id: String,
+    val enabled: Boolean = false,
     val displayName: String,
     val ggufFile: String,
     val contextSize: Int,
@@ -47,15 +33,15 @@ data class EmbeddedLlamaModelProperties(
     val sha256: String? = null,
 ) {
     init {
-        require(id.isNotBlank()) { "aisme.embedded-llama.config.models.id must not be blank" }
-        require(displayName.isNotBlank()) { "aisme.embedded-llama.config.models.display-name must not be blank" }
-        require(ggufFile.isNotBlank()) { "aisme.embedded-llama.config.models.gguf-file must not be blank" }
-        require(contextSize > 0) { "aisme.embedded-llama.config.models.context-size must be greater than 0" }
+        require(id.isNotBlank()) { "aisme.embedded-llama.models.id must not be blank" }
+        require(displayName.isNotBlank()) { "aisme.embedded-llama.models.display-name must not be blank" }
+        require(ggufFile.isNotBlank()) { "aisme.embedded-llama.models.gguf-file must not be blank" }
+        require(contextSize > 0) { "aisme.embedded-llama.models.context-size must be greater than 0" }
         require(runtimeArguments.none { it.isBlank() }) {
-            "aisme.embedded-llama.config.models.runtime-arguments must not contain blank values"
+            "aisme.embedded-llama.models.runtime-arguments must not contain blank values"
         }
         require(sha256 == null || sha256.matches(SHA_256_PATTERN)) {
-            "aisme.embedded-llama.config.models.sha256 must be a 64-character lowercase hexadecimal value"
+            "aisme.embedded-llama.models.sha256 must be a 64-character lowercase hexadecimal value"
         }
     }
 

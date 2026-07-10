@@ -7,43 +7,18 @@ import org.junit.jupiter.api.Test
 
 class EmbeddedLlamaPropertiesTest {
     @Test
-    fun `is disabled by default without nested config`() {
-        val properties = EmbeddedLlamaProperties()
+    fun `returns only enabled models`() {
+        val enabledModel = embeddedModel(id = "enabled-model", enabled = true)
+        val disabledModel = embeddedModel(id = "disabled-model", enabled = false)
+        val properties = embeddedLlamaProperties(models = listOf(enabledModel, disabledModel))
 
-        properties.enabled shouldBe false
-        properties.config shouldBe null
-    }
-
-    @Test
-    fun `rejects enabled properties without nested config`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties(enabled = true)
-        }
-
-        exception.message shouldContain "config"
-    }
-
-    @Test
-    fun `requires enabled properties before returning nested config`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            EmbeddedLlamaProperties().requireEnabledConfig()
-        }
-
-        exception.message shouldContain "enabled"
-    }
-
-    @Test
-    fun `returns nested config when enabled`() {
-        val config = enabledConfig()
-        val properties = EmbeddedLlamaProperties(enabled = true, config = config)
-
-        properties.requireEnabledConfig() shouldBe config
+        properties.enabledModels() shouldBe listOf(enabledModel)
     }
 
     @Test
     fun `rejects blank asset directory`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            enabledConfig(assetDirectory = " ")
+            embeddedLlamaProperties(assetDirectory = " ")
         }
 
         exception.message shouldContain "asset-directory"
@@ -52,7 +27,7 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects blank server executable path`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            enabledConfig(serverExecutablePath = " ")
+            embeddedLlamaProperties(serverExecutablePath = " ")
         }
 
         exception.message shouldContain "server-executable-path"
@@ -61,7 +36,7 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects empty model list`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            enabledConfig(models = emptyList())
+            embeddedLlamaProperties(models = emptyList())
         }
 
         exception.message shouldContain "models"
@@ -70,7 +45,7 @@ class EmbeddedLlamaPropertiesTest {
     @Test
     fun `rejects duplicate model ids`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            enabledConfig(
+            embeddedLlamaProperties(
                 models = listOf(
                     embeddedModel(id = "duplicate-model"),
                     embeddedModel(id = "duplicate-model"),
@@ -135,12 +110,12 @@ class EmbeddedLlamaPropertiesTest {
         exception.message shouldContain "sha256"
     }
 
-    private fun enabledConfig(
+    private fun embeddedLlamaProperties(
         assetDirectory: String = "./models/llama",
         serverExecutablePath: String = "./models/llama/bin/llama-server",
         models: List<EmbeddedLlamaModelProperties> = listOf(embeddedModel()),
-    ): EnabledEmbeddedLlamaProperties =
-        EnabledEmbeddedLlamaProperties(
+    ): EmbeddedLlamaProperties =
+        EmbeddedLlamaProperties(
             assetDirectory = assetDirectory,
             serverExecutablePath = serverExecutablePath,
             models = models,
@@ -148,6 +123,7 @@ class EmbeddedLlamaPropertiesTest {
 
     private fun embeddedModel(
         id: String = "embedded-llama",
+        enabled: Boolean = false,
         displayName: String = "Embedded Llama",
         ggufFile: String = "models/llama.gguf",
         contextSize: Int = 4096,
@@ -156,6 +132,7 @@ class EmbeddedLlamaPropertiesTest {
     ): EmbeddedLlamaModelProperties =
         EmbeddedLlamaModelProperties(
             id = id,
+            enabled = enabled,
             displayName = displayName,
             ggufFile = ggufFile,
             contextSize = contextSize,

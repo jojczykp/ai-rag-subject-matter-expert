@@ -9,7 +9,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
-import org.alterbit.aisme.chat.embedded.EnabledEmbeddedLlamaProperties
 import org.alterbit.aisme.chat.embedded.EphemeralEmbeddedLlamaPortAllocator
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessLauncher
@@ -91,8 +90,8 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model as misconfigured when embedded llama is disabled`() {
-        val availability = checker().check(
+    fun `marks embedded offline model as misconfigured when embedded llama model is disabled`() {
+        val availability = checker(properties = disabledProperties()).check(
             model = embeddedModel(),
             timeout = Duration.ofSeconds(5),
         )
@@ -264,7 +263,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     private fun checker(
-        properties: EmbeddedLlamaProperties = EmbeddedLlamaProperties(),
+        properties: EmbeddedLlamaProperties = disabledProperties(),
         runtimeReady: Boolean = true,
     ): EmbeddedOfflineModelAvailabilityChecker =
         EmbeddedOfflineModelAvailabilityChecker(
@@ -324,18 +323,33 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         val configuredGgufFile = ggufFile ?: assets.ggufFile.fileName.toString()
 
         return EmbeddedLlamaProperties(
-            enabled = true,
-            config = EnabledEmbeddedLlamaProperties(
-                assetDirectory = configuredAssetDirectory.toString(),
-                serverExecutablePath = configuredServerExecutablePath.toString(),
-                models = listOf(
-                    EmbeddedLlamaModelProperties(
-                        id = modelId,
-                        displayName = "Embedded Llama Example",
-                        ggufFile = configuredGgufFile,
-                        contextSize = 4096,
-                        sha256 = sha256,
-                    ),
+            assetDirectory = configuredAssetDirectory.toString(),
+            serverExecutablePath = configuredServerExecutablePath.toString(),
+            models = listOf(
+                EmbeddedLlamaModelProperties(
+                    id = modelId,
+                    enabled = true,
+                    displayName = "Embedded Llama Example",
+                    ggufFile = configuredGgufFile,
+                    contextSize = 4096,
+                    sha256 = sha256,
+                ),
+            ),
+        )
+    }
+
+    private fun disabledProperties(): EmbeddedLlamaProperties {
+        val assets = runtimeAssets()
+        return EmbeddedLlamaProperties(
+            assetDirectory = assets.assetDirectory.toString(),
+            serverExecutablePath = assets.serverExecutable.toString(),
+            models = listOf(
+                EmbeddedLlamaModelProperties(
+                    id = "embedded-llama-example",
+                    enabled = false,
+                    displayName = "Embedded Llama Example",
+                    ggufFile = assets.ggufFile.fileName.toString(),
+                    contextSize = 4096,
                 ),
             ),
         )

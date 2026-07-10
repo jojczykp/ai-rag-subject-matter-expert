@@ -92,11 +92,11 @@ Copy-Item $env:TEMP\llama-bin-win-cpu-x64\llama-server.exe models\llama\bin\llam
 ```
 
 When running on Windows, set
-`aisme.embedded-llama.config.server-executable-path` to
+`aisme.embedded-llama.server-executable-path` to
 `./models/llama/bin/llama-server.exe`.
 
 Optionally calculate the model checksum and copy it into
-`aisme.embedded-llama.config.models[0].sha256`:
+`aisme.embedded-llama.models[0].sha256`:
 
 ```bash
 # macOS
@@ -113,8 +113,9 @@ sha256sum models/llama/models/llama.gguf
 Get-FileHash models\llama\models\llama.gguf -Algorithm SHA256
 ```
 
-To make the example model selectable, set both `aisme.embedded-llama.enabled`
-and the `embedded-llama-example` chat model entry to `true`.
+To make the example model selectable, set both
+`aisme.embedded-llama.models[0].enabled` and the
+`embedded-llama-example` chat model entry to `true`.
 
 Build the application:
 
@@ -212,25 +213,24 @@ configuration points to external files outside the application JAR:
 ```yaml
 aisme:
   embedded-llama:
-    enabled: false
-    config:
-      asset-directory: ./models/llama
-      server-executable-path: ./models/llama/bin/llama-server
-      models:
-        - id: embedded-llama-example
-          display-name: Embedded Llama
-          gguf-file: models/llama.gguf
-          context-size: 4096
-          runtime-arguments: []
+    asset-directory: ./models/llama
+    server-executable-path: ./models/llama/bin/llama-server
+    models:
+      - id: embedded-llama-example
+        enabled: false
+        display-name: Embedded Llama
+        gguf-file: models/llama.gguf
+        context-size: 4096
+        runtime-arguments: []
 ```
 
-Set `enabled` to `true` only when the local llama.cpp runtime assets are
-installed. `config.asset-directory` is the base directory for local GGUF model
-files and related metadata. `config.server-executable-path` points to the local
+Set a model's `enabled` to `true` only when its local llama.cpp runtime assets
+are installed. `asset-directory` is the base directory for local GGUF model
+files and related metadata. `server-executable-path` points to the local
 `llama-server` binary. For enabled embedded models, the application starts one
 managed llama-server process per model on an ephemeral loopback port and sends
 chat requests to its OpenAI-compatible `/v1/chat/completions` endpoint. Model
-metadata describes GGUF files relative to `config.asset-directory`, runtime
+metadata describes GGUF files relative to `asset-directory`, runtime
 arguments, and optional checksums.
 
 Embedded offline asset availability is checked when the application starts.

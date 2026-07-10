@@ -15,9 +15,8 @@ class EmbeddedLlamaAiModelClientProvider(
     embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
     llamaServerChatApiFactory: LlamaServerChatApiFactory,
 ) : AiModelClientProvider {
-    private val clients: List<AiModelClient> = if (embeddedLlamaProperties.enabled) {
-        val config = embeddedLlamaProperties.requireEnabledConfig()
-        val runtimeModelsById = config.models.associateBy { it.id }
+    private val clients: List<AiModelClient> = run {
+        val runtimeModelsById = embeddedLlamaProperties.enabledModels().associateBy { it.id }
 
         chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
@@ -37,8 +36,6 @@ class EmbeddedLlamaAiModelClientProvider(
                     null
                 }
             }
-    } else {
-        emptyList()
     }
 
     override fun clients(): List<AiModelClient> =

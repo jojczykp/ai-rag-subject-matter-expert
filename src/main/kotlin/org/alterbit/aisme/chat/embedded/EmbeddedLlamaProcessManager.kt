@@ -74,12 +74,7 @@ class EmbeddedLlamaProcessManager(
         embeddedLlamaProperties: EmbeddedLlamaProperties,
         portAllocator: EphemeralEmbeddedLlamaPortAllocator,
     ): List<ManagedEmbeddedLlamaModel> {
-        if (!embeddedLlamaProperties.enabled) {
-            return emptyList()
-        }
-
-        val config = embeddedLlamaProperties.requireEnabledConfig()
-        val runtimeModelsById = config.models.associateBy { it.id }
+        val runtimeModelsById = embeddedLlamaProperties.enabledModels().associateBy { it.id }
 
         return chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
@@ -89,13 +84,13 @@ class EmbeddedLlamaProcessManager(
                     ManagedEmbeddedLlamaModel(
                         modelId = chatModel.id,
                         baseUrl = "http://$LOOPBACK_HOST:$port",
-                        command = config.commandFor(runtimeModel, port),
+                        command = embeddedLlamaProperties.commandFor(runtimeModel, port),
                     )
                 }
             }
     }
 
-    private fun EnabledEmbeddedLlamaProperties.commandFor(
+    private fun EmbeddedLlamaProperties.commandFor(
         model: EmbeddedLlamaModelProperties,
         port: Int,
     ): List<String> =
