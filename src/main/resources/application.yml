@@ -38,6 +38,13 @@ aisme:
     timeout: 5s
     cache-ttl: 5s
   chat-models:
+    - id: embedded-llama-example
+      enabled: true
+      config:
+        display-name: Embedded Llama Example
+        runtime: EMBEDDED_OFFLINE
+        mode: EMBEDDED_OFFLINE
+        available-offline: true
     - id: local-ollama-llama
       enabled: true
       config:
@@ -66,13 +73,6 @@ aisme:
         available-offline: false
         base-url: https://example.endpoints.huggingface.cloud
         api-key: placeholder-api-key
-    - id: embedded-llama-example
-      enabled: true
-      config:
-        display-name: Embedded Llama Example
-        runtime: EMBEDDED_OFFLINE
-        mode: EMBEDDED_OFFLINE
-        available-offline: true
 
 management:
   endpoints:

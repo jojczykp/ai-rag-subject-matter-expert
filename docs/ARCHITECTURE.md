@@ -7,8 +7,8 @@ Subject Matter Expert. The goal is to let users choose between online models,
 local server models, and fully offline embedded models without coupling the
 application domain logic to any single model provider or runtime.
 
-All implementation items are currently TODO. As features are delivered, update
-this document by marking the matching checklist items as complete.
+As features are delivered, update this document by marking the matching
+checklist items as complete.
 
 ## Decision Records
 
@@ -32,20 +32,20 @@ documents as the knowledge base.
 
 ## Goals
 
-- [ ] Let users choose which model to use for each interaction.
-- [ ] Support online cloud-hosted models.
-- [ ] Support locally running model servers, including Ollama on localhost.
-- [ ] Support Hugging Face-hosted models through managed inference endpoints.
-- [ ] Support fully offline use with predownloaded embedded models.
-- [ ] Keep application code independent from provider-specific SDKs.
+- [x] Let users choose which model to use for each interaction.
+- [x] Support online cloud-hosted models.
+- [x] Support locally running model servers, including Ollama on localhost.
+- [x] Support Hugging Face-hosted models through managed inference endpoints.
+- [x] Support fully offline use with predownloaded embedded models.
+- [x] Keep application code independent from provider-specific SDKs.
 - [ ] Track model capabilities, availability, and runtime requirements.
-- [ ] Make online/offline behavior explicit and visible to users.
+- [x] Make online/offline behavior explicit and visible to users.
 
 ## Non-Goals
 
-- [ ] Do not bundle multi-GB model files inside the application JAR.
-- [ ] Do not make one model provider a hard dependency of the domain layer.
-- [ ] Do not require network access for embedded offline model usage.
+- [x] Do not bundle multi-GB model files inside the application JAR.
+- [x] Do not make one model provider a hard dependency of the domain layer.
+- [x] Do not require network access for embedded offline model usage.
 
 ## Recommended Architecture
 
@@ -91,12 +91,12 @@ documents.
 
 - [x] Add `ChatModelRegistry`.
 - [x] Add static configuration for known models.
-- [ ] Add runtime availability checks.
+- [x] Add runtime availability checks.
 - [ ] Add model capability metadata.
 - [x] Add online/offline mode metadata.
 - [x] Add user-facing display names.
 - [ ] Add user-facing descriptions.
-- [ ] Add tests for model discovery and filtering.
+- [x] Add tests for model discovery and filtering.
 
 Runtime availability checks should be delegated to a separate
 `ChatModelAvailabilityService`, not implemented directly in the registry or
@@ -169,7 +169,7 @@ documents.
 - [x] Resolve the selected model through `ChatModelRegistry`.
 - [x] Route chat requests to the matching `AiModelClient`.
 - [x] Return provider-neutral responses.
-- [ ] Add tests for model selection and routing.
+- [x] Add tests for model selection and routing.
 
 ### StaticSubjectDocumentService
 
@@ -177,13 +177,13 @@ documents.
 bundled with the application.
 
 - [ ] Add `StaticSubjectDocumentService`.
-- [ ] Discover configured documents in application resources.
-- [ ] Extract or load text from supported resource files.
-- [ ] Split extracted text into searchable chunks.
-- [ ] Index bundled documents once at startup or application initialization.
+- [x] Discover configured documents in application resources.
+- [x] Extract or load text from supported resource files.
+- [x] Split extracted text into searchable chunks.
+- [x] Index bundled documents once at startup or application initialization.
 - [ ] Expose document metadata for API responses.
 - [ ] Provide indexed chunks to the chat context retrieval layer.
-- [ ] Add tests for resource discovery and unsupported document types.
+- [x] Add tests for resource discovery and unsupported document types.
 
 ### RelevantChunkRetriever
 
@@ -192,10 +192,10 @@ document chunks for each user message. The initial architecture should use
 retrieval-augmented generation rather than sending every bundled document to the
 model for each request.
 
-- [ ] Add `RelevantChunkRetriever`.
+- [x] Add `RelevantChunkRetriever`.
 - [ ] Retrieve relevant chunks for a user message.
 - [ ] Limit retrieved context to a configurable budget.
-- [ ] Return enough chunk metadata to support future citations.
+- [x] Return enough chunk metadata to support future citations.
 - [ ] Avoid sending all bundled document content to the model by default.
 - [ ] Add tests for retrieval behavior and empty-result handling.
 
@@ -258,13 +258,13 @@ embedding model metadata or chunking strategy changes. The schema diagram is mai
 
 Configuration should make model availability and runtime mode explicit.
 
-- [ ] Add bundled document resource folder configuration.
+- [x] Add bundled document resource folder configuration.
 - [ ] Add `application-local.yml` for local server models.
 - [ ] Add `application-cloud.yml` for cloud-hosted models.
 - [ ] Add `application-offline.yml` for embedded offline models.
-- [ ] Add configuration properties for `aisme.chat-models`.
+- [x] Add configuration properties for `aisme.chat-models`.
 - [ ] Add environment variable support for cloud credentials.
-- [ ] Add validation for missing required provider settings.
+- [x] Add validation for missing required provider settings.
 - [ ] Document all configuration properties in README.md.
 
 Example profile intent:
@@ -290,7 +290,7 @@ aisme:
     server-executable-path: ./models/llama/bin/llama-server
     models:
       - id: embedded-llama-example
-        enabled: false
+        enabled: true
         display-name: Embedded Llama
         gguf-file: models/llama.gguf
         context-size: 4096
@@ -306,7 +306,7 @@ aisme:
         model-name: llama3.2
         available-offline: false
     - id: openai-compatible-example
-      enabled: false
+      enabled: true
       config:
         display-name: OpenAI-Compatible Cloud Example
         runtime: OPENAI_COMPATIBLE
@@ -316,7 +316,7 @@ aisme:
         api-key: placeholder-api-key
         available-offline: false
     - id: hugging-face-tgi-example
-      enabled: false
+      enabled: true
       config:
         display-name: Hugging Face TGI Example
         runtime: HUGGING_FACE_ENDPOINT
@@ -325,7 +325,7 @@ aisme:
         api-key: placeholder-api-key
         available-offline: false
     - id: embedded-llama-example
-      enabled: false
+      enabled: true
       config:
         display-name: Embedded Llama Example
         runtime: EMBEDDED_OFFLINE
@@ -381,24 +381,24 @@ integration tests should use Docker-backed services or HTTP protocol mocks. See
 [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
 for the accepted integration testing decision.
 
-- [ ] Unit test static resource document discovery.
-- [ ] Unit test `ChatModelRegistry`.
-- [ ] Unit test `AiChatService` routing.
+- [x] Unit test static resource document discovery.
+- [x] Unit test `ChatModelRegistry`.
+- [x] Unit test `AiChatService` routing.
 - [ ] Add Spring Boot configuration tests for each profile.
-- [ ] Add integration tests for REST endpoints and the static document
+- [x] Add integration tests for REST endpoints and the static document
       indexing/chat flow.
-- [ ] Keep Kover coverage at or above 80%.
+- [x] Keep Kover coverage at or above 80%.
 
 ## Documentation Tasks
 
 - [ ] Document the single-subject static-resource scope in README.md.
 - [ ] Document where bundled subject documents live.
-- [ ] Document supported model runtimes in README.md.
+- [x] Document supported model runtimes in README.md.
 - [x] Document local Ollama setup in README.md.
-- [ ] Document cloud provider environment variables in README.md.
-- [ ] Document embedded offline model installation in README.md.
-- [ ] Document model selection behavior in README.md.
-- [ ] Keep this design document updated as implementation progresses.
+- [x] Document cloud provider environment variables in README.md.
+- [x] Document embedded offline model installation in README.md.
+- [x] Document model selection behavior in README.md.
+- [x] Keep this design document updated as implementation progresses.
 
 Implementation sequencing is tracked in
 [Implementation Plan](IMPLEMENTATION_PLAN.md).
