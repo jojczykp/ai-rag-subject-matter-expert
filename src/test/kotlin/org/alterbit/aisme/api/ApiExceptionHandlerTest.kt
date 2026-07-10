@@ -6,11 +6,72 @@ import io.kotest.matchers.shouldBe
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
+import org.alterbit.aisme.chatmodel.ChatModelAvailability
+import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
+import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.mock.http.MockHttpInputMessage
 
 class ApiExceptionHandlerTest {
     private val handler = ApiExceptionHandler()
+
+    @Test
+    fun `handles unreadable message`() {
+        val response = handler.handleUnreadableMessage(
+            HttpMessageNotReadableException(
+                "JSON parse error",
+                IllegalArgumentException("missing modelId"),
+                MockHttpInputMessage(ByteArray(0)),
+            ),
+        )
+        val body = response.body.shouldNotBeNull()
+
+        response.statusCode shouldBe HttpStatus.BAD_REQUEST
+        body.code shouldBe ApiErrorCode.INVALID_REQUEST
+        body.message shouldBe "Request body is invalid."
+        body.details shouldContain ("reason" to "missing modelId")
+    }
+
+    @Test
+    fun `handles illegal argument`() {
+        val response = handler.handleIllegalArgument(IllegalArgumentException("message must not be blank"))
+        val body = response.body.shouldNotBeNull()
+
+        response.statusCode shouldBe HttpStatus.BAD_REQUEST
+        body.code shouldBe ApiErrorCode.INVALID_REQUEST
+        body.message shouldBe "message must not be blank"
+        body.details shouldBe emptyMap()
+    }
+
+    @Test
+    fun `handles chat model not found`() {
+        val response = handler.handleChatModelNotFound(ChatModelNotFoundException("unknown-model"))
+        val body = response.body.shouldNotBeNull()
+
+        response.statusCode shouldBe HttpStatus.NOT_FOUND
+        body.code shouldBe ApiErrorCode.MODEL_NOT_FOUND
+        body.message shouldBe "Configured chat model was not found."
+        body.details shouldContain ("modelId" to "unknown-model")
+    }
+
+    @Test
+    fun `handles chat model unavailable`() {
+        val response = handler.handleChatModelUnavailable(
+            ChatModelUnavailableException(
+                modelId = "cloud-gpt",
+                availability = ChatModelAvailability.UNAVAILABLE,
+            ),
+        )
+        val body = response.body.shouldNotBeNull()
+
+        response.statusCode shouldBe HttpStatus.SERVICE_UNAVAILABLE
+        body.code shouldBe ApiErrorCode.MODEL_UNAVAILABLE
+        body.message shouldBe "Configured chat model is not available."
+        body.details shouldContain ("modelId" to "cloud-gpt")
+        body.details shouldContain ("availability" to "UNAVAILABLE")
+    }
 
     @Test
     fun `handles missing ai model client`() {
