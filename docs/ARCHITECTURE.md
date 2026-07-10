@@ -46,7 +46,6 @@ documents as the knowledge base.
 - [ ] Do not bundle multi-GB model files inside the application JAR.
 - [ ] Do not make one model provider a hard dependency of the domain layer.
 - [ ] Do not require network access for embedded offline model usage.
-- [ ] Do not hide model licensing, hardware, or memory requirements.
 
 ## Recommended Architecture
 

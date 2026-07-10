@@ -129,11 +129,6 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add Docker image and container-level acceptance test for embedded offline
       runtime with bundled or mounted model assets.
 
-## Future Milestone: Model Selection Metadata
-
-- [ ] Expose embedded model license and hardware requirements when model
-      selection UX needs them.
-
 ## Future Milestone: Dynamic Subjects And Documents
 
 - [ ] Add first-class structured CSV document support.
