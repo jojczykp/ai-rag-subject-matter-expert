@@ -119,13 +119,15 @@ All implementation items are TODO until delivered and verified.
       once the embedded adapter exists.
 - [x] Add model checksum validation.
 - [ ] Add offline profile configuration.
-- [x] Add offline startup tests with lightweight fakes.
 - [x] Add embedded offline availability tests for `GET /models`.
 - [x] Add embedded offline availability tests for `POST /chat`.
 - [x] Document that embedded offline availability requires static asset
       validation and managed `llama-server` readiness.
-- [ ] Add optional tagged embedded runtime tests when a practical fixture
-      exists.
+
+## Future Milestone: Docker Packaging And Acceptance
+
+- [ ] Add Docker image and container-level acceptance test for embedded offline
+      runtime with bundled or mounted model assets.
 
 ## Future Milestone: Model Selection Metadata
 
