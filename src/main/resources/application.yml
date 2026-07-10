@@ -27,7 +27,7 @@ aisme:
     server-executable-path: ./models/llama/bin/llama-server
     models:
       - id: embedded-llama-example
-        enabled: false
+        enabled: true
         display-name: Embedded Llama
         gguf-file: models/llama.gguf
         context-size: 4096
@@ -48,7 +48,7 @@ aisme:
         base-url: http://localhost:11434
         model-name: llama3.2
     - id: openai-compatible-example
-      enabled: false
+      enabled: true
       config:
         display-name: OpenAI-Compatible Cloud Example
         runtime: OPENAI_COMPATIBLE
@@ -58,7 +58,7 @@ aisme:
         model-name: example-chat-model
         api-key: placeholder-api-key
     - id: hugging-face-tgi-example
-      enabled: false
+      enabled: true
       config:
         display-name: Hugging Face TGI Example
         runtime: HUGGING_FACE_ENDPOINT
@@ -67,7 +67,7 @@ aisme:
         base-url: https://example.endpoints.huggingface.cloud
         api-key: placeholder-api-key
     - id: embedded-llama-example
-      enabled: false
+      enabled: true
       config:
         display-name: Embedded Llama Example
         runtime: EMBEDDED_OFFLINE
