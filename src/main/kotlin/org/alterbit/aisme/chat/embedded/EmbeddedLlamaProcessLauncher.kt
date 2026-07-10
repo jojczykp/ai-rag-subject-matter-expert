@@ -2,12 +2,12 @@ package org.alterbit.aisme.chat.embedded
 
 import org.springframework.stereotype.Component
 
-fun interface LlamaRuntimeProcessLauncher {
+fun interface EmbeddedLlamaProcessLauncher {
     fun start(command: List<String>): Process
 }
 
 @Component
-class ProcessBuilderLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
+class ProcessBuilderEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
     override fun start(command: List<String>): Process =
         ProcessBuilder(command)
             .start()

@@ -9,13 +9,13 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
-import org.alterbit.aisme.chat.embedded.EnabledLlamaRuntimeProperties
-import org.alterbit.aisme.chat.embedded.EphemeralLlamaRuntimePortAllocator
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessLauncher
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessManager
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessOutputLogger
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProperties
+import org.alterbit.aisme.chat.embedded.EnabledEmbeddedLlamaProperties
+import org.alterbit.aisme.chat.embedded.EphemeralEmbeddedLlamaPortAllocator
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessLauncher
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessOutputLogger
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
 import org.alterbit.aisme.chat.embedded.LlamaServerReadinessProbe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -52,14 +52,14 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             properties = enabledProperties(
                 assetDirectory = assets.assetDirectory,
                 serverExecutablePath = assets.serverExecutable,
-                modelId = "llama-runtime-example",
+                modelId = "embedded-llama-example",
                 ggufFile = assets.ggufFile.fileName.toString(),
             ),
         )
 
         val availability = checker.check(
             model = chatModel(
-                id = "llama-runtime-example",
+                id = "embedded-llama-example",
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
@@ -91,7 +91,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model as misconfigured when llama runtime is disabled`() {
+    fun `marks embedded offline model as misconfigured when embedded llama is disabled`() {
         val availability = checker().check(
             model = embeddedModel(),
             timeout = Duration.ofSeconds(5),
@@ -129,7 +129,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model as misconfigured when model is not in llama runtime config`() {
+    fun `marks embedded offline model as misconfigured when model is not in embedded llama config`() {
         val availability = checker(properties = enabledProperties(modelId = "other-model")).check(
             model = embeddedModel(),
             timeout = Duration.ofSeconds(5),
@@ -264,30 +264,30 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     private fun checker(
-        properties: LlamaRuntimeProperties = LlamaRuntimeProperties(),
+        properties: EmbeddedLlamaProperties = EmbeddedLlamaProperties(),
         runtimeReady: Boolean = true,
     ): EmbeddedOfflineModelAvailabilityChecker =
         EmbeddedOfflineModelAvailabilityChecker(
-            llamaRuntimeProperties = properties,
-            llamaRuntimeProcessManager = processManager(
+            embeddedLlamaProperties = properties,
+            embeddedLlamaProcessManager = processManager(
                 properties = properties,
                 runtimeReady = runtimeReady,
             ),
         )
 
     private fun processManager(
-        properties: LlamaRuntimeProperties,
+        properties: EmbeddedLlamaProperties,
         runtimeReady: Boolean,
-    ): LlamaRuntimeProcessManager =
-        LlamaRuntimeProcessManager(
+    ): EmbeddedLlamaProcessManager =
+        EmbeddedLlamaProcessManager(
             chatModelRegistry = ChatModelRegistry(
                 ConfiguredChatModelsProperties(
                     chatModels = listOf(
                         ConfiguredChatModelProperties(
-                            id = "llama-runtime-example",
+                            id = "embedded-llama-example",
                             enabled = true,
                             config = EnabledChatModelProperties(
-                                displayName = "Llama Runtime Example",
+                                displayName = "Embedded Llama Example",
                                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                                 availableOffline = true,
@@ -296,16 +296,16 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                     ),
                 ),
             ),
-            llamaRuntimeProperties = properties,
-            portAllocator = EphemeralLlamaRuntimePortAllocator { 19001 },
-            processLauncher = FakeLlamaRuntimeProcessLauncher(),
+            embeddedLlamaProperties = properties,
+            portAllocator = EphemeralEmbeddedLlamaPortAllocator { 19001 },
+            processLauncher = FakeEmbeddedLlamaProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> runtimeReady },
-            processOutputLogger = LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> }),
+            processOutputLogger = EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         ).also { it.run(DefaultApplicationArguments()) }
 
     private fun embeddedModel(): ChatModelDescriptor =
         chatModel(
-            id = "llama-runtime-example",
+            id = "embedded-llama-example",
             runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
@@ -314,24 +314,24 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     private fun enabledProperties(
         assetDirectory: Path? = null,
         serverExecutablePath: Path? = null,
-        modelId: String = "llama-runtime-example",
+        modelId: String = "embedded-llama-example",
         ggufFile: String? = null,
         sha256: String? = null,
-    ): LlamaRuntimeProperties {
+    ): EmbeddedLlamaProperties {
         val assets = runtimeAssets()
         val configuredAssetDirectory = assetDirectory ?: assets.assetDirectory
         val configuredServerExecutablePath = serverExecutablePath ?: assets.serverExecutable
         val configuredGgufFile = ggufFile ?: assets.ggufFile.fileName.toString()
 
-        return LlamaRuntimeProperties(
+        return EmbeddedLlamaProperties(
             enabled = true,
-            config = EnabledLlamaRuntimeProperties(
+            config = EnabledEmbeddedLlamaProperties(
                 assetDirectory = configuredAssetDirectory.toString(),
                 serverExecutablePath = configuredServerExecutablePath.toString(),
                 models = listOf(
-                    LlamaRuntimeModelProperties(
+                    EmbeddedLlamaModelProperties(
                         id = modelId,
-                        displayName = "Llama Runtime Example",
+                        displayName = "Embedded Llama Example",
                         ggufFile = configuredGgufFile,
                         contextSize = 4096,
                         sha256 = sha256,
@@ -373,7 +373,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         return digest.digest().joinToString(separator = "") { "%02x".format(it) }
     }
 
-    private class FakeLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
+    private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
         override fun start(command: List<String>): Process =
             FakeProcess()
     }

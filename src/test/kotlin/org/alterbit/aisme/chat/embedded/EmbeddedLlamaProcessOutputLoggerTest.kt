@@ -8,12 +8,12 @@ import java.io.OutputStream
 import java.util.concurrent.Executors
 import org.junit.jupiter.api.Test
 
-class LlamaRuntimeProcessOutputLoggerTest {
+class EmbeddedLlamaProcessOutputLoggerTest {
     @Test
     fun `captures stdout and stderr lines with model id`() {
         val executor = Executors.newFixedThreadPool(2)
         val capturedLines = mutableListOf<CapturedLine>()
-        val outputLogger = LlamaRuntimeProcessOutputLogger(
+        val outputLogger = EmbeddedLlamaProcessOutputLogger(
             executor = executor,
             lineConsumer = { modelId, stream, line ->
                 capturedLines += CapturedLine(
@@ -36,17 +36,17 @@ class LlamaRuntimeProcessOutputLoggerTest {
         capturedLines shouldContainExactlyInAnyOrder listOf(
             CapturedLine(
                 modelId = "embedded-llama",
-                stream = LlamaRuntimeProcessOutputStream.STDOUT,
+                stream = EmbeddedLlamaProcessOutputStream.STDOUT,
                 line = "server started",
             ),
             CapturedLine(
                 modelId = "embedded-llama",
-                stream = LlamaRuntimeProcessOutputStream.STDOUT,
+                stream = EmbeddedLlamaProcessOutputStream.STDOUT,
                 line = "model loaded",
             ),
             CapturedLine(
                 modelId = "embedded-llama",
-                stream = LlamaRuntimeProcessOutputStream.STDERR,
+                stream = EmbeddedLlamaProcessOutputStream.STDERR,
                 line = "warning: slow startup",
             ),
         )
@@ -54,7 +54,7 @@ class LlamaRuntimeProcessOutputLoggerTest {
 
     private data class CapturedLine(
         val modelId: String,
-        val stream: LlamaRuntimeProcessOutputStream,
+        val stream: EmbeddedLlamaProcessOutputStream,
         val line: String,
     )
 

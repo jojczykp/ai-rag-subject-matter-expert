@@ -6,9 +6,9 @@ import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.toSingleUserPromptText
 import org.alterbit.aisme.chatmodel.ChatModelDescriptor
 
-class LlamaRuntimeAiModelClient(
+class EmbeddedLlamaAiModelClient(
     private val model: ChatModelDescriptor,
-    private val runtimeModel: LlamaRuntimeModelProperties,
+    private val runtimeModel: EmbeddedLlamaModelProperties,
     private val chatApi: LlamaServerChatApi,
 ) : AiModelClient {
     override val modelId: String = model.id

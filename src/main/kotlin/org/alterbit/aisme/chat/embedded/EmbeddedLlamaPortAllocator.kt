@@ -4,7 +4,7 @@ import java.net.ServerSocket
 import org.springframework.stereotype.Component
 
 @Component
-class EphemeralLlamaRuntimePortAllocator(
+class EphemeralEmbeddedLlamaPortAllocator(
     private val portSupplier: (() -> Int)? = null,
 ) {
     fun allocate(): Int =

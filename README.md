@@ -33,7 +33,7 @@ curl -L \
 ```
 
 Download example offline llama assets if you want to enable the bundled
-`llama-runtime-example` chat model:
+`embedded-llama-example` chat model:
 
 ```bash
 mkdir -p models/llama/models
@@ -92,11 +92,11 @@ Copy-Item $env:TEMP\llama-bin-win-cpu-x64\llama-server.exe models\llama\bin\llam
 ```
 
 When running on Windows, set
-`aisme.llama-runtime.config.server-executable-path` to
+`aisme.embedded-llama.config.server-executable-path` to
 `./models/llama/bin/llama-server.exe`.
 
 Optionally calculate the model checksum and copy it into
-`aisme.llama-runtime.config.models[0].sha256`:
+`aisme.embedded-llama.config.models[0].sha256`:
 
 ```bash
 # macOS
@@ -113,8 +113,8 @@ sha256sum models/llama/models/llama.gguf
 Get-FileHash models\llama\models\llama.gguf -Algorithm SHA256
 ```
 
-To make the example model selectable, set both `aisme.llama-runtime.enabled`
-and the `llama-runtime-example` chat model entry to `true`.
+To make the example model selectable, set both `aisme.embedded-llama.enabled`
+and the `embedded-llama-example` chat model entry to `true`.
 
 Build the application:
 
@@ -204,20 +204,20 @@ application code.
 The ONNX client loads these files during startup, so the application fails fast
 when the configured model or tokenizer file is missing.
 
-## Llama Runtime Assets
+## Embedded Llama Assets
 
 Embedded offline chat will use local llama.cpp assets. The default asset
 configuration points to external files outside the application JAR:
 
 ```yaml
 aisme:
-  llama-runtime:
+  embedded-llama:
     enabled: false
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
       models:
-        - id: llama-runtime-example
+        - id: embedded-llama-example
           display-name: Embedded Llama
           gguf-file: models/llama.gguf
           context-size: 4096
@@ -393,4 +393,4 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 - [ADR-004: Integration Testing Strategy](docs/ADR-004-integration-testing-strategy.md)
 - [ADR-005: Subject Document Scope](docs/ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](docs/ADR-006-local-embedding-runtime.md)
-- [ADR-007: Llama Runtime](docs/ADR-007-llama-runtime.md)
+- [ADR-007: Embedded Llama](docs/ADR-007-embedded-llama.md)

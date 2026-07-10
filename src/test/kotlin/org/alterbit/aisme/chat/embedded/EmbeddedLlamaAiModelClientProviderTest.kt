@@ -11,24 +11,24 @@ import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
 import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 
-class LlamaRuntimeAiModelClientProviderTest {
+class EmbeddedLlamaAiModelClientProviderTest {
     @Test
     fun `creates one client per configured embedded offline model`() {
         val factory = FakeLlamaServerChatApiFactory()
-        val llamaRuntimeProperties = enabledLlamaRuntimeProperties(
+        val embeddedLlamaProperties = enabledEmbeddedLlamaProperties(
             runtimeModel(id = "embedded-llama"),
             runtimeModel(id = "embedded-qwen"),
         )
-        val provider = LlamaRuntimeAiModelClientProvider(
+        val provider = EmbeddedLlamaAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(id = "embedded-llama"),
                 ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-qwen"),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
-            llamaRuntimeProperties = llamaRuntimeProperties,
-            llamaRuntimeProcessManager = processManager(
-                llamaRuntimeProperties = llamaRuntimeProperties,
+            embeddedLlamaProperties = embeddedLlamaProperties,
+            embeddedLlamaProcessManager = processManager(
+                embeddedLlamaProperties = embeddedLlamaProperties,
                 ports = intArrayOf(19001, 19002),
             ),
             llamaServerChatApiFactory = factory,
@@ -48,14 +48,14 @@ class LlamaRuntimeAiModelClientProviderTest {
     }
 
     @Test
-    fun `does not create clients when llama runtime is disabled`() {
+    fun `does not create clients when embedded llama is disabled`() {
         val factory = FakeLlamaServerChatApiFactory()
-        val provider = LlamaRuntimeAiModelClientProvider(
+        val provider = EmbeddedLlamaAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
             chatProperties = ChatProperties(),
-            llamaRuntimeProperties = LlamaRuntimeProperties(enabled = false),
-            llamaRuntimeProcessManager = processManager(
-                llamaRuntimeProperties = LlamaRuntimeProperties(enabled = false),
+            embeddedLlamaProperties = EmbeddedLlamaProperties(enabled = false),
+            embeddedLlamaProcessManager = processManager(
+                embeddedLlamaProperties = EmbeddedLlamaProperties(enabled = false),
                 ports = intArrayOf(19001),
             ),
             llamaServerChatApiFactory = factory,
@@ -68,16 +68,16 @@ class LlamaRuntimeAiModelClientProviderTest {
     @Test
     fun `skips embedded chat models without matching runtime model`() {
         val factory = FakeLlamaServerChatApiFactory()
-        val llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "configured-runtime-model"))
-        val provider = LlamaRuntimeAiModelClientProvider(
+        val embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "configured-runtime-model"))
+        val provider = EmbeddedLlamaAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(id = "configured-runtime-model"),
                 embeddedModel(id = "missing-runtime-model"),
             ),
             chatProperties = ChatProperties(),
-            llamaRuntimeProperties = llamaRuntimeProperties,
-            llamaRuntimeProcessManager = processManager(
-                llamaRuntimeProperties = llamaRuntimeProperties,
+            embeddedLlamaProperties = embeddedLlamaProperties,
+            embeddedLlamaProcessManager = processManager(
+                embeddedLlamaProperties = embeddedLlamaProperties,
                 ports = intArrayOf(19001),
             ),
             llamaServerChatApiFactory = factory,
@@ -115,12 +115,12 @@ class LlamaRuntimeAiModelClientProviderTest {
             ),
         )
 
-    private fun enabledLlamaRuntimeProperties(
-        vararg models: LlamaRuntimeModelProperties,
-    ): LlamaRuntimeProperties =
-        LlamaRuntimeProperties(
+    private fun enabledEmbeddedLlamaProperties(
+        vararg models: EmbeddedLlamaModelProperties,
+    ): EmbeddedLlamaProperties =
+        EmbeddedLlamaProperties(
             enabled = true,
-            config = EnabledLlamaRuntimeProperties(
+            config = EnabledEmbeddedLlamaProperties(
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
                 models = models.toList(),
@@ -128,30 +128,30 @@ class LlamaRuntimeAiModelClientProviderTest {
         )
 
     private fun processManager(
-        llamaRuntimeProperties: LlamaRuntimeProperties,
+        embeddedLlamaProperties: EmbeddedLlamaProperties,
         ports: IntArray,
-    ): LlamaRuntimeProcessManager =
-        LlamaRuntimeProcessManager(
+    ): EmbeddedLlamaProcessManager =
+        EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(id = "embedded-llama"),
                 embeddedModel(id = "embedded-qwen"),
                 embeddedModel(id = "configured-runtime-model"),
                 embeddedModel(id = "missing-runtime-model"),
             ),
-            llamaRuntimeProperties = llamaRuntimeProperties,
+            embeddedLlamaProperties = embeddedLlamaProperties,
             portAllocator = fixedPortAllocator(*ports),
-            processLauncher = FakeLlamaRuntimeProcessLauncher(),
+            processLauncher = FakeEmbeddedLlamaProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> true },
-            processOutputLogger = LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> }),
+            processOutputLogger = EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         )
 
-    private fun fixedPortAllocator(vararg ports: Int): EphemeralLlamaRuntimePortAllocator {
+    private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {
         val remainingPorts = ports.toMutableList()
-        return EphemeralLlamaRuntimePortAllocator { remainingPorts.removeFirst() }
+        return EphemeralEmbeddedLlamaPortAllocator { remainingPorts.removeFirst() }
     }
 
-    private fun runtimeModel(id: String): LlamaRuntimeModelProperties =
-        LlamaRuntimeModelProperties(
+    private fun runtimeModel(id: String): EmbeddedLlamaModelProperties =
+        EmbeddedLlamaModelProperties(
             id = id,
             displayName = "Embedded Llama",
             ggufFile = "llama.gguf",
@@ -181,7 +181,7 @@ class LlamaRuntimeAiModelClientProviderTest {
             )
     }
 
-    private class FakeLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
+    private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
         override fun start(command: List<String>): Process =
             error("Provider tests do not start managed processes")
     }

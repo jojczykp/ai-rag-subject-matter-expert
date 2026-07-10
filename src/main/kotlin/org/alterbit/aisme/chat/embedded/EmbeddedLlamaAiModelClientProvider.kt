@@ -8,24 +8,24 @@ import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.springframework.stereotype.Component
 
 @Component
-class LlamaRuntimeAiModelClientProvider(
+class EmbeddedLlamaAiModelClientProvider(
     chatModelRegistry: ChatModelRegistry,
     chatProperties: ChatProperties,
-    llamaRuntimeProperties: LlamaRuntimeProperties,
-    llamaRuntimeProcessManager: LlamaRuntimeProcessManager,
+    embeddedLlamaProperties: EmbeddedLlamaProperties,
+    embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
     llamaServerChatApiFactory: LlamaServerChatApiFactory,
 ) : AiModelClientProvider {
-    private val clients: List<AiModelClient> = if (llamaRuntimeProperties.enabled) {
-        val config = llamaRuntimeProperties.requireEnabledConfig()
+    private val clients: List<AiModelClient> = if (embeddedLlamaProperties.enabled) {
+        val config = embeddedLlamaProperties.requireEnabledConfig()
         val runtimeModelsById = config.models.associateBy { it.id }
 
         chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
             .mapNotNull { model ->
-                val baseUrl = llamaRuntimeProcessManager.baseUrlForModelId(model.id)
+                val baseUrl = embeddedLlamaProcessManager.baseUrlForModelId(model.id)
                 val runtimeModel = runtimeModelsById[model.id]
                 if (baseUrl != null && runtimeModel != null) {
-                    LlamaRuntimeAiModelClient(
+                    EmbeddedLlamaAiModelClient(
                         model = model,
                         runtimeModel = runtimeModel,
                         chatApi = llamaServerChatApiFactory.create(

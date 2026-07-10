@@ -5,10 +5,10 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class LlamaRuntimePropertiesTest {
+class EmbeddedLlamaPropertiesTest {
     @Test
     fun `is disabled by default without nested config`() {
-        val properties = LlamaRuntimeProperties()
+        val properties = EmbeddedLlamaProperties()
 
         properties.enabled shouldBe false
         properties.config shouldBe null
@@ -17,7 +17,7 @@ class LlamaRuntimePropertiesTest {
     @Test
     fun `rejects enabled properties without nested config`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            LlamaRuntimeProperties(enabled = true)
+            EmbeddedLlamaProperties(enabled = true)
         }
 
         exception.message shouldContain "config"
@@ -26,7 +26,7 @@ class LlamaRuntimePropertiesTest {
     @Test
     fun `requires enabled properties before returning nested config`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            LlamaRuntimeProperties().requireEnabledConfig()
+            EmbeddedLlamaProperties().requireEnabledConfig()
         }
 
         exception.message shouldContain "enabled"
@@ -35,7 +35,7 @@ class LlamaRuntimePropertiesTest {
     @Test
     fun `returns nested config when enabled`() {
         val config = enabledConfig()
-        val properties = LlamaRuntimeProperties(enabled = true, config = config)
+        val properties = EmbeddedLlamaProperties(enabled = true, config = config)
 
         properties.requireEnabledConfig() shouldBe config
     }
@@ -138,9 +138,9 @@ class LlamaRuntimePropertiesTest {
     private fun enabledConfig(
         assetDirectory: String = "./models/llama",
         serverExecutablePath: String = "./models/llama/bin/llama-server",
-        models: List<LlamaRuntimeModelProperties> = listOf(embeddedModel()),
-    ): EnabledLlamaRuntimeProperties =
-        EnabledLlamaRuntimeProperties(
+        models: List<EmbeddedLlamaModelProperties> = listOf(embeddedModel()),
+    ): EnabledEmbeddedLlamaProperties =
+        EnabledEmbeddedLlamaProperties(
             assetDirectory = assetDirectory,
             serverExecutablePath = serverExecutablePath,
             models = models,
@@ -153,8 +153,8 @@ class LlamaRuntimePropertiesTest {
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
         sha256: String? = null,
-    ): LlamaRuntimeModelProperties =
-        LlamaRuntimeModelProperties(
+    ): EmbeddedLlamaModelProperties =
+        EmbeddedLlamaModelProperties(
             id = id,
             displayName = displayName,
             ggufFile = ggufFile,

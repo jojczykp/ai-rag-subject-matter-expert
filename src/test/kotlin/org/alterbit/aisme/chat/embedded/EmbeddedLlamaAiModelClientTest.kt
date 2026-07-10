@@ -11,30 +11,30 @@ import org.alterbit.aisme.chatmodel.ChatModelRuntime
 import org.alterbit.aisme.chatmodel.chatModel
 import org.junit.jupiter.api.Test
 
-class LlamaRuntimeAiModelClientTest {
+class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `exposes configured model id`() {
-        val client = LlamaRuntimeAiModelClient(
-            model = embeddedModel(id = "llama-runtime-example"),
-            runtimeModel = runtimeModel(id = "llama-runtime-example"),
+        val client = EmbeddedLlamaAiModelClient(
+            model = embeddedModel(id = "embedded-llama-example"),
+            runtimeModel = runtimeModel(id = "embedded-llama-example"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
-        client.modelId shouldBe "llama-runtime-example"
+        client.modelId shouldBe "embedded-llama-example"
     }
 
     @Test
-    fun `sends chat request to configured llama runtime model`() {
+    fun `sends chat request to configured embedded llama model`() {
         val chatApi = FakeLlamaServerChatApi(answer = " Use two parts water. ")
-        val client = LlamaRuntimeAiModelClient(
-            model = embeddedModel(id = "llama-runtime-example"),
-            runtimeModel = runtimeModel(id = "llama-runtime-example"),
+        val client = EmbeddedLlamaAiModelClient(
+            model = embeddedModel(id = "embedded-llama-example"),
+            runtimeModel = runtimeModel(id = "embedded-llama-example"),
             chatApi = chatApi,
         )
 
         val response = client.chat(
             AiModelChatRequest(
-                modelId = "llama-runtime-example",
+                modelId = "embedded-llama-example",
                 message = "How should I cook rice?",
                 contextChunks = listOf(
                     AiModelContextChunk(
@@ -47,9 +47,9 @@ class LlamaRuntimeAiModelClientTest {
             ),
         )
 
-        response.modelId shouldBe "llama-runtime-example"
+        response.modelId shouldBe "embedded-llama-example"
         response.answer shouldBe "Use two parts water."
-        chatApi.requests.single().model shouldBe "llama-runtime-example"
+        chatApi.requests.single().model shouldBe "embedded-llama-example"
         chatApi.requests.single().stream shouldBe false
         chatApi.requests.single().messages.single().role shouldBe "user"
         chatApi.requests.single().messages.single().content shouldBe """
@@ -63,9 +63,9 @@ class LlamaRuntimeAiModelClientTest {
 
     @Test
     fun `rejects request for another model id`() {
-        val client = LlamaRuntimeAiModelClient(
-            model = embeddedModel(id = "llama-runtime-example"),
-            runtimeModel = runtimeModel(id = "llama-runtime-example"),
+        val client = EmbeddedLlamaAiModelClient(
+            model = embeddedModel(id = "embedded-llama-example"),
+            runtimeModel = runtimeModel(id = "embedded-llama-example"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
@@ -78,9 +78,9 @@ class LlamaRuntimeAiModelClientTest {
 
     @Test
     fun `rejects blank provider response`() {
-        val client = LlamaRuntimeAiModelClient(
-            model = embeddedModel(id = "llama-runtime-example"),
-            runtimeModel = runtimeModel(id = "llama-runtime-example"),
+        val client = EmbeddedLlamaAiModelClient(
+            model = embeddedModel(id = "embedded-llama-example"),
+            runtimeModel = runtimeModel(id = "embedded-llama-example"),
             chatApi = FakeLlamaServerChatApi(answer = " "),
         )
 
@@ -91,7 +91,7 @@ class LlamaRuntimeAiModelClientTest {
         exception.message shouldContain "blank answer"
     }
 
-    private fun request(modelId: String = "llama-runtime-example"): AiModelChatRequest =
+    private fun request(modelId: String = "embedded-llama-example"): AiModelChatRequest =
         AiModelChatRequest(
             modelId = modelId,
             message = "How should I cook rice?",
@@ -109,8 +109,8 @@ class LlamaRuntimeAiModelClientTest {
         modelName = null,
     )
 
-    private fun runtimeModel(id: String): LlamaRuntimeModelProperties =
-        LlamaRuntimeModelProperties(
+    private fun runtimeModel(id: String): EmbeddedLlamaModelProperties =
+        EmbeddedLlamaModelProperties(
             id = id,
             displayName = "Embedded Llama",
             ggufFile = "llama.gguf",

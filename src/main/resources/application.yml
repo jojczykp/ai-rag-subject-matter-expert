@@ -22,13 +22,13 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  llama-runtime:
+  embedded-llama:
     enabled: false
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
       models:
-        - id: llama-runtime-example
+        - id: embedded-llama-example
           display-name: Embedded Llama
           gguf-file: models/llama.gguf
           context-size: 4096
@@ -67,10 +67,10 @@ aisme:
         available-offline: false
         base-url: https://example.endpoints.huggingface.cloud
         api-key: placeholder-api-key
-    - id: llama-runtime-example
+    - id: embedded-llama-example
       enabled: false
       config:
-        display-name: Llama Runtime Example
+        display-name: Embedded Llama Example
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
         available-offline: true

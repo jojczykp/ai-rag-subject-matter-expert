@@ -5,19 +5,19 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
 import java.time.Duration
-import org.alterbit.aisme.chat.embedded.EnabledLlamaRuntimeProperties
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProcessManager
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeModelProperties
-import org.alterbit.aisme.chat.embedded.LlamaRuntimeProperties
+import org.alterbit.aisme.chat.embedded.EnabledEmbeddedLlamaProperties
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
+import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
 import org.springframework.stereotype.Component
 
 @Component
 class EmbeddedOfflineModelAvailabilityChecker(
-    llamaRuntimeProperties: LlamaRuntimeProperties,
-    private val llamaRuntimeProcessManager: LlamaRuntimeProcessManager,
+    embeddedLlamaProperties: EmbeddedLlamaProperties,
+    private val embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
 ) : ChatModelAvailabilityChecker {
     private val staticAvailabilityByModelId: Map<String, ChatModelAvailability> =
-        buildStaticAvailabilityByModelId(llamaRuntimeProperties)
+        buildStaticAvailabilityByModelId(embeddedLlamaProperties)
 
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.EMBEDDED_OFFLINE
@@ -28,24 +28,24 @@ class EmbeddedOfflineModelAvailabilityChecker(
         } else if (staticAvailabilityByModelId[model.id] != ChatModelAvailability.AVAILABLE) {
             staticAvailabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED
         } else {
-            llamaRuntimeProcessManager.availabilityForModelId(model.id)
+            embeddedLlamaProcessManager.availabilityForModelId(model.id)
         }
 
     private fun buildStaticAvailabilityByModelId(
-        llamaRuntimeProperties: LlamaRuntimeProperties,
+        embeddedLlamaProperties: EmbeddedLlamaProperties,
     ): Map<String, ChatModelAvailability> {
-        if (!llamaRuntimeProperties.enabled) {
+        if (!embeddedLlamaProperties.enabled) {
             return emptyMap()
         }
 
-        val config = llamaRuntimeProperties.config ?: return emptyMap()
+        val config = embeddedLlamaProperties.config ?: return emptyMap()
         return config.models.associate { runtimeModel ->
             runtimeModel.id to config.availabilityFor(runtimeModel)
         }
     }
 
-    private fun EnabledLlamaRuntimeProperties.availabilityFor(
-        runtimeModel: LlamaRuntimeModelProperties,
+    private fun EnabledEmbeddedLlamaProperties.availabilityFor(
+        runtimeModel: EmbeddedLlamaModelProperties,
     ): ChatModelAvailability {
         val assetDirectory = Path.of(assetDirectory)
         val ggufFile = assetDirectory.resolveConfiguredPath(runtimeModel.ggufFile)

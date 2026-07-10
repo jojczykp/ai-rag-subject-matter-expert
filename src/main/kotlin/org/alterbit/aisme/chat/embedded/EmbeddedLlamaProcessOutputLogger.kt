@@ -11,16 +11,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class LlamaRuntimeProcessOutputLogger(
+class EmbeddedLlamaProcessOutputLogger(
     private val executor: ExecutorService = createExecutor(),
-    private val lineConsumer: ((String, LlamaRuntimeProcessOutputStream, String) -> Unit)? = null,
+    private val lineConsumer: ((String, EmbeddedLlamaProcessOutputStream, String) -> Unit)? = null,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     fun attach(modelId: String, process: Process): List<Future<*>> =
         listOf(
-            executor.submit { logLines(modelId, LlamaRuntimeProcessOutputStream.STDOUT, process.inputStream) },
-            executor.submit { logLines(modelId, LlamaRuntimeProcessOutputStream.STDERR, process.errorStream) },
+            executor.submit { logLines(modelId, EmbeddedLlamaProcessOutputStream.STDOUT, process.inputStream) },
+            executor.submit { logLines(modelId, EmbeddedLlamaProcessOutputStream.STDERR, process.errorStream) },
         )
 
     @PreDestroy
@@ -30,7 +30,7 @@ class LlamaRuntimeProcessOutputLogger(
 
     private fun logLines(
         modelId: String,
-        stream: LlamaRuntimeProcessOutputStream,
+        stream: EmbeddedLlamaProcessOutputStream,
         input: InputStream,
     ) {
         try {
@@ -44,14 +44,14 @@ class LlamaRuntimeProcessOutputLogger(
 
     private fun logLine(
         modelId: String,
-        stream: LlamaRuntimeProcessOutputStream,
+        stream: EmbeddedLlamaProcessOutputStream,
         line: String,
     ) {
         lineConsumer?.invoke(modelId, stream, line) ?: when (stream) {
-            LlamaRuntimeProcessOutputStream.STDOUT ->
+            EmbeddedLlamaProcessOutputStream.STDOUT ->
                 logger.info("llama-server [{}] stdout: {}", modelId, line)
 
-            LlamaRuntimeProcessOutputStream.STDERR ->
+            EmbeddedLlamaProcessOutputStream.STDERR ->
                 logger.warn("llama-server [{}] stderr: {}", modelId, line)
         }
     }
@@ -60,7 +60,7 @@ class LlamaRuntimeProcessOutputLogger(
         fun createExecutor(): ExecutorService {
             val counter = AtomicInteger(0)
             return Executors.newCachedThreadPool { runnable ->
-                Thread(runnable, "llama-runtime-output-${counter.incrementAndGet()}").apply {
+                Thread(runnable, "embedded-llama-output-${counter.incrementAndGet()}").apply {
                     isDaemon = true
                 }
             }
@@ -68,7 +68,7 @@ class LlamaRuntimeProcessOutputLogger(
     }
 }
 
-enum class LlamaRuntimeProcessOutputStream(
+enum class EmbeddedLlamaProcessOutputStream(
     val label: String,
 ) {
     STDOUT("stdout"),

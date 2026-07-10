@@ -18,7 +18,7 @@ this document by marking the matching checklist items as complete.
 - [ADR-004: Integration Testing Strategy](ADR-004-integration-testing-strategy.md)
 - [ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 - [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
-- [ADR-007: Llama Runtime](ADR-007-llama-runtime.md)
+- [ADR-007: Embedded Llama](ADR-007-embedded-llama.md)
 
 ## Current Product Scope
 
@@ -285,13 +285,13 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  llama-runtime:
+  embedded-llama:
     enabled: false
     config:
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
       models:
-        - id: llama-runtime-example
+        - id: embedded-llama-example
           display-name: Embedded Llama
           gguf-file: models/llama.gguf
           context-size: 4096
@@ -325,10 +325,10 @@ aisme:
         base-url: https://example.endpoints.huggingface.cloud
         api-key: placeholder-api-key
         available-offline: false
-    - id: llama-runtime-example
+    - id: embedded-llama-example
       enabled: false
       config:
-        display-name: Llama Runtime Example
+        display-name: Embedded Llama Example
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
         available-offline: true

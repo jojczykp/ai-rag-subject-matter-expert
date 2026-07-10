@@ -17,13 +17,13 @@ import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.DefaultApplicationArguments
 
-class LlamaRuntimeProcessManagerTest {
+class EmbeddedLlamaProcessManagerTest {
     @Test
-    fun `does not start processes when llama runtime is disabled`() {
-        val launcher = FakeLlamaRuntimeProcessLauncher()
-        val manager = LlamaRuntimeProcessManager(
+    fun `does not start processes when embedded llama is disabled`() {
+        val launcher = FakeEmbeddedLlamaProcessLauncher()
+        val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            llamaRuntimeProperties = LlamaRuntimeProperties(enabled = false),
+            embeddedLlamaProperties = EmbeddedLlamaProperties(enabled = false),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -39,14 +39,14 @@ class LlamaRuntimeProcessManagerTest {
 
     @Test
     fun `starts one llama server process per configured embedded model`() {
-        val launcher = FakeLlamaRuntimeProcessLauncher()
-        val manager = LlamaRuntimeProcessManager(
+        val launcher = FakeEmbeddedLlamaProcessLauncher()
+        val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(id = "embedded-llama"),
                 ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-qwen"),
             ),
-            llamaRuntimeProperties = enabledLlamaRuntimeProperties(
+            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(
                 runtimeModel(
                     id = "embedded-llama",
                     ggufFile = "llama.gguf",
@@ -101,13 +101,13 @@ class LlamaRuntimeProcessManagerTest {
 
     @Test
     fun `skips embedded chat model without matching runtime model`() {
-        val launcher = FakeLlamaRuntimeProcessLauncher()
-        val manager = LlamaRuntimeProcessManager(
+        val launcher = FakeEmbeddedLlamaProcessLauncher()
+        val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(id = "configured-runtime-model"),
                 embeddedModel(id = "missing-runtime-model"),
             ),
-            llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "configured-runtime-model")),
+            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "configured-runtime-model")),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -123,10 +123,10 @@ class LlamaRuntimeProcessManagerTest {
 
     @Test
     fun `stops running llama server processes`() {
-        val launcher = FakeLlamaRuntimeProcessLauncher()
-        val manager = LlamaRuntimeProcessManager(
+        val launcher = FakeEmbeddedLlamaProcessLauncher()
+        val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "embedded-llama")),
+            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "embedded-llama")),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -141,10 +141,10 @@ class LlamaRuntimeProcessManagerTest {
 
     @Test
     fun `marks model unavailable and stops process when readiness fails`() {
-        val launcher = FakeLlamaRuntimeProcessLauncher()
-        val manager = LlamaRuntimeProcessManager(
+        val launcher = FakeEmbeddedLlamaProcessLauncher()
+        val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            llamaRuntimeProperties = enabledLlamaRuntimeProperties(runtimeModel(id = "embedded-llama")),
+            embeddedLlamaProperties = enabledEmbeddedLlamaProperties(runtimeModel(id = "embedded-llama")),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(ready = false),
@@ -186,12 +186,12 @@ class LlamaRuntimeProcessManagerTest {
             ),
         )
 
-    private fun enabledLlamaRuntimeProperties(
-        vararg models: LlamaRuntimeModelProperties,
-    ): LlamaRuntimeProperties =
-        LlamaRuntimeProperties(
+    private fun enabledEmbeddedLlamaProperties(
+        vararg models: EmbeddedLlamaModelProperties,
+    ): EmbeddedLlamaProperties =
+        EmbeddedLlamaProperties(
             enabled = true,
-            config = EnabledLlamaRuntimeProperties(
+            config = EnabledEmbeddedLlamaProperties(
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
                 models = models.toList(),
@@ -203,8 +203,8 @@ class LlamaRuntimeProcessManagerTest {
         ggufFile: String = "llama.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
-    ): LlamaRuntimeModelProperties =
-        LlamaRuntimeModelProperties(
+    ): EmbeddedLlamaModelProperties =
+        EmbeddedLlamaModelProperties(
             id = id,
             displayName = "Embedded Llama",
             ggufFile = ggufFile,
@@ -212,15 +212,15 @@ class LlamaRuntimeProcessManagerTest {
             runtimeArguments = runtimeArguments,
         )
 
-    private fun fixedPortAllocator(vararg ports: Int): EphemeralLlamaRuntimePortAllocator {
+    private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {
         val remainingPorts = ports.toMutableList()
-        return EphemeralLlamaRuntimePortAllocator { remainingPorts.removeFirst() }
+        return EphemeralEmbeddedLlamaPortAllocator { remainingPorts.removeFirst() }
     }
 
-    private fun noOpOutputLogger(): LlamaRuntimeProcessOutputLogger =
-        LlamaRuntimeProcessOutputLogger(lineConsumer = { _, _, _ -> })
+    private fun noOpOutputLogger(): EmbeddedLlamaProcessOutputLogger =
+        EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> })
 
-    private class FakeLlamaRuntimeProcessLauncher : LlamaRuntimeProcessLauncher {
+    private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
         val commands = mutableListOf<List<String>>()
         val processes = mutableListOf<FakeProcess>()
 

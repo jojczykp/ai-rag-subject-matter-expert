@@ -1,4 +1,4 @@
-# ADR-007: Llama Runtime
+# ADR-007: Embedded Llama
 
 ## Status
 
@@ -29,7 +29,7 @@ The application will:
 
 - [x] Require GGUF model files as external local assets, not files bundled into
       the executable JAR.
-- [x] Configure the llama runtime behind an explicit `enabled` flag;
+- [x] Configure the embedded llama behind an explicit `enabled` flag;
       when enabled, require asset directory, `llama-server` executable path,
       and model metadata.
 - [x] Configure per-model GGUF file paths, runtime arguments, checksum,
@@ -123,9 +123,9 @@ first embedded chat runtime.
       health endpoint before embedded models are marked available.
 - [x] Managed process stdout and stderr should be captured through application
       logging instead of being discarded or printed directly to the console.
-- [ ] Optional embedded runtime tests should be tagged because they may require
-      native executables and model files.
-- [ ] Documentation must explain that model files and binaries are local assets
+- [ ] Container-level acceptance testing should verify embedded offline runtime
+      behavior with bundled or mounted model assets.
+- [x] Documentation explains that model files and binaries are local assets
       that users install separately.
 - [ ] The application should avoid committing model files, binaries, or runtime
       logs.

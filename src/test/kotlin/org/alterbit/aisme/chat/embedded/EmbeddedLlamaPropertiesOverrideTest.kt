@@ -7,26 +7,26 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class LlamaRuntimePropertiesOverrideTest {
+class EmbeddedLlamaPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
-            "aisme.llama-runtime.enabled=true",
-            "aisme.llama-runtime.config.asset-directory=/opt/aisme/models/llama",
-            "aisme.llama-runtime.config.server-executable-path=/opt/aisme/bin/llama-server",
-            "aisme.llama-runtime.config.models[0].id=embedded-mistral",
-            "aisme.llama-runtime.config.models[0].display-name=Embedded Mistral",
-            "aisme.llama-runtime.config.models[0].gguf-file=mistral/mistral-7b-instruct-q4.gguf",
-            "aisme.llama-runtime.config.models[0].context-size=8192",
-            "aisme.llama-runtime.config.models[0].runtime-arguments[0]=--threads",
-            "aisme.llama-runtime.config.models[0].runtime-arguments[1]=8",
-            "aisme.llama-runtime.config.models[0].sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            "aisme.embedded-llama.enabled=true",
+            "aisme.embedded-llama.config.asset-directory=/opt/aisme/models/llama",
+            "aisme.embedded-llama.config.server-executable-path=/opt/aisme/bin/llama-server",
+            "aisme.embedded-llama.config.models[0].id=embedded-mistral",
+            "aisme.embedded-llama.config.models[0].display-name=Embedded Mistral",
+            "aisme.embedded-llama.config.models[0].gguf-file=mistral/mistral-7b-instruct-q4.gguf",
+            "aisme.embedded-llama.config.models[0].context-size=8192",
+            "aisme.embedded-llama.config.models[0].runtime-arguments[0]=--threads",
+            "aisme.embedded-llama.config.models[0].runtime-arguments[1]=8",
+            "aisme.embedded-llama.config.models[0].sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
         )
 
     @Test
-    fun `uses configured llama runtime properties`() {
+    fun `uses configured embedded llama properties`() {
         contextRunner.run { context ->
-            val properties = context.getBean<LlamaRuntimeProperties>()
+            val properties = context.getBean<EmbeddedLlamaProperties>()
             val config = properties.requireEnabledConfig()
 
             properties.enabled shouldBe true
@@ -43,6 +43,6 @@ class LlamaRuntimePropertiesOverrideTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(LlamaRuntimeProperties::class)
+    @EnableConfigurationProperties(EmbeddedLlamaProperties::class)
     private class PropertiesConfiguration
 }

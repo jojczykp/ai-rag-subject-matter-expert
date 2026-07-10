@@ -13,19 +13,19 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
 
 @Component
-class LlamaRuntimeProcessManager(
+class EmbeddedLlamaProcessManager(
     chatModelRegistry: ChatModelRegistry,
-    llamaRuntimeProperties: LlamaRuntimeProperties,
-    portAllocator: EphemeralLlamaRuntimePortAllocator,
-    private val processLauncher: LlamaRuntimeProcessLauncher,
+    embeddedLlamaProperties: EmbeddedLlamaProperties,
+    portAllocator: EphemeralEmbeddedLlamaPortAllocator,
+    private val processLauncher: EmbeddedLlamaProcessLauncher,
     private val readinessProbe: LlamaServerReadinessProbe,
-    private val processOutputLogger: LlamaRuntimeProcessOutputLogger,
+    private val processOutputLogger: EmbeddedLlamaProcessOutputLogger,
 ) : ApplicationRunner {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val managedModels: List<ManagedLlamaRuntimeModel> =
+    private val managedModels: List<ManagedEmbeddedLlamaModel> =
         buildManagedModels(
             chatModelRegistry = chatModelRegistry,
-            llamaRuntimeProperties = llamaRuntimeProperties,
+            embeddedLlamaProperties = embeddedLlamaProperties,
             portAllocator = portAllocator,
         )
     private val availabilityByModelId = ConcurrentHashMap(
@@ -71,14 +71,14 @@ class LlamaRuntimeProcessManager(
 
     private fun buildManagedModels(
         chatModelRegistry: ChatModelRegistry,
-        llamaRuntimeProperties: LlamaRuntimeProperties,
-        portAllocator: EphemeralLlamaRuntimePortAllocator,
-    ): List<ManagedLlamaRuntimeModel> {
-        if (!llamaRuntimeProperties.enabled) {
+        embeddedLlamaProperties: EmbeddedLlamaProperties,
+        portAllocator: EphemeralEmbeddedLlamaPortAllocator,
+    ): List<ManagedEmbeddedLlamaModel> {
+        if (!embeddedLlamaProperties.enabled) {
             return emptyList()
         }
 
-        val config = llamaRuntimeProperties.requireEnabledConfig()
+        val config = embeddedLlamaProperties.requireEnabledConfig()
         val runtimeModelsById = config.models.associateBy { it.id }
 
         return chatModelRegistry.chatModels()
@@ -86,7 +86,7 @@ class LlamaRuntimeProcessManager(
             .mapNotNull { chatModel ->
                 runtimeModelsById[chatModel.id]?.let { runtimeModel ->
                     val port = portAllocator.allocate()
-                    ManagedLlamaRuntimeModel(
+                    ManagedEmbeddedLlamaModel(
                         modelId = chatModel.id,
                         baseUrl = "http://$LOOPBACK_HOST:$port",
                         command = config.commandFor(runtimeModel, port),
@@ -95,8 +95,8 @@ class LlamaRuntimeProcessManager(
             }
     }
 
-    private fun EnabledLlamaRuntimeProperties.commandFor(
-        model: LlamaRuntimeModelProperties,
+    private fun EnabledEmbeddedLlamaProperties.commandFor(
+        model: EmbeddedLlamaModelProperties,
         port: Int,
     ): List<String> =
         listOf(
@@ -116,7 +116,7 @@ class LlamaRuntimeProcessManager(
         return if (configuredPath.isAbsolute) configuredPath else resolve(configuredPath)
     }
 
-    private data class ManagedLlamaRuntimeModel(
+    private data class ManagedEmbeddedLlamaModel(
         val modelId: String,
         val baseUrl: String,
         val command: List<String>,

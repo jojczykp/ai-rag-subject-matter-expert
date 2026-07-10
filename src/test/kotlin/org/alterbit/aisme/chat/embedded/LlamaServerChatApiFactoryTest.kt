@@ -47,7 +47,7 @@ class LlamaServerChatApiFactoryTest {
 
         val response = api.chat(
             LlamaServerChatRequest(
-                model = "llama-runtime-example",
+                model = "embedded-llama-example",
                 messages = listOf(
                     LlamaServerChatMessage(
                         role = "user",
@@ -61,7 +61,7 @@ class LlamaServerChatApiFactoryTest {
         response.choices.single().message.content shouldBe "Embedded answer"
         recordedRequests.single().method shouldBe "POST"
         recordedRequests.single().body shouldBe """
-            {"model":"llama-runtime-example","messages":[{"role":"user","content":"How should I cook rice?"}],"stream":false}
+            {"model":"embedded-llama-example","messages":[{"role":"user","content":"How should I cook rice?"}],"stream":false}
         """.trimIndent()
     }
 
