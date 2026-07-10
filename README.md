@@ -131,6 +131,20 @@ Start the database:
 docker compose up -d db
 ```
 
+Start Ollama locally and pull the configured chat model if it is not already
+available:
+
+```bash
+ollama serve
+```
+
+In another terminal:
+
+```bash
+ollama pull llama3.2
+ollama list
+```
+
 Run the application:
 
 ```bash
