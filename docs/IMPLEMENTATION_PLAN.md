@@ -134,8 +134,8 @@ All implementation items are TODO until delivered and verified.
 - [x] Add frontend linting, formatting, and test tooling.
 - [x] Add Vitest for frontend unit and component tests.
 - [x] Add React Testing Library for behavior-focused UI tests.
-- [ ] Add MSW for frontend API mocking.
-- [ ] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
+- [x] Add MSW for frontend API mocking.
+- [x] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
 - [ ] Add an API client for `GET /models`.
 - [ ] Add an API client for `POST /chat`.
 - [ ] Build the first application screen around model selection and chat.
