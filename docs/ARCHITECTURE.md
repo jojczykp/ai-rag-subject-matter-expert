@@ -392,7 +392,7 @@ for the accepted integration testing decision.
 - [x] Unit test static resource document discovery.
 - [x] Unit test `ChatModelRegistry`.
 - [x] Unit test `AiChatService` routing.
-- [ ] Add Spring Boot configuration tests for each profile.
+- [x] Add Spring Boot configuration binding and validation tests.
 - [x] Add integration tests for REST endpoints and the static document
       indexing/chat flow.
 - [x] Keep Kover coverage at or above 80%.
