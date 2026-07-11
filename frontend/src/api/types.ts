@@ -45,3 +45,18 @@ export type ChatResponse = {
   modelId: string
   answer: string
 }
+
+export type ApiErrorCode =
+  | 'INVALID_REQUEST'
+  | 'MODEL_NOT_FOUND'
+  | 'MODEL_UNAVAILABLE'
+  | 'MODEL_CLIENT_NOT_FOUND'
+  | 'PROVIDER_TIMEOUT'
+  | 'PROVIDER_ERROR'
+  | 'INTERNAL_ERROR'
+
+export type ApiErrorResponse = {
+  code: ApiErrorCode
+  message: string
+  details?: Record<string, string>
+}
