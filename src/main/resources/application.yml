@@ -64,7 +64,7 @@ aisme:
         available-offline: false
         base-url: https://api.example.com/v1
         model-name: example-chat-model
-        api-key: placeholder-api-key
+        api-key: ${OPENAI_API_KEY:placeholder-api-key}
     - id: hugging-face-tgi-example
       enabled: true
       config:
@@ -73,7 +73,7 @@ aisme:
         mode: ONLINE
         available-offline: false
         base-url: https://example.endpoints.huggingface.cloud
-        api-key: placeholder-api-key
+        api-key: ${HF_API_KEY:placeholder-api-key}
 
 management:
   endpoints:

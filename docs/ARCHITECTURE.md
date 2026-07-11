@@ -263,7 +263,7 @@ Configuration should make model availability and runtime mode explicit.
 - [ ] Add `application-cloud.yml` for cloud-hosted models.
 - [ ] Add `application-offline.yml` for embedded offline models.
 - [x] Add configuration properties for `aisme.chat-models`.
-- [ ] Add environment variable support for cloud credentials.
+- [x] Add environment variable support for cloud credentials.
 - [x] Add validation for missing required provider settings.
 - [ ] Document all configuration properties in README.md.
 

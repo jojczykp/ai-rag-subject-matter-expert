@@ -6,13 +6,14 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.concurrent.Executors
+import java.util.concurrent.CopyOnWriteArrayList
 import org.junit.jupiter.api.Test
 
 class EmbeddedLlamaProcessOutputLoggerTest {
     @Test
     fun `captures stdout and stderr lines with model id`() {
         val executor = Executors.newFixedThreadPool(2)
-        val capturedLines = mutableListOf<CapturedLine>()
+        val capturedLines = CopyOnWriteArrayList<CapturedLine>()
         val outputLogger = EmbeddedLlamaProcessOutputLogger(
             executor = executor,
             lineConsumer = { modelId, stream, line ->
