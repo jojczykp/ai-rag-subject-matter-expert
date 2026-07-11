@@ -171,12 +171,12 @@ documents.
 - [x] Return provider-neutral responses.
 - [x] Add tests for model selection and routing.
 
-### StaticSubjectDocumentService
+### Static Subject Document Loading
 
-`StaticSubjectDocumentService` should load and describe the static documents
-bundled with the application.
+Static subject document loading components should load and describe the static
+documents bundled with the application.
 
-- [ ] Add `StaticSubjectDocumentService`.
+- [x] Add static subject document loading components.
 - [x] Discover configured documents in application resources.
 - [x] Extract or load text from supported resource files.
 - [x] Split extracted text into searchable chunks.
