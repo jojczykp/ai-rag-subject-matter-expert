@@ -147,6 +147,31 @@ class AiChatServiceTest {
     }
 
     @Test
+    fun `rejects misconfigured model before calling model client`() {
+        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.MISCONFIGURED),
+            chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
+            aiModelClients = aiModelClients(modelClient),
+        )
+
+        val exception = shouldThrow<ChatModelUnavailableException> {
+            service.chat(
+                ChatRequestDto(
+                    modelId = "local-ollama-llama",
+                    message = "How should I cook rice?",
+                ),
+            )
+        }
+
+        exception.modelId shouldBe "local-ollama-llama"
+        exception.availability shouldBe ChatModelAvailability.MISCONFIGURED
+        modelClient.requests shouldContainExactly emptyList()
+    }
+
+    @Test
     fun `maps model client failure to provider error`() {
         val modelClient = FailingAiModelClient(modelId = "local-ollama-llama")
         val service = AiChatService(
