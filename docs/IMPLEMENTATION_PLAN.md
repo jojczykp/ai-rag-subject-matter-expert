@@ -131,9 +131,9 @@ All implementation items are TODO until delivered and verified.
 ## Future Milestone: Frontend UI
 
 - [x] Add a separate `frontend/` React + TypeScript + Vite project.
-- [ ] Add frontend linting, formatting, and test tooling.
-- [ ] Add Vitest for frontend unit and component tests.
-- [ ] Add React Testing Library for behavior-focused UI tests.
+- [x] Add frontend linting, formatting, and test tooling.
+- [x] Add Vitest for frontend unit and component tests.
+- [x] Add React Testing Library for behavior-focused UI tests.
 - [ ] Add MSW for frontend API mocking.
 - [ ] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
 - [ ] Add an API client for `GET /models`.
