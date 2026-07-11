@@ -280,7 +280,7 @@ Configuration should make model availability and runtime mode explicit.
 - [x] Add validation for missing required provider settings.
 - [x] Report missing OpenAI-compatible credentials as model misconfiguration
       instead of failing application startup.
-- [ ] Document all configuration properties in README.md.
+- [x] Document all configuration properties in README.md.
 
 Example profile intent:
 

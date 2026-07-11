@@ -200,6 +200,50 @@ jdbc:postgresql://localhost:5432/aisme
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
 
+## Configuration Reference
+
+Application properties are configured under the `aisme` prefix.
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `aisme.documents.location` | `classpath:/subject-documents/` | Bundled document resource folder. |
+| `aisme.documents.chunk-size` | `700` | Maximum character count per indexed document chunk. |
+| `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
+| `aisme.embedding-model.id` | `local-bge-small` | Stable embedding model identifier stored with embeddings. |
+| `aisme.embedding-model.version` | `1.5` | Embedding model version stored with embeddings. |
+| `aisme.embedding-model.dimensions` | `384` | Embedding vector dimension. |
+| `aisme.embedding-model.runtime` | `ONNX` | Local embedding runtime. |
+| `aisme.embedding-model.model-path` | `./models/bge-small-en-v1.5/model.onnx` | ONNX model file path. |
+| `aisme.embedding-model.tokenizer-path` | `./models/bge-small-en-v1.5/tokenizer.json` | tokenizer file path. |
+| `aisme.chat.timeout` | `60s` | Timeout for model chat generation. |
+| `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
+| `aisme.chat-model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
+| `aisme.chat-model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
+| `aisme.embedded-llama.asset-directory` | `./models/llama` | Base directory for local embedded llama assets. |
+| `aisme.embedded-llama.server-executable-path` | `./models/llama/bin/llama-server` | Path to the managed `llama-server` executable. |
+| `aisme.embedded-llama.models[*].id` | required | Embedded llama model id. Should match the related `chat-models[*].id`. |
+| `aisme.embedded-llama.models[*].enabled` | `false` | Whether the embedded runtime should manage this model. |
+| `aisme.embedded-llama.models[*].display-name` | required | Human-readable embedded model name. |
+| `aisme.embedded-llama.models[*].gguf-file` | required | GGUF file path relative to `asset-directory`. |
+| `aisme.embedded-llama.models[*].context-size` | required | Context size passed to `llama-server`. |
+| `aisme.embedded-llama.models[*].runtime-arguments` | `[]` | Extra arguments passed to `llama-server`. |
+| `aisme.embedded-llama.models[*].sha256` | optional | Lowercase SHA-256 checksum for the GGUF file. |
+| `aisme.chat-models[*].id` | required | User-selected chat model id used in `/chat` requests. |
+| `aisme.chat-models[*].enabled` | `false` | Whether the chat model is visible and selectable. |
+| `aisme.chat-models[*].config.display-name` | required when enabled | Human-readable model name. |
+| `aisme.chat-models[*].config.description` | optional | Short model description for clients and selection UIs. |
+| `aisme.chat-models[*].config.runtime` | required when enabled | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_ENDPOINT`, `EMBEDDED_OFFLINE`, or `SPRING_AI`. |
+| `aisme.chat-models[*].config.mode` | required when enabled | Runtime mode: `ONLINE`, `LOCAL_SERVER`, or `EMBEDDED_OFFLINE`. |
+| `aisme.chat-models[*].config.available-offline` | required when enabled | Whether the model can answer without network access. |
+| `aisme.chat-models[*].config.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint models. |
+| `aisme.chat-models[*].config.model-name` | runtime-specific | Provider model name for Ollama and OpenAI-compatible models. |
+| `aisme.chat-models[*].config.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
+
+Runtime and mode combinations are intentionally narrow in the initial scope:
+`OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_ENDPOINT`
+use `ONLINE`, `EMBEDDED_OFFLINE` uses `EMBEDDED_OFFLINE`, and `SPRING_AI` uses
+`ONLINE`.
+
 ## Local Embedding Model
 
 The default embedding runtime is local ONNX. Model files are configured outside
