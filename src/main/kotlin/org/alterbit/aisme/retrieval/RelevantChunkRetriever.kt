@@ -6,10 +6,10 @@ import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Component
 
 @Component
-class RelevantChunkRetriever(
+class JdbcRelevantChunkRetriever(
     private val jdbcClient: JdbcClient,
-) {
-    fun retrieve(request: RelevantChunkRequest): List<RelevantChunk> {
+) : RelevantChunkRetriever {
+    override fun retrieve(request: RelevantChunkRequest): List<RelevantChunk> {
         require(request.embedding.isNotEmpty()) { "embedding must not be empty" }
         require(request.limit > 0) { "limit must be greater than 0" }
         require(request.embedding.size == request.embeddingModel.dimensions) {
@@ -65,4 +65,8 @@ class RelevantChunkRetriever(
             LIMIT :limit
         """
     }
+}
+
+fun interface RelevantChunkRetriever {
+    fun retrieve(request: RelevantChunkRequest): List<RelevantChunk>
 }

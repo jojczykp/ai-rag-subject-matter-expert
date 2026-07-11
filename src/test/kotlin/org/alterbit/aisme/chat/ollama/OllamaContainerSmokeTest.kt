@@ -6,6 +6,7 @@ import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatController
+import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
@@ -151,4 +152,8 @@ class OllamaContainerTestContext {
     @Bean
     fun clock(): java.time.Clock =
         java.time.Clock.systemUTC()
+
+    @Bean
+    fun chatContextRetriever(): ChatContextRetriever =
+        ChatContextRetriever { emptyList() }
 }

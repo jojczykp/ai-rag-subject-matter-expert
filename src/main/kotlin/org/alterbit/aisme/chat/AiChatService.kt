@@ -13,6 +13,7 @@ class AiChatService(
     private val chatModelRegistry: ChatModelRegistry,
     private val chatModelAvailabilityService: ChatModelAvailabilityService,
     private val chatProperties: ChatProperties,
+    private val chatContextRetriever: ChatContextRetriever,
     private val aiModelClients: AiModelClients,
 ) {
     fun chat(request: ChatRequestDto): ChatResponseDto {
@@ -23,7 +24,7 @@ class AiChatService(
         val modelRequest = AiModelChatRequest(
             modelId = chatModel.id,
             message = request.message,
-            contextChunks = emptyList(),
+            contextChunks = chatContextRetriever.retrieve(request.message),
             timeout = chatProperties.timeout,
         )
 

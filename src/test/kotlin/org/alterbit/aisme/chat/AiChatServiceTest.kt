@@ -28,10 +28,13 @@ class AiChatServiceTest {
     fun `delegates chat request to matching configured model client`() {
         val localModelClient = FakeAiModelClient(modelId = "local-ollama-llama")
         val cloudModelClient = FakeAiModelClient(modelId = "cloud-gpt")
+        val contextChunks = contextChunks()
+        val chatContextRetriever = FakeChatContextRetriever(contextChunks)
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(45)),
+            chatContextRetriever = chatContextRetriever,
             aiModelClients = aiModelClients(localModelClient, cloudModelClient),
         )
 
@@ -48,10 +51,11 @@ class AiChatServiceTest {
             AiModelChatRequest(
                 modelId = "local-ollama-llama",
                 message = "How should I cook rice?",
-                contextChunks = emptyList(),
+                contextChunks = contextChunks,
                 timeout = Duration.ofSeconds(45),
             ),
         )
+        chatContextRetriever.messages shouldContainExactly listOf("How should I cook rice?")
         cloudModelClient.requests shouldContainExactly emptyList()
     }
 
@@ -61,6 +65,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(FakeAiModelClient(modelId = "local-ollama-llama")),
         )
 
@@ -82,6 +87,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(FakeAiModelClient(modelId = "other-model")),
         )
 
@@ -104,6 +110,7 @@ class AiChatServiceTest {
                 chatModelRegistry = chatModelRegistry(),
                 chatModelAvailabilityService = chatModelAvailabilityService(),
                 chatProperties = ChatProperties(),
+                chatContextRetriever = FakeChatContextRetriever(),
                 aiModelClients = aiModelClients(
                     FakeAiModelClient(modelId = "local-ollama-llama"),
                     FakeAiModelClient(modelId = "local-ollama-llama"),
@@ -121,6 +128,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.UNAVAILABLE),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(modelClient),
         )
 
@@ -145,6 +153,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(modelClient),
         )
 
@@ -168,6 +177,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(
                 FailingAiModelClient(
                     modelId = "local-ollama-llama",
@@ -200,6 +210,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(
                 FailingAiModelClient(
                     modelId = "local-ollama-llama",
@@ -226,6 +237,7 @@ class AiChatServiceTest {
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
+            chatContextRetriever = FakeChatContextRetriever(),
             aiModelClients = aiModelClients(
                 FailingAiModelClient(
                     modelId = "local-ollama-llama",
@@ -295,6 +307,26 @@ class AiChatServiceTest {
 
     private fun aiModelClients(vararg clients: AiModelClient): AiModelClients =
         AiModelClients(listOf(AiModelClientProvider { clients.toList() }))
+
+    private fun contextChunks(): List<AiModelContextChunk> =
+        listOf(
+            AiModelContextChunk(
+                content = "Use two parts water for one part rice.",
+                resourcePath = "culinary_expert/rice.txt",
+                chunkIndex = 0,
+            ),
+        )
+
+    private class FakeChatContextRetriever(
+        private val chunks: List<AiModelContextChunk> = emptyList(),
+    ) : ChatContextRetriever {
+        val messages = mutableListOf<String>()
+
+        override fun retrieve(message: String): List<AiModelContextChunk> {
+            messages += message
+            return chunks
+        }
+    }
 
     private class FailingAiModelClient(
         override val modelId: String,

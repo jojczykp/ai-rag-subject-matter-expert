@@ -162,4 +162,8 @@ class ChatApiIntegrationTestConfiguration {
     @Bean
     fun cloudAiModelClient(): FakeAiModelClient =
         FakeAiModelClient(modelId = "cloud-gpt")
+
+    @Bean
+    fun chatContextRetriever(): ChatContextRetriever =
+        ChatContextRetriever { emptyList() }
 }

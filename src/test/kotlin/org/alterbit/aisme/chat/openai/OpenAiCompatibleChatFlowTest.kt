@@ -10,6 +10,7 @@ import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatController
+import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
@@ -145,6 +146,10 @@ class OpenAiCompatibleChatFlowTestContext {
     @Bean
     fun clock(): Clock =
         Clock.systemUTC()
+
+    @Bean
+    fun chatContextRetriever(): ChatContextRetriever =
+        ChatContextRetriever { emptyList() }
 }
 
 private fun HttpExchange.respondJson(body: String) {

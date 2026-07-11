@@ -164,7 +164,7 @@ documents.
 
 - [x] Add `AiChatService`.
 - [x] Require a selected model id with each chat request.
-- [ ] Retrieve relevant chunks from the single configured subject's bundled
+- [x] Retrieve relevant chunks from the single configured subject's bundled
       resource documents.
 - [x] Resolve the selected model through `ChatModelRegistry`.
 - [x] Route chat requests to the matching `AiModelClient`.
@@ -193,11 +193,11 @@ retrieval-augmented generation rather than sending every bundled document to the
 model for each request.
 
 - [x] Add `RelevantChunkRetriever`.
-- [ ] Retrieve relevant chunks for a user message.
-- [ ] Limit retrieved context to a configurable budget.
+- [x] Retrieve relevant chunks for a user message.
+- [x] Limit retrieved context to a configurable budget.
 - [x] Return enough chunk metadata to support future citations.
-- [ ] Avoid sending all bundled document content to the model by default.
-- [ ] Add tests for retrieval behavior and empty-result handling.
+- [x] Avoid sending all bundled document content to the model by default.
+- [x] Add tests for retrieval behavior and empty-result handling.
 
 ### AiModelClient
 

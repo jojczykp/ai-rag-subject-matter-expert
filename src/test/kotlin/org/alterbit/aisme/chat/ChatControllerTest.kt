@@ -165,4 +165,8 @@ class ChatControllerTestConfiguration {
         AiModelClientProvider {
             listOf(FakeAiModelClient(modelId = "local-ollama-llama"))
         }
+
+    @Bean
+    fun chatContextRetriever(): ChatContextRetriever =
+        ChatContextRetriever { emptyList() }
 }

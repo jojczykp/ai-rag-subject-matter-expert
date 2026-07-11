@@ -196,6 +196,10 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
         FakeAiModelClient(modelId = "embedded-ready")
 
     @Bean
+    fun chatContextRetriever(): ChatContextRetriever =
+        ChatContextRetriever { emptyList() }
+
+    @Bean
     fun embeddedAvailabilityChecker(): ChatModelAvailabilityChecker =
         object : ChatModelAvailabilityChecker {
             override fun supports(model: ChatModelDescriptor): Boolean =

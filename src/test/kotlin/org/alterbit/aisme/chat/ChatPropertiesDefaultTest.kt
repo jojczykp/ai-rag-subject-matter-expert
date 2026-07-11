@@ -13,11 +13,12 @@ class ChatPropertiesDefaultTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
-    fun `uses default chat timeout`() {
+    fun `uses default chat properties`() {
         contextRunner.run { context ->
             val properties = context.getBean<ChatProperties>()
 
             properties.timeout shouldBe Duration.ofSeconds(60)
+            properties.relevantChunkLimit shouldBe 5
         }
     }
 

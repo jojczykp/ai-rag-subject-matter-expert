@@ -117,9 +117,9 @@ Requirements:
 
 - [ ] A chat request includes a user message.
 - [ ] A chat request includes a selected model id.
-- [ ] The service retrieves only relevant indexed document chunks for the
+- [x] The service retrieves only relevant indexed document chunks for the
       request.
-- [ ] The service sends the user message and retrieved chunks to the selected
+- [x] The service sends the user message and retrieved chunks to the selected
       model.
 - [ ] The response includes the generated answer.
 - [ ] The response identifies the model used.

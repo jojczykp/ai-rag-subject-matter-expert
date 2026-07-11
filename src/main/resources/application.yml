@@ -34,6 +34,7 @@ aisme:
         runtime-arguments: []
   chat:
     timeout: 60s
+    relevant-chunk-limit: 5
   chat-model-availability:
     timeout: 5s
     cache-ttl: 5s
