@@ -233,11 +233,6 @@ interface AiModelClient {
 
 Streaming chat support can be added later when the API shape is clear.
 
-## Future Scope
-
-- [ ] Expose source document metadata in API responses when document inspection,
-      citations, or source references are added.
-
 ### Provider Adapters
 
 Provider adapters translate internal requests to the selected runtime. Runtime
