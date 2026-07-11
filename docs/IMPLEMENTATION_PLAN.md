@@ -138,17 +138,17 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
 - [x] Add an API client for `GET /models`.
 - [x] Add an API client for `POST /chat`.
-- [ ] Build the first application screen around model selection and chat.
-- [ ] Show model display name, availability, runtime mode, runtime
+- [x] Build the first application screen around model selection and chat.
+- [x] Show model display name, availability, runtime mode, runtime
       requirements, and whether prompts may leave the local machine.
-- [ ] Require selecting a model before sending a chat message.
-- [ ] Keep chat history in browser memory only.
-- [ ] Display loading, validation, unavailable-model, and provider-error
+- [x] Require selecting a model before sending a chat message.
+- [x] Keep chat history in browser memory only.
+- [x] Display loading, validation, unavailable-model, and provider-error
       states.
-- [ ] Add frontend tests for model loading, model selection, chat submission,
+- [x] Add frontend tests for model loading, model selection, chat submission,
       and API error states.
 - [ ] Add Playwright end-to-end tests after the first usable UI screen exists.
-- [ ] Add local development configuration so the Vite dev server can call the
+- [x] Add local development configuration so the Vite dev server can call the
       Spring Boot API.
 - [ ] Add Gradle integration to build the frontend and copy production assets
       into Spring Boot static resources when packaging.

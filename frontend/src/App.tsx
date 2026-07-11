@@ -1,122 +1,251 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
 import './App.css'
+import { ApiError, getModels, postChat } from './api/client'
+import type { ChatModel } from './api/types'
+
+type ChatMessage = {
+  id: number
+  role: 'user' | 'assistant'
+  content: string
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [models, setModels] = useState<ChatModel[]>([])
+  const [modelsLoading, setModelsLoading] = useState(true)
+  const [modelsError, setModelsError] = useState<string | null>(null)
+  const [selectedModelId, setSelectedModelId] = useState('')
+  const [message, setMessage] = useState('')
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [chatError, setChatError] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    getModels()
+      .then((response) => {
+        if (!active) {
+          return
+        }
+        setModels(response.models)
+        setModelsError(null)
+      })
+      .catch((error: unknown) => {
+        if (!active) {
+          return
+        }
+        setModelsError(errorMessage(error, 'Could not load configured models.'))
+      })
+      .finally(() => {
+        if (active) {
+          setModelsLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const selectedModel = useMemo(
+    () => models.find((model) => model.id === selectedModelId),
+    [models, selectedModelId],
+  )
+  const trimmedMessage = message.trim()
+  const modelCanChat =
+    selectedModel?.availability === 'AVAILABLE' ||
+    selectedModel?.availability === 'CONFIGURED'
+  const sendDisabled =
+    sending || !selectedModel || !trimmedMessage || !modelCanChat
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (sendDisabled || !selectedModel) {
+      return
+    }
+
+    const userMessage: ChatMessage = {
+      id: Date.now(),
+      role: 'user',
+      content: trimmedMessage,
+    }
+    setChatMessages((current) => [...current, userMessage])
+    setMessage('')
+    setChatError(null)
+    setSending(true)
+
+    try {
+      const response = await postChat({
+        modelId: selectedModel.id,
+        message: trimmedMessage,
+      })
+      setChatMessages((current) => [
+        ...current,
+        {
+          id: Date.now() + 1,
+          role: 'assistant',
+          content: response.answer,
+        },
+      ])
+    } catch (error: unknown) {
+      setChatError(errorMessage(error, 'The selected model could not answer.'))
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <main className="app-shell">
+      <section className="model-panel" aria-labelledby="model-panel-heading">
+        <div className="panel-heading">
+          <p className="eyebrow">AI Subject Matter Expert</p>
+          <h1 id="model-panel-heading">Chat workspace</h1>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+
+        <label className="field" htmlFor="model">
+          <span>Model</span>
+          <select
+            id="model"
+            value={selectedModelId}
+            onChange={(event) => setSelectedModelId(event.target.value)}
+            disabled={modelsLoading || models.length === 0}
+          >
+            <option value="">Select a model</option>
+            {models.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.displayName}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        {modelsLoading && (
+          <p className="status">Loading configured models...</p>
+        )}
+        {modelsError && <p className="status status-error">{modelsError}</p>}
+        {!modelsLoading && !modelsError && models.length === 0 && (
+          <p className="status status-error">No chat models are configured.</p>
+        )}
+
+        <ModelDetails model={selectedModel} />
+      </section>
+
+      <section className="chat-panel" aria-labelledby="chat-heading">
+        <div className="chat-header">
+          <div>
+            <p className="eyebrow">Single subject</p>
+            <h2 id="chat-heading">Ask a question</h2>
+          </div>
+          <p className="chat-summary">
+            {selectedModel
+              ? `Using ${selectedModel.displayName}`
+              : 'Choose a model to start'}
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="messages" aria-live="polite">
+          {chatMessages.length === 0 ? (
+            <div className="empty-state">
+              Select a model, ask a question, and the answer will use the
+              indexed bundled documents as context.
+            </div>
+          ) : (
+            chatMessages.map((chatMessage) => (
+              <article
+                key={chatMessage.id}
+                className={`message message-${chatMessage.role}`}
+              >
+                <span>{chatMessage.role === 'user' ? 'You' : 'Assistant'}</span>
+                <p>{chatMessage.content}</p>
+              </article>
+            ))
+          )}
+          {sending && <p className="status">Waiting for model response...</p>}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {chatError && <p className="status status-error">{chatError}</p>}
+        {selectedModel && !modelCanChat && (
+          <p className="status status-error">
+            Selected model is {selectedModel.availability.toLowerCase()} and
+            cannot be used for chat.
+          </p>
+        )}
+
+        <form className="chat-form" onSubmit={handleSubmit}>
+          <label className="field" htmlFor="message">
+            <span>Message</span>
+            <textarea
+              id="message"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              placeholder="Ask about the bundled subject documents..."
+              rows={4}
+            />
+          </label>
+          <button type="submit" disabled={sendDisabled}>
+            {sending ? 'Sending...' : 'Send'}
+          </button>
+        </form>
+      </section>
+    </main>
   )
+}
+
+function ModelDetails({ model }: { model: ChatModel | undefined }) {
+  if (!model) {
+    return (
+      <div className="model-details model-details-empty">
+        Model availability, privacy, and runtime requirements appear here after
+        selection.
+      </div>
+    )
+  }
+
+  return (
+    <div className="model-details">
+      <div>
+        <span>Availability</span>
+        <strong>{model.availability}</strong>
+      </div>
+      <div>
+        <span>Mode</span>
+        <strong>{model.mode.replaceAll('_', ' ')}</strong>
+      </div>
+      <div>
+        <span>Privacy</span>
+        <strong>
+          {model.promptsMayLeaveLocalMachine
+            ? 'Prompts may leave this machine'
+            : 'Prompts stay local'}
+        </strong>
+      </div>
+      <div>
+        <span>Runtime requirements</span>
+        <strong>{runtimeRequirements(model)}</strong>
+      </div>
+      {model.description && <p>{model.description}</p>}
+    </div>
+  )
+}
+
+function runtimeRequirements(model: ChatModel): string {
+  if (model.runtimeRequirements.length === 0) {
+    return 'None'
+  }
+
+  return model.runtimeRequirements
+    .map((requirement) => requirement.replaceAll('_', ' ').toLowerCase())
+    .join(', ')
+}
+
+function errorMessage(error: unknown, fallback: string): string {
+  if (error instanceof ApiError) {
+    return error.message
+  }
+
+  return fallback
 }
 
 export default App

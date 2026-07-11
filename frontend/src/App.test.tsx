@@ -1,17 +1,124 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import type { ModelsResponse } from './api/types'
+import { availableOllamaModel } from './test/fixtures'
+import { server } from './test/server'
 
 describe('App', () => {
-  it('increments the counter when clicked', async () => {
+  it('loads models and shows selected model details', async () => {
     const user = userEvent.setup()
 
     render(<App />)
 
-    const counter = screen.getByRole('button', { name: 'Count is 0' })
-    await user.click(counter)
+    expect(screen.getByText('Loading configured models...')).toBeVisible()
 
-    expect(screen.getByRole('button', { name: 'Count is 1' })).toBeVisible()
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+
+    expect(screen.getByText('AVAILABLE')).toBeVisible()
+    expect(screen.getByText('LOCAL SERVER')).toBeVisible()
+    expect(screen.getByText('Prompts stay local')).toBeVisible()
+    expect(screen.getByText('requires local ollama')).toBeVisible()
+  })
+
+  it('requires a selected model and message before sending', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const sendButton = screen.getByRole('button', { name: 'Send' })
+
+    expect(sendButton).toBeDisabled()
+
+    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
+
+    expect(sendButton).toBeDisabled()
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+
+    expect(sendButton).toBeEnabled()
+  })
+
+  it('sends chat messages with the selected model', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(screen.getByText('How should I cook rice?')).toBeVisible()
+    expect(
+      await screen.findByText('Mock answer for: How should I cook rice?'),
+    ).toBeVisible()
+  })
+
+  it('displays provider errors returned by chat API', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.post('/chat', () =>
+        HttpResponse.json(
+          {
+            code: 'PROVIDER_ERROR',
+            message: 'Provider failed.',
+          },
+          { status: 502 },
+        ),
+      ),
+    )
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'Will this fail?')
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(await screen.findByText('Provider failed.')).toBeVisible()
+  })
+
+  it('prevents chat when selected model is unavailable', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.get('/models', () =>
+        HttpResponse.json<ModelsResponse>({
+          models: [
+            {
+              ...availableOllamaModel,
+              availability: 'UNAVAILABLE',
+            },
+          ],
+        }),
+      ),
+    )
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
+
+    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
+    expect(
+      screen.getByText(
+        'Selected model is unavailable and cannot be used for chat.',
+      ),
+    ).toBeVisible()
   })
 })
