@@ -20,6 +20,7 @@ checklist items as complete.
 - [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md)
 - [ADR-007: Embedded Llama](ADR-007-embedded-llama.md)
 - [ADR-008: Operational Logging](ADR-008-operational-logging.md)
+- [ADR-009: Frontend UI Architecture](ADR-009-frontend-ui-architecture.md)
 
 ## Current Product Scope
 

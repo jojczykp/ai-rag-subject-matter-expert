@@ -128,6 +128,34 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add Docker image and container-level acceptance test for embedded offline
       runtime with bundled or mounted model assets.
 
+## Future Milestone: Frontend UI
+
+- [ ] Add a separate `frontend/` React + TypeScript + Vite project.
+- [ ] Add frontend linting, formatting, and test tooling.
+- [ ] Add Vitest for frontend unit and component tests.
+- [ ] Add React Testing Library for behavior-focused UI tests.
+- [ ] Add MSW for frontend API mocking.
+- [ ] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
+- [ ] Add an API client for `GET /models`.
+- [ ] Add an API client for `POST /chat`.
+- [ ] Build the first application screen around model selection and chat.
+- [ ] Show model display name, availability, runtime mode, runtime
+      requirements, and whether prompts may leave the local machine.
+- [ ] Require selecting a model before sending a chat message.
+- [ ] Keep chat history in browser memory only.
+- [ ] Display loading, validation, unavailable-model, and provider-error
+      states.
+- [ ] Add frontend tests for model loading, model selection, chat submission,
+      and API error states.
+- [ ] Add Playwright end-to-end tests after the first usable UI screen exists.
+- [ ] Add local development configuration so the Vite dev server can call the
+      Spring Boot API.
+- [ ] Add Gradle integration to build the frontend and copy production assets
+      into Spring Boot static resources when packaging.
+- [ ] Add frontend verification to the default project verification workflow
+      once the frontend project exists.
+- [ ] Document frontend development and production packaging in `README.md`.
+
 ## Future Milestone: Dynamic Subjects And Documents
 
 - [ ] Add first-class structured CSV document support.
