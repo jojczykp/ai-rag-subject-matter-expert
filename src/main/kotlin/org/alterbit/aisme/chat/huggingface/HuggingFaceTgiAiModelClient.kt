@@ -5,11 +5,14 @@ import org.alterbit.aisme.chat.AiModelChatResponse
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.toSingleUserPromptText
 import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
+import org.slf4j.LoggerFactory
 
 class HuggingFaceTgiAiModelClient(
     private val model: ChatModelDescriptor,
     private val chatApi: HuggingFaceTgiChatApi,
 ) : AiModelClient {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     override val modelId: String = model.id
 
     override fun chat(request: AiModelChatRequest): AiModelChatResponse {
@@ -20,12 +23,14 @@ class HuggingFaceTgiAiModelClient(
         val providerRequest = HuggingFaceTgiGenerateRequest(
             inputs = request.toSingleUserPromptText(),
         )
+        logger.info("Calling Hugging Face TGI provider for model '{}'", model.id)
         val providerResponse = chatApi.generate(providerRequest)
         val answer = providerResponse.generatedText.orEmpty().trim()
 
         check(answer.isNotBlank()) {
             "Hugging Face TGI provider returned blank answer for model '${model.id}'"
         }
+        logger.info("Hugging Face TGI provider returned non-blank answer for model '{}'", model.id)
 
         return AiModelChatResponse(
             modelId = request.modelId,

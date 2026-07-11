@@ -5,11 +5,13 @@ import org.alterbit.aisme.chat.AiModelChatResponse
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.toSingleUserPromptText
 import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
+import org.slf4j.LoggerFactory
 
 class OpenAiCompatibleAiModelClient(
     private val model: ChatModelDescriptor,
     private val chatApi: OpenAiCompatibleChatApi,
 ) : AiModelClient {
+    private val logger = LoggerFactory.getLogger(javaClass)
     override val modelId: String = model.id
 
     init {
@@ -30,6 +32,7 @@ class OpenAiCompatibleAiModelClient(
                 ),
             ),
         )
+        logger.info("Calling OpenAI-compatible provider for model '{}'", model.id)
         val providerResponse = chatApi.chat(providerRequest)
         val answer = providerResponse.choices.firstOrNull()
             ?.message
@@ -40,6 +43,7 @@ class OpenAiCompatibleAiModelClient(
         check(answer.isNotBlank()) {
             "OpenAI-compatible provider returned blank answer for model '${model.id}'"
         }
+        logger.info("OpenAI-compatible provider returned non-blank answer for model '{}'", model.id)
 
         return AiModelChatResponse(
             modelId = request.modelId,

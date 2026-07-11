@@ -8,6 +8,7 @@ import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -15,6 +16,8 @@ class EmbeddedOfflineModelAvailabilityChecker(
     embeddedLlamaProperties: EmbeddedLlamaProperties,
     private val embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
 ) : ChatModelAvailabilityChecker {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     private val staticAvailabilityByModelId: Map<String, ChatModelAvailability> =
         buildStaticAvailabilityByModelId(embeddedLlamaProperties)
 
@@ -23,11 +26,16 @@ class EmbeddedOfflineModelAvailabilityChecker(
 
     override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
         if (model.mode != ChatModelMode.EMBEDDED_OFFLINE || !model.availableOffline) {
+            logger.warn("Embedded model '{}' is misconfigured for offline availability checks", model.id)
             ChatModelAvailability.MISCONFIGURED
         } else if (staticAvailabilityByModelId[model.id] != ChatModelAvailability.AVAILABLE) {
-            staticAvailabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED
+            (staticAvailabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED).also {
+                logger.warn("Embedded model '{}' static asset availability is '{}'", model.id, it)
+            }
         } else {
-            embeddedLlamaProcessManager.availabilityForModelId(model.id)
+            embeddedLlamaProcessManager.availabilityForModelId(model.id).also {
+                logger.info("Embedded model '{}' runtime availability is '{}'", model.id, it)
+            }
         }
 
     private fun buildStaticAvailabilityByModelId(
@@ -54,8 +62,10 @@ class EmbeddedOfflineModelAvailabilityChecker(
             Files.isExecutable(serverExecutable) &&
             ggufFile.matchesConfiguredChecksum(runtimeModel.sha256)
         ) {
+            logger.info("Embedded model '{}' static assets are available", runtimeModel.id)
             ChatModelAvailability.AVAILABLE
         } else {
+            logger.warn("Embedded model '{}' static assets are misconfigured or unavailable", runtimeModel.id)
             ChatModelAvailability.MISCONFIGURED
         }
     }
@@ -80,7 +90,12 @@ class EmbeddedOfflineModelAvailabilityChecker(
                 }
             }
             digest.digest().joinToString(separator = "") { "%02x".format(it) }
-        } catch (_: IOException) {
+        } catch (ex: IOException) {
+            logger.warn(
+                "Could not read embedded model asset '{}' for checksum validation: '{}'",
+                this,
+                ex.javaClass.simpleName,
+            )
             null
         }
 }

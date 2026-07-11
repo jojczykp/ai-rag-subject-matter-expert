@@ -1,11 +1,14 @@
 package org.alterbit.aisme.modelcatalog
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class ChatModelRegistry(
     properties: ConfiguredChatModelsProperties,
 ) {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModels
         .also { models ->
             require(models.map { it.id }.distinct().size == models.size) {
@@ -20,6 +23,17 @@ class ChatModelRegistry(
             require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
         }
         .associateBy { it.id }
+        .also { models ->
+            logger.info("Configured {} enabled chat model(s)", models.size)
+            models.values.forEach { model ->
+                logger.info(
+                    "Chat model '{}' configured with runtime '{}' and mode '{}'",
+                    model.id,
+                    model.runtime,
+                    model.mode,
+                )
+            }
+        }
 
     fun chatModels(): List<ChatModelDescriptor> =
         modelsById.values.toList()

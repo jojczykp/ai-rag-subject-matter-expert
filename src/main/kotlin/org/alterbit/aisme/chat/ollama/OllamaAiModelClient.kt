@@ -5,12 +5,14 @@ import org.alterbit.aisme.chat.AiModelChatResponse
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.toSingleUserPromptText
 import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
+import org.slf4j.LoggerFactory
 import org.springframework.ai.ollama.api.OllamaApi
 
 class OllamaAiModelClient(
     private val model: ChatModelDescriptor,
     private val chatApi: OllamaChatApi,
 ) : AiModelClient {
+    private val logger = LoggerFactory.getLogger(javaClass)
     override val modelId: String = model.id
 
     init {
@@ -23,12 +25,14 @@ class OllamaAiModelClient(
         }
 
         val ollamaRequest = toOllamaRequest(request)
+        logger.info("Calling Ollama provider for model '{}'", model.id)
         val ollamaResponse = chatApi.chat(ollamaRequest)
         val answer = ollamaResponse.message().content().orEmpty().trim()
 
         check(answer.isNotBlank()) {
             "Ollama returned blank answer for model '${model.id}'"
         }
+        logger.info("Ollama provider returned non-blank answer for model '{}'", model.id)
 
         return AiModelChatResponse(
             modelId = request.modelId,

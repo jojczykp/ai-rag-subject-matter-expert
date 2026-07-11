@@ -2,6 +2,7 @@ package org.alterbit.aisme.chat.embedded
 
 import java.time.Duration
 import java.time.Instant
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
@@ -13,6 +14,8 @@ fun interface LlamaServerReadinessProbe {
 
 @Component
 class RestClientLlamaServerReadinessProbe : LlamaServerReadinessProbe {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     override fun awaitReady(baseUrl: String, timeout: Duration): Boolean {
         val deadline = Instant.now().plus(timeout)
         val restClient = RestClient.builder()
@@ -36,7 +39,8 @@ class RestClientLlamaServerReadinessProbe : LlamaServerReadinessProbe {
                 .retrieve()
                 .toBodilessEntity()
                 .statusCode == HttpStatus.OK
-        } catch (_: RestClientException) {
+        } catch (ex: RestClientException) {
+            logger.debug("llama-server health check did not succeed yet: '{}'", ex.javaClass.simpleName)
             false
         }
 

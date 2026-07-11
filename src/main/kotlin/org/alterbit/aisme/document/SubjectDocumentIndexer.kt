@@ -12,6 +12,7 @@ import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
 import org.alterbit.aisme.persistence.SourceDocumentRecord
 import org.alterbit.aisme.persistence.SourceDocumentRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,13 +25,22 @@ class SubjectDocumentIndexer(
     private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
     private val embeddingClient: EmbeddingClient,
 ) {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun index(chunks: List<SubjectDocumentChunk>) {
-        chunks
-            .groupBy(SubjectDocumentChunk::documentPath)
+        val chunksByDocument = chunks.groupBy(SubjectDocumentChunk::documentPath)
+        logger.info(
+            "Indexing {} static subject document(s) with {} chunk(s)",
+            chunksByDocument.size,
+            chunks.size,
+        )
+
+        chunksByDocument
             .forEach { (documentPath, documentChunks) ->
                 indexDocument(documentPath, documentChunks.sortedBy(SubjectDocumentChunk::index))
             }
+        logger.info("Finished indexing static subject documents")
     }
 
     private fun indexDocument(
@@ -42,7 +52,8 @@ class SubjectDocumentIndexer(
         val existingSourceDocument = sourceDocumentRepository.findByResourcePath(documentPath)
 
         val sourceDocument = when {
-            existingSourceDocument == null ->
+            existingSourceDocument == null -> {
+                logger.info("Indexing new source document '{}' with {} chunk(s)", documentPath, chunks.size)
                 sourceDocumentRepository.save(
                     SourceDocumentRecord(
                         resourcePath = documentPath,
@@ -50,8 +61,10 @@ class SubjectDocumentIndexer(
                         indexedAt = Instant.now(),
                     ),
                 )
+            }
 
-            existingSourceDocument.contentHash != contentHash ->
+            existingSourceDocument.contentHash != contentHash -> {
+                logger.info("Re-indexing changed source document '{}' with {} chunk(s)", documentPath, chunks.size)
                 sourceDocumentRepository.save(
                     existingSourceDocument.copy(
                         contentHash = contentHash,
@@ -60,8 +73,12 @@ class SubjectDocumentIndexer(
                 ).also {
                     documentChunkRepository.deleteBySourceDocumentId(requireNotNull(it.id))
                 }
+            }
 
-            else -> existingSourceDocument
+            else -> {
+                logger.info("Source document '{}' is unchanged", documentPath)
+                existingSourceDocument
+            }
         }
 
         val sourceDocumentId = requireNotNull(sourceDocument.id)
@@ -74,12 +91,18 @@ class SubjectDocumentIndexer(
                 chunkingStrategyVersion = chunkingStrategyVersion,
             )
 
-        indexedChunks.forEach { chunk ->
+        val createdEmbeddingCount = indexedChunks.count { chunk ->
             indexEmbeddingIfNeeded(
                 chunk = chunk,
                 chunkingStrategyVersion = chunkingStrategyVersion,
             )
         }
+        logger.info(
+            "Indexed source document '{}' with {} chunk(s); created {} embedding(s)",
+            documentPath,
+            indexedChunks.size,
+            createdEmbeddingCount,
+        )
     }
 
     private fun recreateChunks(
@@ -106,13 +129,20 @@ class SubjectDocumentIndexer(
     private fun indexEmbeddingIfNeeded(
         chunk: DocumentChunkRecord,
         chunkingStrategyVersion: String,
-    ) {
+    ): Boolean {
         val chunkId = requireNotNull(chunk.id)
         val embeddingModel = embeddingModelProperties.metadata
         if (chunkEmbeddingRepository.hasCurrentEmbedding(chunkId, embeddingModel, chunkingStrategyVersion)) {
-            return
+            logger.debug("Current embedding already exists for document chunk '{}'", chunkId)
+            return false
         }
 
+        logger.debug(
+            "Creating embedding for document chunk '{}' using model '{}:{}'",
+            chunkId,
+            embeddingModel.id,
+            embeddingModel.version,
+        )
         val embedding = embeddingClient.embed(chunk.content)
         require(embedding.model == embeddingModel) {
             "embedding model metadata must match configured embedding model"
@@ -126,6 +156,8 @@ class SubjectDocumentIndexer(
                 embeddedAt = Instant.now(),
             ),
         )
+
+        return true
     }
 
     private fun List<DocumentChunkRecord>.matches(
