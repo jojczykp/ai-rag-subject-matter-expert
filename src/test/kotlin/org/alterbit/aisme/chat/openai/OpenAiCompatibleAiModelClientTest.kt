@@ -6,9 +6,9 @@ import io.kotest.matchers.string.shouldContain
 import java.time.Duration
 import org.alterbit.aisme.chat.AiModelChatRequest
 import org.alterbit.aisme.chat.AiModelContextChunk
-import org.alterbit.aisme.chatmodel.ChatModelMode
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
-import org.alterbit.aisme.chatmodel.chatModel
+import org.alterbit.aisme.modelcatalog.ChatModelMode
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.chatModel
 import org.junit.jupiter.api.Test
 
 class OpenAiCompatibleAiModelClientTest {

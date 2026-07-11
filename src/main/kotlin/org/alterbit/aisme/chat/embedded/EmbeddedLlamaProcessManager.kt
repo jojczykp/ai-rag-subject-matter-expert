@@ -4,9 +4,9 @@ import jakarta.annotation.PreDestroy
 import java.nio.file.Path
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
-import org.alterbit.aisme.chatmodel.ChatModelAvailability
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ChatModelAvailability
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner

@@ -3,8 +3,8 @@ package org.alterbit.aisme.chat.embedded
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.AiModelClientProvider
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.springframework.stereotype.Component
 
 @Component

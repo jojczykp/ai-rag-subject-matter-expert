@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe

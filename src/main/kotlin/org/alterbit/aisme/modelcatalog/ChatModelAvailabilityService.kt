@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 import java.time.Clock
 import java.time.Instant

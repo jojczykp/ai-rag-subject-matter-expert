@@ -8,10 +8,10 @@ import java.time.Duration
 import java.time.Instant
 import org.alterbit.aisme.chat.AiModelChatRequest
 import org.alterbit.aisme.chat.AiModelContextChunk
-import org.alterbit.aisme.chatmodel.ChatModelDescriptor
-import org.alterbit.aisme.chatmodel.ChatModelMode
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
-import org.alterbit.aisme.chatmodel.chatModel
+import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
+import org.alterbit.aisme.modelcatalog.ChatModelMode
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.chatModel
 import org.junit.jupiter.api.Test
 import org.springframework.ai.ollama.api.OllamaApi
 

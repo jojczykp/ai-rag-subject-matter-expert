@@ -4,11 +4,11 @@ import io.kotest.matchers.collections.shouldContainExactly
 import java.time.Clock
 import java.time.Duration
 import org.alterbit.aisme.api.ApiExceptionHandler
-import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
-import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
-import org.alterbit.aisme.chatmodel.ModelsController
+import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
+import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringBootConfiguration

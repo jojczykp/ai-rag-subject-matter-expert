@@ -4,10 +4,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import java.time.Duration
 import java.time.Instant
-import org.alterbit.aisme.chatmodel.ChatModelAvailability
-import org.alterbit.aisme.chatmodel.ChatModelMode
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
-import org.alterbit.aisme.chatmodel.chatModel
+import org.alterbit.aisme.modelcatalog.ChatModelAvailability
+import org.alterbit.aisme.modelcatalog.ChatModelMode
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.chatModel
 import org.junit.jupiter.api.Test
 import org.springframework.ai.ollama.api.OllamaApi
 

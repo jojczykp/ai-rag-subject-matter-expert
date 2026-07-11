@@ -3,12 +3,12 @@ package org.alterbit.aisme.chat.embedded
 import io.kotest.matchers.collections.shouldContainExactly
 import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.chatmodel.ChatModelMode
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
-import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelMode
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 
 class EmbeddedLlamaAiModelClientProviderTest {

@@ -4,7 +4,7 @@ import org.alterbit.aisme.chat.AiModelChatRequest
 import org.alterbit.aisme.chat.AiModelChatResponse
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.toSingleUserPromptText
-import org.alterbit.aisme.chatmodel.ChatModelDescriptor
+import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
 
 class HuggingFaceTgiAiModelClient(
     private val model: ChatModelDescriptor,

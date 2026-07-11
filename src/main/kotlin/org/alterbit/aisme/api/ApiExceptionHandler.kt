@@ -3,8 +3,8 @@ package org.alterbit.aisme.api
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
-import org.alterbit.aisme.chatmodel.ChatModelNotFoundException
-import org.alterbit.aisme.chatmodel.ChatModelUnavailableException
+import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
+import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException

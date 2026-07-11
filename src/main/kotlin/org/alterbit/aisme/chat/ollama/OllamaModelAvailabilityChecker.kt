@@ -1,10 +1,10 @@
 package org.alterbit.aisme.chat.ollama
 
 import java.time.Duration
-import org.alterbit.aisme.chatmodel.ChatModelAvailability
-import org.alterbit.aisme.chatmodel.ChatModelAvailabilityChecker
-import org.alterbit.aisme.chatmodel.ChatModelDescriptor
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ChatModelAvailability
+import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityChecker
+import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.springframework.stereotype.Component
 
 @Component

@@ -7,13 +7,13 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.Duration
-import org.alterbit.aisme.chatmodel.ChatModelAvailability
-import org.alterbit.aisme.chatmodel.ChatModelMode
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ChatModelRuntime
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelProperties
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
-import org.alterbit.aisme.chatmodel.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelAvailability
+import org.alterbit.aisme.modelcatalog.ChatModelMode
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.DefaultApplicationArguments
 

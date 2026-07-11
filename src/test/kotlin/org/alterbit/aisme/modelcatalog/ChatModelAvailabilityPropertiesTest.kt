@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.string.shouldContain

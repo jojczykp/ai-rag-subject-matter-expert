@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 data class ModelsResponseDto(
     val models: List<ChatModelDto>,

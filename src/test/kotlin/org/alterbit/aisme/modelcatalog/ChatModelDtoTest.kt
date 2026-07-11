@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

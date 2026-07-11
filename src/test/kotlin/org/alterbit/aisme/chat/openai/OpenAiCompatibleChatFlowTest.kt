@@ -12,10 +12,10 @@ import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatController
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.chatmodel.ChatModelAvailabilityProperties
-import org.alterbit.aisme.chatmodel.ChatModelAvailabilityService
-import org.alterbit.aisme.chatmodel.ChatModelRegistry
-import org.alterbit.aisme.chatmodel.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
+import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
+import org.alterbit.aisme.modelcatalog.ChatModelRegistry
+import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

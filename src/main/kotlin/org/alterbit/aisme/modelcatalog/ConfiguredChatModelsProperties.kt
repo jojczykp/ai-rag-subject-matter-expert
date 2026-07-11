@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chatmodel
+package org.alterbit.aisme.modelcatalog
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
