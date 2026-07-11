@@ -272,9 +272,8 @@ embedding model metadata or chunking strategy changes. The schema diagram is mai
 Configuration should make model availability and runtime mode explicit.
 
 - [x] Add bundled document resource folder configuration.
-- [ ] Add `application-local.yml` for local server models.
-- [ ] Add `application-cloud.yml` for cloud-hosted models.
-- [ ] Add `application-offline.yml` for embedded offline models.
+- [x] Keep model selection in a single `aisme.chat-models` catalog with
+      per-model `enabled` flags.
 - [x] Add configuration properties for `aisme.chat-models`.
 - [x] Add environment variable support for cloud credentials.
 - [x] Add validation for missing required provider settings.
@@ -282,17 +281,12 @@ Configuration should make model availability and runtime mode explicit.
       instead of failing application startup.
 - [x] Document all configuration properties in README.md.
 
-Example profile intent:
-
-```yaml
-spring:
-  profiles:
-    active: local
-```
+Example model catalog configuration:
 
 ```yaml
 aisme:
-  documents-location: classpath:/subject-documents/
+  documents:
+    location: classpath:/subject-documents/
   embedding-model:
     id: local-bge-small
     version: "1.5"
