@@ -53,6 +53,3 @@ fun ChatModelDescriptor.requireOpenAiCompatibleBaseUrl(): String =
 
 fun ChatModelDescriptor.requireOpenAiCompatibleModelName(): String =
     checkNotNull(modelName) { "OpenAI-compatible model '$id' requires modelName" }
-
-fun ChatModelDescriptor.requireOpenAiCompatibleApiKey(): String =
-    checkNotNull(apiKey) { "OpenAI-compatible model '$id' requires apiKey" }

@@ -265,6 +265,8 @@ Configuration should make model availability and runtime mode explicit.
 - [x] Add configuration properties for `aisme.chat-models`.
 - [x] Add environment variable support for cloud credentials.
 - [x] Add validation for missing required provider settings.
+- [x] Report missing OpenAI-compatible credentials as model misconfiguration
+      instead of failing application startup.
 - [ ] Document all configuration properties in README.md.
 
 Example profile intent:
@@ -313,7 +315,7 @@ aisme:
         mode: ONLINE
         base-url: https://api.example.com/v1
         model-name: example-chat-model
-        api-key: placeholder-api-key
+        api-key: ${OPENAI_API_KEY:}
         available-offline: false
     - id: hugging-face-tgi-example
       enabled: true
@@ -322,7 +324,7 @@ aisme:
         runtime: HUGGING_FACE_ENDPOINT
         mode: ONLINE
         base-url: https://example.endpoints.huggingface.cloud
-        api-key: placeholder-api-key
+        api-key: ${HF_API_KEY:}
         available-offline: false
     - id: embedded-llama-example
       enabled: true

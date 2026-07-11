@@ -47,7 +47,6 @@ class ChatModelRegistry(
             ChatModelRuntime.OPENAI_COMPATIBLE -> {
                 requireConfigured(config.baseUrl, "base-url")
                 requireConfigured(config.modelName, "model-name")
-                requireConfigured(config.apiKey, "api-key")
             }
 
             ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {

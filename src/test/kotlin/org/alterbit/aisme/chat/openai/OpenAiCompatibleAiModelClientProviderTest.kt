@@ -57,17 +57,19 @@ class OpenAiCompatibleAiModelClientProviderTest {
     }
 
     @Test
-    fun `rejects OpenAI-compatible model without api key`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            OpenAiCompatibleAiModelClientProvider(
-                chatModelRegistry = chatModelRegistry(openAiModel(apiKey = null)),
-                chatProperties = ChatProperties(),
-                openAiCompatibleChatApiFactory = FakeOpenAiCompatibleChatApiFactory(),
-            )
-        }
+    fun `skips OpenAI-compatible model without api key`() {
+        val factory = FakeOpenAiCompatibleChatApiFactory()
+        val provider = OpenAiCompatibleAiModelClientProvider(
+            chatModelRegistry = chatModelRegistry(
+                openAiModel(id = "missing-api-key", apiKey = null),
+                openAiModel(id = "configured-api-key", apiKey = "test-api-key"),
+            ),
+            chatProperties = ChatProperties(),
+            openAiCompatibleChatApiFactory = factory,
+        )
 
-        exception.message shouldContain "aisme.chat-models[0].config.api-key"
-        exception.message shouldContain "is required"
+        provider.clients().map { it.modelId } shouldContainExactly listOf("configured-api-key")
+        factory.createdClients.map { it.apiKey } shouldContainExactly listOf("test-api-key")
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =

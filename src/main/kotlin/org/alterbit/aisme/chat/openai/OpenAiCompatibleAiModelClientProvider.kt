@@ -15,12 +15,14 @@ class OpenAiCompatibleAiModelClientProvider(
 ) : AiModelClientProvider {
     private val clients: List<AiModelClient> = chatModelRegistry.chatModels()
         .filter { it.runtime == ChatModelRuntime.OPENAI_COMPATIBLE }
-        .map { model ->
+        .mapNotNull { model ->
+            val apiKey = model.apiKey?.takeIf(String::isNotBlank) ?: return@mapNotNull null
+
             OpenAiCompatibleAiModelClient(
                 model = model,
                 chatApi = openAiCompatibleChatApiFactory.create(
                     baseUrl = model.requireOpenAiCompatibleBaseUrl(),
-                    apiKey = model.requireOpenAiCompatibleApiKey(),
+                    apiKey = apiKey,
                     timeout = chatProperties.timeout,
                 ),
             )

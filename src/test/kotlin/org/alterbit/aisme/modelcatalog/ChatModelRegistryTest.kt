@@ -156,26 +156,25 @@ class ChatModelRegistryTest {
     }
 
     @Test
-    fun `rejects OpenAI-compatible model without api key`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            ChatModelRegistry(
-                ConfiguredChatModelsProperties(
-                    chatModels = listOf(
-                        configuredModel(
-                            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
-                            mode = ChatModelMode.ONLINE,
-                            baseUrl = "https://api.example.com/v1",
-                            modelName = "gpt-4.1-mini",
-                            apiKey = null,
-                        ),
+    fun `allows OpenAI-compatible model without api key`() {
+        val registry = ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                chatModels = listOf(
+                    configuredModel(
+                        id = "cloud-gpt",
+                        runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
+                        mode = ChatModelMode.ONLINE,
+                        baseUrl = "https://api.example.com/v1",
+                        modelName = "gpt-4.1-mini",
+                        apiKey = null,
                     ),
                 ),
-            )
-        }
+            ),
+        )
 
-        exception.message shouldContain "aisme.chat-models[0].config.api-key"
-        exception.message shouldContain "is required"
-        exception.message shouldContain "OPENAI_COMPATIBLE"
+        val model = registry.getByIdOrThrow("cloud-gpt")
+
+        model.apiKey shouldBe null
     }
 
     @Test

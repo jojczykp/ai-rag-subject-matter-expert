@@ -298,7 +298,9 @@ aisme:
 ```
 
 The adapter sends non-streaming chat-completion requests to
-`/chat/completions` with bearer-token authentication.
+`/chat/completions` with bearer-token authentication. If `OPENAI_API_KEY` is
+not set, the application still starts, but the model is reported as
+`MISCONFIGURED` and cannot be used for chat.
 
 ## Hugging Face Inference Endpoint / TGI Model
 
@@ -320,7 +322,8 @@ aisme:
 ```
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.
-`api-key` is optional for unsecured local TGI servers.
+`api-key` is optional for unsecured local TGI servers. If `HF_API_KEY` is not
+set, no bearer token is sent.
 
 ## Verification
 

@@ -48,11 +48,14 @@ data class ConfiguredChatModelProperties(
             mode = config.mode,
             availableOffline = config.availableOffline,
             availability = ChatModelAvailability.CONFIGURED,
-            baseUrl = config.baseUrl,
-            modelName = config.modelName,
-            apiKey = config.apiKey,
+            baseUrl = config.baseUrl.normalizedOptionalValue(),
+            modelName = config.modelName.normalizedOptionalValue(),
+            apiKey = config.apiKey.normalizedOptionalValue(),
         )
     }
+
+    private fun String?.normalizedOptionalValue(): String? =
+        this?.trim()?.takeIf(String::isNotEmpty)
 }
 
 data class EnabledChatModelProperties(
@@ -73,9 +76,6 @@ data class EnabledChatModelProperties(
         }
         require(modelName == null || modelName.isNotBlank()) {
             "aisme.chat-models.config.model-name must not be blank when configured"
-        }
-        require(apiKey == null || apiKey.isNotBlank()) {
-            "aisme.chat-models.config.api-key must not be blank when configured"
         }
     }
 }
