@@ -201,15 +201,15 @@ class ChatModelRegistryTest {
     }
 
     @Test
-    fun `allows Hugging Face endpoint model without api key`() {
+    fun `allows online Hugging Face endpoint model without api key`() {
         val registry = ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 chatModels = listOf(
                     configuredModel(
-                        id = "local-tgi",
+                        id = "hf-endpoint",
                         runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-                        mode = ChatModelMode.LOCAL_SERVER,
-                        baseUrl = "http://localhost:8080",
+                        mode = ChatModelMode.ONLINE,
+                        baseUrl = "https://example.endpoints.huggingface.cloud",
                         modelName = null,
                         apiKey = null,
                     ),
@@ -217,9 +217,74 @@ class ChatModelRegistryTest {
             ),
         )
 
-        val model = registry.getByIdOrThrow("local-tgi")
+        val model = registry.getByIdOrThrow("hf-endpoint")
 
         model.apiKey shouldBe null
+    }
+
+    @Test
+    fun `rejects OpenAI-compatible model configured as local server`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        configuredModel(
+                            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
+                            mode = ChatModelMode.LOCAL_SERVER,
+                            baseUrl = "http://localhost:8000/v1",
+                            modelName = "local-model",
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].config.mode"
+        exception.message shouldContain "ONLINE"
+        exception.message shouldContain "OPENAI_COMPATIBLE"
+    }
+
+    @Test
+    fun `rejects Hugging Face endpoint model configured as local server`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        configuredModel(
+                            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                            mode = ChatModelMode.LOCAL_SERVER,
+                            baseUrl = "http://localhost:8080",
+                            modelName = null,
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].config.mode"
+        exception.message shouldContain "ONLINE"
+        exception.message shouldContain "HUGGING_FACE_ENDPOINT"
+    }
+
+    @Test
+    fun `rejects embedded offline model configured as online`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatModelRegistry(
+                ConfiguredChatModelsProperties(
+                    chatModels = listOf(
+                        configuredModel(
+                            runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+                            mode = ChatModelMode.ONLINE,
+                            baseUrl = null,
+                            modelName = null,
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        exception.message shouldContain "aisme.chat-models[0].config.mode"
+        exception.message shouldContain "EMBEDDED_OFFLINE"
     }
 
     private fun configuredModel(

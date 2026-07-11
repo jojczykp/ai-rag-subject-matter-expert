@@ -177,6 +177,9 @@ View the configured models:
 curl http://localhost:8080/models
 ```
 
+The response includes each model's availability, capabilities, runtime
+requirements, and whether prompts may leave the local machine.
+
 Send a sample chat request:
 
 ```bash
@@ -304,8 +307,7 @@ not set, the application still starts, but the model is reported as
 
 ## Hugging Face Inference Endpoint / TGI Model
 
-Hugging Face Inference Endpoints or self-hosted TGI-compatible servers can be
-configured as selectable online models:
+Hugging Face Inference Endpoints can be configured as selectable online models:
 
 ```yaml
 aisme:
@@ -322,8 +324,7 @@ aisme:
 ```
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.
-`api-key` is optional for unsecured local TGI servers. If `HF_API_KEY` is not
-set, no bearer token is sent.
+If `HF_API_KEY` is not set, no bearer token is sent.
 
 ## Verification
 

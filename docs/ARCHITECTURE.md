@@ -38,7 +38,7 @@ documents as the knowledge base.
 - [x] Support Hugging Face-hosted models through managed inference endpoints.
 - [x] Support fully offline use with predownloaded embedded models.
 - [x] Keep application code independent from provider-specific SDKs.
-- [ ] Track model capabilities, availability, and runtime requirements.
+- [x] Track model capabilities, availability, and runtime requirements.
 - [x] Make online/offline behavior explicit and visible to users.
 
 ## Non-Goals
@@ -92,7 +92,7 @@ documents.
 - [x] Add `ChatModelRegistry`.
 - [x] Add static configuration for known models.
 - [x] Add runtime availability checks.
-- [ ] Add model capability metadata.
+- [x] Add model capability metadata.
 - [x] Add online/offline mode metadata.
 - [x] Add user-facing display names.
 - [ ] Add user-facing descriptions.
@@ -108,6 +108,14 @@ that service, for example Ollama, cloud, and embedded-runtime checkers.
 should enforce that the selected model is usable before calling it. Short-lived
 availability caching can be added inside `ChatModelAvailabilityService` if
 checks become slow or noisy.
+
+`GET /models` exposes model capabilities and runtime requirements derived from
+the configured runtime. The first implementation reports `CHAT` capability for
+all selectable models and requirements such as network access, API keys,
+Ollama, GGUF assets, or a managed llama-server executable. Cloud-provider
+runtimes are online-only in the initial scope; local OpenAI-compatible and
+local TGI-compatible servers can be added later as explicit future runtimes if
+needed.
 
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static

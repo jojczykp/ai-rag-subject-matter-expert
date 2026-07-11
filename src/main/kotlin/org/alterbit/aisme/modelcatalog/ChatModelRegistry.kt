@@ -38,24 +38,37 @@ class ChatModelRegistry(
             require(value != null) { "$prefix.$propertyName is required for ${config.runtime} models" }
         }
 
+        fun requireMode(expectedMode: ChatModelMode) {
+            require(config.mode == expectedMode) {
+                "$prefix.mode must be $expectedMode for ${config.runtime} models"
+            }
+        }
+
         when (config.runtime) {
             ChatModelRuntime.OLLAMA -> {
+                requireMode(ChatModelMode.LOCAL_SERVER)
                 requireConfigured(config.baseUrl, "base-url")
                 requireConfigured(config.modelName, "model-name")
             }
 
             ChatModelRuntime.OPENAI_COMPATIBLE -> {
+                requireMode(ChatModelMode.ONLINE)
                 requireConfigured(config.baseUrl, "base-url")
                 requireConfigured(config.modelName, "model-name")
             }
 
             ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {
+                requireMode(ChatModelMode.ONLINE)
                 requireConfigured(config.baseUrl, "base-url")
             }
 
-            ChatModelRuntime.SPRING_AI,
-            ChatModelRuntime.EMBEDDED_OFFLINE,
-            -> Unit
+            ChatModelRuntime.SPRING_AI -> {
+                requireMode(ChatModelMode.ONLINE)
+            }
+
+            ChatModelRuntime.EMBEDDED_OFFLINE -> {
+                requireMode(ChatModelMode.EMBEDDED_OFFLINE)
+            }
         }
     }
 

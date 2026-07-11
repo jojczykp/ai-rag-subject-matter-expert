@@ -21,13 +21,13 @@ class HuggingFaceTgiAiModelClientProviderTest {
             chatModelRegistry = chatModelRegistry(
                 huggingFaceModel(id = "hf-mistral", baseUrl = "https://hf.example.com", apiKey = "test-api-key"),
                 nonHuggingFaceModel(id = "local-llama"),
-                huggingFaceModel(id = "local-tgi", baseUrl = "http://localhost:8080", apiKey = null),
+                huggingFaceModel(id = "hf-qwen", baseUrl = "https://qwen.example.com", apiKey = null),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             huggingFaceTgiChatApiFactory = factory,
         )
 
-        provider.clients().map { it.modelId } shouldContainExactly listOf("hf-mistral", "local-tgi")
+        provider.clients().map { it.modelId } shouldContainExactly listOf("hf-mistral", "hf-qwen")
         factory.createdClients shouldContainExactly listOf(
             CreatedHuggingFaceTgiClient(
                 baseUrl = "https://hf.example.com",
@@ -35,7 +35,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                 timeout = Duration.ofSeconds(30),
             ),
             CreatedHuggingFaceTgiClient(
-                baseUrl = "http://localhost:8080",
+                baseUrl = "https://qwen.example.com",
                 apiKey = null,
                 timeout = Duration.ofSeconds(30),
             ),

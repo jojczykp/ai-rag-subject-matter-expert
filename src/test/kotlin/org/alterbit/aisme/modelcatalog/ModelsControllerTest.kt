@@ -68,6 +68,12 @@ class ModelsControllerTest(
                 jsonPath("$.models[0].promptsMayLeaveLocalMachine") {
                     value(false)
                 }
+                jsonPath("$.models[0].capabilities[0]") {
+                    value("CHAT")
+                }
+                jsonPath("$.models[0].runtimeRequirements[0]") {
+                    value("REQUIRES_OLLAMA_SERVER")
+                }
                 jsonPath("$.models[0].baseUrl") {
                     doesNotExist()
                 }
@@ -79,6 +85,12 @@ class ModelsControllerTest(
                 }
                 jsonPath("$.models[1].promptsMayLeaveLocalMachine") {
                     value(true)
+                }
+                jsonPath("$.models[1].capabilities[0]") {
+                    value("CHAT")
+                }
+                jsonPath("$.models[1].runtimeRequirements[0]") {
+                    value("REQUIRES_NETWORK")
                 }
             }
     }

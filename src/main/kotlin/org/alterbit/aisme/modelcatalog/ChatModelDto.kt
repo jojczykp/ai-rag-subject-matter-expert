@@ -8,6 +8,8 @@ data class ChatModelDto(
     val availability: ChatModelAvailability,
     val availableOffline: Boolean,
     val promptsMayLeaveLocalMachine: Boolean,
+    val capabilities: List<ChatModelCapability>,
+    val runtimeRequirements: List<ChatModelRuntimeRequirement>,
 )
 
 fun ChatModelDescriptor.toDto(): ChatModelDto =
@@ -19,4 +21,6 @@ fun ChatModelDescriptor.toDto(): ChatModelDto =
         availability = availability,
         availableOffline = availableOffline,
         promptsMayLeaveLocalMachine = mode == ChatModelMode.ONLINE,
+        capabilities = listOf(ChatModelCapability.CHAT),
+        runtimeRequirements = runtime.runtimeRequirements,
     )

@@ -18,6 +18,8 @@ class ChatModelDtoTest {
         dto.availability shouldBe ChatModelAvailability.CONFIGURED
         dto.availableOffline shouldBe false
         dto.promptsMayLeaveLocalMachine shouldBe false
+        dto.capabilities shouldBe listOf(ChatModelCapability.CHAT)
+        dto.runtimeRequirements shouldBe listOf(ChatModelRuntimeRequirement.REQUIRES_OLLAMA_SERVER)
     }
 
     @Test
@@ -29,6 +31,45 @@ class ChatModelDtoTest {
         ).toDto()
 
         dto.promptsMayLeaveLocalMachine shouldBe true
+    }
+
+    @Test
+    fun `maps OpenAI-compatible runtime requirements`() {
+        val dto = descriptor(
+            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
+            mode = ChatModelMode.ONLINE,
+            availableOffline = false,
+        ).toDto()
+
+        dto.runtimeRequirements shouldBe listOf(
+            ChatModelRuntimeRequirement.REQUIRES_NETWORK,
+            ChatModelRuntimeRequirement.REQUIRES_API_KEY,
+        )
+    }
+
+    @Test
+    fun `maps embedded offline runtime requirements`() {
+        val dto = descriptor(
+            runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+            mode = ChatModelMode.EMBEDDED_OFFLINE,
+            availableOffline = true,
+        ).toDto()
+
+        dto.runtimeRequirements shouldBe listOf(
+            ChatModelRuntimeRequirement.REQUIRES_LOCAL_GGUF_MODEL,
+            ChatModelRuntimeRequirement.REQUIRES_LLAMA_SERVER_EXECUTABLE,
+        )
+    }
+
+    @Test
+    fun `maps Hugging Face endpoint runtime requirements`() {
+        val dto = descriptor(
+            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+            mode = ChatModelMode.ONLINE,
+            availableOffline = false,
+        ).toDto()
+
+        dto.runtimeRequirements shouldBe listOf(ChatModelRuntimeRequirement.REQUIRES_NETWORK)
     }
 
     @Test
