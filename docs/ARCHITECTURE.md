@@ -182,7 +182,7 @@ documents bundled with the application.
 - [x] Split extracted text into searchable chunks.
 - [x] Index bundled documents once at startup or application initialization.
 - [ ] Expose document metadata for API responses.
-- [ ] Provide indexed chunks to the chat context retrieval layer.
+- [x] Provide indexed chunks to the chat context retrieval layer.
 - [x] Add tests for resource discovery and unsupported document types.
 
 ### RelevantChunkRetriever
