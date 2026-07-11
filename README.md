@@ -153,6 +153,20 @@ Run the application:
 
 The service starts on the default Spring Boot port, `8080`.
 
+Start the development UI in another terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the UI at the URL printed by Vite, usually:
+
+```text
+http://localhost:5173
+```
+
 Check application health:
 
 ```bash
