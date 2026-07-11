@@ -190,7 +190,6 @@ documents bundled with the application.
 - [x] Extract or load text from supported resource files.
 - [x] Split extracted text into searchable chunks.
 - [x] Index bundled documents once at startup or application initialization.
-- [ ] Expose document metadata for API responses.
 - [x] Provide indexed chunks to the chat context retrieval layer.
 - [x] Add tests for resource discovery and unsupported document types.
 
@@ -233,6 +232,11 @@ interface AiModelClient {
 ```
 
 Streaming chat support can be added later when the API shape is clear.
+
+## Future Scope
+
+- [ ] Expose source document metadata in API responses when document inspection,
+      citations, or source references are added.
 
 ### Provider Adapters
 
