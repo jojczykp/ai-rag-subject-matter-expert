@@ -118,7 +118,6 @@ All implementation items are TODO until delivered and verified.
 - [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
 - [x] Add model checksum validation.
-- [ ] Add offline profile configuration.
 - [x] Add embedded offline availability tests for `GET /models`.
 - [x] Add embedded offline availability tests for `POST /chat`.
 - [x] Document that embedded offline availability requires static asset
