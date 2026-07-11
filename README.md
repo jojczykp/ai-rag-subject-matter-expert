@@ -270,6 +270,7 @@ aisme:
       enabled: true
       config:
         display-name: Local Ollama Llama
+        description: Local Ollama model for chat requests when Ollama is running on this machine.
         runtime: OLLAMA
         mode: LOCAL_SERVER
         available-offline: false
@@ -292,6 +293,7 @@ aisme:
       enabled: true
       config:
         display-name: Cloud GPT
+        description: Online OpenAI-compatible model for cloud-hosted chat requests.
         runtime: OPENAI_COMPATIBLE
         mode: ONLINE
         available-offline: false
@@ -316,6 +318,7 @@ aisme:
       enabled: true
       config:
         display-name: Hugging Face Mistral
+        description: Online Hugging Face endpoint using the TGI-compatible generate API.
         runtime: HUGGING_FACE_ENDPOINT
         mode: ONLINE
         available-offline: false

@@ -3,6 +3,7 @@ package org.alterbit.aisme.modelcatalog
 fun chatModel(
     id: String = "local-ollama-llama",
     displayName: String = "Local Ollama Llama",
+    description: String? = "Local Ollama model for chat requests.",
     runtime: ChatModelRuntime = ChatModelRuntime.OLLAMA,
     mode: ChatModelMode = ChatModelMode.LOCAL_SERVER,
     availableOffline: Boolean = false,
@@ -14,6 +15,7 @@ fun chatModel(
     ChatModelDescriptor(
         id = id,
         displayName = displayName,
+        description = description,
         runtime = runtime,
         mode = mode,
         availableOffline = availableOffline,

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.get
         "aisme.chat-models[0].id=local-ollama-llama",
         "aisme.chat-models[0].enabled=true",
         "aisme.chat-models[0].config.display-name=Local Ollama Llama",
+        "aisme.chat-models[0].config.description=Local Ollama model for chat requests.",
         "aisme.chat-models[0].config.runtime=OLLAMA",
         "aisme.chat-models[0].config.mode=LOCAL_SERVER",
         "aisme.chat-models[0].config.available-offline=false",
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.get
         "aisme.chat-models[1].id=cloud-gpt",
         "aisme.chat-models[1].enabled=true",
         "aisme.chat-models[1].config.display-name=Cloud GPT",
+        "aisme.chat-models[1].config.description=Cloud model for online chat requests.",
         "aisme.chat-models[1].config.runtime=SPRING_AI",
         "aisme.chat-models[1].config.mode=ONLINE",
         "aisme.chat-models[1].config.available-offline=false",
@@ -52,6 +54,9 @@ class ModelsControllerTest(
                 }
                 jsonPath("$.models[0].displayName") {
                     value("Local Ollama Llama")
+                }
+                jsonPath("$.models[0].description") {
+                    value("Local Ollama model for chat requests.")
                 }
                 jsonPath("$.models[0].runtime") {
                     value("OLLAMA")
@@ -79,6 +84,9 @@ class ModelsControllerTest(
                 }
                 jsonPath("$.models[1].id") {
                     value("cloud-gpt")
+                }
+                jsonPath("$.models[1].description") {
+                    value("Cloud model for online chat requests.")
                 }
                 jsonPath("$.models[1].availability") {
                     value("CONFIGURED")

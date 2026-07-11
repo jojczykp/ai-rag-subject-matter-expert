@@ -11,6 +11,7 @@ class ChatModelDescriptorTest {
         val descriptor = ChatModelDescriptor(
             id = "local-ollama-llama",
             displayName = "Local Ollama Llama",
+            description = "Local Ollama model for chat requests.",
             runtime = ChatModelRuntime.OLLAMA,
             mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,
@@ -22,6 +23,7 @@ class ChatModelDescriptorTest {
 
         descriptor.id shouldBe "local-ollama-llama"
         descriptor.displayName shouldBe "Local Ollama Llama"
+        descriptor.description shouldBe "Local Ollama model for chat requests."
         descriptor.runtime shouldBe ChatModelRuntime.OLLAMA
         descriptor.mode shouldBe ChatModelMode.LOCAL_SERVER
         descriptor.availableOffline shouldBe false
@@ -47,6 +49,15 @@ class ChatModelDescriptorTest {
         }
 
         exception.message shouldContain "display name"
+    }
+
+    @Test
+    fun `rejects blank description when configured`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            descriptor(description = " ")
+        }
+
+        exception.message shouldContain "description"
     }
 
     @Test
@@ -79,6 +90,7 @@ class ChatModelDescriptorTest {
     private fun descriptor(
         id: String = "local-ollama-llama",
         displayName: String = "Local Ollama Llama",
+        description: String? = "Local Ollama model for chat requests.",
         baseUrl: String? = "http://localhost:11434",
         modelName: String? = "llama3.2",
         apiKey: String? = null,
@@ -86,6 +98,7 @@ class ChatModelDescriptorTest {
         ChatModelDescriptor(
             id = id,
             displayName = displayName,
+            description = description,
             runtime = ChatModelRuntime.OLLAMA,
             mode = ChatModelMode.LOCAL_SERVER,
             availableOffline = false,

@@ -95,7 +95,7 @@ documents.
 - [x] Add model capability metadata.
 - [x] Add online/offline mode metadata.
 - [x] Add user-facing display names.
-- [ ] Add user-facing descriptions.
+- [x] Add user-facing descriptions.
 - [x] Add tests for model discovery and filtering.
 
 Runtime availability checks should be delegated to a separate
@@ -131,6 +131,7 @@ Example model descriptor:
 data class ChatModelDescriptor(
     val id: String,
     val displayName: String,
+    val description: String?,
     val runtime: ChatModelRuntime,
     val mode: ChatModelMode,
     val availableOffline: Boolean,
@@ -310,6 +311,7 @@ aisme:
       enabled: true
       config:
         display-name: Local Ollama Llama
+        description: Local Ollama model for chat requests when Ollama is running on this machine.
         runtime: OLLAMA
         mode: LOCAL_SERVER
         base-url: http://localhost:11434
@@ -319,6 +321,7 @@ aisme:
       enabled: true
       config:
         display-name: OpenAI-Compatible Cloud Example
+        description: Online OpenAI-compatible model for cloud-hosted chat requests.
         runtime: OPENAI_COMPATIBLE
         mode: ONLINE
         base-url: https://api.example.com/v1
@@ -329,6 +332,7 @@ aisme:
       enabled: true
       config:
         display-name: Hugging Face TGI Example
+        description: Online Hugging Face endpoint using the TGI-compatible generate API.
         runtime: HUGGING_FACE_ENDPOINT
         mode: ONLINE
         base-url: https://example.endpoints.huggingface.cloud
@@ -338,6 +342,7 @@ aisme:
       enabled: true
       config:
         display-name: Embedded Llama Example
+        description: Fully offline embedded model backed by a local GGUF asset.
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
         available-offline: true

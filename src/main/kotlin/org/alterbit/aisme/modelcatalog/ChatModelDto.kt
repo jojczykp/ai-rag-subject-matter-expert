@@ -3,6 +3,7 @@ package org.alterbit.aisme.modelcatalog
 data class ChatModelDto(
     val id: String,
     val displayName: String,
+    val description: String?,
     val runtime: ChatModelRuntime,
     val mode: ChatModelMode,
     val availability: ChatModelAvailability,
@@ -16,6 +17,7 @@ fun ChatModelDescriptor.toDto(): ChatModelDto =
     ChatModelDto(
         id = id,
         displayName = displayName,
+        description = description,
         runtime = runtime,
         mode = mode,
         availability = availability,

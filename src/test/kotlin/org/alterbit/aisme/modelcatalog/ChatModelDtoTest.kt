@@ -13,6 +13,7 @@ class ChatModelDtoTest {
 
         dto.id shouldBe "local-ollama-llama"
         dto.displayName shouldBe "Local Ollama Llama"
+        dto.description shouldBe "Local Ollama model for chat requests."
         dto.runtime shouldBe ChatModelRuntime.OLLAMA
         dto.mode shouldBe ChatModelMode.LOCAL_SERVER
         dto.availability shouldBe ChatModelAvailability.CONFIGURED
@@ -94,6 +95,7 @@ class ChatModelDtoTest {
         ChatModelDescriptor(
             id = "local-ollama-llama",
             displayName = "Local Ollama Llama",
+            description = "Local Ollama model for chat requests.",
             runtime = runtime,
             mode = mode,
             availableOffline = availableOffline,

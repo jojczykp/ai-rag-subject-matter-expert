@@ -10,6 +10,7 @@ data class ConfiguredChatModelsProperties(
             enabled = true,
             config = EnabledChatModelProperties(
                 displayName = "Local Ollama Llama",
+                description = "Local Ollama model for chat requests when Ollama is running on this machine.",
                 runtime = ChatModelRuntime.OLLAMA,
                 mode = ChatModelMode.LOCAL_SERVER,
                 availableOffline = false,
@@ -44,6 +45,7 @@ data class ConfiguredChatModelProperties(
         return ChatModelDescriptor(
             id = id,
             displayName = config.displayName,
+            description = config.description.normalizedOptionalValue(),
             runtime = config.runtime,
             mode = config.mode,
             availableOffline = config.availableOffline,
@@ -60,6 +62,7 @@ data class ConfiguredChatModelProperties(
 
 data class EnabledChatModelProperties(
     val displayName: String,
+    val description: String? = null,
     val runtime: ChatModelRuntime,
     val mode: ChatModelMode,
     val availableOffline: Boolean,
