@@ -130,7 +130,7 @@ All implementation items are TODO until delivered and verified.
 
 ## Future Milestone: Frontend UI
 
-- [ ] Add a separate `frontend/` React + TypeScript + Vite project.
+- [x] Add a separate `frontend/` React + TypeScript + Vite project.
 - [ ] Add frontend linting, formatting, and test tooling.
 - [ ] Add Vitest for frontend unit and component tests.
 - [ ] Add React Testing Library for behavior-focused UI tests.
