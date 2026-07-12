@@ -64,7 +64,7 @@ tasks.withType<Test>().configureEach {
 
 tasks.test {
     useJUnitPlatform {
-        excludeTags("ollama", "openai-compatible")
+        excludeTags("ollama", "openai-compatible", "hugging-face-tgi")
     }
 }
 
@@ -95,6 +95,21 @@ tasks.register<Test>("ollamaTest") {
 
     useJUnitPlatform {
         includeTags("ollama")
+    }
+}
+
+tasks.register<Test>("huggingFaceTgiTest") {
+    group = "verification"
+    description = "Runs optional Hugging Face TGI adapter flow tests."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    shouldRunAfter(tasks.test)
+    onlyIf {
+        gradle.startParameter.taskNames.any { it == "huggingFaceTgiTest" || it.endsWith(":huggingFaceTgiTest") }
+    }
+
+    useJUnitPlatform {
+        includeTags("hugging-face-tgi")
     }
 }
 

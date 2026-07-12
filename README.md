@@ -277,6 +277,13 @@ use a local mock HTTP server, not a real cloud provider:
 ./gradlew :backend:openAiCompatibleTest
 ```
 
+Optional Hugging Face TGI adapter flow tests are tagged the same way. They use
+a local mock HTTP server, not a real Hugging Face endpoint:
+
+```bash
+./gradlew :backend:huggingFaceTgiTest
+```
+
 The default test image is `ollama/ollama:latest`, and the default model-backed
 test model is `tinyllama:latest`. Override them when needed:
 

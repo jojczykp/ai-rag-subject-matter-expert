@@ -80,6 +80,13 @@ task:
 ./gradlew :backend:openAiCompatibleTest
 ```
 
+Run optional Hugging Face TGI adapter flow tests through the dedicated Gradle
+task:
+
+```bash
+./gradlew :backend:huggingFaceTgiTest
+```
+
 ## Test Categories
 
 ### Database And Retrieval
