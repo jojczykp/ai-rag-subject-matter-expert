@@ -1,24 +1,14 @@
 package org.alterbit.aisme.chat.embedded
 
 interface LlamaServerChatApi {
-    fun chat(request: LlamaServerChatRequest): LlamaServerChatResponse
+    fun complete(request: LlamaServerCompletionRequest): LlamaServerCompletionResponse
 }
 
-data class LlamaServerChatRequest(
-    val model: String,
-    val messages: List<LlamaServerChatMessage>,
+data class LlamaServerCompletionRequest(
+    val prompt: String,
     val stream: Boolean,
 )
 
-data class LlamaServerChatMessage(
-    val role: String,
+data class LlamaServerCompletionResponse(
     val content: String,
-)
-
-data class LlamaServerChatResponse(
-    val choices: List<LlamaServerChatChoice> = emptyList(),
-)
-
-data class LlamaServerChatChoice(
-    val message: LlamaServerChatMessage,
 )

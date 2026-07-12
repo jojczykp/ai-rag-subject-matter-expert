@@ -17,9 +17,9 @@ class LlamaServerChatApiFactoryTest {
     }
 
     @Test
-    fun `sends chat completions request to llama server endpoint`() {
+    fun `sends completion request to llama server endpoint`() {
         val recordedRequests = mutableListOf<RecordedRequest>()
-        server.createContext("/v1/chat/completions") { exchange ->
+        server.createContext("/completion") { exchange ->
             recordedRequests += RecordedRequest(
                 method = exchange.requestMethod,
                 body = exchange.requestBody.bufferedReader().use { it.readText() },
@@ -27,14 +27,7 @@ class LlamaServerChatApiFactoryTest {
             exchange.respondJson(
                 """
                     {
-                      "choices": [
-                        {
-                          "message": {
-                            "role": "assistant",
-                            "content": "Embedded answer"
-                          }
-                        }
-                      ]
+                      "content": "Embedded answer"
                     }
                 """.trimIndent(),
             )
@@ -45,23 +38,17 @@ class LlamaServerChatApiFactoryTest {
             timeout = Duration.ofSeconds(5),
         )
 
-        val response = api.chat(
-            LlamaServerChatRequest(
-                model = "embedded-llama-tiny",
-                messages = listOf(
-                    LlamaServerChatMessage(
-                        role = "user",
-                        content = "How should I cook rice?",
-                    ),
-                ),
+        val response = api.complete(
+            LlamaServerCompletionRequest(
+                prompt = "How should I cook rice?",
                 stream = false,
             ),
         )
 
-        response.choices.single().message.content shouldBe "Embedded answer"
+        response.content shouldBe "Embedded answer"
         recordedRequests.single().method shouldBe "POST"
         recordedRequests.single().body shouldBe """
-            {"model":"embedded-llama-tiny","messages":[{"role":"user","content":"How should I cook rice?"}],"stream":false}
+            {"prompt":"How should I cook rice?","stream":false}
         """.trimIndent()
     }
 

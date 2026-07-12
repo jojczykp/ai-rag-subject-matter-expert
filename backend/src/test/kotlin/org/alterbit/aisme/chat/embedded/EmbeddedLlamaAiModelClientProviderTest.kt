@@ -169,17 +169,8 @@ class EmbeddedLlamaAiModelClientProviderTest {
     }
 
     private class FakeLlamaServerChatApi : LlamaServerChatApi {
-        override fun chat(request: LlamaServerChatRequest): LlamaServerChatResponse =
-            LlamaServerChatResponse(
-                choices = listOf(
-                    LlamaServerChatChoice(
-                        message = LlamaServerChatMessage(
-                            role = "assistant",
-                            content = "Fake embedded answer",
-                        ),
-                    ),
-                ),
-            )
+        override fun complete(request: LlamaServerCompletionRequest): LlamaServerCompletionResponse =
+            LlamaServerCompletionResponse(content = "Fake embedded answer")
     }
 
     private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {

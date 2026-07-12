@@ -49,10 +49,8 @@ class EmbeddedLlamaAiModelClientTest {
 
         response.modelId shouldBe "embedded-llama-tiny"
         response.answer shouldBe "Use two parts water."
-        chatApi.requests.single().model shouldBe "embedded-llama-tiny"
         chatApi.requests.single().stream shouldBe false
-        chatApi.requests.single().messages.single().role shouldBe "user"
-        chatApi.requests.single().messages.single().content shouldBe """
+        chatApi.requests.single().prompt shouldBe """
             Context:
             Use two parts water for one part rice.
 
@@ -120,20 +118,11 @@ class EmbeddedLlamaAiModelClientTest {
     private class FakeLlamaServerChatApi(
         private val answer: String = "Fake embedded answer",
     ) : LlamaServerChatApi {
-        val requests = mutableListOf<LlamaServerChatRequest>()
+        val requests = mutableListOf<LlamaServerCompletionRequest>()
 
-        override fun chat(request: LlamaServerChatRequest): LlamaServerChatResponse {
+        override fun complete(request: LlamaServerCompletionRequest): LlamaServerCompletionResponse {
             requests += request
-            return LlamaServerChatResponse(
-                choices = listOf(
-                    LlamaServerChatChoice(
-                        message = LlamaServerChatMessage(
-                            role = "assistant",
-                            content = answer,
-                        ),
-                    ),
-                ),
-            )
+            return LlamaServerCompletionResponse(content = answer)
         }
     }
 }

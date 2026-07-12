@@ -21,23 +21,13 @@ class EmbeddedLlamaAiModelClient(
             "Llama runtime client for model '${model.id}' cannot handle model '${request.modelId}'"
         }
 
-        val providerRequest = LlamaServerChatRequest(
-            model = runtimeModel.id,
-            messages = listOf(
-                LlamaServerChatMessage(
-                    role = "user",
-                    content = request.toSingleUserPromptText(),
-                ),
-            ),
+        val providerRequest = LlamaServerCompletionRequest(
+            prompt = request.toSingleUserPromptText(),
             stream = false,
         )
         logger.info("Calling embedded llama runtime for model '{}'", model.id)
-        val providerResponse = chatApi.chat(providerRequest)
-        val answer = providerResponse.choices.firstOrNull()
-            ?.message
-            ?.content
-            .orEmpty()
-            .trim()
+        val providerResponse = chatApi.complete(providerRequest)
+        val answer = providerResponse.content.trim()
 
         check(answer.isNotBlank()) {
             "Llama runtime returned blank answer for model '${model.id}'"

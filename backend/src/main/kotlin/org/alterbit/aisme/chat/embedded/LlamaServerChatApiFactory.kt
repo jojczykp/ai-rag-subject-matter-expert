@@ -29,12 +29,12 @@ class RestClientLlamaServerChatApiFactory : LlamaServerChatApiFactory {
 private class RestClientLlamaServerChatApi(
     private val restClient: RestClient,
 ) : LlamaServerChatApi {
-    override fun chat(request: LlamaServerChatRequest): LlamaServerChatResponse =
+    override fun complete(request: LlamaServerCompletionRequest): LlamaServerCompletionResponse =
         restClient.post()
-            .uri("/v1/chat/completions")
+            .uri("/completion")
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .retrieve()
-            .body(LlamaServerChatResponse::class.java)
-            ?: LlamaServerChatResponse()
+            .body(LlamaServerCompletionResponse::class.java)
+            ?: LlamaServerCompletionResponse(content = "")
 }
