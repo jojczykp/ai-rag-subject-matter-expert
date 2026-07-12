@@ -1,4 +1,4 @@
-# AI Subject Matter Expert
+# AI RAG Subject Matter Expert
 
 AI Subject Matter Expert is a Kotlin Spring Boot backend with a separate React
 and Vite frontend. The backend exposes REST endpoints for model discovery and
@@ -144,7 +144,14 @@ curl http://localhost:8080/actuator/health
 Expected response:
 
 ```json
-{"status":"UP"}
+{
+  "status": "UP",
+  "components": {
+    "db": {
+      "status": "UP"
+    }
+  }
+}
 ```
 
 View application info:

@@ -84,6 +84,9 @@ aisme:
         api-key: ${HF_API_KEY:}
 
 management:
+  endpoint:
+    health:
+      show-details: always
   endpoints:
     web:
       exposure:
