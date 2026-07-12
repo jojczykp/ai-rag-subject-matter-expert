@@ -252,7 +252,11 @@ Install frontend dependencies and build the production assets:
 
 ```bash
 cd frontend
-npm install
+npm run clean
+npm ci
+npm run format:check
+npm run lint
+npm run test:coverage
 npm run build
 ```
 
@@ -265,6 +269,8 @@ Or build the frontend from the repository root through Gradle:
 #### Run
 
 ```bash
+cd frontend
+npm ci
 npm run dev
 ```
 
@@ -396,7 +402,7 @@ Alternatively, run frontend npm commands directly from `frontend/`:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
@@ -414,6 +420,7 @@ Run frontend-only verification:
 
 ```bash
 cd frontend
+npm run clean
 npm run format:check
 npm run lint
 npm run test
@@ -428,8 +435,9 @@ From the project root, run the frontend verification aggregate:
 ./gradlew :frontend:check
 ```
 
-`npm run build` writes production frontend assets to `frontend/dist`. Generated
-frontend assets remain build output and are not committed to source control.
+`npm run clean` empties `frontend/dist`, and `npm run build` also empties it
+before writing production frontend assets. Generated frontend assets remain
+build output and are not committed to source control.
 
 Run browser end-to-end tests explicitly:
 

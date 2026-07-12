@@ -40,6 +40,7 @@ val npmInstall = tasks.register<Exec>("npmInstall") {
     inputs.file(layout.projectDirectory.file("package.json"))
     inputs.file(layout.projectDirectory.file("package-lock.json"))
     outputs.dir(layout.projectDirectory.dir("node_modules"))
+    outputs.upToDateWhen { false }
 }
 
 val npmBuild = tasks.register<Exec>("npmBuild") {
@@ -59,6 +60,18 @@ val npmBuild = tasks.register<Exec>("npmBuild") {
     inputs.dir(layout.projectDirectory.dir("public"))
     inputs.dir(layout.projectDirectory.dir("src"))
     outputs.dir(layout.projectDirectory.dir("dist"))
+    outputs.upToDateWhen { false }
+}
+
+tasks.clean {
+    dependsOn("npmClean")
+}
+
+tasks.register<Exec>("npmClean") {
+    group = "frontend"
+    description = "Deletes frontend production build output."
+    workingDir = layout.projectDirectory.asFile
+    commandLine(npmExecutable, "run", "clean")
 }
 
 tasks.register<Exec>("run") {
