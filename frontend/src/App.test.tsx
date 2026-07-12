@@ -66,6 +66,44 @@ describe('App', () => {
     ).toBeVisible()
   })
 
+  it('sends chat messages when pressing enter in the message field', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
+    await user.keyboard('{Enter}')
+
+    expect(screen.getByText('How should I cook rice?')).toBeVisible()
+    expect(
+      await screen.findByText('Mock answer for: How should I cook rice?'),
+    ).toBeVisible()
+  })
+
+  it('adds a newline without sending when pressing shift enter', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+
+    const messageField = screen.getByLabelText('Message')
+    await user.type(messageField, 'Line one')
+    await user.keyboard('{Shift>}{Enter}{/Shift}')
+    await user.type(messageField, 'Line two')
+
+    expect(messageField).toHaveValue('Line one\nLine two')
+    expect(screen.queryByText(/Mock answer for:/)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Send' })).toBeEnabled()
+  })
+
   it('displays provider errors returned by chat API', async () => {
     const user = userEvent.setup()
     server.use(

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { KeyboardEvent } from 'react'
 import './App.css'
 import { ApiError, getModels, postChat } from './api/client'
 import type { ChatModel } from './api/types'
@@ -59,9 +59,7 @@ function App() {
   const sendDisabled =
     sending || !selectedModel || !trimmedMessage || !modelCanChat
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
+  async function submitChat() {
     if (sendDisabled || !selectedModel) {
       return
     }
@@ -93,6 +91,13 @@ function App() {
       setChatError(errorMessage(error, 'The selected model could not answer.'))
     } finally {
       setSending(false)
+    }
+  }
+
+  function handleMessageKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      void submitChat()
     }
   }
 
@@ -173,13 +178,20 @@ function App() {
           </p>
         )}
 
-        <form className="chat-form" onSubmit={handleSubmit}>
+        <form
+          className="chat-form"
+          onSubmit={(event) => {
+            event.preventDefault()
+            void submitChat()
+          }}
+        >
           <label className="field" htmlFor="message">
             <span>Message</span>
             <textarea
               id="message"
               value={message}
               onChange={(event) => setMessage(event.target.value)}
+              onKeyDown={handleMessageKeyDown}
               placeholder="Ask about the bundled subject documents..."
               rows={4}
             />
