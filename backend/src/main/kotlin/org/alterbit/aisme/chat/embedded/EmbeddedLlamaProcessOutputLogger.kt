@@ -58,10 +58,10 @@ class EmbeddedLlamaProcessOutputLogger(
 
     private fun logStderrLine(modelId: String, line: String) {
         when {
-            line.contains(" E ") -> logger.error("llama-server [{}] stderr: {}", modelId, line)
-            line.contains(" W ") -> logger.warn("llama-server [{}] stderr: {}", modelId, line)
-            line.contains(" I ") -> logger.info("llama-server [{}] stderr: {}", modelId, line)
-            else -> logger.warn("llama-server [{}] stderr: {}", modelId, line)
+            line.contains(" E ") -> logger.error("llama-server [{}] {}", modelId, line)
+            line.contains(" W ") -> logger.warn("llama-server [{}] {}", modelId, line)
+            line.contains(" I ") -> logger.info("llama-server [{}] {}", modelId, line)
+            else -> logger.warn("llama-server [{}] {}", modelId, line)
         }
     }
 
