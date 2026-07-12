@@ -12,11 +12,12 @@ import org.alterbit.aisme.persistence.DocumentChunkRepository
 import org.alterbit.aisme.persistence.SaveChunkEmbeddingRequest
 import org.alterbit.aisme.persistence.SourceDocumentRecord
 import org.alterbit.aisme.persistence.SourceDocumentRepository
+import org.alterbit.aisme.testsupport.addPostgresProperties
+import org.alterbit.aisme.testsupport.pgVectorContainer
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
@@ -145,20 +146,11 @@ class RelevantChunkRetrieverIntegrationTest(
         private const val CHUNKING_STRATEGY_VERSION = "character-count-v1"
 
         @Container
-        val postgres: PgVectorContainer =
-            PgVectorContainer()
-                .withDatabaseName("aisme")
-                .withUsername("aisme")
-                .withPassword("aisme")
+        val postgres = pgVectorContainer()
 
         @JvmStatic
         @DynamicPropertySource
-        fun postgresProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgres::getJdbcUrl)
-            registry.add("spring.datasource.username", postgres::getUsername)
-            registry.add("spring.datasource.password", postgres::getPassword)
-        }
+        fun postgresProperties(registry: DynamicPropertyRegistry) =
+            registry.addPostgresProperties(postgres)
     }
-
-    class PgVectorContainer : PostgreSQLContainer<PgVectorContainer>("pgvector/pgvector:0.8.2-pg18")
 }
