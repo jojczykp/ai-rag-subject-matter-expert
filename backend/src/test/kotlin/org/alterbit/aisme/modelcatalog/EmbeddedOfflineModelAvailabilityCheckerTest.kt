@@ -7,7 +7,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Path
-import java.security.MessageDigest
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EphemeralEmbeddedLlamaPortAllocator
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
@@ -209,42 +208,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model with matching checksum as available`() {
-        val assets = runtimeAssets()
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                ggufFile = assets.ggufFile.fileName.toString(),
-                sha256 = assets.ggufFile.sha256(),
-            ),
-        ).check(
-            model = embeddedModel(),
-            timeout = Duration.ofSeconds(5),
-        )
-
-        availability shouldBe ChatModelAvailability.AVAILABLE
-    }
-
-    @Test
-    fun `marks embedded offline model with mismatched checksum as misconfigured`() {
-        val assets = runtimeAssets()
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                ggufFile = assets.ggufFile.fileName.toString(),
-                sha256 = "0000000000000000000000000000000000000000000000000000000000000000",
-            ),
-        ).check(
-            model = embeddedModel(),
-            timeout = Duration.ofSeconds(5),
-        )
-
-        availability shouldBe ChatModelAvailability.MISCONFIGURED
-    }
-
-    @Test
     fun `marks embedded offline model as unavailable when runtime readiness fails`() {
         val assets = runtimeAssets()
         val availability = checker(
@@ -315,7 +278,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         serverExecutablePath: Path? = null,
         modelId: String = "embedded-llama-example",
         ggufFile: String? = null,
-        sha256: String? = null,
     ): EmbeddedLlamaProperties {
         val assets = runtimeAssets()
         val configuredAssetDirectory = assetDirectory ?: assets.assetDirectory
@@ -332,7 +294,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                     displayName = "Embedded Llama Example",
                     ggufFile = configuredGgufFile,
                     contextSize = 4096,
-                    sha256 = sha256,
                 ),
             ),
         )
@@ -373,19 +334,6 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         val ggufFile: Path,
         val serverExecutable: Path,
     )
-
-    private fun Path.sha256(): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        Files.newInputStream(this).use { input ->
-            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-            var bytesRead = input.read(buffer)
-            while (bytesRead != -1) {
-                digest.update(buffer, 0, bytesRead)
-                bytesRead = input.read(buffer)
-            }
-        }
-        return digest.digest().joinToString(separator = "") { "%02x".format(it) }
-    }
 
     private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
         override fun start(command: List<String>): Process =

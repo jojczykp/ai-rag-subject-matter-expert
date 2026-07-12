@@ -1,4 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
+    id("aisme.embedded-llama")
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.spring.boot)
@@ -6,15 +9,21 @@ plugins {
     alias(libs.plugins.kover)
 }
 
+val javaToolchainVersion = providers.gradleProperty("javaToolchainVersion").get().toInt()
+val jvmBytecodeTarget = providers.gradleProperty("jvmBytecodeTarget").get()
+
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(26)
+        languageVersion = JavaLanguageVersion.of(javaToolchainVersion)
     }
+    sourceCompatibility = JavaVersion.toVersion(jvmBytecodeTarget)
+    targetCompatibility = JavaVersion.toVersion(jvmBytecodeTarget)
 }
 
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget = JvmTarget.fromTarget(jvmBytecodeTarget)
     }
 }
 

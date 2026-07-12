@@ -57,24 +57,6 @@ class ConfigurationPropertiesValidationTest {
     }
 
     @Test
-    fun `fails binding invalid embedded llama configuration`() {
-        propertyContext(EmbeddedLlamaPropertiesConfiguration::class.java)
-            .withPropertyValues(
-                "aisme.embedded-llama.asset-directory=./models/llama",
-                "aisme.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
-                "aisme.embedded-llama.models[0].id=embedded-llama-example",
-                "aisme.embedded-llama.models[0].enabled=true",
-                "aisme.embedded-llama.models[0].display-name=Embedded Llama",
-                "aisme.embedded-llama.models[0].gguf-file=models/llama.gguf",
-                "aisme.embedded-llama.models[0].context-size=4096",
-                "aisme.embedded-llama.models[0].sha256=invalid-sha",
-            )
-            .run { context ->
-                context.failureMessage() shouldContain "aisme.embedded-llama.models.sha256"
-            }
-    }
-
-    @Test
     fun `fails creating model catalog from invalid runtime and mode configuration`() {
         propertyContext(ChatModelCatalogConfiguration::class.java)
             .withPropertyValues(

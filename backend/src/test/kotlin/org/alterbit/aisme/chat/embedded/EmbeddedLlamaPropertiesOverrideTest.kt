@@ -20,7 +20,6 @@ class EmbeddedLlamaPropertiesOverrideTest {
             "aisme.embedded-llama.models[0].context-size=8192",
             "aisme.embedded-llama.models[0].runtime-arguments[0]=--threads",
             "aisme.embedded-llama.models[0].runtime-arguments[1]=8",
-            "aisme.embedded-llama.models[0].sha256=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
         )
 
     @Test
@@ -37,7 +36,6 @@ class EmbeddedLlamaPropertiesOverrideTest {
             model.ggufFile shouldBe "mistral/mistral-7b-instruct-q4.gguf"
             model.contextSize shouldBe 8192
             model.runtimeArguments shouldBe listOf("--threads", "8")
-            model.sha256 shouldBe "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
             properties.enabledModels() shouldBe listOf(model)
         }
     }

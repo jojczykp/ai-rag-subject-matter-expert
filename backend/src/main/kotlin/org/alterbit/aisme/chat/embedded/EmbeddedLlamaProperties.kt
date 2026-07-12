@@ -30,7 +30,6 @@ data class EmbeddedLlamaModelProperties(
     val ggufFile: String,
     val contextSize: Int,
     val runtimeArguments: List<String> = emptyList(),
-    val sha256: String? = null,
 ) {
     init {
         require(id.isNotBlank()) { "aisme.embedded-llama.models.id must not be blank" }
@@ -40,12 +39,5 @@ data class EmbeddedLlamaModelProperties(
         require(runtimeArguments.none { it.isBlank() }) {
             "aisme.embedded-llama.models.runtime-arguments must not contain blank values"
         }
-        require(sha256 == null || sha256.matches(SHA_256_PATTERN)) {
-            "aisme.embedded-llama.models.sha256 must be a 64-character lowercase hexadecimal value"
-        }
-    }
-
-    private companion object {
-        private val SHA_256_PATTERN = Regex("[a-f0-9]{64}")
     }
 }

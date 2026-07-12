@@ -58,7 +58,6 @@ Runtime integration follows the component flow documented in
       executable JAR.
 - [x] Add model asset directory configuration.
 - [x] Add static model metadata configuration for predownloaded models.
-- [ ] Validate model file checksums before use.
 - [ ] Expose model license and redistribution metadata.
 - [ ] Report hardware requirements before loading a model.
 - [ ] Support offline startup without network access.

@@ -3,7 +3,6 @@ package org.alterbit.aisme.modelcatalog
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.security.MessageDigest
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
@@ -60,7 +59,7 @@ class EmbeddedOfflineModelAvailabilityChecker(
             Files.isReadable(ggufFile) &&
             Files.isRegularFile(serverExecutable) &&
             Files.isExecutable(serverExecutable) &&
-            ggufFile.matchesConfiguredChecksum(runtimeModel.sha256)
+            serverExecutable.canBeOpened()
         ) {
             logger.info("Embedded model '{}' static assets are available", runtimeModel.id)
             ChatModelAvailability.AVAILABLE
@@ -75,27 +74,18 @@ class EmbeddedOfflineModelAvailabilityChecker(
         return if (configuredPath.isAbsolute) configuredPath else resolve(configuredPath)
     }
 
-    private fun Path.matchesConfiguredChecksum(expectedSha256: String?): Boolean =
-        expectedSha256 == null || expectedSha256 == sha256()
-
-    private fun Path.sha256(): String? =
+    private fun Path.canBeOpened(): Boolean =
         try {
-            val digest = MessageDigest.getInstance("SHA-256")
             Files.newInputStream(this).use { input ->
-                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-                var bytesRead = input.read(buffer)
-                while (bytesRead != -1) {
-                    digest.update(buffer, 0, bytesRead)
-                    bytesRead = input.read(buffer)
-                }
+                input.read()
             }
-            digest.digest().joinToString(separator = "") { "%02x".format(it) }
+            true
         } catch (ex: IOException) {
             logger.warn(
-                "Could not read embedded model asset '{}' for checksum validation: '{}'",
+                "Could not open embedded llama-server executable '{}': '{}'",
                 this,
                 ex.javaClass.simpleName,
             )
-            null
+            false
         }
 }

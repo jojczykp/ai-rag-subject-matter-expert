@@ -101,15 +101,6 @@ class EmbeddedLlamaPropertiesTest {
         exception.message shouldContain "runtime-arguments"
     }
 
-    @Test
-    fun `rejects invalid sha256`() {
-        val exception = shouldThrow<IllegalArgumentException> {
-            embeddedModel(sha256 = "not-a-sha")
-        }
-
-        exception.message shouldContain "sha256"
-    }
-
     private fun embeddedLlamaProperties(
         assetDirectory: String = "./models/llama",
         serverExecutablePath: String = "./models/llama/bin/llama-server",
@@ -128,7 +119,6 @@ class EmbeddedLlamaPropertiesTest {
         ggufFile: String = "models/llama.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
-        sha256: String? = null,
     ): EmbeddedLlamaModelProperties =
         EmbeddedLlamaModelProperties(
             id = id,
@@ -137,6 +127,5 @@ class EmbeddedLlamaPropertiesTest {
             ggufFile = ggufFile,
             contextSize = contextSize,
             runtimeArguments = runtimeArguments,
-            sha256 = sha256,
         )
 }

@@ -108,8 +108,6 @@ All implementation items are TODO until delivered and verified.
       asset existence.
 - [x] Extend embedded offline availability checks to verify model metadata
       validity.
-- [x] Extend embedded offline availability checks to include checksum validation
-      results.
 - [x] Add embedded adapter behind `AiModelClient`.
 - [x] Start managed `llama-server` processes for enabled embedded offline
       models using ephemeral loopback ports.
@@ -117,7 +115,6 @@ All implementation items are TODO until delivered and verified.
       collect managed `llama-server` stdout and stderr.
 - [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
-- [x] Add model checksum validation.
 - [x] Add embedded offline availability tests for `GET /models`.
 - [x] Add embedded offline availability tests for `POST /chat`.
 - [x] Document that embedded offline availability requires static asset

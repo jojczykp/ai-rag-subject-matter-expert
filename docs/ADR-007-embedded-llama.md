@@ -32,8 +32,7 @@ The application will:
 - [x] Configure embedded llama models with per-model `enabled` flags;
       enabled models require asset directory, `llama-server` executable path,
       and model metadata.
-- [x] Configure per-model GGUF file paths, runtime arguments, checksum,
-      and context size.
+- [x] Configure per-model GGUF file paths, runtime arguments, and context size.
 - [x] Start the configured `llama-server` process for enabled embedded offline
       models.
 - [x] Allocate loopback ports internally instead of exposing host or port in
@@ -115,8 +114,6 @@ first embedded chat runtime.
       and metadata.
 - [x] Availability checks verify executable and model file existence before
       attempting runtime loadability.
-- [x] Availability checks verify configured GGUF SHA-256 checksums at startup
-      when model metadata provides `sha256`.
 - [x] Embedded offline asset availability is calculated once at checker
       creation; local asset changes require application restart.
 - [x] Managed process readiness is checked with the local `llama-server`

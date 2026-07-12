@@ -35,7 +35,7 @@ Run commands from the repository root.
 
 If not already present.
 
-#### Local embedding model
+#### Embedding model
 
 ```bash
 mkdir -p backend/models/bge-small-en-v1.5
@@ -47,88 +47,34 @@ curl -L \
   -o backend/models/bge-small-en-v1.5/tokenizer.json
 ```
 
-#### Offline Llama server (optional)
+#### Embedded (localhost) Llama server (optional)
 
 If you want to use the bundled `embedded-llama-example` chat model:
 
 ```bash
-mkdir -p backend/models/llama/models
-curl -L \
-  https://huggingface.co/QuantFactory/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/TinyLlama-1.1B-Chat-v1.0.Q4_K_M.gguf \
-  -o backend/models/llama/models/llama.gguf
+./gradlew :backend:embeddedLlamaDownloadModel
 ```
 
-##### macOS Apple Silicon (optional)
+Download `llama-server` for the current platform:
 
 ```bash
-mkdir -p backend/models/llama/bin
-curl -L \
-  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-arm64.tar.gz \
-  -o /tmp/llama-bin-macos-arm64.tar.gz
-tar -xzf /tmp/llama-bin-macos-arm64.tar.gz -C /tmp
-cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
-chmod +x backend/models/llama/bin/llama-server
+./gradlew :backend:embeddedLlamaDownloadServer
 ```
 
-##### macOS Intel x64 (optional)
+If platform auto-detection does not match your environment, run the matching
+explicit task:
 
 ```bash
-mkdir -p backend/models/llama/bin
-curl -L \
-  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-x64.tar.gz \
-  -o /tmp/llama-bin-macos-x64.tar.gz
-tar -xzf /tmp/llama-bin-macos-x64.tar.gz -C /tmp
-cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
-chmod +x backend/models/llama/bin/llama-server
+./gradlew :backend:embeddedLlamaDownloadServerMacAppleSilicon
+./gradlew :backend:embeddedLlamaDownloadServerMacIntel
+./gradlew :backend:embeddedLlamaDownloadServerLinuxUbuntuX64
+./gradlew :backend:embeddedLlamaDownloadServerWindowsX64
 ```
 
-##### Linux Ubuntu x64 (optional)
+Remove locally downloaded model files:
 
 ```bash
-mkdir -p backend/models/llama/bin
-curl -L \
-  https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-ubuntu-x64.tar.gz \
-  -o /tmp/llama-bin-ubuntu-x64.tar.gz
-tar -xzf /tmp/llama-bin-ubuntu-x64.tar.gz -C /tmp
-cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
-chmod +x backend/models/llama/bin/llama-server
-```
-
-##### Windows x64 (optional)
-
-```powershell
-New-Item -ItemType Directory -Force backend\models\llama\bin | Out-Null
-Invoke-WebRequest `
-  -Uri https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-win-cpu-x64.zip `
-  -OutFile $env:TEMP\llama-bin-win-cpu-x64.zip
-Expand-Archive -Force $env:TEMP\llama-bin-win-cpu-x64.zip $env:TEMP\llama-bin-win-cpu-x64
-Copy-Item $env:TEMP\llama-bin-win-cpu-x64\llama-server.exe backend\models\llama\bin\llama-server.exe
-```
-
-When running on Windows, set
-`aisme.embedded-llama.server-executable-path` to
-`./models/llama/bin/llama-server.exe`.
-
-#### Calculate the model checksum (optional)
-
-Calculate and copy it into `aisme.embedded-llama.models[0].sha256`:
-
-##### macOS
-
-```bash
-shasum -a 256 backend/models/llama/models/llama.gguf
-```
-
-##### Linux
-
-```bash
-sha256sum backend/models/llama/models/llama.gguf
-```
-
-##### Windows (PowerShell)
-
-```powershell
-Get-FileHash backend\models\llama\models\llama.gguf -Algorithm SHA256
+./gradlew :backend:embeddedLlamaCleanAssets
 ```
 
 The example embedded llama model is enabled in `application.yml`. It is
@@ -453,7 +399,6 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedded-llama.models[*].gguf-file` | required | GGUF file path relative to `asset-directory`. |
 | `aisme.embedded-llama.models[*].context-size` | required | Context size passed to `llama-server`. |
 | `aisme.embedded-llama.models[*].runtime-arguments` | `[]` | Extra arguments passed to `llama-server`. |
-| `aisme.embedded-llama.models[*].sha256` | optional | Lowercase SHA-256 checksum for the GGUF file. |
 | `aisme.chat-models[*].id` | required | User-selected chat model id used in `/chat` requests. |
 | `aisme.chat-models[*].enabled` | `true` in example config | Whether the chat model is visible and selectable. |
 | `aisme.chat-models[*].config.display-name` | required when enabled | Human-readable model name. |
@@ -518,15 +463,14 @@ model files and related metadata. `server-executable-path` points to the local
 `llama-server` binary. For enabled embedded models, the application starts one
 managed llama-server process per model on an ephemeral loopback port and sends
 chat requests to its OpenAI-compatible `/v1/chat/completions` endpoint. Model
-metadata describes GGUF files relative to `asset-directory`, runtime arguments,
-and optional checksums.
+metadata describes GGUF files relative to `asset-directory` and runtime
+arguments.
 
 Embedded offline asset availability is checked when the application starts.
 After changing local GGUF files or the configured `llama-server` binary, restart
-the application to refresh embedded offline availability. If model metadata
-includes `sha256`, the GGUF checksum is verified during that startup check.
-The managed local `llama-server` health endpoint must become ready before an
-embedded model is reported as available.
+the application to refresh embedded offline availability. The managed local
+`llama-server` health endpoint must become ready before an embedded model is
+reported as available.
 Managed `llama-server` lifecycle events and process stdout/stderr are written
 to the application logs.
 
