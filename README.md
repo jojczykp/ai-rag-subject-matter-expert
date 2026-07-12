@@ -10,13 +10,20 @@ plan.
 
 ## Requirements
 
-- JDK 26
-- Node.js and npm for frontend builds
-- Gradle Wrapper included in this repository
+Backend:
 
-The Gradle build uses the Java 26 toolchain, Kotlin 2.4.0, Spring Boot 4.1.0,
-and Kover for coverage verification. The wrapper currently uses Gradle 9.5.1.
-The frontend has been built with Node.js 25.2.1 and npm 11.12.1.
+- JDK 26
+- Kotlin 2.4.0
+- Spring Boot 4.1.0
+- Gradle 9.5.1 through the wrapper
+- Gradle Wrapper included in this repository
+- Kover for coverage verification
+
+Frontend:
+
+- Node.js 25.2.1
+- npm 11.12.1
+- React, TypeScript, and Vite
 
 ## Build
 
@@ -44,7 +51,7 @@ curl -L \
   -o models/llama/models/llama.gguf
 ```
 
-Download a prebuilt `llama-server` for macOS Apple Silicon and copy it into the
+For macOS Apple Silicon, download a prebuilt `llama-server` and copy it into the
 configured project-local path:
 
 ```bash
@@ -69,7 +76,7 @@ cp /tmp/llama-b9892/llama-server models/llama/bin/llama-server
 chmod +x models/llama/bin/llama-server
 ```
 
-Download a prebuilt `llama-server` for Linux Ubuntu x64:
+For Linux Ubuntu x64, download a prebuilt `llama-server`:
 
 ```bash
 mkdir -p models/llama/bin
@@ -81,7 +88,7 @@ cp /tmp/llama-b9892/llama-server models/llama/bin/llama-server
 chmod +x models/llama/bin/llama-server
 ```
 
-On Windows PowerShell, download the CPU x64 archive and copy
+For Windows PowerShell, download the CPU x64 archive and copy:
 `llama-server.exe`:
 
 ```powershell
@@ -115,9 +122,9 @@ sha256sum models/llama/models/llama.gguf
 Get-FileHash models\llama\models\llama.gguf -Algorithm SHA256
 ```
 
-To make the example model selectable, set both
-`aisme.embedded-llama.models[0].enabled` and the
-`embedded-llama-example` chat model entry to `true`.
+The example embedded llama model is enabled in `application.yml`. It is
+selectable when the configured GGUF file and `llama-server` executable are
+present and pass startup availability checks.
 
 Build the application:
 
@@ -154,20 +161,6 @@ Run the application:
 ```
 
 The service starts on the default Spring Boot port, `8080`.
-
-Start the development UI in another terminal:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open the UI at the URL printed by Vite, usually:
-
-```text
-http://localhost:5173
-```
 
 Check application health:
 
@@ -215,6 +208,20 @@ jdbc:postgresql://localhost:5432/aisme
 
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
+
+Start the development UI in another terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the UI at the URL printed by Vite, usually:
+
+```text
+http://localhost:5173
+```
 
 ## Frontend Development
 
@@ -308,14 +315,14 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedded-llama.asset-directory` | `./models/llama` | Base directory for local embedded llama assets. |
 | `aisme.embedded-llama.server-executable-path` | `./models/llama/bin/llama-server` | Path to the managed `llama-server` executable. |
 | `aisme.embedded-llama.models[*].id` | required | Embedded llama model id. Should match the related `chat-models[*].id`. |
-| `aisme.embedded-llama.models[*].enabled` | `false` | Whether the embedded runtime should manage this model. |
+| `aisme.embedded-llama.models[*].enabled` | `true` in example config | Whether the embedded runtime should manage this model. |
 | `aisme.embedded-llama.models[*].display-name` | required | Human-readable embedded model name. |
 | `aisme.embedded-llama.models[*].gguf-file` | required | GGUF file path relative to `asset-directory`. |
 | `aisme.embedded-llama.models[*].context-size` | required | Context size passed to `llama-server`. |
 | `aisme.embedded-llama.models[*].runtime-arguments` | `[]` | Extra arguments passed to `llama-server`. |
 | `aisme.embedded-llama.models[*].sha256` | optional | Lowercase SHA-256 checksum for the GGUF file. |
 | `aisme.chat-models[*].id` | required | User-selected chat model id used in `/chat` requests. |
-| `aisme.chat-models[*].enabled` | `false` | Whether the chat model is visible and selectable. |
+| `aisme.chat-models[*].enabled` | `true` in example config | Whether the chat model is visible and selectable. |
 | `aisme.chat-models[*].config.display-name` | required when enabled | Human-readable model name. |
 | `aisme.chat-models[*].config.description` | optional | Short model description for clients and selection UIs. |
 | `aisme.chat-models[*].config.runtime` | required when enabled | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_ENDPOINT`, `EMBEDDED_OFFLINE`, or `SPRING_AI`. |
