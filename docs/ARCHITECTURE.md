@@ -296,10 +296,10 @@ aisme:
     asset-directory: ./models/llama
     server-executable-path: ./models/llama/bin/llama-server
     models:
-      - id: embedded-llama-tiny
+      - id: embedded-qwen-0-5b
         enabled: true
-        display-name: Embedded Llama Tiny
-        gguf-file: models/llama.gguf
+        display-name: Embedded Qwen 0.5B
+        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
   chat-models:
@@ -334,10 +334,10 @@ aisme:
         base-url: https://example.endpoints.huggingface.cloud
         api-key: ${HF_API_KEY:}
         available-offline: false
-    - id: embedded-llama-tiny
+    - id: embedded-qwen-0-5b
       enabled: true
       config:
-        display-name: Embedded Llama Tiny
+        display-name: Embedded Qwen 0.5B
         description: Fully offline embedded model backed by a local GGUF asset.
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE

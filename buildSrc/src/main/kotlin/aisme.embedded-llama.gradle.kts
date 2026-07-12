@@ -5,13 +5,13 @@ val releaseVersion = "b9892"
 val releaseBaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/$releaseVersion"
 
 val assetDirectory = layout.projectDirectory.dir("models/llama")
-val modelPath = assetDirectory.file("models/llama.gguf")
+val modelPath = assetDirectory.file("models/qwen2.5-0.5b-instruct-q4_k_m.gguf")
 
 val serverDirectory = assetDirectory.dir("bin")
 val serverExecutablePath = assetDirectory.file("bin/llama-server")
 
-val exampleLlamaModelUrl =
-    "https://huggingface.co/QuantFactory/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/TinyLlama-1.1B-Chat-v1.0.Q4_K_M.gguf"
+val embeddedQwenModelUrl =
+    "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf"
 
 val serverArchivesDirectory = layout.buildDirectory.dir("embedded-llama-server")
 val embeddedLlamaInstaller = EmbeddedLlamaInstaller(
@@ -105,18 +105,18 @@ tasks.register("embeddedLlamaVerifyServer") {
 
 tasks.register("embeddedLlamaDownloadModel") {
     group = "model management"
-    description = "Downloads the embedded llama GGUF model asset when it is missing."
+    description = "Downloads the embedded Qwen GGUF model asset when it is missing."
 
     doLast {
         val modelFile = modelPath.asFile
         if (modelFile.isFile) {
-            logger.lifecycle("embedded llama model already exists: ${modelFile.path}")
+            logger.lifecycle("embedded Qwen model already exists: ${modelFile.path}")
             return@doLast
         }
 
         modelFile.parentFile.mkdirs()
-        logger.lifecycle("Downloading embedded llama model to ${modelFile.path}")
-        URI(exampleLlamaModelUrl).toURL().openStream().use { input ->
+        logger.lifecycle("Downloading embedded Qwen model to ${modelFile.path}")
+        URI(embeddedQwenModelUrl).toURL().openStream().use { input ->
             modelFile.outputStream().use { output ->
                 input.copyTo(output)
             }
@@ -126,7 +126,7 @@ tasks.register("embeddedLlamaDownloadModel") {
 
 tasks.register<Delete>("cleanEmbeddedLlamaModel") {
     group = "model management"
-    description = "Deletes the locally downloaded embedded llama GGUF model."
+    description = "Deletes the locally downloaded embedded Qwen GGUF model."
     delete(modelPath)
 }
 

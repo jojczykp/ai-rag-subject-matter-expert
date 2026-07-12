@@ -16,14 +16,14 @@ class EmbeddedLlamaAiModelClientProviderTest {
     fun `creates one client per configured embedded offline model`() {
         val factory = FakeLlamaServerChatApiFactory()
         val embeddedLlamaProperties = embeddedLlamaProperties(
-            runtimeModel(id = "embedded-llama", enabled = true),
             runtimeModel(id = "embedded-qwen", enabled = true),
+            runtimeModel(id = "embedded-mistral", enabled = true),
         )
         val provider = EmbeddedLlamaAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "embedded-llama"),
-                ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-qwen"),
+                ollamaModel(id = "local-llama"),
+                embeddedModel(id = "embedded-mistral"),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             embeddedLlamaProperties = embeddedLlamaProperties,
@@ -34,7 +34,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
             llamaServerChatApiFactory = factory,
         )
 
-        provider.clients().map { it.modelId } shouldContainExactly listOf("embedded-llama", "embedded-qwen")
+        provider.clients().map { it.modelId } shouldContainExactly listOf("embedded-qwen", "embedded-mistral")
         factory.createdClients shouldContainExactly listOf(
             CreatedLlamaServerClient(
                 baseUrl = "http://127.0.0.1:19001",
@@ -50,9 +50,9 @@ class EmbeddedLlamaAiModelClientProviderTest {
     @Test
     fun `does not create clients for disabled embedded llama models`() {
         val factory = FakeLlamaServerChatApiFactory()
-        val embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = false))
+        val embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = false))
         val provider = EmbeddedLlamaAiModelClientProvider(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
             chatProperties = ChatProperties(),
             embeddedLlamaProperties = embeddedLlamaProperties,
             embeddedLlamaProcessManager = processManager(
@@ -97,7 +97,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
             id = id,
             enabled = true,
             config = EnabledChatModelProperties(
-                displayName = "Embedded Llama",
+                displayName = "Embedded Qwen",
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
@@ -133,8 +133,8 @@ class EmbeddedLlamaAiModelClientProviderTest {
     ): EmbeddedLlamaProcessManager =
         EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "embedded-llama"),
                 embeddedModel(id = "embedded-qwen"),
+                embeddedModel(id = "embedded-mistral"),
                 embeddedModel(id = "configured-runtime-model"),
                 embeddedModel(id = "missing-runtime-model"),
             ),
@@ -154,8 +154,8 @@ class EmbeddedLlamaAiModelClientProviderTest {
         EmbeddedLlamaModelProperties(
             id = id,
             enabled = enabled,
-            displayName = "Embedded Llama",
-            ggufFile = "llama.gguf",
+            displayName = "Embedded Qwen",
+            ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
             contextSize = 4096,
         )
 

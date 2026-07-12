@@ -50,14 +50,14 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             properties = enabledProperties(
                 assetDirectory = assets.assetDirectory,
                 serverExecutablePath = assets.serverExecutable,
-                modelId = "embedded-llama-tiny",
+                modelId = "embedded-qwen-0-5b",
                 ggufFile = assets.ggufFile.fileName.toString(),
             ),
         )
 
         val availability = checker.check(
             model = chatModel(
-                id = "embedded-llama-tiny",
+                id = "embedded-qwen-0-5b",
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
@@ -246,10 +246,10 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 ConfiguredChatModelsProperties(
                     chatModels = listOf(
                         ConfiguredChatModelProperties(
-                            id = "embedded-llama-tiny",
+                            id = "embedded-qwen-0-5b",
                             enabled = true,
                             config = EnabledChatModelProperties(
-                                displayName = "Embedded Llama Tiny",
+                                displayName = "Embedded Qwen 0.5B",
                                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                                 availableOffline = true,
@@ -267,7 +267,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
     private fun embeddedModel(): ChatModelDescriptor =
         chatModel(
-            id = "embedded-llama-tiny",
+            id = "embedded-qwen-0-5b",
             runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
@@ -276,7 +276,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     private fun enabledProperties(
         assetDirectory: Path? = null,
         serverExecutablePath: Path? = null,
-        modelId: String = "embedded-llama-tiny",
+        modelId: String = "embedded-qwen-0-5b",
         ggufFile: String? = null,
     ): EmbeddedLlamaProperties {
         val assets = runtimeAssets()
@@ -291,7 +291,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 EmbeddedLlamaModelProperties(
                     id = modelId,
                     enabled = true,
-                    displayName = "Embedded Llama Tiny",
+                    displayName = "Embedded Qwen 0.5B",
                     ggufFile = configuredGgufFile,
                     contextSize = 4096,
                 ),
@@ -306,9 +306,9 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             serverExecutablePath = assets.serverExecutable.toString(),
             models = listOf(
                 EmbeddedLlamaModelProperties(
-                    id = "embedded-llama-tiny",
+                    id = "embedded-qwen-0-5b",
                     enabled = false,
-                    displayName = "Embedded Llama Tiny",
+                    displayName = "Embedded Qwen 0.5B",
                     ggufFile = assets.ggufFile.fileName.toString(),
                     contextSize = 4096,
                 ),

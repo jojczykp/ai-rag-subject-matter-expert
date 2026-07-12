@@ -13,10 +13,10 @@ class EmbeddedLlamaPropertiesDefaultTest {
         .withPropertyValues(
             "aisme.embedded-llama.asset-directory=./models/llama",
             "aisme.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
-            "aisme.embedded-llama.models[0].id=embedded-llama-tiny",
+            "aisme.embedded-llama.models[0].id=embedded-qwen-0-5b",
             "aisme.embedded-llama.models[0].enabled=false",
-            "aisme.embedded-llama.models[0].display-name=Embedded Llama",
-            "aisme.embedded-llama.models[0].gguf-file=models/llama.gguf",
+            "aisme.embedded-llama.models[0].display-name=Embedded Qwen",
+            "aisme.embedded-llama.models[0].gguf-file=models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
             "aisme.embedded-llama.models[0].context-size=2048",
         )
 

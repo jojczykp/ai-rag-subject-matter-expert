@@ -21,9 +21,9 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             "aisme.chat-models[0].config.base-url=https://api.example.com/v1",
             "aisme.chat-models[0].config.model-name=gpt-4.1-mini",
             "aisme.chat-models[0].config.api-key=test-api-key",
-            "aisme.chat-models[1].id=embedded-llama",
+            "aisme.chat-models[1].id=embedded-qwen",
             "aisme.chat-models[1].enabled=true",
-            "aisme.chat-models[1].config.display-name=Embedded Llama",
+            "aisme.chat-models[1].config.display-name=Embedded Qwen",
             "aisme.chat-models[1].config.runtime=EMBEDDED_OFFLINE",
             "aisme.chat-models[1].config.mode=EMBEDDED_OFFLINE",
             "aisme.chat-models[1].config.available-offline=true",
@@ -49,9 +49,9 @@ class ConfiguredChatModelsPropertiesOverrideTest {
 
             val embeddedModel = properties.chatModels[1]
             val embeddedConfig = embeddedModel.requireEnabledConfig()
-            embeddedModel.id shouldBe "embedded-llama"
+            embeddedModel.id shouldBe "embedded-qwen"
             embeddedModel.enabled shouldBe true
-            embeddedConfig.displayName shouldBe "Embedded Llama"
+            embeddedConfig.displayName shouldBe "Embedded Qwen"
             embeddedConfig.runtime shouldBe ChatModelRuntime.EMBEDDED_OFFLINE
             embeddedConfig.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
             embeddedConfig.availableOffline shouldBe true

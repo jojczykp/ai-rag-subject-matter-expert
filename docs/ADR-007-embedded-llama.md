@@ -17,7 +17,7 @@ observable through the same model availability and provider-error handling used
 by other chat runtimes.
 
 llama.cpp provides `llama-server`, an HTTP server for llama.cpp models, with
-OpenAI-compatible chat-completion endpoints. See the upstream llama.cpp server
+completion and OpenAI-compatible chat-completion endpoints. See the upstream llama.cpp server
 documentation:
 https://github.com/ggml-org/llama.cpp/tree/master/tools/server
 
@@ -38,8 +38,10 @@ The application will:
 - [x] Allocate loopback ports internally instead of exposing host or port in
       application configuration.
 - [x] Wait for a local readiness endpoint before marking the model available.
-- [x] Send chat requests to the local `llama-server` OpenAI-compatible HTTP API
-      using the existing provider-neutral `AiModelClient` abstraction.
+- [x] Send chat requests to the local `llama-server` HTTP API using the
+      existing provider-neutral `AiModelClient` abstraction. The default
+      embedded adapter uses `/completion`; chat-template based
+      `/v1/chat/completions` support remains a future per-model option.
 - [x] Introduce structured application logging for embedded runtime process
       lifecycle events and collect managed `llama-server` stdout and stderr
       into those logs.
@@ -107,9 +109,9 @@ first embedded chat runtime.
 
 ## Consequences
 
-- [x] Embedded llama model entries are disabled by default in example
-      configuration; enabled entries use the shared asset directory and
-      executable path.
+- [x] The example embedded Qwen model entry is enabled by default; it becomes
+      available only when the shared asset directory, GGUF file, and executable
+      path are valid.
 - [x] Embedded model metadata must include model file paths, runtime arguments,
       and metadata.
 - [x] Availability checks verify executable and model file existence before

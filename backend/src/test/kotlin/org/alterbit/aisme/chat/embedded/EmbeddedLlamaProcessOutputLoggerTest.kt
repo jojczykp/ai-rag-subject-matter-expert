@@ -31,7 +31,7 @@ class EmbeddedLlamaProcessOutputLoggerTest {
         )
 
         outputLogger.attach(
-            modelId = "embedded-llama",
+            modelId = "embedded-qwen",
             process = FakeProcess(
                 stdout = "server started\nmodel loaded\n",
                 stderr = "warning: slow startup\n",
@@ -41,17 +41,17 @@ class EmbeddedLlamaProcessOutputLoggerTest {
 
         capturedLines shouldContainExactlyInAnyOrder listOf(
             CapturedLine(
-                modelId = "embedded-llama",
+                modelId = "embedded-qwen",
                 stream = EmbeddedLlamaProcessOutputStream.STDOUT,
                 line = "server started",
             ),
             CapturedLine(
-                modelId = "embedded-llama",
+                modelId = "embedded-qwen",
                 stream = EmbeddedLlamaProcessOutputStream.STDOUT,
                 line = "model loaded",
             ),
             CapturedLine(
-                modelId = "embedded-llama",
+                modelId = "embedded-qwen",
                 stream = EmbeddedLlamaProcessOutputStream.STDERR,
                 line = "warning: slow startup",
             ),
@@ -64,7 +64,7 @@ class EmbeddedLlamaProcessOutputLoggerTest {
         val outputLogger = EmbeddedLlamaProcessOutputLogger(executor = executor)
 
         outputLogger.attach(
-            modelId = "embedded-llama",
+            modelId = "embedded-qwen",
             process = FakeProcess(
                 stdout = "",
                 stderr = """

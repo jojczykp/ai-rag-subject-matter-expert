@@ -15,26 +15,26 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `exposes configured model id`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-tiny"),
-            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
+            model = embeddedModel(id = "embedded-qwen-0-5b"),
+            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
-        client.modelId shouldBe "embedded-llama-tiny"
+        client.modelId shouldBe "embedded-qwen-0-5b"
     }
 
     @Test
     fun `sends chat request to configured embedded llama model`() {
         val chatApi = FakeLlamaServerChatApi(answer = " Use two parts water. ")
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-tiny"),
-            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
+            model = embeddedModel(id = "embedded-qwen-0-5b"),
+            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = chatApi,
         )
 
         val response = client.chat(
             AiModelChatRequest(
-                modelId = "embedded-llama-tiny",
+                modelId = "embedded-qwen-0-5b",
                 message = "How should I cook rice?",
                 contextChunks = listOf(
                     AiModelContextChunk(
@@ -47,7 +47,7 @@ class EmbeddedLlamaAiModelClientTest {
             ),
         )
 
-        response.modelId shouldBe "embedded-llama-tiny"
+        response.modelId shouldBe "embedded-qwen-0-5b"
         response.answer shouldBe "Use two parts water."
         chatApi.requests.single().stream shouldBe false
         chatApi.requests.single().prompt shouldBe """
@@ -62,8 +62,8 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `rejects request for another model id`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-tiny"),
-            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
+            model = embeddedModel(id = "embedded-qwen-0-5b"),
+            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
@@ -77,8 +77,8 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `rejects blank provider response`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-tiny"),
-            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
+            model = embeddedModel(id = "embedded-qwen-0-5b"),
+            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(answer = " "),
         )
 
@@ -89,7 +89,7 @@ class EmbeddedLlamaAiModelClientTest {
         exception.message shouldContain "blank answer"
     }
 
-    private fun request(modelId: String = "embedded-llama-tiny"): AiModelChatRequest =
+    private fun request(modelId: String = "embedded-qwen-0-5b"): AiModelChatRequest =
         AiModelChatRequest(
             modelId = modelId,
             message = "How should I cook rice?",
@@ -99,7 +99,7 @@ class EmbeddedLlamaAiModelClientTest {
 
     private fun embeddedModel(id: String) = chatModel(
         id = id,
-        displayName = "Embedded Llama",
+        displayName = "Embedded Qwen",
         runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
         mode = ChatModelMode.EMBEDDED_OFFLINE,
         availableOffline = true,
@@ -110,8 +110,8 @@ class EmbeddedLlamaAiModelClientTest {
     private fun runtimeModel(id: String): EmbeddedLlamaModelProperties =
         EmbeddedLlamaModelProperties(
             id = id,
-            displayName = "Embedded Llama",
-            ggufFile = "llama.gguf",
+            displayName = "Embedded Qwen",
+            ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
             contextSize = 4096,
         )
 

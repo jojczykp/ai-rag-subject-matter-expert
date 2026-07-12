@@ -24,8 +24,8 @@ class EmbeddedLlamaProcessManagerTest {
     fun `does not start processes for disabled embedded llama models`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = false)),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = false)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -34,8 +34,8 @@ class EmbeddedLlamaProcessManagerTest {
         manager.run(DefaultApplicationArguments())
 
         launcher.commands shouldContainExactly emptyList()
-        manager.baseUrlForModelId("embedded-llama") shouldBe null
-        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.MISCONFIGURED
+        manager.baseUrlForModelId("embedded-qwen") shouldBe null
+        manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.MISCONFIGURED
     }
 
     @Test
@@ -43,20 +43,20 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "embedded-llama"),
-                ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-qwen"),
+                ollamaModel(id = "local-llama"),
+                embeddedModel(id = "embedded-mistral"),
             ),
             embeddedLlamaProperties = embeddedLlamaProperties(
                 runtimeModel(
-                    id = "embedded-llama",
+                    id = "embedded-qwen",
                     enabled = true,
-                    ggufFile = "llama.gguf",
+                    ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
                     contextSize = 2048,
                     runtimeArguments = listOf("--threads", "8"),
                 ),
                 runtimeModel(
-                    id = "embedded-qwen",
+                    id = "embedded-mistral",
                     enabled = true,
                     ggufFile = "/opt/models/qwen.gguf",
                     contextSize = 8192,
@@ -68,14 +68,14 @@ class EmbeddedLlamaProcessManagerTest {
             processOutputLogger = noOpOutputLogger(),
         )
         val serverExecutablePath = Path.of("./models/llama/bin/llama-server").toAbsolutePath().normalize().toString()
-        val llamaModelPath = Path.of("./models/llama/llama.gguf").toAbsolutePath().normalize().toString()
+        val llamaModelPath = Path.of("./models/llama/qwen2.5-0.5b-instruct-q4_k_m.gguf").toAbsolutePath().normalize().toString()
 
         manager.run(DefaultApplicationArguments())
 
-        manager.baseUrlForModelId("embedded-llama") shouldBe "http://127.0.0.1:19001"
-        manager.baseUrlForModelId("embedded-qwen") shouldBe "http://127.0.0.1:19002"
-        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.AVAILABLE
+        manager.baseUrlForModelId("embedded-qwen") shouldBe "http://127.0.0.1:19001"
+        manager.baseUrlForModelId("embedded-mistral") shouldBe "http://127.0.0.1:19002"
         manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.AVAILABLE
+        manager.availabilityForModelId("embedded-mistral") shouldBe ChatModelAvailability.AVAILABLE
         launcher.commands shouldContainExactly listOf(
             listOf(
                 serverExecutablePath,
@@ -130,8 +130,8 @@ class EmbeddedLlamaProcessManagerTest {
     fun `stops running llama server processes`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -149,8 +149,8 @@ class EmbeddedLlamaProcessManagerTest {
     fun `force stops running llama server process when graceful stop times out`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher(processStopsGracefully = false)
         val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -168,8 +168,8 @@ class EmbeddedLlamaProcessManagerTest {
     fun `marks model unavailable and stops process when readiness fails`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(ready = false),
@@ -178,7 +178,7 @@ class EmbeddedLlamaProcessManagerTest {
 
         manager.run(DefaultApplicationArguments())
 
-        manager.availabilityForModelId("embedded-llama") shouldBe ChatModelAvailability.UNAVAILABLE
+        manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.UNAVAILABLE
         launcher.processes.single().destroyed shouldBe true
     }
 
@@ -190,7 +190,7 @@ class EmbeddedLlamaProcessManagerTest {
             id = id,
             enabled = true,
             config = EnabledChatModelProperties(
-                displayName = "Embedded Llama",
+                displayName = "Embedded Qwen",
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
@@ -223,14 +223,14 @@ class EmbeddedLlamaProcessManagerTest {
     private fun runtimeModel(
         id: String,
         enabled: Boolean = false,
-        ggufFile: String = "llama.gguf",
+        ggufFile: String = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
     ): EmbeddedLlamaModelProperties =
         EmbeddedLlamaModelProperties(
             id = id,
             enabled = enabled,
-            displayName = "Embedded Llama",
+            displayName = "Embedded Qwen",
             ggufFile = ggufFile,
             contextSize = contextSize,
             runtimeArguments = runtimeArguments,

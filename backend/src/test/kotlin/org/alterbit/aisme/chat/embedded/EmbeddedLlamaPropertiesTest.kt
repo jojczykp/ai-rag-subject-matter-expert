@@ -113,10 +113,10 @@ class EmbeddedLlamaPropertiesTest {
         )
 
     private fun embeddedModel(
-        id: String = "embedded-llama",
+        id: String = "embedded-qwen",
         enabled: Boolean = false,
-        displayName: String = "Embedded Llama",
-        ggufFile: String = "models/llama.gguf",
+        displayName: String = "Embedded Qwen",
+        ggufFile: String = "models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
     ): EmbeddedLlamaModelProperties =
