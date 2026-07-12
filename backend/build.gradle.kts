@@ -114,6 +114,7 @@ tasks.register<Test>("huggingFaceTgiTest") {
 }
 
 tasks.bootRun {
+    workingDir = projectDir
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 

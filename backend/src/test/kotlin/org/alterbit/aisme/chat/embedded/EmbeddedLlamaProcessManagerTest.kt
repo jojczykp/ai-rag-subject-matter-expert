@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.file.Path
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
@@ -30,7 +31,6 @@ class EmbeddedLlamaProcessManagerTest {
             readinessProbe = FakeReadinessProbe(),
             processOutputLogger = noOpOutputLogger(),
         )
-
         manager.run(DefaultApplicationArguments())
 
         launcher.commands shouldContainExactly emptyList()
@@ -52,7 +52,7 @@ class EmbeddedLlamaProcessManagerTest {
                     id = "embedded-llama",
                     enabled = true,
                     ggufFile = "llama.gguf",
-                    contextSize = 4096,
+                    contextSize = 2048,
                     runtimeArguments = listOf("--threads", "8"),
                 ),
                 runtimeModel(
@@ -67,6 +67,8 @@ class EmbeddedLlamaProcessManagerTest {
             readinessProbe = FakeReadinessProbe(),
             processOutputLogger = noOpOutputLogger(),
         )
+        val serverExecutablePath = Path.of("./models/llama/bin/llama-server").toAbsolutePath().normalize().toString()
+        val llamaModelPath = Path.of("./models/llama/llama.gguf").toAbsolutePath().normalize().toString()
 
         manager.run(DefaultApplicationArguments())
 
@@ -76,20 +78,20 @@ class EmbeddedLlamaProcessManagerTest {
         manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.AVAILABLE
         launcher.commands shouldContainExactly listOf(
             listOf(
-                "./models/llama/bin/llama-server",
+                serverExecutablePath,
                 "--host",
                 "127.0.0.1",
                 "--port",
                 "19001",
                 "--model",
-                "./models/llama/llama.gguf",
+                llamaModelPath,
                 "--ctx-size",
-                "4096",
+                "2048",
                 "--threads",
                 "8",
             ),
             listOf(
-                "./models/llama/bin/llama-server",
+                serverExecutablePath,
                 "--host",
                 "127.0.0.1",
                 "--port",

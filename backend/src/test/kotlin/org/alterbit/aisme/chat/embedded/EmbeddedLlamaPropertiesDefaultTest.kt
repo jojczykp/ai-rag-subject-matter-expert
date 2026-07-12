@@ -17,7 +17,7 @@ class EmbeddedLlamaPropertiesDefaultTest {
             "aisme.embedded-llama.models[0].enabled=false",
             "aisme.embedded-llama.models[0].display-name=Embedded Llama",
             "aisme.embedded-llama.models[0].gguf-file=models/llama.gguf",
-            "aisme.embedded-llama.models[0].context-size=4096",
+            "aisme.embedded-llama.models[0].context-size=2048",
         )
 
     @Test

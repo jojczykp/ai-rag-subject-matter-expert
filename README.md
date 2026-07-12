@@ -87,10 +87,6 @@ explicit task:
 ./gradlew :backend:embeddedLlamaDownloadServerWindowsX64
 ```
 
-The embedded llama model is enabled in `application.yml`. It is
-selectable when the configured GGUF file and `llama-server` executable are
-present and pass startup availability checks.
-
 ### Ollama (optional)
 
 If you want to use the local Ollama model, start Ollama and pull the configured
@@ -534,7 +530,7 @@ aisme:
         enabled: true
         display-name: Embedded Llama Tiny
         gguf-file: models/llama.gguf
-        context-size: 4096
+        context-size: 2048
         runtime-arguments: []
 ```
 

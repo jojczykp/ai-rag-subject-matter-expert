@@ -118,13 +118,13 @@ class EmbeddedLlamaProcessManager(
         port: Int,
     ): List<String> =
         listOf(
-            serverExecutablePath,
+            Path.of(serverExecutablePath).absoluteNormalizedPath(),
             "--host",
             LOOPBACK_HOST,
             "--port",
             port.toString(),
             "--model",
-            Path.of(assetDirectory).resolveConfiguredPath(model.ggufFile).toString(),
+            Path.of(assetDirectory).resolveConfiguredPath(model.ggufFile).absoluteNormalizedPath(),
             "--ctx-size",
             model.contextSize.toString(),
         ) + model.runtimeArguments
@@ -133,6 +133,9 @@ class EmbeddedLlamaProcessManager(
         val configuredPath = Path.of(path)
         return if (configuredPath.isAbsolute) configuredPath else resolve(configuredPath)
     }
+
+    private fun Path.absoluteNormalizedPath(): String =
+        toAbsolutePath().normalize().toString()
 
     private data class ManagedEmbeddedLlamaModel(
         val modelId: String,

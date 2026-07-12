@@ -300,7 +300,7 @@ aisme:
         enabled: true
         display-name: Embedded Llama Tiny
         gguf-file: models/llama.gguf
-        context-size: 4096
+        context-size: 2048
         runtime-arguments: []
   chat-models:
     - id: local-ollama-llama
