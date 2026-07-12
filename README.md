@@ -16,6 +16,7 @@ plan.
 
 The Gradle build uses the Java 26 toolchain, Kotlin 2.4.0, Spring Boot 4.1.0,
 and Kover for coverage verification. The wrapper currently uses Gradle 9.5.1.
+The frontend has been built with Node.js 25.2.1 and npm 11.12.1.
 
 ## Build
 
