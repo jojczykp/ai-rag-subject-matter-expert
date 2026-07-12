@@ -51,8 +51,8 @@ Download:
 
 #### Embedded Qwen model on local llama-server
 
-If you want to use the bundled `embedded-qwen-0-5b` and
-`embedded-qwen-1-5b` chat models.
+If you want to use the bundled `embedded-qwen-0-5b`, `embedded-qwen-1-5b`,
+and `embedded-qwen-3b` chat models.
 
 Remove downloaded model first if exists:
 
@@ -71,6 +71,7 @@ To download only one embedded Qwen model, use the specific task:
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadQwen0p5BModel
 ./gradlew :backend:embeddedLlamaDownloadQwen1p5BModel
+./gradlew :backend:embeddedLlamaDownloadQwen3BModel
 ```
 
 Remove `llama-server` for the current platform first if exists:
@@ -553,6 +554,12 @@ aisme:
         enabled: true
         display-name: Embedded Qwen 1.5B
         gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
+      - id: embedded-qwen-3b
+        enabled: true
+        display-name: Embedded Qwen 3B
+        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
 ```
