@@ -4,6 +4,7 @@ import type {
   ChatResponse,
   ModelsResponse,
 } from './types'
+import { apiUrl } from '../config'
 
 export class ApiError extends Error {
   readonly status: number
@@ -18,11 +19,11 @@ export class ApiError extends Error {
 }
 
 export async function getModels(): Promise<ModelsResponse> {
-  return requestJson<ModelsResponse>('/models')
+  return requestJson<ModelsResponse>(apiUrl('/models'))
 }
 
 export async function postChat(request: ChatRequest): Promise<ChatResponse> {
-  return requestJson<ChatResponse>('/chat', {
+  return requestJson<ChatResponse>(apiUrl('/chat'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

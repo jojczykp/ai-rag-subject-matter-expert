@@ -3,7 +3,7 @@
 ## Purpose
 
 This document describes the application database schema. Keep it aligned with
-Flyway migrations under `src/main/resources/db/migration`.
+Flyway migrations under `backend/src/main/resources/db/migration`.
 
 ## Current Schema
 

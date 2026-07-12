@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import type { ChatResponse, ModelsResponse } from '../api/types'
+import { apiUrl } from '../config'
 
 describe('MSW backend API mocks', () => {
   it('returns configured models', async () => {
-    const response = await fetch('/models')
+    const response = await fetch(apiUrl('/models'))
     const body = (await response.json()) as ModelsResponse
 
     expect(response.ok).toBe(true)
@@ -13,7 +14,7 @@ describe('MSW backend API mocks', () => {
   })
 
   it('returns a deterministic chat response', async () => {
-    const response = await fetch('/chat', {
+    const response = await fetch(apiUrl('/chat'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -4,12 +4,6 @@ import { defineConfig } from 'vitest/config'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/models': 'http://localhost:8080',
-      '/chat': 'http://localhost:8080',
-    },
-  },
   test: {
     environment: 'jsdom',
     exclude: ['e2e/**', 'node_modules/**', 'dist/**'],

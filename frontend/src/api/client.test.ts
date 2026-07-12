@@ -1,9 +1,14 @@
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { getModels, postChat } from './client'
+import { apiUrl, backendApiBaseUrl } from '../config'
 import { server } from '../test/server'
 
 describe('API client', () => {
+  it('defaults to the local backend API', () => {
+    expect(backendApiBaseUrl).toBe('http://localhost:8080')
+  })
+
   it('loads configured models', async () => {
     const response = await getModels()
 
@@ -24,7 +29,7 @@ describe('API client', () => {
 
   it('throws typed API errors for backend error responses', async () => {
     server.use(
-      http.post('/chat', () =>
+      http.post(apiUrl('/chat'), () =>
         HttpResponse.json(
           {
             code: 'MODEL_UNAVAILABLE',

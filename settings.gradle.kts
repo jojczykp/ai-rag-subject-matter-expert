@@ -13,3 +13,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ai-subject-matter-expert"
+
+include("backend", "frontend")

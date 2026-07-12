@@ -22,7 +22,7 @@ Initial scope:
 - [ ] Do not require a subject id in API requests or responses.
 - [ ] Load all reasoning documents from static application resources.
 - [ ] Store bundled documents under a resource folder such as
-      `src/main/resources/subject-documents/`.
+      `backend/src/main/resources/subject-documents/`.
 - [ ] Support plain text `.txt` documents as the first input format.
 - [x] Provide `POST /chat` for asking questions.
 - [x] Provide `GET /models` for listing configured models.
@@ -35,7 +35,7 @@ Initial scope:
 
 ## Static Document Loading
 
-- [ ] Load `.txt` files recursively from `src/main/resources/subject-documents/`.
+- [ ] Load `.txt` files recursively from `backend/src/main/resources/subject-documents/`.
 - [ ] Use the classpath resource path relative to `subject-documents/` as the
       stable document identity.
 - [ ] Sort resource paths lexicographically before indexing for deterministic

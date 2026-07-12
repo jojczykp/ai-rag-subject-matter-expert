@@ -26,9 +26,9 @@ Build the frontend as a separate React application using TypeScript and Vite.
 
 The frontend source will live under a separate top-level `frontend/` directory.
 During development, the frontend may run through the Vite dev server and call
-the Spring Boot backend API. For production packaging, the built frontend assets
-can be copied into Spring Boot static resources so the application can still be
-distributed as a single backend artifact.
+the Spring Boot backend API. The frontend and backend are built as separate
+Gradle subprojects and are launched independently. The frontend API client uses
+a configurable backend base URL, defaulting to `http://localhost:8080`.
 
 The initial UI scope is:
 
@@ -85,8 +85,8 @@ as a meaningful browser workflow.
 - [ ] Backend and frontend API contracts should stay explicit and tested.
 - [ ] The first UI will consume existing REST endpoints rather than adding
       UI-specific backend endpoints.
-- [ ] Production packaging will need a Gradle integration step if the frontend
-      should be served by Spring Boot.
+- [ ] Production deployment should serve the frontend independently from the
+      backend API unless a later deployment decision changes that boundary.
 - [ ] Frontend tests should cover model loading, model selection, chat request
       flow, and API error states.
 - [ ] Frontend verification should fail when the configured frontend coverage

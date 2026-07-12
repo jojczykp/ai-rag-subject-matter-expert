@@ -30,7 +30,7 @@ All implementation items are TODO until delivered and verified.
 
 ## Milestone 2: Persistence, Embeddings, And Retrieval
 
-- [x] Add Flyway migrations under `src/main/resources/db/migration`.
+- [x] Add Flyway migrations under `backend/src/main/resources/db/migration`.
 - [x] Add PostgreSQL + pgvector persistence support.
 - [x] Add `source_document`, `document_chunk`, and `chunk_embedding` schema.
 - [x] Add Spring Data JDBC repositories for ordinary persistence.
@@ -150,8 +150,10 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Playwright end-to-end tests after the first usable UI screen exists.
 - [x] Add local development configuration so the Vite dev server can call the
       Spring Boot API.
-- [x] Add Gradle integration to build the frontend and copy production assets
-      into Spring Boot static resources when packaging.
+- [x] Add Gradle multi-project integration so frontend and backend build as
+      separate subprojects.
+- [x] Add configurable frontend backend API base URL with localhost default.
+- [x] Add backend CORS configuration for the local frontend origin.
 - [x] Add frontend verification to the default project verification workflow
       once the frontend project exists.
 - [x] Document frontend development and production packaging in `README.md`.

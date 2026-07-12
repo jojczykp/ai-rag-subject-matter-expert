@@ -32,7 +32,7 @@ latest pgvector version verified when this ADR was accepted.
 - [ ] Spring Data JDBC for ordinary persistence of simple application data.
 - [x] Spring `JdbcClient` for explicit pgvector queries in
       `RelevantChunkRetriever`.
-- [ ] Flyway migrations under `src/main/resources/db/migration`.
+- [ ] Flyway migrations under `backend/src/main/resources/db/migration`.
 - [ ] Testcontainers with `pgvector/pgvector:0.8.2-pg18` for persistence
       integration tests.
 

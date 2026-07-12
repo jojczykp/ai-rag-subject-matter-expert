@@ -48,15 +48,15 @@ Optional verification should include expensive or runtime-heavy tests:
 Keep the Gradle setup simple while the project is small:
 
 ```bash
-./gradlew test
+./gradlew :backend:test
 ./gradlew check
 ```
 
-`test` runs the project test suite. Integration-style tests stay under
-`src/test` and use `*IntegrationTest` in the file and class name so their scope
-is visible without a separate source set. A dedicated `integrationTest` source
-set can be introduced later if the test suite becomes large enough to justify
-the extra Gradle configuration.
+`:backend:test` runs the backend test suite. Integration-style tests stay under
+`backend/src/test` and use `*IntegrationTest` in the file and class name so
+their scope is visible without a separate source set. A dedicated
+`integrationTest` source set can be introduced later if the test suite becomes
+large enough to justify the extra Gradle configuration.
 
 Use JUnit tags for optional runtime-heavy tests when they are introduced:
 
@@ -70,14 +70,14 @@ Use JUnit tags for optional runtime-heavy tests when they are introduced:
 Run optional Ollama container tests through the dedicated Gradle task:
 
 ```bash
-./gradlew ollamaTest
+./gradlew :backend:ollamaTest
 ```
 
 Run optional OpenAI-compatible adapter flow tests through the dedicated Gradle
 task:
 
 ```bash
-./gradlew openAiCompatibleTest
+./gradlew :backend:openAiCompatibleTest
 ```
 
 ## Test Categories

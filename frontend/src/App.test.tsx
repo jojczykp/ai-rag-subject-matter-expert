@@ -4,6 +4,7 @@ import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import type { ModelsResponse } from './api/types'
+import { apiUrl } from './config'
 import { availableOllamaModel } from './test/fixtures'
 import { server } from './test/server'
 
@@ -68,7 +69,7 @@ describe('App', () => {
   it('displays provider errors returned by chat API', async () => {
     const user = userEvent.setup()
     server.use(
-      http.post('/chat', () =>
+      http.post(apiUrl('/chat'), () =>
         HttpResponse.json(
           {
             code: 'PROVIDER_ERROR',
@@ -94,7 +95,7 @@ describe('App', () => {
   it('prevents chat when selected model is unavailable', async () => {
     const user = userEvent.setup()
     server.use(
-      http.get('/models', () =>
+      http.get(apiUrl('/models'), () =>
         HttpResponse.json<ModelsResponse>({
           models: [
             {

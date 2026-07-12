@@ -11,6 +11,10 @@ spring:
     enabled: true
 
 aisme:
+  api:
+    cors:
+      allowed-origins:
+        - http://localhost:5173
   documents:
     location: classpath:/subject-documents/
     chunk-size: 700
