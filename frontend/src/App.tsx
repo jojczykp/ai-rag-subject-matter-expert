@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { KeyboardEvent } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
 import './App.css'
 import { ApiError, getModels, postChat } from './api/client'
 import type { ChatModel } from './api/types'
@@ -163,7 +163,7 @@ function App() {
                 className={`message message-${chatMessage.role}`}
               >
                 <span>{chatMessage.role === 'user' ? 'You' : 'Assistant'}</span>
-                <p>{chatMessage.content}</p>
+                <p>{renderMessageContent(chatMessage.content)}</p>
               </article>
             ))
           )}
@@ -203,6 +203,30 @@ function App() {
       </section>
     </main>
   )
+}
+
+function renderMessageContent(content: string): ReactNode[] {
+  const nodes: ReactNode[] = []
+  const boldPattern = /\*\*(.+?)\*\*/g
+  let lastIndex = 0
+
+  for (const match of content.matchAll(boldPattern)) {
+    const [matchedText, boldText] = match
+    const matchIndex = match.index
+
+    if (matchIndex > lastIndex) {
+      nodes.push(content.slice(lastIndex, matchIndex))
+    }
+
+    nodes.push(<strong key={matchIndex}>{boldText}</strong>)
+    lastIndex = matchIndex + matchedText.length
+  }
+
+  if (lastIndex < content.length) {
+    nodes.push(content.slice(lastIndex))
+  }
+
+  return nodes
 }
 
 function ModelDetails({ model }: { model: ChatModel | undefined }) {

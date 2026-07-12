@@ -66,6 +66,34 @@ describe('App', () => {
     ).toBeVisible()
   })
 
+  it('renders double star phrases in chat messages as bold text', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.post(apiUrl('/chat'), () =>
+        HttpResponse.json({
+          modelId: 'local-ollama-llama',
+          answer: 'Use **one cup** of rice.',
+        }),
+      ),
+    )
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    const boldText = await screen.findByText('one cup')
+
+    expect(boldText.tagName).toBe('STRONG')
+    expect(screen.getByText('Use', { exact: false })).toHaveTextContent(
+      'Use one cup of rice.',
+    )
+  })
+
   it('sends chat messages when pressing enter in the message field', async () => {
     const user = userEvent.setup()
 
