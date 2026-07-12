@@ -71,6 +71,14 @@ Download `llama-server` for the current platform:
 ./gradlew :backend:embeddedLlamaDownloadServer
 ```
 
+The download task also verifies that the installed `llama-server` executable can
+start by running `llama-server --version`. To re-check an already installed
+server later, run:
+
+```bash
+./gradlew :backend:embeddedLlamaVerifyServer
+```
+
 If platform auto-detection does not match your environment, run the matching
 explicit task:
 

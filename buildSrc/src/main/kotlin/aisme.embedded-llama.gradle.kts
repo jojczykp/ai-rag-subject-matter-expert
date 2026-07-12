@@ -1,4 +1,5 @@
 import java.net.URI
+import org.alterbit.aisme.buildlogic.EmbeddedLlamaInstaller
 
 val releaseVersion = "b9892"
 val releaseBaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/$releaseVersion"
@@ -13,6 +14,11 @@ val exampleLlamaModelUrl =
     "https://huggingface.co/QuantFactory/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/TinyLlama-1.1B-Chat-v1.0.Q4_K_M.gguf"
 
 val serverArchivesDirectory = layout.buildDirectory.dir("embedded-llama-server")
+val embeddedLlamaInstaller = EmbeddedLlamaInstaller(
+    project = project,
+    serverDirectory = serverDirectory,
+    serverExecutable = serverExecutablePath,
+)
 
 data class LlamaServerDistribution(
     val taskName: String,
@@ -71,41 +77,12 @@ fun registerLlamaServerDownloadTask(distribution: LlamaServerDistribution) {
         description = "Downloads and installs ${distribution.classifier} llama-server under backend/models."
         doLast {
             val targetFile = archiveFile.get().asFile
-            if (!targetFile.isFile) {
-                targetFile.parentFile.mkdirs()
-                val archiveUrl = "$releaseBaseUrl/${distribution.archiveName}"
-                logger.lifecycle("Downloading llama-server archive from $archiveUrl")
-                URI(archiveUrl).toURL().openStream().use { input ->
-                    targetFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
-            } else {
-                logger.lifecycle("llama-server archive already exists: ${targetFile.path}")
-            }
-
-            copy {
-                from(
-                    if (distribution.windows) {
-                        zipTree(targetFile)
-                    } else {
-                        tarTree(resources.gzip(targetFile))
-                    },
-                ) {
-                    include("**/${distribution.executableName}")
-                    eachFile {
-                        relativePath = RelativePath(true, "llama-server")
-                    }
-                    includeEmptyDirs = false
-                }
-                into(serverDirectory)
-            }
-
-            val executable = serverExecutablePath.asFile
-            if (!distribution.windows) {
-                executable.setExecutable(true)
-            }
-            logger.lifecycle("Installed llama-server executable to ${executable.path}")
+            embeddedLlamaInstaller.downloadAndInstall(
+                archiveUrl = "$releaseBaseUrl/${distribution.archiveName}",
+                archiveFile = targetFile,
+                executableName = distribution.executableName,
+                windows = distribution.windows,
+            )
         }
     }
 }
@@ -116,6 +93,14 @@ tasks.register("embeddedLlamaDownloadServer") {
     group = "model management"
     description = "Downloads the llama-server archive for the current platform and installs it under backend/models."
     dependsOn(provider { currentLlamaServerDistribution().taskName })
+}
+
+tasks.register("embeddedLlamaVerifyServer") {
+    group = "model management"
+    description = "Verifies that the installed llama-server executable can start."
+    doLast {
+        embeddedLlamaInstaller.verify()
+    }
 }
 
 tasks.register("embeddedLlamaDownloadModel") {
