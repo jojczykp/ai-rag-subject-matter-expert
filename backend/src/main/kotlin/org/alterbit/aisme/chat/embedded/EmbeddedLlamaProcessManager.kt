@@ -4,6 +4,7 @@ import jakarta.annotation.PreDestroy
 import java.nio.file.Path
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
@@ -52,9 +53,7 @@ class EmbeddedLlamaProcessManager(
             } else {
                 availabilityByModelId[managedModel.modelId] = ChatModelAvailability.UNAVAILABLE
                 logger.warn("Managed llama-server process for model '{}' did not become ready", managedModel.modelId)
-                if (process.isAlive) {
-                    process.destroy()
-                }
+                stopProcess(process)
             }
         }
     }
@@ -62,10 +61,21 @@ class EmbeddedLlamaProcessManager(
     @PreDestroy
     fun stop() {
         runningProcesses.forEach { process ->
-            if (process.isAlive) {
-                logger.info("Stopping managed llama-server process")
-                process.destroy()
-            }
+            stopProcess(process)
+        }
+    }
+
+    private fun stopProcess(process: Process) {
+        if (!process.isAlive) {
+            return
+        }
+
+        logger.info("Stopping managed llama-server process")
+        process.destroy()
+
+        if (!process.waitFor(GRACEFUL_SHUTDOWN_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS) && process.isAlive) {
+            logger.warn("Managed llama-server process did not stop gracefully; forcing shutdown")
+            process.destroyForcibly()
         }
     }
 
@@ -120,5 +130,6 @@ class EmbeddedLlamaProcessManager(
     private companion object {
         const val LOOPBACK_HOST = "127.0.0.1"
         val STARTUP_TIMEOUT: Duration = Duration.ofSeconds(30)
+        val GRACEFUL_SHUTDOWN_TIMEOUT: Duration = Duration.ofSeconds(5)
     }
 }

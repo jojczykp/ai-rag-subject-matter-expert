@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
 import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
@@ -139,6 +140,26 @@ class EmbeddedLlamaProcessManagerTest {
         manager.stop()
 
         launcher.processes.single().destroyed shouldBe true
+        launcher.processes.single().forciblyDestroyed shouldBe false
+    }
+
+    @Test
+    fun `force stops running llama server process when graceful stop times out`() {
+        val launcher = FakeEmbeddedLlamaProcessLauncher(processStopsGracefully = false)
+        val manager = EmbeddedLlamaProcessManager(
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-llama")),
+            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-llama", enabled = true)),
+            portAllocator = fixedPortAllocator(19001),
+            processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
+        )
+
+        manager.run(DefaultApplicationArguments())
+        manager.stop()
+
+        launcher.processes.single().destroyed shouldBe true
+        launcher.processes.single().forciblyDestroyed shouldBe true
     }
 
     @Test
@@ -221,13 +242,15 @@ class EmbeddedLlamaProcessManagerTest {
     private fun noOpOutputLogger(): EmbeddedLlamaProcessOutputLogger =
         EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> })
 
-    private class FakeEmbeddedLlamaProcessLauncher : EmbeddedLlamaProcessLauncher {
+    private class FakeEmbeddedLlamaProcessLauncher(
+        private val processStopsGracefully: Boolean = true,
+    ) : EmbeddedLlamaProcessLauncher {
         val commands = mutableListOf<List<String>>()
         val processes = mutableListOf<FakeProcess>()
 
         override fun start(command: List<String>): Process {
             commands += command
-            return FakeProcess().also { processes += it }
+            return FakeProcess(processStopsGracefully = processStopsGracefully).also { processes += it }
         }
     }
 
@@ -238,8 +261,11 @@ class EmbeddedLlamaProcessManagerTest {
             ready
     }
 
-    private class FakeProcess : Process() {
+    private class FakeProcess(
+        private val processStopsGracefully: Boolean = true,
+    ) : Process() {
         var destroyed: Boolean = false
+        var forciblyDestroyed: Boolean = false
 
         override fun getOutputStream(): OutputStream =
             ByteArrayOutputStream()
@@ -253,14 +279,30 @@ class EmbeddedLlamaProcessManagerTest {
         override fun waitFor(): Int =
             0
 
+        override fun waitFor(timeout: Long, unit: TimeUnit): Boolean =
+            if (processStopsGracefully) {
+                true
+            } else {
+                false
+            }
+
         override fun exitValue(): Int =
-            if (destroyed) 0 else throw IllegalThreadStateException()
+            if (!isAlive) 0 else throw IllegalThreadStateException()
 
         override fun destroy() {
             destroyed = true
         }
 
+        override fun destroyForcibly(): Process {
+            forciblyDestroyed = true
+            return this
+        }
+
         override fun isAlive(): Boolean =
-            !destroyed
+            if (processStopsGracefully) {
+                !destroyed
+            } else {
+                !forciblyDestroyed
+            }
     }
 }
