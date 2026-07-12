@@ -31,9 +31,9 @@ Frontend:
 
 Run commands from the repository root.
 
-### Models (optional)
+### Models
 
-If not already present.
+May skip if not already present and correct.
 
 #### Embedding model
 
@@ -49,14 +49,14 @@ Download:
 ./gradlew :backend:embeddingModelDownload
 ```
 
-#### Embedded (localhost) Llama server (optional)
+#### Embedded (localhost) Llama server
 
 If you want to use the bundled `embedded-llama-tiny` chat model.
 
-Remove locally downloaded embedding model files first:
+Remove downloaded model first if exists:
 
 ```bash
-./gradlew :backend:cleanEmbeddedLlama
+./gradlew :backend:cleanEmbeddedLlamaModel
 ```
 
 Download model:
@@ -65,18 +65,16 @@ Download model:
 ./gradlew :backend:embeddedLlamaDownloadModel
 ```
 
-Download `llama-server` for the current platform:
+Remove `llama-server` for the current platform first if exists:
+
+```bash
+./gradlew :backend:cleanEmbeddedLlamaServer
+```
+
+Download and verify the `llama-server` for the current platform:
 
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadServer
-```
-
-The download task also verifies that the installed `llama-server` executable can
-start by running `llama-server --version`. To re-check an already installed
-server later, run:
-
-```bash
-./gradlew :backend:embeddedLlamaVerifyServer
 ```
 
 If platform auto-detection does not match your environment, run the matching

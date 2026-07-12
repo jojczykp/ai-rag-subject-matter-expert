@@ -124,8 +124,15 @@ tasks.register("embeddedLlamaDownloadModel") {
     }
 }
 
-tasks.register<Delete>("cleanEmbeddedLlama") {
+tasks.register<Delete>("cleanEmbeddedLlamaModel") {
     group = "model management"
-    description = "Deletes locally downloaded embedded llama assets under backend/models/llama."
-    delete(assetDirectory)
+    description = "Deletes the locally downloaded embedded llama GGUF model."
+    delete(modelPath)
+}
+
+tasks.register<Delete>("cleanEmbeddedLlamaServer") {
+    group = "model management"
+    description = "Deletes the locally installed embedded llama server and cached server archives."
+    delete(serverDirectory)
+    delete(serverArchivesDirectory)
 }
