@@ -9,10 +9,7 @@ plugins {
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
-fun isWindows(): Boolean =
-    System.getProperty("os.name").lowercase().contains("windows")
-
-val npmExecutable = if (isWindows()) {
+val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) {
     "npm.cmd"
 } else {
     "npm"
