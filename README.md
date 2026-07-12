@@ -219,6 +219,77 @@ curl http://localhost:8080/chat \
   }'
 ```
 
+## Backend Development
+
+Run backend tests:
+
+```bash
+./gradlew test
+```
+
+Some tests named `*IntegrationTest` use Testcontainers and run through the same
+test task when Docker is available.
+
+Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
+
+Run backend coverage verification:
+
+```bash
+./gradlew koverVerify
+```
+
+Generate the backend HTML coverage report when a local report is useful:
+
+```bash
+./gradlew koverHtmlReport
+```
+
+The generated backend coverage report is available at
+[build/reports/kover/html/index.html](build/reports/kover/html/index.html):
+
+```text
+build/reports/kover/html/index.html
+```
+
+Optional Ollama container tests are tagged separately because they pull and
+start the Ollama Docker image and may pull a small model for the model-backed
+chat-flow test. Run them explicitly:
+
+```bash
+./gradlew ollamaTest
+```
+
+Optional OpenAI-compatible adapter flow tests are also tagged separately. They
+use a local mock HTTP server, not a real cloud provider:
+
+```bash
+./gradlew openAiCompatibleTest
+```
+
+The default test image is `ollama/ollama:latest`, and the default model-backed
+test model is `tinyllama:latest`. Override them when needed:
+
+```bash
+./gradlew ollamaTest \
+  -Daisme.ollama.test.image=ollama/ollama:latest \
+  -Daisme.ollama.test.model=tinyllama:latest
+```
+
+Run full project verification before final handoff when practical. The Gradle
+`check` task depends on backend coverage verification and frontend format, lint,
+unit coverage, and typecheck verification:
+
+```bash
+./gradlew check
+```
+
+Playwright browser end-to-end tests are not part of the default Gradle `check`
+task yet. Run them explicitly from `frontend/`:
+
+```bash
+npm run e2e
+```
+
 ## Frontend Development
 
 The frontend is a React, TypeScript, and Vite application in `frontend/`.
@@ -443,78 +514,6 @@ aisme:
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.
 If `HF_API_KEY` is not set, no bearer token is sent.
-
-## Verification
-
-Run the unit tests:
-
-```bash
-./gradlew test
-```
-
-Some tests named `*IntegrationTest` use Testcontainers and run through the same
-test task when Docker is available.
-
-Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
-
-Optional Ollama container tests are tagged separately because they pull and
-start the Ollama Docker image and may pull a small model for the model-backed
-chat-flow test. Run them explicitly:
-
-```bash
-./gradlew ollamaTest
-```
-
-Optional OpenAI-compatible adapter flow tests are also tagged separately. They
-use a local mock HTTP server, not a real cloud provider:
-
-```bash
-./gradlew openAiCompatibleTest
-```
-
-The default test image is `ollama/ollama:latest`, and the default model-backed
-test model is `tinyllama:latest`. Override them when needed:
-
-```bash
-./gradlew ollamaTest \
-  -Daisme.ollama.test.image=ollama/ollama:latest \
-  -Daisme.ollama.test.model=tinyllama:latest
-```
-
-This project uses Kover for code coverage and enforces a minimum 80% coverage
-threshold for production code:
-
-```bash
-./gradlew koverVerify
-```
-
-Generate the HTML coverage report when a local report is useful:
-
-```bash
-./gradlew koverHtmlReport
-```
-
-The generated backend coverage report is available at
-[build/reports/kover/html/index.html](build/reports/kover/html/index.html):
-
-```text
-build/reports/kover/html/index.html
-```
-
-Run the full Gradle check before final handoff when practical. The `check` task
-depends on backend coverage verification and frontend format, lint, unit
-coverage, and typecheck verification:
-
-```bash
-./gradlew check
-```
-
-Playwright browser end-to-end tests are not part of the default Gradle `check`
-task yet. Run them explicitly from `frontend/`:
-
-```bash
-npm run e2e
-```
 
 ## Project Agents
 
