@@ -33,7 +33,9 @@ Run commands from the repository root.
 
 ### Models (optional)
 
-Download the local embedding model if it is not already present:
+If not already present.
+
+#### Local embedding model
 
 ```bash
 mkdir -p backend/models/bge-small-en-v1.5
@@ -45,8 +47,9 @@ curl -L \
   -o backend/models/bge-small-en-v1.5/tokenizer.json
 ```
 
-Download example offline llama assets if you want to use the bundled
-`embedded-llama-example` chat model:
+#### Offline Llama server (optional)
+
+If you want to use the bundled `embedded-llama-example` chat model:
 
 ```bash
 mkdir -p backend/models/llama/models
@@ -55,8 +58,7 @@ curl -L \
   -o backend/models/llama/models/llama.gguf
 ```
 
-For macOS Apple Silicon, download a prebuilt `llama-server` and copy it into the
-configured project-local path:
+##### macOS Apple Silicon (optional)
 
 ```bash
 mkdir -p backend/models/llama/bin
@@ -68,7 +70,7 @@ cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
 chmod +x backend/models/llama/bin/llama-server
 ```
 
-For macOS Intel, use the x64 archive instead:
+##### macOS Intel x64 (optional)
 
 ```bash
 mkdir -p backend/models/llama/bin
@@ -80,7 +82,7 @@ cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
 chmod +x backend/models/llama/bin/llama-server
 ```
 
-For Linux Ubuntu x64, download a prebuilt `llama-server`:
+##### Linux Ubuntu x64 (optional)
 
 ```bash
 mkdir -p backend/models/llama/bin
@@ -92,8 +94,7 @@ cp /tmp/llama-b9892/llama-server backend/models/llama/bin/llama-server
 chmod +x backend/models/llama/bin/llama-server
 ```
 
-For Windows PowerShell, download the CPU x64 archive and copy:
-`llama-server.exe`:
+##### Windows x64 (optional)
 
 ```powershell
 New-Item -ItemType Directory -Force backend\models\llama\bin | Out-Null
@@ -108,25 +109,25 @@ When running on Windows, set
 `aisme.embedded-llama.server-executable-path` to
 `./models/llama/bin/llama-server.exe`.
 
-Model paths in `application.yml` are relative to the `backend/` Gradle
-subproject working directory. From the repository root, place model files under
-`backend/models`.
+#### Calculate the model checksum (optional)
 
-Optionally calculate the model checksum and copy it into
-`aisme.embedded-llama.models[0].sha256`:
+Calculate and copy it into `aisme.embedded-llama.models[0].sha256`:
+
+##### macOS
 
 ```bash
-# macOS
 shasum -a 256 backend/models/llama/models/llama.gguf
 ```
 
+##### Linux
+
 ```bash
-# Linux
 sha256sum backend/models/llama/models/llama.gguf
 ```
 
+##### Windows (PowerShell)
+
 ```powershell
-# Windows PowerShell
 Get-FileHash backend\models\llama\models\llama.gguf -Algorithm SHA256
 ```
 
@@ -422,7 +423,7 @@ frontend/coverage/index.html
 
 The initial frontend coverage threshold is 70%.
 
-## Configuration 
+## Configuration
 
 ### Reference
 
