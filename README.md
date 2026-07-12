@@ -44,7 +44,7 @@ If not already present.
 Remove locally downloaded embedding model files:
 
 ```bash
-./gradlew :backend:embeddingModelClean
+./gradlew :backend:cleanEmbeddingModel
 ```
 
 #### Embedded (localhost) Llama server (optional)
@@ -74,7 +74,7 @@ explicit task:
 Remove locally downloaded model files:
 
 ```bash
-./gradlew :backend:embeddedLlamaClean
+./gradlew :backend:cleanEmbeddedLlama
 ```
 
 The example embedded llama model is enabled in `application.yml`. It is
