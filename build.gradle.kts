@@ -112,6 +112,12 @@ kover {
     }
 }
 
+val backendCheck = tasks.register("backendCheck") {
+    group = "verification"
+    description = "Runs backend tests and coverage verification."
+    dependsOn(tasks.test, "koverVerify")
+}
+
 // Frontend build and verification
 
 val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) {
@@ -214,14 +220,35 @@ val frontendTypecheck = frontendNpmTask(
     description = "Runs frontend TypeScript checks.",
 )
 
-// Verification
-
-tasks.check {
+val frontendCheck = tasks.register("frontendCheck") {
+    group = "verification"
+    description = "Runs frontend format, lint, unit coverage, and typecheck verification."
     dependsOn(
-        "koverVerify",
         frontendFormatCheck,
         frontendLint,
         frontendTestCoverage,
         frontendTypecheck,
+    )
+}
+
+tasks.register("backendBuild") {
+    group = "build"
+    description = "Builds backend application artifacts."
+    dependsOn("bootJar", "jar")
+}
+
+// Verification
+
+tasks.check {
+    dependsOn(
+        backendCheck,
+        frontendCheck,
+    )
+}
+
+tasks.build {
+    dependsOn(
+        "backendBuild",
+        frontendBuild,
     )
 }

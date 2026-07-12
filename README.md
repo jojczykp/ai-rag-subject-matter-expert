@@ -221,20 +221,21 @@ curl http://localhost:8080/chat \
 
 ## Backend Development
 
-Run backend tests:
+Run normal backend verification:
 
 ```bash
-./gradlew test
+./gradlew backendCheck
 ```
 
-Some tests named `*IntegrationTest` use Testcontainers and run through the same
-test task when Docker is available.
+`backendCheck` runs the backend test suite and Kover coverage verification.
+Some tests named `*IntegrationTest` use Testcontainers and require Docker.
 
 Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
 
-Run backend coverage verification:
+When debugging, run focused backend verification tasks directly:
 
 ```bash
+./gradlew test
 ./gradlew koverVerify
 ```
 
@@ -276,8 +277,7 @@ test model is `tinyllama:latest`. Override them when needed:
 ```
 
 Run full project verification before final handoff when practical. The Gradle
-`check` task depends on backend coverage verification and frontend format, lint,
-unit coverage, and typecheck verification:
+`check` task depends on `backendCheck` and `frontendCheck`:
 
 ```bash
 ./gradlew check
@@ -321,6 +321,12 @@ npm run test
 npm run test:coverage
 npm run typecheck
 npm run build
+```
+
+From the project root, run the frontend verification aggregate:
+
+```bash
+./gradlew frontendCheck
 ```
 
 `npm run build` writes production frontend assets to `frontend/dist`. The
