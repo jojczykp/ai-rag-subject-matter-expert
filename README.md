@@ -37,19 +37,29 @@ If not already present.
 
 #### Embedding model
 
-```bash
-./gradlew :backend:embeddingModelDownload
-```
-
-Remove locally downloaded embedding model files:
+Remove locally downloaded embedding model files first:
 
 ```bash
 ./gradlew :backend:cleanEmbeddingModel
 ```
 
+Download:
+
+```bash
+./gradlew :backend:embeddingModelDownload
+```
+
 #### Embedded (localhost) Llama server (optional)
 
-If you want to use the bundled `embedded-llama-example` chat model:
+If you want to use the bundled `embedded-llama-example` chat model.
+
+Remove locally downloaded embedding model files first:
+
+```bash
+./gradlew :backend:cleanEmbeddedLlama
+```
+
+Download model:
 
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadModel
@@ -71,13 +81,7 @@ explicit task:
 ./gradlew :backend:embeddedLlamaDownloadServerWindowsX64
 ```
 
-Remove locally downloaded model files:
-
-```bash
-./gradlew :backend:cleanEmbeddedLlama
-```
-
-The example embedded llama model is enabled in `application.yml`. It is
+The embedded llama model is enabled in `application.yml`. It is
 selectable when the configured GGUF file and `llama-server` executable are
 present and pass startup availability checks.
 
@@ -94,6 +98,9 @@ In another terminal:
 
 ```bash
 ollama pull llama3.2
+```
+
+```bash
 ollama list
 ```
 
@@ -114,6 +121,42 @@ jdbc:postgresql://localhost:5432/aisme
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
 
+To see if it is running:
+
+```bash
+docker compose ps
+```
+
+To view logs (i.e. last 100 lines):
+
+```bash
+docker compose logs --tail=100 db
+```
+
+To follow logs:
+
+```bash
+docker compose logs -f db
+```
+
+To stop:
+
+```bash
+docker compose stop db
+```
+
+To restart later:
+
+```bash
+docker compose start db
+```
+
+To remove:
+
+```bash
+docker compose down
+```
+
 ### Backend
 
 #### Build
@@ -131,9 +174,9 @@ backend build.
 ./gradlew :backend:run
 ```
 
-The backend API and actuator endpoints are served on port `8080`.
-
 #### Check API
+
+The backend API and actuator endpoints are served on port `8080`.
 
 Check application health:
 
@@ -470,7 +513,7 @@ aisme:
         runtime-arguments: []
 ```
 
-The example embedded llama model is enabled by default. It becomes selectable
+The embedded llama model is enabled by default. It becomes selectable
 only when its local llama.cpp runtime assets are installed and pass startup
 availability checks. `asset-directory` is the base directory for local GGUF
 model files and related metadata. `server-executable-path` points to the local

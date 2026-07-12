@@ -66,42 +66,41 @@ fun currentLlamaServerDistribution(): LlamaServerDistribution {
 fun registerLlamaServerDownloadTask(distribution: LlamaServerDistribution) {
     val archiveFile = serverArchivesDirectory.map { directory -> directory.file(distribution.archiveName) }
 
-    tasks.register<Copy>(distribution.taskName) {
+    tasks.register(distribution.taskName) {
         group = "model management"
         description = "Downloads and installs ${distribution.classifier} llama-server under backend/models."
-        doFirst {
-            val targetFile = archiveFile.get().asFile
-            if (targetFile.isFile) {
-                logger.lifecycle("llama-server archive already exists: ${targetFile.path}")
-                return@doFirst
-            }
-
-            targetFile.parentFile.mkdirs()
-            val archiveUrl = "$releaseBaseUrl/${distribution.archiveName}"
-            logger.lifecycle("Downloading llama-server archive from $archiveUrl")
-            URI(archiveUrl).toURL().openStream().use { input ->
-                targetFile.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
-        }
-
-        from(
-            if (distribution.windows) {
-                zipTree(archiveFile)
-            } else {
-                tarTree(resources.gzip(archiveFile))
-            },
-        ) {
-            include("**/${distribution.executableName}")
-            eachFile {
-                relativePath = RelativePath(true, "llama-server")
-            }
-            includeEmptyDirs = false
-        }
-        into(serverDirectory)
-
         doLast {
+            val targetFile = archiveFile.get().asFile
+            if (!targetFile.isFile) {
+                targetFile.parentFile.mkdirs()
+                val archiveUrl = "$releaseBaseUrl/${distribution.archiveName}"
+                logger.lifecycle("Downloading llama-server archive from $archiveUrl")
+                URI(archiveUrl).toURL().openStream().use { input ->
+                    targetFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                logger.lifecycle("llama-server archive already exists: ${targetFile.path}")
+            }
+
+            copy {
+                from(
+                    if (distribution.windows) {
+                        zipTree(targetFile)
+                    } else {
+                        tarTree(resources.gzip(targetFile))
+                    },
+                ) {
+                    include("**/${distribution.executableName}")
+                    eachFile {
+                        relativePath = RelativePath(true, "llama-server")
+                    }
+                    includeEmptyDirs = false
+                }
+                into(serverDirectory)
+            }
+
             val executable = serverExecutablePath.asFile
             if (!distribution.windows) {
                 executable.setExecutable(true)
@@ -121,17 +120,17 @@ tasks.register("embeddedLlamaDownloadServer") {
 
 tasks.register("embeddedLlamaDownloadModel") {
     group = "model management"
-    description = "Downloads the example embedded llama GGUF model asset when it is missing."
+    description = "Downloads the embedded llama GGUF model asset when it is missing."
 
     doLast {
         val modelFile = modelPath.asFile
         if (modelFile.isFile) {
-            logger.lifecycle("Example embedded llama model already exists: ${modelFile.path}")
+            logger.lifecycle("embedded llama model already exists: ${modelFile.path}")
             return@doLast
         }
 
         modelFile.parentFile.mkdirs()
-        logger.lifecycle("Downloading example embedded llama model to ${modelFile.path}")
+        logger.lifecycle("Downloading embedded llama model to ${modelFile.path}")
         URI(exampleLlamaModelUrl).toURL().openStream().use { input ->
             modelFile.outputStream().use { output ->
                 input.copyTo(output)

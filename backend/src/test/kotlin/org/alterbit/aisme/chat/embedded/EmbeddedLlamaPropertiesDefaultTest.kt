@@ -21,7 +21,7 @@ class EmbeddedLlamaPropertiesDefaultTest {
         )
 
     @Test
-    fun `keeps example embedded llama model disabled by default`() {
+    fun `keeps embedded llama model disabled by default`() {
         contextRunner.run { context ->
             val properties = context.getBean<EmbeddedLlamaProperties>()
 
