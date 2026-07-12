@@ -126,6 +126,9 @@ All implementation items are TODO until delivered and verified.
 
 - [ ] Add Docker image and container-level acceptance test for embedded offline
       runtime with bundled or mounted model assets.
+- [ ] Add per-model embedded llama prompt mode configuration, keeping
+      plain `/completion` as the default and allowing `/v1/chat/completions`
+      only for GGUF models with reliable chat-template metadata.
 
 ## Future Milestone: Frontend UI
 
