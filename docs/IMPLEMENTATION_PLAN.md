@@ -147,7 +147,7 @@ All implementation items are TODO until delivered and verified.
       states.
 - [x] Add frontend tests for model loading, model selection, chat submission,
       and API error states.
-- [ ] Add Playwright end-to-end tests after the first usable UI screen exists.
+- [x] Add Playwright end-to-end tests after the first usable UI screen exists.
 - [x] Add local development configuration so the Vite dev server can call the
       Spring Boot API.
 - [x] Add Gradle integration to build the frontend and copy production assets

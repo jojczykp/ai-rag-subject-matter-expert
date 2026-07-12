@@ -248,7 +248,8 @@ npm run typecheck
 npm run build
 ```
 
-The frontend coverage report is generated at:
+After `npm run test:coverage`, the frontend coverage report is generated at
+[frontend/coverage/index.html](frontend/coverage/index.html):
 
 ```text
 frontend/coverage/index.html
@@ -501,7 +502,8 @@ Generate the HTML coverage report when a local report is useful:
 ./gradlew koverHtmlReport
 ```
 
-The generated report is available at:
+The generated backend coverage report is available at
+[build/reports/kover/html/index.html](build/reports/kover/html/index.html):
 
 ```text
 build/reports/kover/html/index.html
