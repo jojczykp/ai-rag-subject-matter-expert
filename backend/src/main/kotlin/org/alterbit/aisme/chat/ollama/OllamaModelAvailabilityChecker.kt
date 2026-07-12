@@ -40,9 +40,9 @@ class OllamaModelAvailabilityChecker(
             }
         } catch (ex: RuntimeException) {
             logger.warn(
-                "Ollama availability check failed for model '{}' with exception '{}'",
+                "Ollama availability check failed for model '{}'",
                 model.id,
-                ex.javaClass.simpleName,
+                ex,
             )
             ChatModelAvailability.UNAVAILABLE
         }

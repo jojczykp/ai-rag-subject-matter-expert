@@ -8,11 +8,14 @@ import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class ApiExceptionHandler {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleUnreadableMessage(exception: HttpMessageNotReadableException): ResponseEntity<ApiErrorResponse> =
         error(
@@ -79,12 +82,14 @@ class ApiExceptionHandler {
         )
 
     @ExceptionHandler(Exception::class)
-    fun handleUnexpected(exception: Exception): ResponseEntity<ApiErrorResponse> =
-        error(
+    fun handleUnexpected(exception: Exception): ResponseEntity<ApiErrorResponse> {
+        logger.error("Unexpected server error", exception)
+        return error(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
             code = ApiErrorCode.INTERNAL_ERROR,
             message = "Unexpected server error.",
         )
+    }
 
     private fun error(
         status: HttpStatus,

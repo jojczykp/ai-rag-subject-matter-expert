@@ -53,13 +53,14 @@ class AiChatService(
                 "Chat provider reported failure for model '{}' and provider '{}'",
                 ex.modelId,
                 ex.provider,
+                ex,
             )
             throw ex
         } catch (ex: AiModelClientNotFoundException) {
             logger.warn("No AI model client found for configured model '{}'", ex.modelId)
             throw ex
         } catch (ex: RuntimeException) {
-            logger.warn("Chat provider call failed for model '{}' with exception '{}'", chatModel.id, ex.javaClass.simpleName)
+            logger.warn("Chat provider call failed for model '{}'", chatModel.id, ex)
             throw ex.toAiModelProviderException(
                 modelId = chatModel.id,
                 provider = chatModel.runtime.providerLabel,
