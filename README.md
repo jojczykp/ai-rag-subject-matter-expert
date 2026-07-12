@@ -38,13 +38,13 @@ If not already present.
 #### Embedding model
 
 ```bash
-mkdir -p backend/models/bge-small-en-v1.5
-curl -L \
-  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx \
-  -o backend/models/bge-small-en-v1.5/model.onnx
-curl -L \
-  https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json \
-  -o backend/models/bge-small-en-v1.5/tokenizer.json
+./gradlew :backend:embeddingModelDownload
+```
+
+Remove locally downloaded embedding model files:
+
+```bash
+./gradlew :backend:embeddingModelClean
 ```
 
 #### Embedded (localhost) Llama server (optional)
@@ -74,7 +74,7 @@ explicit task:
 Remove locally downloaded model files:
 
 ```bash
-./gradlew :backend:embeddedLlamaCleanAssets
+./gradlew :backend:embeddedLlamaClean
 ```
 
 The example embedded llama model is enabled in `application.yml`. It is

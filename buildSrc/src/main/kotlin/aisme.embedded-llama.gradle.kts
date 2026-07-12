@@ -140,7 +140,7 @@ tasks.register("embeddedLlamaDownloadModel") {
     }
 }
 
-tasks.register<Delete>("embeddedLlamaCleanAssets") {
+tasks.register<Delete>("embeddedLlamaClean") {
     group = "model management"
     description = "Deletes locally downloaded embedded llama assets under backend/models/llama."
     delete(assetDirectory)

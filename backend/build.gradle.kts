@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    id("aisme.embedding-model")
     id("aisme.embedded-llama")
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
