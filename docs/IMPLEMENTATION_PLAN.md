@@ -152,7 +152,7 @@ All implementation items are TODO until delivered and verified.
       Spring Boot API.
 - [x] Add Gradle integration to build the frontend and copy production assets
       into Spring Boot static resources when packaging.
-- [ ] Add frontend verification to the default project verification workflow
+- [x] Add frontend verification to the default project verification workflow
       once the frontend project exists.
 - [x] Document frontend development and production packaging in `README.md`.
 

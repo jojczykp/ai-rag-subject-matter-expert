@@ -9,15 +9,6 @@ plugins {
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
-val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) {
-    "npm.cmd"
-} else {
-    "npm"
-}
-val frontendDirectory = layout.projectDirectory.dir("frontend")
-val frontendBuildDirectory = frontendDirectory.dir("dist")
-val generatedFrontendResources = layout.buildDirectory.dir("generated/resources/frontend")
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(26)
@@ -104,6 +95,57 @@ tasks.bootRun {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
+// Backend coverage
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes("org.alterbit.aisme.AismeApplicationKt")
+            }
+        }
+        verify {
+            rule {
+                minBound(80)
+            }
+        }
+    }
+}
+
+// Frontend build and verification
+
+val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) {
+    "npm.cmd"
+} else {
+    "npm"
+}
+val frontendDirectory = layout.projectDirectory.dir("frontend")
+val frontendBuildDirectory = frontendDirectory.dir("dist")
+val generatedFrontendResources = layout.buildDirectory.dir("generated/resources/frontend")
+
+fun frontendNpmTask(
+    name: String,
+    npmScript: String,
+    description: String,
+): TaskProvider<Exec> =
+    tasks.register<Exec>(name) {
+        group = "frontend"
+        this.description = description
+        dependsOn("frontendInstall")
+        workingDir = frontendDirectory.asFile
+        commandLine(npmExecutable, "run", npmScript)
+
+        inputs.file(frontendDirectory.file("package.json"))
+        inputs.file(frontendDirectory.file("package-lock.json"))
+        inputs.dir(frontendDirectory.dir("e2e"))
+        inputs.dir(frontendDirectory.dir("src"))
+        inputs.file(frontendDirectory.file("playwright.config.ts"))
+        inputs.file(frontendDirectory.file("tsconfig.app.json"))
+        inputs.file(frontendDirectory.file("tsconfig.json"))
+        inputs.file(frontendDirectory.file("tsconfig.node.json"))
+        inputs.file(frontendDirectory.file("vite.config.ts"))
+    }
+
 val frontendInstall = tasks.register<Exec>("frontendInstall") {
     group = "frontend"
     description = "Installs frontend dependencies from package-lock.json."
@@ -148,21 +190,38 @@ tasks.processResources {
     from(generatedFrontendResources)
 }
 
-kover {
-    reports {
-        filters {
-            excludes {
-                classes("org.alterbit.aisme.AismeApplicationKt")
-            }
-        }
-        verify {
-            rule {
-                minBound(80)
-            }
-        }
-    }
-}
+val frontendFormatCheck = frontendNpmTask(
+    name = "frontendFormatCheck",
+    npmScript = "format:check",
+    description = "Checks frontend formatting.",
+)
+
+val frontendLint = frontendNpmTask(
+    name = "frontendLint",
+    npmScript = "lint",
+    description = "Runs frontend linting.",
+)
+
+val frontendTestCoverage = frontendNpmTask(
+    name = "frontendTestCoverage",
+    npmScript = "test:coverage",
+    description = "Runs frontend unit tests with coverage verification.",
+)
+
+val frontendTypecheck = frontendNpmTask(
+    name = "frontendTypecheck",
+    npmScript = "typecheck",
+    description = "Runs frontend TypeScript checks.",
+)
+
+// Verification
 
 tasks.check {
-    dependsOn("koverVerify")
+    dependsOn(
+        "koverVerify",
+        frontendFormatCheck,
+        frontendLint,
+        frontendTestCoverage,
+        frontendTypecheck,
+    )
 }

@@ -238,7 +238,7 @@ The Vite development server serves the UI on the printed local URL, usually
 backend on `http://localhost:8080`, so the backend must be running for real API
 calls.
 
-Run frontend verification:
+Run frontend-only verification:
 
 ```bash
 npm run format:check
@@ -247,6 +247,12 @@ npm run test
 npm run test:coverage
 npm run typecheck
 npm run build
+```
+
+Run browser end-to-end tests explicitly:
+
+```bash
+npm run e2e
 ```
 
 After `npm run test:coverage`, the frontend coverage report is generated at
@@ -511,10 +517,18 @@ build/reports/kover/html/index.html
 ```
 
 Run the full Gradle check before final handoff when practical. The `check` task
-depends on coverage verification:
+depends on backend coverage verification and frontend format, lint, unit
+coverage, and typecheck verification:
 
 ```bash
 ./gradlew check
+```
+
+Playwright browser end-to-end tests are not part of the default Gradle `check`
+task yet. Run them explicitly from `frontend/`:
+
+```bash
+npm run e2e
 ```
 
 ## Project Agents
