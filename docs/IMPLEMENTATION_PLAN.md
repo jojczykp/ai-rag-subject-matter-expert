@@ -150,7 +150,7 @@ All implementation items are TODO until delivered and verified.
 - [ ] Add Playwright end-to-end tests after the first usable UI screen exists.
 - [x] Add local development configuration so the Vite dev server can call the
       Spring Boot API.
-- [ ] Add Gradle integration to build the frontend and copy production assets
+- [x] Add Gradle integration to build the frontend and copy production assets
       into Spring Boot static resources when packaging.
 - [ ] Add frontend verification to the default project verification workflow
       once the frontend project exists.

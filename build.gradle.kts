@@ -9,6 +9,18 @@ plugins {
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
+fun isWindows(): Boolean =
+    System.getProperty("os.name").lowercase().contains("windows")
+
+val npmExecutable = if (isWindows()) {
+    "npm.cmd"
+} else {
+    "npm"
+}
+val frontendDirectory = layout.projectDirectory.dir("frontend")
+val frontendBuildDirectory = frontendDirectory.dir("dist")
+val generatedFrontendResources = layout.buildDirectory.dir("generated/resources/frontend")
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(26)
@@ -93,6 +105,50 @@ tasks.register<Test>("ollamaTest") {
 
 tasks.bootRun {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+val frontendInstall = tasks.register<Exec>("frontendInstall") {
+    group = "frontend"
+    description = "Installs frontend dependencies from package-lock.json."
+    workingDir = frontendDirectory.asFile
+    commandLine(npmExecutable, "ci")
+
+    inputs.file(frontendDirectory.file("package.json"))
+    inputs.file(frontendDirectory.file("package-lock.json"))
+    outputs.dir(frontendDirectory.dir("node_modules"))
+}
+
+val frontendBuild = tasks.register<Exec>("frontendBuild") {
+    group = "frontend"
+    description = "Builds the production frontend assets."
+    dependsOn(frontendInstall)
+    workingDir = frontendDirectory.asFile
+    commandLine(npmExecutable, "run", "build")
+
+    inputs.file(frontendDirectory.file("index.html"))
+    inputs.file(frontendDirectory.file("package.json"))
+    inputs.file(frontendDirectory.file("package-lock.json"))
+    inputs.file(frontendDirectory.file("tsconfig.app.json"))
+    inputs.file(frontendDirectory.file("tsconfig.json"))
+    inputs.file(frontendDirectory.file("tsconfig.node.json"))
+    inputs.file(frontendDirectory.file("vite.config.ts"))
+    inputs.dir(frontendDirectory.dir("public"))
+    inputs.dir(frontendDirectory.dir("src"))
+    outputs.dir(frontendBuildDirectory)
+}
+
+val copyFrontendAssets = tasks.register<Copy>("copyFrontendAssets") {
+    group = "frontend"
+    description = "Copies frontend production assets into Spring Boot static resources."
+    dependsOn(frontendBuild)
+
+    from(frontendBuildDirectory)
+    into(generatedFrontendResources.map { it.dir("static") })
+}
+
+tasks.processResources {
+    dependsOn(copyFrontendAssets)
+    from(generatedFrontendResources)
 }
 
 kover {

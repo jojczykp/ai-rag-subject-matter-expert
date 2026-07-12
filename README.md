@@ -11,6 +11,7 @@ plan.
 ## Requirements
 
 - JDK 26
+- Node.js and npm for frontend builds
 - Gradle Wrapper included in this repository
 
 The Gradle build uses the Java 26 toolchain, Kotlin 2.4.0, Spring Boot 4.1.0,
@@ -257,7 +258,7 @@ The initial frontend coverage threshold is 70%.
 
 ## Frontend Production Packaging
 
-The frontend production build is created with:
+The frontend production build can be created directly with:
 
 ```bash
 cd frontend
@@ -266,10 +267,16 @@ npm run build
 
 The generated static files are written to `frontend/dist/`.
 
-Packaging `frontend/dist/` into Spring Boot static resources is planned but not
-implemented yet. Until that Gradle integration is added, `./gradlew build`
-builds the backend only, and production frontend assets are built separately
-with the frontend command above.
+The Gradle build also builds the frontend and copies `frontend/dist/` into
+generated Spring Boot static resources. This means the backend artifact produced
+by Gradle includes the production UI:
+
+```bash
+./gradlew build
+```
+
+Generated frontend assets remain build output and are not committed to source
+control.
 
 ## Configuration Reference
 
