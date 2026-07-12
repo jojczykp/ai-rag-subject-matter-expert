@@ -83,7 +83,15 @@ aisme:
         base-url: https://example.endpoints.huggingface.cloud
         api-key: ${HF_API_KEY:}
 
+info:
+  app:
+    name: AI RAG Subject Matter Expert
+    description: Backend RAG application for subject-matter chat.
+
 management:
+  info:
+    env:
+      enabled: true
   endpoint:
     health:
       show-details: always

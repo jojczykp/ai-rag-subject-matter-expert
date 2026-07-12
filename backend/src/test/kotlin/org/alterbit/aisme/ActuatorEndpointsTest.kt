@@ -27,6 +27,12 @@ class ActuatorEndpointsTest(
         mockMvc.get("/actuator/info")
             .andExpect {
                 status { isOk() }
+                jsonPath("$.app.name") {
+                    value("AI RAG Subject Matter Expert")
+                }
+                jsonPath("$.app.description") {
+                    value("Backend RAG application for subject-matter chat.")
+                }
             }
     }
 }

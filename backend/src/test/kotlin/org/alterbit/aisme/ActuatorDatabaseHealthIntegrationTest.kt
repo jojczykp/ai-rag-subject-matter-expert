@@ -28,6 +28,12 @@ class ActuatorDatabaseHealthIntegrationTest(
                 jsonPath("$.status") {
                     value("UP")
                 }
+                jsonPath("$.groups[0]") {
+                    value("liveness")
+                }
+                jsonPath("$.groups[1]") {
+                    value("readiness")
+                }
                 jsonPath("$.components.db.status") {
                     value("UP")
                 }

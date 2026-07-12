@@ -189,18 +189,40 @@ Expected response:
 ```json
 {
   "status": "UP",
+  "groups": ["liveness", "readiness"],
   "components": {
     "db": {
-      "status": "UP"
+      "status": "UP",
+      "details": {
+        "database": "PostgreSQL",
+        "validationQuery": "isValid()"
+      }
     }
-  }
+  },
+  ...
 }
 ```
+
+For some period of time you may notice `OUT_OF_SERVICE` status, this means indexing is still in progress.
+
+If the response only contains `status` and `groups`, restart the backend so the
+current Actuator health-detail configuration is loaded.
 
 View application info:
 
 ```bash
 curl http://localhost:8080/actuator/info
+```
+
+Expected response:
+
+```json
+{
+  "app": {
+    "name": "AI RAG Subject Matter Expert",
+    "description": "Backend RAG application for subject-matter chat."
+  }
+}
 ```
 
 View the configured models:
