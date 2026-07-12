@@ -140,8 +140,8 @@ Start the database:
 docker compose up -d db
 ```
 
-Start Ollama locally and pull the configured chat model if it is not already
-available:
+If you want to use the local Ollama model, start Ollama and pull the configured
+chat model if it is not already available:
 
 ```bash
 ollama serve
@@ -154,13 +154,32 @@ ollama pull llama3.2
 ollama list
 ```
 
-Run the application:
+Run the application. Gradle builds the frontend and packages it into the Spring
+Boot static resources:
 
 ```bash
 ./gradlew bootRun
 ```
 
-The service starts on the default Spring Boot port, `8080`.
+Open the application UI:
+
+```text
+http://localhost:8080
+```
+
+The backend API and actuator endpoints are served from the same application on
+port `8080`.
+
+The default local database connection is:
+
+```text
+jdbc:postgresql://localhost:5432/aisme
+```
+
+Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
+`AISME_DATASOURCE_PASSWORD` when needed.
+
+### API Checks
 
 Check application health:
 
@@ -200,29 +219,6 @@ curl http://localhost:8080/chat \
   }'
 ```
 
-The default local database connection is:
-
-```text
-jdbc:postgresql://localhost:5432/aisme
-```
-
-Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
-`AISME_DATASOURCE_PASSWORD` when needed.
-
-Start the development UI in another terminal:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open the UI at the URL printed by Vite, usually:
-
-```text
-http://localhost:5173
-```
-
 ## Frontend Development
 
 The frontend is a React, TypeScript, and Vite application in `frontend/`.
@@ -256,6 +252,10 @@ npm run typecheck
 npm run build
 ```
 
+`npm run build` writes production frontend assets to `frontend/dist`. The
+Gradle build packages those assets into the Spring Boot application; generated
+frontend assets remain build output and are not committed to source control.
+
 Run browser end-to-end tests explicitly:
 
 ```bash
@@ -270,28 +270,6 @@ frontend/coverage/index.html
 ```
 
 The initial frontend coverage threshold is 70%.
-
-## Frontend Production Packaging
-
-The frontend production build can be created directly with:
-
-```bash
-cd frontend
-npm run build
-```
-
-The generated static files are written to `frontend/dist/`.
-
-The Gradle build also builds the frontend and copies `frontend/dist/` into
-generated Spring Boot static resources. This means the backend artifact produced
-by Gradle includes the production UI:
-
-```bash
-./gradlew build
-```
-
-Generated frontend assets remain build output and are not committed to source
-control.
 
 ## Configuration Reference
 
