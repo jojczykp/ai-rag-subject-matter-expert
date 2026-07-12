@@ -51,7 +51,8 @@ Download:
 
 #### Embedded Qwen model on local llama-server
 
-If you want to use the bundled `embedded-qwen-0-5b` chat model.
+If you want to use the bundled `embedded-qwen-0-5b` and
+`embedded-qwen-1-5b` chat models.
 
 Remove downloaded model first if exists:
 
@@ -59,10 +60,17 @@ Remove downloaded model first if exists:
 ./gradlew :backend:cleanEmbeddedLlamaModel
 ```
 
-Download model:
+Download models:
 
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadModel
+```
+
+To download only one embedded Qwen model, use the specific task:
+
+```bash
+./gradlew :backend:embeddedLlamaDownloadQwen0p5BModel
+./gradlew :backend:embeddedLlamaDownloadQwen1p5BModel
 ```
 
 Remove `llama-server` for the current platform first if exists:
@@ -526,7 +534,7 @@ when the configured model or tokenizer file is missing.
 ### Embedded Llama Assets
 
 Embedded offline chat will use local llama.cpp assets. The default model is
-Qwen2.5 0.5B Instruct in GGUF format. The default asset
+Qwen2.5 Instruct in GGUF format. The default asset
 configuration points to external files outside the application JAR:
 
 ```yaml
@@ -541,9 +549,15 @@ aisme:
         gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
+      - id: embedded-qwen-1-5b
+        enabled: true
+        display-name: Embedded Qwen 1.5B
+        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
 ```
 
-The embedded Qwen model is enabled by default. It becomes selectable
+Embedded Qwen models are enabled by default. Each becomes selectable
 only when its local llama.cpp runtime assets are installed and pass startup
 availability checks. `asset-directory` is the base directory for local GGUF
 model files and related metadata. `server-executable-path` points to the local

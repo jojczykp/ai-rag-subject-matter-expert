@@ -1,6 +1,7 @@
 package org.alterbit.aisme.modelcatalog
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -16,9 +17,13 @@ import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessOutputLogger
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
 import org.alterbit.aisme.chat.embedded.LlamaServerReadinessProbe
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.boot.DefaultApplicationArguments
+import org.springframework.boot.test.system.CapturedOutput
+import org.springframework.boot.test.system.OutputCaptureExtension
 
+@ExtendWith(OutputCaptureExtension::class)
 class EmbeddedOfflineModelAvailabilityCheckerTest {
     @field:TempDir
     lateinit var tempDirectory: Path
@@ -191,7 +196,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model as misconfigured when gguf file is missing`() {
+    fun `logs clear warning when gguf file is missing`(output: CapturedOutput) {
         val assets = runtimeAssets()
         val availability = checker(
             properties = enabledProperties(
@@ -205,6 +210,8 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
+        output.toString() shouldContain
+            "Embedded model 'embedded-qwen-0-5b' GGUF model file not found: ${assets.assetDirectory.resolve("missing-model.gguf")}"
     }
 
     @Test

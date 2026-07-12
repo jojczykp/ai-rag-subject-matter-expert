@@ -5,19 +5,22 @@ val releaseVersion = "b9892"
 val releaseBaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/$releaseVersion"
 
 val assetDirectory = layout.projectDirectory.dir("models/llama")
-val modelPath = assetDirectory.file("models/qwen2.5-0.5b-instruct-q4_k_m.gguf")
 
 val serverDirectory = assetDirectory.dir("bin")
 val serverExecutablePath = assetDirectory.file("bin/llama-server")
-
-val embeddedQwenModelUrl =
-    "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf"
 
 val serverArchivesDirectory = layout.buildDirectory.dir("embedded-llama-server")
 val embeddedLlamaInstaller = EmbeddedLlamaInstaller(
     project = project,
     serverDirectory = serverDirectory,
     serverExecutable = serverExecutablePath,
+)
+
+data class EmbeddedLlamaModelAsset(
+    val taskName: String,
+    val displayName: String,
+    val fileName: String,
+    val url: String,
 )
 
 data class LlamaServerDistribution(
@@ -56,6 +59,21 @@ val serverDistributions = mapOf(
     ),
 )
 
+val embeddedModels = listOf(
+    EmbeddedLlamaModelAsset(
+        taskName = "embeddedLlamaDownloadQwen0p5BModel",
+        displayName = "Qwen2.5 0.5B Instruct Q4_K_M",
+        fileName = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+        url = "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    ),
+    EmbeddedLlamaModelAsset(
+        taskName = "embeddedLlamaDownloadQwen1p5BModel",
+        displayName = "Qwen2.5 1.5B Instruct Q4_K_M",
+        fileName = "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+        url = "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    ),
+)
+
 fun currentLlamaServerDistribution(): LlamaServerDistribution {
     val os = System.getProperty("os.name").lowercase()
     val arch = System.getProperty("os.arch").lowercase()
@@ -87,7 +105,33 @@ fun registerLlamaServerDownloadTask(distribution: LlamaServerDistribution) {
     }
 }
 
+fun registerEmbeddedModelDownloadTask(modelAsset: EmbeddedLlamaModelAsset) {
+    val modelPath = assetDirectory.file("models/${modelAsset.fileName}")
+
+    tasks.register(modelAsset.taskName) {
+        group = "model management"
+        description = "Downloads the embedded ${modelAsset.displayName} GGUF model asset when it is missing."
+
+        doLast {
+            val modelFile = modelPath.asFile
+            if (modelFile.isFile) {
+                logger.lifecycle("embedded ${modelAsset.displayName} model already exists: ${modelFile.path}")
+                return@doLast
+            }
+
+            modelFile.parentFile.mkdirs()
+            logger.lifecycle("Downloading embedded ${modelAsset.displayName} model to ${modelFile.path}")
+            URI(modelAsset.url).toURL().openStream().use { input ->
+                modelFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+}
+
 serverDistributions.values.forEach(::registerLlamaServerDownloadTask)
+embeddedModels.forEach(::registerEmbeddedModelDownloadTask)
 
 tasks.register("embeddedLlamaDownloadServer") {
     group = "model management"
@@ -105,29 +149,14 @@ tasks.register("embeddedLlamaVerifyServer") {
 
 tasks.register("embeddedLlamaDownloadModel") {
     group = "model management"
-    description = "Downloads the embedded Qwen GGUF model asset when it is missing."
-
-    doLast {
-        val modelFile = modelPath.asFile
-        if (modelFile.isFile) {
-            logger.lifecycle("embedded Qwen model already exists: ${modelFile.path}")
-            return@doLast
-        }
-
-        modelFile.parentFile.mkdirs()
-        logger.lifecycle("Downloading embedded Qwen model to ${modelFile.path}")
-        URI(embeddedQwenModelUrl).toURL().openStream().use { input ->
-            modelFile.outputStream().use { output ->
-                input.copyTo(output)
-            }
-        }
-    }
+    description = "Downloads all embedded Qwen GGUF model assets when they are missing."
+    dependsOn(embeddedModels.map { modelAsset -> modelAsset.taskName })
 }
 
 tasks.register<Delete>("cleanEmbeddedLlamaModel") {
     group = "model management"
-    description = "Deletes the locally downloaded embedded Qwen GGUF model."
-    delete(modelPath)
+    description = "Deletes the locally downloaded embedded Qwen GGUF models."
+    delete(embeddedModels.map { modelAsset -> assetDirectory.file("models/${modelAsset.fileName}") })
 }
 
 tasks.register<Delete>("cleanEmbeddedLlamaServer") {

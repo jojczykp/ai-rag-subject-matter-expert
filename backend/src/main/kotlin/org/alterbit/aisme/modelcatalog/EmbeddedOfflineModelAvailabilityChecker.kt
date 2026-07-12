@@ -52,19 +52,20 @@ class EmbeddedOfflineModelAvailabilityChecker(
         val ggufFile = assetDirectory.resolveConfiguredPath(runtimeModel.ggufFile)
         val serverExecutable = Path.of(serverExecutablePath)
 
-        return if (
-            Files.isDirectory(assetDirectory) &&
-            Files.isReadable(assetDirectory) &&
-            Files.isRegularFile(ggufFile) &&
-            Files.isReadable(ggufFile) &&
-            Files.isRegularFile(serverExecutable) &&
-            Files.isExecutable(serverExecutable) &&
-            serverExecutable.canBeOpened()
-        ) {
+        val assetProblems = listOfNotNull(
+            assetDirectory.problemIfNotReadableDirectory("asset directory"),
+            ggufFile.problemIfNotReadableFile("GGUF model file"),
+            serverExecutable.problemIfNotExecutableFile("llama-server executable"),
+            serverExecutable.problemIfCannotBeOpened("llama-server executable"),
+        )
+
+        return if (assetProblems.isEmpty()) {
             logger.info("Embedded model '{}' static assets are available", runtimeModel.id)
             ChatModelAvailability.AVAILABLE
         } else {
-            logger.warn("Embedded model '{}' static assets are misconfigured or unavailable", runtimeModel.id)
+            assetProblems.forEach { problem ->
+                logger.warn("Embedded model '{}' {}", runtimeModel.id, problem)
+            }
             ChatModelAvailability.MISCONFIGURED
         }
     }
@@ -74,7 +75,40 @@ class EmbeddedOfflineModelAvailabilityChecker(
         return if (configuredPath.isAbsolute) configuredPath else resolve(configuredPath)
     }
 
-    private fun Path.canBeOpened(): Boolean =
+    private fun Path.problemIfNotReadableDirectory(label: String): String? =
+        when {
+            !Files.exists(this) -> "$label not found: $this"
+            !Files.isDirectory(this) -> "$label is not a directory: $this"
+            !Files.isReadable(this) -> "$label is not readable: $this"
+            else -> null
+        }
+
+    private fun Path.problemIfNotReadableFile(label: String): String? =
+        when {
+            !Files.exists(this) -> "$label not found: $this"
+            !Files.isRegularFile(this) -> "$label is not a regular file: $this"
+            !Files.isReadable(this) -> "$label is not readable: $this"
+            else -> null
+        }
+
+    private fun Path.problemIfNotExecutableFile(label: String): String? =
+        when {
+            !Files.exists(this) -> "$label not found: $this"
+            !Files.isRegularFile(this) -> "$label is not a regular file: $this"
+            !Files.isExecutable(this) -> "$label is not executable: $this"
+            else -> null
+        }
+
+    private fun Path.problemIfCannotBeOpened(label: String): String? =
+        if (!Files.exists(this) || !Files.isRegularFile(this)) {
+            null
+        } else if (canBeOpened(label)) {
+            null
+        } else {
+            "$label cannot be opened: $this"
+        }
+
+    private fun Path.canBeOpened(label: String): Boolean =
         try {
             Files.newInputStream(this).use { input ->
                 input.read()
@@ -82,7 +116,8 @@ class EmbeddedOfflineModelAvailabilityChecker(
             true
         } catch (ex: IOException) {
             logger.warn(
-                "Could not open embedded llama-server executable '{}': '{}'",
+                "Could not open embedded {} '{}': '{}'",
+                label,
                 this,
                 ex.javaClass.simpleName,
             )

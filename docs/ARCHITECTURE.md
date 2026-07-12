@@ -302,6 +302,12 @@ aisme:
         gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
+      - id: embedded-qwen-1-5b
+        enabled: true
+        display-name: Embedded Qwen 1.5B
+        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
   chat-models:
     - id: local-ollama-llama
       enabled: true
@@ -339,6 +345,14 @@ aisme:
       config:
         display-name: Embedded Qwen 0.5B
         description: Fully offline embedded model backed by a local GGUF asset.
+        runtime: EMBEDDED_OFFLINE
+        mode: EMBEDDED_OFFLINE
+        available-offline: true
+    - id: embedded-qwen-1-5b
+      enabled: true
+      config:
+        display-name: Embedded Qwen 1.5B
+        description: Smarter fully offline embedded model backed by a local GGUF asset.
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
         available-offline: true
