@@ -17,5 +17,6 @@ class ApplicationReadyLogger {
             .orEmpty()
 
         logger.info("Application startup work completed{}; ready to accept requests", startupDuration)
+        logger.info("-----<[ R E A D Y ]>-----")
     }
 }

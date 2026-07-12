@@ -25,5 +25,6 @@ class ApplicationReadyLoggerTest {
         ApplicationReadyLogger().logReady(event)
 
         output.out shouldContain "Application startup work completed in 1234ms; ready to accept requests"
+        output.out shouldContain "-----<[ R E A D Y ]>-----"
     }
 }

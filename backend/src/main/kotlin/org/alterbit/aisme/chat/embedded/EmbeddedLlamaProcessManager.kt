@@ -82,9 +82,12 @@ class EmbeddedLlamaProcessManager(
         logger.info("Stopping managed llama-server process")
         process.destroy()
 
-        if (!process.waitFor(GRACEFUL_SHUTDOWN_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS) && process.isAlive) {
+        if (process.waitFor(GRACEFUL_SHUTDOWN_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS) || !process.isAlive) {
+            logger.info("Managed llama-server process with pid '{}' stopped gracefully", process.pid())
+        } else {
             logger.warn("Managed llama-server process did not stop gracefully; forcing shutdown")
             process.destroyForcibly()
+            logger.info("Managed llama-server process with pid '{}' was force stopped", process.pid())
         }
     }
 

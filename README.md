@@ -106,6 +106,18 @@ ollama list
 
 ### Database
 
+Make sure previous instance is no longer running:
+
+```bash
+docker compose ps
+```
+
+Remove if necessary:
+
+```bash
+docker compose down
+```
+
 Start the database:
 
 ```bash
@@ -120,12 +132,6 @@ jdbc:postgresql://localhost:5432/aisme
 
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
-
-To see if it is running:
-
-```bash
-docker compose ps
-```
 
 To view logs (i.e. last 100 lines):
 
@@ -149,12 +155,6 @@ To restart later:
 
 ```bash
 docker compose start db
-```
-
-To remove:
-
-```bash
-docker compose down
 ```
 
 ### Backend
