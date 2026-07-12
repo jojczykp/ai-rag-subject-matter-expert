@@ -52,7 +52,16 @@ class EmbeddedLlamaProcessOutputLogger(
                 logger.info("llama-server [{}] stdout: {}", modelId, line)
 
             EmbeddedLlamaProcessOutputStream.STDERR ->
-                logger.warn("llama-server [{}] stderr: {}", modelId, line)
+                logStderrLine(modelId, line)
+        }
+    }
+
+    private fun logStderrLine(modelId: String, line: String) {
+        when {
+            line.contains(" E ") -> logger.error("llama-server [{}] stderr: {}", modelId, line)
+            line.contains(" W ") -> logger.warn("llama-server [{}] stderr: {}", modelId, line)
+            line.contains(" I ") -> logger.info("llama-server [{}] stderr: {}", modelId, line)
+            else -> logger.warn("llama-server [{}] stderr: {}", modelId, line)
         }
     }
 
