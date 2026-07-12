@@ -214,6 +214,63 @@ jdbc:postgresql://localhost:5432/aisme
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
 
+## Frontend Development
+
+The frontend is a React, TypeScript, and Vite application in `frontend/`.
+
+Install dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+Start the development UI:
+
+```bash
+npm run dev
+```
+
+The Vite development server serves the UI on the printed local URL, usually
+`http://localhost:5173`. It proxies `/models` and `/chat` to the Spring Boot
+backend on `http://localhost:8080`, so the backend must be running for real API
+calls.
+
+Run frontend verification:
+
+```bash
+npm run format:check
+npm run lint
+npm run test
+npm run test:coverage
+npm run typecheck
+npm run build
+```
+
+The frontend coverage report is generated at:
+
+```text
+frontend/coverage/index.html
+```
+
+The initial frontend coverage threshold is 70%.
+
+## Frontend Production Packaging
+
+The frontend production build is created with:
+
+```bash
+cd frontend
+npm run build
+```
+
+The generated static files are written to `frontend/dist/`.
+
+Packaging `frontend/dist/` into Spring Boot static resources is planned but not
+implemented yet. Until that Gradle integration is added, `./gradlew build`
+builds the backend only, and production frontend assets are built separately
+with the frontend command above.
+
 ## Configuration Reference
 
 Application properties are configured under the `aisme` prefix.

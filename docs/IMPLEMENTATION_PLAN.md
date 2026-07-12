@@ -154,7 +154,7 @@ All implementation items are TODO until delivered and verified.
       into Spring Boot static resources when packaging.
 - [ ] Add frontend verification to the default project verification workflow
       once the frontend project exists.
-- [ ] Document frontend development and production packaging in `README.md`.
+- [x] Document frontend development and production packaging in `README.md`.
 
 ## Future Milestone: Dynamic Subjects And Documents
 
