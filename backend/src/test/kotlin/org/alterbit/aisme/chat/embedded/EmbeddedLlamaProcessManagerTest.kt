@@ -276,6 +276,9 @@ class EmbeddedLlamaProcessManagerTest {
         override fun getErrorStream(): InputStream =
             ByteArrayInputStream(ByteArray(0))
 
+        override fun pid(): Long =
+            12345L
+
         override fun waitFor(): Int =
             0
 

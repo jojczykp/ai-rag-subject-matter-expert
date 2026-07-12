@@ -42,9 +42,18 @@ class EmbeddedLlamaProcessManager(
 
     override fun run(args: ApplicationArguments) {
         managedModels.forEach { managedModel ->
-            logger.info("Starting managed llama-server process for model '{}'", managedModel.modelId)
+            logger.info(
+                "Starting managed llama-server process for model '{}' on port '{}'",
+                managedModel.modelId,
+                managedModel.port,
+            )
 
             val process = processLauncher.start(managedModel.command)
+            logger.info(
+                "Started managed llama-server process for model '{}' with pid '{}'",
+                managedModel.modelId,
+                process.pid(),
+            )
             runningProcesses += process
             processOutputLogger.attach(managedModel.modelId, process)
             if (readinessProbe.awaitReady(managedModel.baseUrl, STARTUP_TIMEOUT)) {
@@ -93,6 +102,7 @@ class EmbeddedLlamaProcessManager(
                     val port = portAllocator.allocate()
                     ManagedEmbeddedLlamaModel(
                         modelId = chatModel.id,
+                        port = port,
                         baseUrl = "http://$LOOPBACK_HOST:$port",
                         command = embeddedLlamaProperties.commandFor(runtimeModel, port),
                     )
@@ -123,6 +133,7 @@ class EmbeddedLlamaProcessManager(
 
     private data class ManagedEmbeddedLlamaModel(
         val modelId: String,
+        val port: Int,
         val baseUrl: String,
         val command: List<String>,
     )
