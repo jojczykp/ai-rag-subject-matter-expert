@@ -61,7 +61,7 @@ class EmbeddedLlamaProcessManager(
                 logger.info("Managed llama-server process for model '{}' is ready", managedModel.modelId)
             } else {
                 availabilityByModelId[managedModel.modelId] = ChatModelAvailability.UNAVAILABLE
-                logger.warn("Managed llama-server process for model '{}' did not become ready", managedModel.modelId)
+                logger.warn("Managed llama-server process for model '{}' did not become ready within {}", managedModel.modelId, STARTUP_TIMEOUT)
                 stopProcess(process)
             }
         }

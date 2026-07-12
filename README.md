@@ -51,7 +51,7 @@ Download:
 
 #### Embedded (localhost) Llama server (optional)
 
-If you want to use the bundled `embedded-llama-example` chat model.
+If you want to use the bundled `embedded-llama-tiny` chat model.
 
 Remove locally downloaded embedding model files first:
 
@@ -165,7 +165,7 @@ Docker must be running for the backend integration tests executed by the
 backend build.
 
 ```bash
-./gradlew :backend:build
+./gradlew :backend:clean :backend:build
 ```
 
 #### Run
@@ -181,7 +181,7 @@ The backend API and actuator endpoints are served on port `8080`.
 Check application health:
 
 ```bash
-curl http://localhost:8080/actuator/health
+curl -s http://localhost:8080/actuator/health | jq .
 ```
 
 Expected response:
@@ -205,13 +205,10 @@ Expected response:
 
 For some period of time you may notice `OUT_OF_SERVICE` status, this means indexing is still in progress.
 
-If the response only contains `status` and `groups`, restart the backend so the
-current Actuator health-detail configuration is loaded.
-
 View application info:
 
 ```bash
-curl http://localhost:8080/actuator/info
+curl -s http://localhost:8080/actuator/info | jq .
 ```
 
 Expected response:
@@ -228,7 +225,7 @@ Expected response:
 View the configured models:
 
 ```bash
-curl http://localhost:8080/models
+curl -s http://localhost:8080/models | jq .
 ```
 
 The response includes each model's availability, capabilities, runtime
@@ -237,12 +234,12 @@ requirements, and whether prompts may leave the local machine.
 Send a sample chat request:
 
 ```bash
-curl http://localhost:8080/chat \
+curl -s http://localhost:8080/chat \
   -H 'Content-Type: application/json' \
   -d '{
     "modelId": "local-ollama-llama",
     "message": "How should I cook rice?"
-  }'
+  }' | jq .
 ```
 
 ### Frontend
@@ -260,7 +257,7 @@ npm run build
 Or build the frontend from the repository root through Gradle:
 
 ```bash
-./gradlew :frontend:build
+./gradlew :frontend:clean :frontend:build
 ```
 
 #### Run
@@ -527,9 +524,9 @@ aisme:
     asset-directory: ./models/llama
     server-executable-path: ./models/llama/bin/llama-server
     models:
-      - id: embedded-llama-example
+      - id: embedded-llama-tiny
         enabled: true
-        display-name: Embedded Llama
+        display-name: Embedded Llama Tiny
         gguf-file: models/llama.gguf
         context-size: 4096
         runtime-arguments: []

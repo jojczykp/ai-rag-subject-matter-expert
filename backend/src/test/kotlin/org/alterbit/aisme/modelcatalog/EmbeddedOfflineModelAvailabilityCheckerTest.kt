@@ -50,14 +50,14 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             properties = enabledProperties(
                 assetDirectory = assets.assetDirectory,
                 serverExecutablePath = assets.serverExecutable,
-                modelId = "embedded-llama-example",
+                modelId = "embedded-llama-tiny",
                 ggufFile = assets.ggufFile.fileName.toString(),
             ),
         )
 
         val availability = checker.check(
             model = chatModel(
-                id = "embedded-llama-example",
+                id = "embedded-llama-tiny",
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
@@ -246,10 +246,10 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 ConfiguredChatModelsProperties(
                     chatModels = listOf(
                         ConfiguredChatModelProperties(
-                            id = "embedded-llama-example",
+                            id = "embedded-llama-tiny",
                             enabled = true,
                             config = EnabledChatModelProperties(
-                                displayName = "Embedded Llama Example",
+                                displayName = "Embedded Llama Tiny",
                                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                                 availableOffline = true,
@@ -267,7 +267,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
     private fun embeddedModel(): ChatModelDescriptor =
         chatModel(
-            id = "embedded-llama-example",
+            id = "embedded-llama-tiny",
             runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
@@ -276,7 +276,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     private fun enabledProperties(
         assetDirectory: Path? = null,
         serverExecutablePath: Path? = null,
-        modelId: String = "embedded-llama-example",
+        modelId: String = "embedded-llama-tiny",
         ggufFile: String? = null,
     ): EmbeddedLlamaProperties {
         val assets = runtimeAssets()
@@ -291,7 +291,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 EmbeddedLlamaModelProperties(
                     id = modelId,
                     enabled = true,
-                    displayName = "Embedded Llama Example",
+                    displayName = "Embedded Llama Tiny",
                     ggufFile = configuredGgufFile,
                     contextSize = 4096,
                 ),
@@ -306,9 +306,9 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             serverExecutablePath = assets.serverExecutable.toString(),
             models = listOf(
                 EmbeddedLlamaModelProperties(
-                    id = "embedded-llama-example",
+                    id = "embedded-llama-tiny",
                     enabled = false,
-                    displayName = "Embedded Llama Example",
+                    displayName = "Embedded Llama Tiny",
                     ggufFile = assets.ggufFile.fileName.toString(),
                     contextSize = 4096,
                 ),
@@ -351,6 +351,9 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
         override fun getErrorStream(): InputStream =
             ByteArrayInputStream(ByteArray(0))
+
+        override fun pid(): Long =
+            12345L
 
         override fun waitFor(): Int =
             0

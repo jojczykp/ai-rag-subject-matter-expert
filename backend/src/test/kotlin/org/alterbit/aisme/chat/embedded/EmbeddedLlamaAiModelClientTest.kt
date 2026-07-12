@@ -15,26 +15,26 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `exposes configured model id`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-example"),
-            runtimeModel = runtimeModel(id = "embedded-llama-example"),
+            model = embeddedModel(id = "embedded-llama-tiny"),
+            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
-        client.modelId shouldBe "embedded-llama-example"
+        client.modelId shouldBe "embedded-llama-tiny"
     }
 
     @Test
     fun `sends chat request to configured embedded llama model`() {
         val chatApi = FakeLlamaServerChatApi(answer = " Use two parts water. ")
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-example"),
-            runtimeModel = runtimeModel(id = "embedded-llama-example"),
+            model = embeddedModel(id = "embedded-llama-tiny"),
+            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
             chatApi = chatApi,
         )
 
         val response = client.chat(
             AiModelChatRequest(
-                modelId = "embedded-llama-example",
+                modelId = "embedded-llama-tiny",
                 message = "How should I cook rice?",
                 contextChunks = listOf(
                     AiModelContextChunk(
@@ -47,9 +47,9 @@ class EmbeddedLlamaAiModelClientTest {
             ),
         )
 
-        response.modelId shouldBe "embedded-llama-example"
+        response.modelId shouldBe "embedded-llama-tiny"
         response.answer shouldBe "Use two parts water."
-        chatApi.requests.single().model shouldBe "embedded-llama-example"
+        chatApi.requests.single().model shouldBe "embedded-llama-tiny"
         chatApi.requests.single().stream shouldBe false
         chatApi.requests.single().messages.single().role shouldBe "user"
         chatApi.requests.single().messages.single().content shouldBe """
@@ -64,8 +64,8 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `rejects request for another model id`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-example"),
-            runtimeModel = runtimeModel(id = "embedded-llama-example"),
+            model = embeddedModel(id = "embedded-llama-tiny"),
+            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
@@ -79,8 +79,8 @@ class EmbeddedLlamaAiModelClientTest {
     @Test
     fun `rejects blank provider response`() {
         val client = EmbeddedLlamaAiModelClient(
-            model = embeddedModel(id = "embedded-llama-example"),
-            runtimeModel = runtimeModel(id = "embedded-llama-example"),
+            model = embeddedModel(id = "embedded-llama-tiny"),
+            runtimeModel = runtimeModel(id = "embedded-llama-tiny"),
             chatApi = FakeLlamaServerChatApi(answer = " "),
         )
 
@@ -91,7 +91,7 @@ class EmbeddedLlamaAiModelClientTest {
         exception.message shouldContain "blank answer"
     }
 
-    private fun request(modelId: String = "embedded-llama-example"): AiModelChatRequest =
+    private fun request(modelId: String = "embedded-llama-tiny"): AiModelChatRequest =
         AiModelChatRequest(
             modelId = modelId,
             message = "How should I cook rice?",

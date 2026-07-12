@@ -296,9 +296,9 @@ aisme:
     asset-directory: ./models/llama
     server-executable-path: ./models/llama/bin/llama-server
     models:
-      - id: embedded-llama-example
+      - id: embedded-llama-tiny
         enabled: true
-        display-name: Embedded Llama
+        display-name: Embedded Llama Tiny
         gguf-file: models/llama.gguf
         context-size: 4096
         runtime-arguments: []
@@ -334,10 +334,10 @@ aisme:
         base-url: https://example.endpoints.huggingface.cloud
         api-key: ${HF_API_KEY:}
         available-offline: false
-    - id: embedded-llama-example
+    - id: embedded-llama-tiny
       enabled: true
       config:
-        display-name: Embedded Llama Example
+        display-name: Embedded Llama Tiny
         description: Fully offline embedded model backed by a local GGUF asset.
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
