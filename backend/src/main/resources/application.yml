@@ -53,6 +53,12 @@ aisme:
         gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
+      - id: embedded-mistral-7b
+        enabled: true
+        display-name: Embedded Mistral 7B
+        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
   chat:
     timeout: 60s
     relevant-chunk-limit: 5
@@ -81,6 +87,14 @@ aisme:
       config:
         display-name: Embedded Qwen 3B
         description: Larger fully offline embedded model backed by a local GGUF asset.
+        runtime: EMBEDDED_OFFLINE
+        mode: EMBEDDED_OFFLINE
+        available-offline: true
+    - id: embedded-mistral-7b
+      enabled: true
+      config:
+        display-name: Embedded Mistral 7B
+        description: Heavier fully offline embedded model for stronger local answers.
         runtime: EMBEDDED_OFFLINE
         mode: EMBEDDED_OFFLINE
         available-offline: true

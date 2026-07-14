@@ -49,10 +49,11 @@ Download:
 ./gradlew :backend:embeddingModelDownload
 ```
 
-#### Embedded Qwen model on local llama-server
+#### Embedded local models on llama-server
 
-If you want to use the bundled `embedded-qwen-0-5b`, `embedded-qwen-1-5b`,
-and `embedded-qwen-3b` chat models.
+If you want to use the bundled `embedded-qwen-0-5b`,
+`embedded-qwen-1-5b`, `embedded-qwen-3b`, and `embedded-mistral-7b`
+chat models.
 
 Remove downloaded model first if exists:
 
@@ -66,12 +67,13 @@ Download models:
 ./gradlew :backend:embeddedLlamaDownloadModel
 ```
 
-To download only one embedded Qwen model, use the specific task:
+To download only one embedded model, use the specific task:
 
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadQwen0p5BModel
 ./gradlew :backend:embeddedLlamaDownloadQwen1p5BModel
 ./gradlew :backend:embeddedLlamaDownloadQwen3BModel
+./gradlew :backend:embeddedLlamaDownloadMistral7BModel
 ```
 
 Remove `llama-server` for the current platform first if exists:
@@ -534,8 +536,8 @@ when the configured model or tokenizer file is missing.
 
 ### Embedded Llama Assets
 
-Embedded offline chat will use local llama.cpp assets. The default model is
-Qwen2.5 Instruct in GGUF format. The default asset
+Embedded offline chat will use local llama.cpp assets. The default models are
+Qwen2.5 Instruct and Mistral 7B Instruct in GGUF format. The default asset
 configuration points to external files outside the application JAR:
 
 ```yaml
@@ -562,15 +564,21 @@ aisme:
         gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
         context-size: 2048
         runtime-arguments: []
+      - id: embedded-mistral-7b
+        enabled: true
+        display-name: Embedded Mistral 7B
+        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
 ```
 
-Embedded Qwen models are enabled by default. Each becomes selectable
+Embedded models are enabled by default. Each becomes selectable
 only when its local llama.cpp runtime assets are installed and pass startup
 availability checks. `asset-directory` is the base directory for local GGUF
 model files and related metadata. `server-executable-path` points to the local
 `llama-server` binary. For enabled embedded models, the application starts one
 managed llama-server process per model on an ephemeral loopback port and sends
-chat requests to its OpenAI-compatible `/v1/chat/completions` endpoint. Model
+chat requests to its `/completion` endpoint. Model
 metadata describes GGUF files relative to `asset-directory` and runtime
 arguments.
 

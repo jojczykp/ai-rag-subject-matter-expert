@@ -78,6 +78,12 @@ val embeddedModels = listOf(
         fileName = "qwen2.5-3b-instruct-q4_k_m.gguf",
         url = "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf",
     ),
+    EmbeddedLlamaModelAsset(
+        taskName = "embeddedLlamaDownloadMistral7BModel",
+        displayName = "Mistral 7B Instruct v0.3 Q4_K_M",
+        fileName = "mistral-7b-instruct-v0.3-q4_k_m.gguf",
+        url = "https://huggingface.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
+    ),
 )
 
 fun currentLlamaServerDistribution(): LlamaServerDistribution {
@@ -155,13 +161,13 @@ tasks.register("embeddedLlamaVerifyServer") {
 
 tasks.register("embeddedLlamaDownloadModel") {
     group = "model management"
-    description = "Downloads all embedded Qwen GGUF model assets when they are missing."
+    description = "Downloads all embedded GGUF model assets when they are missing."
     dependsOn(embeddedModels.map { modelAsset -> modelAsset.taskName })
 }
 
 tasks.register<Delete>("cleanEmbeddedLlamaModel") {
     group = "model management"
-    description = "Deletes the locally downloaded embedded Qwen GGUF models."
+    description = "Deletes the locally downloaded embedded GGUF models."
     delete(embeddedModels.map { modelAsset -> assetDirectory.file("models/${modelAsset.fileName}") })
 }
 
