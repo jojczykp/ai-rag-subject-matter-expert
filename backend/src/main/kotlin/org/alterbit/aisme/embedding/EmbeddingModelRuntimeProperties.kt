@@ -5,7 +5,7 @@ data class EmbeddingModelRuntimeProperties(
 ) {
     init {
         require(id == null || id.isNotBlank()) {
-            "aisme.embedding-models.runtime.id must not be blank"
+            "aisme.embedding.models.runtime.id must not be blank"
         }
     }
 }

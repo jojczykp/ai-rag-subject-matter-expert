@@ -7,10 +7,10 @@ data class EmbeddingRuntimeConfigProperties(
 ) {
     init {
         require(modelPath == null || modelPath.isNotBlank()) {
-            "aisme.embedding-runtimes.model-path must not be blank when configured"
+            "aisme.embedding.runtimes.model-path must not be blank when configured"
         }
         require(tokenizerPath == null || tokenizerPath.isNotBlank()) {
-            "aisme.embedding-runtimes.tokenizer-path must not be blank when configured"
+            "aisme.embedding.runtimes.tokenizer-path must not be blank when configured"
         }
     }
 }
