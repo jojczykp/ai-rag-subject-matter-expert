@@ -46,7 +46,7 @@ The application will:
       lifecycle events and collect managed `llama-server` stdout and stderr
       into those logs.
 - [x] Stop the child process during application shutdown.
-- [ ] Treat startup, readiness, timeout, and non-zero-exit failures as embedded
+- [ ] Treat startup, readiness, API timeout, and non-zero-exit failures as embedded
       runtime availability or provider errors.
 
 The first implementation should be synchronous and non-streaming, consistent

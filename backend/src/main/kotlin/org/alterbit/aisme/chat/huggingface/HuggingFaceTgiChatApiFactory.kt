@@ -11,7 +11,7 @@ interface HuggingFaceTgiChatApiFactory {
     fun create(
         baseUrl: String,
         apiKey: String?,
-        timeout: Duration,
+        apiTimeout: Duration,
     ): HuggingFaceTgiChatApi
 }
 
@@ -20,11 +20,11 @@ class RestClientHuggingFaceTgiChatApiFactory : HuggingFaceTgiChatApiFactory {
     override fun create(
         baseUrl: String,
         apiKey: String?,
-        timeout: Duration,
+        apiTimeout: Duration,
     ): HuggingFaceTgiChatApi {
         val requestFactory = SimpleClientHttpRequestFactory().apply {
-            setConnectTimeout(timeout)
-            setReadTimeout(timeout)
+            setConnectTimeout(apiTimeout)
+            setReadTimeout(apiTimeout)
         }
         val restClientBuilder = RestClient.builder()
             .baseUrl(baseUrl)

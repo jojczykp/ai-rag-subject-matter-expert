@@ -35,7 +35,7 @@ class LlamaServerChatApiFactoryTest {
         server.start()
         val api = RestClientLlamaServerChatApiFactory().create(
             baseUrl = "http://localhost:${server.address.port}",
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         val response = api.complete(

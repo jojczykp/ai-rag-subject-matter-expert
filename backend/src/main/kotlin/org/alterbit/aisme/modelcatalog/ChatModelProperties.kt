@@ -9,25 +9,25 @@ data class ChatModelProperties(
 ) {
     init {
         require(displayOrder == null || displayOrder >= 0) {
-            "aisme.chat-models.display-order must not be negative when configured"
+            "aisme.chat.models.display-order must not be negative when configured"
         }
         require(displayName == null || displayName.isNotBlank()) {
-            "aisme.chat-models.display-name must not be blank"
+            "aisme.chat.models.display-name must not be blank"
         }
     }
 
     fun requireDisplayName(): String {
-        require(enabled) { "aisme.chat-models.enabled must be true" }
+        require(enabled) { "aisme.chat.models.enabled must be true" }
         require(displayName != null) {
-            "aisme.chat-models.display-name is required when aisme.chat-models.enabled is true"
+            "aisme.chat.models.display-name is required when aisme.chat.models.enabled is true"
         }
         return displayName
     }
 
     fun requireRuntimeId(): String {
-        require(enabled) { "aisme.chat-models.enabled must be true" }
+        require(enabled) { "aisme.chat.models.enabled must be true" }
         require(runtime.id != null) {
-            "aisme.chat-models.runtime.id is required when aisme.chat-models.enabled is true"
+            "aisme.chat.models.runtime.id is required when aisme.chat.models.enabled is true"
         }
         return runtime.id
     }

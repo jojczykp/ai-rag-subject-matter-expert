@@ -27,14 +27,14 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(modelName = "llama3.2"),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.AVAILABLE
         factory.createdClients shouldContainExactly listOf(
             CreatedOllamaClient(
                 baseUrl = "http://localhost:11434",
-                timeout = Duration.ofSeconds(3),
+                apiTimeout = Duration.ofSeconds(3),
             ),
         )
     }
@@ -47,7 +47,7 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(modelName = "llama3.2"),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.AVAILABLE
@@ -61,7 +61,7 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(modelName = "llama3.2"),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.UNAVAILABLE
@@ -73,7 +73,7 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(baseUrl = null),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -85,7 +85,7 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(modelName = null),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -97,7 +97,7 @@ class OllamaModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = chatModel(modelName = "llama3.2"),
-            timeout = Duration.ofSeconds(3),
+            apiTimeout = Duration.ofSeconds(3),
         )
 
         availability shouldBe ChatModelAvailability.UNAVAILABLE
@@ -108,14 +108,14 @@ class OllamaModelAvailabilityCheckerTest {
     ) : OllamaChatApiFactory {
         val createdClients = mutableListOf<CreatedOllamaClient>()
 
-        override fun create(baseUrl: String, timeout: Duration): OllamaChatApi {
-            createdClients += CreatedOllamaClient(baseUrl = baseUrl, timeout = timeout)
+        override fun create(baseUrl: String, apiTimeout: Duration): OllamaChatApi {
+            createdClients += CreatedOllamaClient(baseUrl = baseUrl, apiTimeout = apiTimeout)
             return FakeOllamaChatApi(modelNames)
         }
     }
 
     private class FailingOllamaChatApiFactory : OllamaChatApiFactory {
-        override fun create(baseUrl: String, timeout: Duration): OllamaChatApi =
+        override fun create(baseUrl: String, apiTimeout: Duration): OllamaChatApi =
             object : OllamaChatApi {
                 override fun chat(request: OllamaApi.ChatRequest): OllamaApi.ChatResponse =
                     throw UnsupportedOperationException("chat is not used by availability checks")
@@ -151,6 +151,6 @@ class OllamaModelAvailabilityCheckerTest {
 
     private data class CreatedOllamaClient(
         val baseUrl: String,
-        val timeout: Duration,
+        val apiTimeout: Duration,
     )
 }

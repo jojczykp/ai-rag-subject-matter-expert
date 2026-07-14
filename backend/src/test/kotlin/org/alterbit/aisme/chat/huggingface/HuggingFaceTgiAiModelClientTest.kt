@@ -41,7 +41,7 @@ class HuggingFaceTgiAiModelClientTest {
                         chunkIndex = 0,
                     ),
                 ),
-                timeout = Duration.ofSeconds(45),
+                apiTimeout = Duration.ofSeconds(45),
             ),
         )
 
@@ -89,7 +89,7 @@ class HuggingFaceTgiAiModelClientTest {
             modelId = modelId,
             message = "How should I cook rice?",
             contextChunks = emptyList(),
-            timeout = Duration.ofSeconds(60),
+            apiTimeout = Duration.ofSeconds(60),
         )
 
     private fun huggingFaceModel(id: String = "hf-mistral") =

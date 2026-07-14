@@ -23,7 +23,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
                 ollamaModel(id = "local-llama"),
                 openAiModel(id = "cloud-qwen", runtimeId = "openai-compatible-alt", modelName = "qwen-plus"),
             ),
-            chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
+            chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(30)),
             openAiCompatibleChatApiFactory = factory,
         )
 
@@ -32,12 +32,12 @@ class OpenAiCompatibleAiModelClientProviderTest {
             CreatedOpenAiCompatibleClient(
                 baseUrl = "https://api.example.com/v1",
                 apiKey = "test-api-key",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
             CreatedOpenAiCompatibleClient(
                 baseUrl = "https://gateway.example.com/v1",
                 apiKey = "test-api-key",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
         )
     }
@@ -140,12 +140,12 @@ class OpenAiCompatibleAiModelClientProviderTest {
         override fun create(
             baseUrl: String,
             apiKey: String,
-            timeout: Duration,
+            apiTimeout: Duration,
         ): OpenAiCompatibleChatApi {
             createdClients += CreatedOpenAiCompatibleClient(
                 baseUrl = baseUrl,
                 apiKey = apiKey,
-                timeout = timeout,
+                apiTimeout = apiTimeout,
             )
             return FakeOpenAiCompatibleChatApi()
         }
@@ -168,6 +168,6 @@ class OpenAiCompatibleAiModelClientProviderTest {
     private data class CreatedOpenAiCompatibleClient(
         val baseUrl: String,
         val apiKey: String,
-        val timeout: Duration,
+        val apiTimeout: Duration,
     )
 }

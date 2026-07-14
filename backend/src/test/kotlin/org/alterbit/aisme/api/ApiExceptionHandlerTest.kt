@@ -87,12 +87,12 @@ class ApiExceptionHandlerTest {
     }
 
     @Test
-    fun `handles provider timeout`() {
+    fun `handles provider apiTimeout`() {
         val response = handler.handleAiModelProviderTimeout(
             AiModelProviderTimeoutException(
                 modelId = "cloud-gpt",
                 provider = "OpenAI-compatible",
-                cause = RuntimeException("timeout details"),
+                cause = RuntimeException("apiTimeout details"),
             ),
         )
         val body = response.body.shouldNotBeNull()

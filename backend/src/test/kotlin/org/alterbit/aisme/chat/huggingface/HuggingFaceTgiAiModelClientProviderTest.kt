@@ -23,7 +23,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                 nonHuggingFaceModel(id = "local-llama"),
                 huggingFaceModel(id = "hf-qwen", runtimeId = "hugging-face-tgi-alt", apiKey = null),
             ),
-            chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
+            chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(30)),
             huggingFaceTgiChatApiFactory = factory,
         )
 
@@ -32,12 +32,12 @@ class HuggingFaceTgiAiModelClientProviderTest {
             CreatedHuggingFaceTgiClient(
                 baseUrl = "https://hf.example.com",
                 apiKey = "test-api-key",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
             CreatedHuggingFaceTgiClient(
                 baseUrl = "https://qwen.example.com",
                 apiKey = null,
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
         )
     }
@@ -115,12 +115,12 @@ class HuggingFaceTgiAiModelClientProviderTest {
         override fun create(
             baseUrl: String,
             apiKey: String?,
-            timeout: Duration,
+            apiTimeout: Duration,
         ): HuggingFaceTgiChatApi {
             createdClients += CreatedHuggingFaceTgiClient(
                 baseUrl = baseUrl,
                 apiKey = apiKey,
-                timeout = timeout,
+                apiTimeout = apiTimeout,
             )
             return FakeHuggingFaceTgiChatApi()
         }
@@ -134,6 +134,6 @@ class HuggingFaceTgiAiModelClientProviderTest {
     private data class CreatedHuggingFaceTgiClient(
         val baseUrl: String,
         val apiKey: String?,
-        val timeout: Duration,
+        val apiTimeout: Duration,
     )
 }

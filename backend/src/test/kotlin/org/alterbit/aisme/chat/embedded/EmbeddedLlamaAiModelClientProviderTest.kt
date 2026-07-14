@@ -21,7 +21,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
                 ollamaModel(id = "local-llama"),
                 embeddedModel(id = "embedded-mistral", displayOrder = 20),
             ),
-            chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
+            chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(30)),
             embeddedLlamaProcessManager = processManager(
                 ports = intArrayOf(19001, 19002),
             ),
@@ -32,11 +32,11 @@ class EmbeddedLlamaAiModelClientProviderTest {
         factory.createdClients shouldContainExactly listOf(
             CreatedLlamaServerClient(
                 baseUrl = "http://127.0.0.1:19001",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
             CreatedLlamaServerClient(
                 baseUrl = "http://127.0.0.1:19002",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
         )
     }
@@ -149,8 +149,8 @@ class EmbeddedLlamaAiModelClientProviderTest {
     private class FakeLlamaServerChatApiFactory : LlamaServerChatApiFactory {
         val createdClients = mutableListOf<CreatedLlamaServerClient>()
 
-        override fun create(baseUrl: String, timeout: Duration): LlamaServerChatApi {
-            createdClients += CreatedLlamaServerClient(baseUrl = baseUrl, timeout = timeout)
+        override fun create(baseUrl: String, apiTimeout: Duration): LlamaServerChatApi {
+            createdClients += CreatedLlamaServerClient(baseUrl = baseUrl, apiTimeout = apiTimeout)
             return FakeLlamaServerChatApi()
         }
     }
@@ -167,6 +167,6 @@ class EmbeddedLlamaAiModelClientProviderTest {
 
     private data class CreatedLlamaServerClient(
         val baseUrl: String,
-        val timeout: Duration,
+        val apiTimeout: Duration,
     )
 }

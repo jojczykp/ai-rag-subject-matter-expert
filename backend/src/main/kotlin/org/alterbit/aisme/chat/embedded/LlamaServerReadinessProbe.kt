@@ -9,15 +9,15 @@ import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
 
 fun interface LlamaServerReadinessProbe {
-    fun awaitReady(baseUrl: String, timeout: Duration): Boolean
+    fun awaitReady(baseUrl: String, apiTimeout: Duration): Boolean
 }
 
 @Component
 class RestClientLlamaServerReadinessProbe : LlamaServerReadinessProbe {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun awaitReady(baseUrl: String, timeout: Duration): Boolean {
-        val deadline = Instant.now().plus(timeout)
+    override fun awaitReady(baseUrl: String, apiTimeout: Duration): Boolean {
+        val deadline = Instant.now().plus(apiTimeout)
         val restClient = RestClient.builder()
             .baseUrl(baseUrl)
             .build()

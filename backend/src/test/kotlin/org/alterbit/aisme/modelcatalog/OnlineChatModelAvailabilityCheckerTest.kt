@@ -27,7 +27,7 @@ class OnlineChatModelAvailabilityCheckerTest {
                 runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
                 apiKey = null,
             ),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -40,7 +40,7 @@ class OnlineChatModelAvailabilityCheckerTest {
                 runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
                 apiKey = "test-api-key",
             ),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.CONFIGURED
@@ -53,7 +53,7 @@ class OnlineChatModelAvailabilityCheckerTest {
                 runtime = ChatModelRuntime.HUGGING_FACE_TGI,
                 apiKey = null,
             ),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.CONFIGURED

@@ -33,27 +33,27 @@ import org.springframework.test.web.servlet.post
 @SpringBootTest(
     classes = [EmbeddedOfflineChatApiIntegrationTestContext::class],
     properties = [
-        "aisme.chat-models.embedded-ready.enabled=true",
-        "aisme.chat-models.embedded-ready.display-order=10",
-        "aisme.chat-models.embedded-ready.display-name=Embedded Ready",
-        "aisme.chat-models.embedded-ready.runtime.id=embedded-llama",
-        "aisme.chat-models.embedded-ready.runtime.model-name=qwen2.5",
-        "aisme.chat-models.embedded-ready.runtime.gguf-file=models/qwen.gguf",
-        "aisme.chat-models.embedded-ready.runtime.context-size=2048",
-        "aisme.chat-models.embedded-down.enabled=true",
-        "aisme.chat-models.embedded-down.display-order=20",
-        "aisme.chat-models.embedded-down.display-name=Embedded Down",
-        "aisme.chat-models.embedded-down.runtime.id=embedded-llama",
-        "aisme.chat-models.embedded-down.runtime.model-name=qwen2.5",
-        "aisme.chat-models.embedded-down.runtime.gguf-file=models/qwen.gguf",
-        "aisme.chat-models.embedded-down.runtime.context-size=2048",
-        "aisme.chat-models.embedded-qwen-0-5b.enabled=false",
-        "aisme.chat-models.embedded-qwen-1-5b.enabled=false",
-        "aisme.chat-models.embedded-qwen-3b.enabled=false",
-        "aisme.chat-models.embedded-mistral-7b.enabled=false",
-        "aisme.chat-models.local-ollama-llama.enabled=false",
-        "aisme.chat-models.openai-compatible-example.enabled=false",
-        "aisme.chat-models.hugging-face-tgi-example.enabled=false",
+        "aisme.chat.models.embedded-ready.enabled=true",
+        "aisme.chat.models.embedded-ready.display-order=10",
+        "aisme.chat.models.embedded-ready.display-name=Embedded Ready",
+        "aisme.chat.models.embedded-ready.runtime.id=embedded-llama",
+        "aisme.chat.models.embedded-ready.runtime.model-name=qwen2.5",
+        "aisme.chat.models.embedded-ready.runtime.gguf-file=models/qwen.gguf",
+        "aisme.chat.models.embedded-ready.runtime.context-size=2048",
+        "aisme.chat.models.embedded-down.enabled=true",
+        "aisme.chat.models.embedded-down.display-order=20",
+        "aisme.chat.models.embedded-down.display-name=Embedded Down",
+        "aisme.chat.models.embedded-down.runtime.id=embedded-llama",
+        "aisme.chat.models.embedded-down.runtime.model-name=qwen2.5",
+        "aisme.chat.models.embedded-down.runtime.gguf-file=models/qwen.gguf",
+        "aisme.chat.models.embedded-down.runtime.context-size=2048",
+        "aisme.chat.models.embedded-qwen-0-5b.enabled=false",
+        "aisme.chat.models.embedded-qwen-1-5b.enabled=false",
+        "aisme.chat.models.embedded-qwen-3b.enabled=false",
+        "aisme.chat.models.embedded-mistral-7b.enabled=false",
+        "aisme.chat.models.local-ollama-llama.enabled=false",
+        "aisme.chat.models.openai-compatible-example.enabled=false",
+        "aisme.chat.models.hugging-face-tgi-example.enabled=false",
     ],
 )
 @AutoConfigureMockMvc
@@ -128,7 +128,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
                 modelId = "embedded-ready",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
-                timeout = Duration.ofSeconds(60),
+                apiTimeout = Duration.ofSeconds(60),
             ),
         )
     }
@@ -214,7 +214,7 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
             override fun supports(model: ChatModelDescriptor): Boolean =
                 model.runtime == ChatModelRuntime.EMBEDDED_LLAMA
 
-            override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+            override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
                 when (model.id) {
                     "embedded-ready" -> ChatModelAvailability.AVAILABLE
                     "embedded-down" -> ChatModelAvailability.UNAVAILABLE

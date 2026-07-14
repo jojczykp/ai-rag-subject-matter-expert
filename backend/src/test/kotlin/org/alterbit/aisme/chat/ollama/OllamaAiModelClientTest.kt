@@ -45,7 +45,7 @@ class OllamaAiModelClientTest {
                         chunkIndex = 0,
                     ),
                 ),
-                timeout = Duration.ofSeconds(45),
+                apiTimeout = Duration.ofSeconds(45),
             ),
         )
 
@@ -108,7 +108,7 @@ class OllamaAiModelClientTest {
             modelId = modelId,
             message = "How should I cook rice?",
             contextChunks = emptyList(),
-            timeout = Duration.ofSeconds(60),
+            apiTimeout = Duration.ofSeconds(60),
         )
 
     private fun ollamaModel(

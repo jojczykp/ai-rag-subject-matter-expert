@@ -6,11 +6,11 @@ data class AiModelChatRequest(
     val modelId: String,
     val message: String,
     val contextChunks: List<AiModelContextChunk>,
-    val timeout: Duration,
+    val apiTimeout: Duration,
 ) {
     init {
         require(modelId.isNotBlank()) { "modelId must not be blank" }
         require(message.isNotBlank()) { "message must not be blank" }
-        require(timeout.isPositive) { "timeout must be greater than zero" }
+        require(apiTimeout.isPositive) { "apiTimeout must be greater than zero" }
     }
 }

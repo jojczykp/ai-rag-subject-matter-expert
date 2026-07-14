@@ -122,7 +122,7 @@ task:
 - [x] Verify request and response mapping.
 - [x] Verify authentication headers.
 - [x] Verify OpenAI-compatible application chat flow with a local mock provider.
-- [ ] Verify timeout handling.
+- [ ] Verify API timeout handling.
 - [ ] Verify provider error translation.
 - [ ] Avoid calling real external APIs in automated tests by default.
 - [ ] Keep real cloud provider tests as explicitly enabled manual smoke tests

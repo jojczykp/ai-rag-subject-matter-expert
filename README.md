@@ -485,25 +485,25 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
 | `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |
 | `aisme.embedding.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.embedding.runtimes`. |
-| `aisme.chat.timeout` | `60s` | Timeout for model chat generation. |
+| `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
-| `aisme.chat-model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
-| `aisme.chat-model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
-| `aisme.chat-runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
-| `aisme.chat-runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
-| `aisme.chat-runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
-| `aisme.chat-runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
-| `aisme.chat-runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
-| `aisme.chat-models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
-| `aisme.chat-models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
-| `aisme.chat-models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
-| `aisme.chat-models.<model-id>.display-name` | required when enabled | Human-readable model name. |
-| `aisme.chat-models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
-| `aisme.chat-models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.chat-runtimes`. |
-| `aisme.chat-models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
-| `aisme.chat-models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
-| `aisme.chat-models.<model-id>.runtime.context-size` | embedded only | Context size passed to `llama-server`. |
-| `aisme.chat-models.<model-id>.runtime.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
+| `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
+| `aisme.chat.model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
+| `aisme.chat.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
+| `aisme.chat.runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
+| `aisme.chat.runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
+| `aisme.chat.runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
+| `aisme.chat.runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
+| `aisme.chat.models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
+| `aisme.chat.models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
+| `aisme.chat.models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
+| `aisme.chat.models.<model-id>.display-name` | required when enabled | Human-readable model name. |
+| `aisme.chat.models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
+| `aisme.chat.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.chat.runtimes`. |
+| `aisme.chat.models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
+| `aisme.chat.models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
+| `aisme.chat.models.<model-id>.runtime.context-size` | embedded only | Context size passed to `llama-server`. |
+| `aisme.chat.models.<model-id>.runtime.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
 
 Runtime and mode combinations are intentionally narrow in the initial scope:
 `OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_TGI`
@@ -550,56 +550,57 @@ configuration points to external files outside the application JAR:
 
 ```yaml
 aisme:
-  chat-runtimes:
-    embedded-llama:
-      type: EMBEDDED_LLAMA
-      asset-directory: ./models/llama
-      server-executable-path: ./models/llama/bin/llama-server
-  chat-models:
-    embedded-qwen-0-5b:
-      enabled: true
-      display-order: 10
-      display-name: Embedded Qwen 0.5B
-      description: Fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-0.5b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-qwen-1-5b:
-      enabled: true
-      display-order: 20
-      display-name: Embedded Qwen 1.5B
-      description: Smarter fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-1.5b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-qwen-3b:
-      enabled: true
-      display-order: 30
-      display-name: Embedded Qwen 3B
-      description: Larger fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-3b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-mistral-7b:
-      enabled: true
-      display-order: 40
-      display-name: Embedded Mistral 7B
-      description: Heavier fully offline embedded model for stronger local answers.
-      runtime:
-        id: embedded-llama
-        model-name: mistral-7b-instruct-v0.3-q4_k_m
-        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
+  chat:
+    runtimes:
+      embedded-llama:
+        type: EMBEDDED_LLAMA
+        asset-directory: ./models/llama
+        server-executable-path: ./models/llama/bin/llama-server
+    models:
+      embedded-qwen-0-5b:
+        enabled: true
+        display-order: 10
+        display-name: Embedded Qwen 0.5B
+        description: Fully offline embedded model backed by a local GGUF asset.
+        runtime:
+          id: embedded-llama
+          model-name: qwen2.5-0.5b-instruct-q4_k_m
+          gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+          context-size: 2048
+          runtime-arguments: []
+      embedded-qwen-1-5b:
+        enabled: true
+        display-order: 20
+        display-name: Embedded Qwen 1.5B
+        description: Smarter fully offline embedded model backed by a local GGUF asset.
+        runtime:
+          id: embedded-llama
+          model-name: qwen2.5-1.5b-instruct-q4_k_m
+          gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+          context-size: 2048
+          runtime-arguments: []
+      embedded-qwen-3b:
+        enabled: true
+        display-order: 30
+        display-name: Embedded Qwen 3B
+        description: Larger fully offline embedded model backed by a local GGUF asset.
+        runtime:
+          id: embedded-llama
+          model-name: qwen2.5-3b-instruct-q4_k_m
+          gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
+          context-size: 2048
+          runtime-arguments: []
+      embedded-mistral-7b:
+        enabled: true
+        display-order: 40
+        display-name: Embedded Mistral 7B
+        description: Heavier fully offline embedded model for stronger local answers.
+        runtime:
+          id: embedded-llama
+          model-name: mistral-7b-instruct-v0.3-q4_k_m
+          gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+          context-size: 2048
+          runtime-arguments: []
 ```
 
 Embedded models are enabled by default. Each becomes selectable
@@ -626,22 +627,23 @@ The default chat model entry points to Ollama at `http://localhost:11434`:
 
 ```yaml
 aisme:
-  chat-runtimes:
-    local-ollama:
-      type: OLLAMA
-      base-url: http://localhost:11434
-  chat-models:
-    local-ollama-llama:
-      enabled: true
-      display-order: 50
-      display-name: Local Ollama Llama
-      description: Local Ollama model for chat requests when Ollama is running on this machine.
-      runtime:
-        id: local-ollama
-        model-name: llama3.2
+  chat:
+    runtimes:
+      local-ollama:
+        type: OLLAMA
+        base-url: http://localhost:11434
+    models:
+      local-ollama-llama:
+        enabled: true
+        display-order: 50
+        display-name: Local Ollama Llama
+        description: Local Ollama model for chat requests when Ollama is running on this machine.
+        runtime:
+          id: local-ollama
+          model-name: llama3.2
 ```
 
-The application-owned `aisme.chat-models` configuration is the source of truth
+The application-owned `aisme.chat.models` configuration is the source of truth
 for selectable chat models. Spring AI Ollama settings are handled by the Ollama
 adapter instead of duplicated in a separate Spring profile.
 
@@ -651,20 +653,21 @@ OpenAI-compatible chat providers can be configured as selectable online models:
 
 ```yaml
 aisme:
-  chat-runtimes:
-    openai-compatible:
-      type: OPENAI_COMPATIBLE
-      base-url: https://api.openai.com/v1
-      api-key: ${OPENAI_API_KEY}
-  chat-models:
-    cloud-gpt:
-      enabled: true
-      display-order: 60
-      display-name: Cloud GPT
-      description: Online OpenAI-compatible model for cloud-hosted chat requests.
-      runtime:
-        id: openai-compatible
-        model-name: gpt-4.1-mini
+  chat:
+    runtimes:
+      openai-compatible:
+        type: OPENAI_COMPATIBLE
+        base-url: https://api.openai.com/v1
+        api-key: ${OPENAI_API_KEY}
+    models:
+      cloud-gpt:
+        enabled: true
+        display-order: 60
+        display-name: Cloud GPT
+        description: Online OpenAI-compatible model for cloud-hosted chat requests.
+        runtime:
+          id: openai-compatible
+          model-name: gpt-4.1-mini
 ```
 
 The adapter sends non-streaming chat-completion requests to
@@ -678,19 +681,20 @@ Hugging Face Inference Endpoints can be configured as selectable online models:
 
 ```yaml
 aisme:
-  chat-runtimes:
-    hugging-face-tgi:
-      type: HUGGING_FACE_TGI
-      base-url: https://example.endpoints.huggingface.cloud
-      api-key: ${HF_API_KEY}
-  chat-models:
-    hf-mistral:
-      enabled: true
-      display-order: 70
-      display-name: Hugging Face Mistral
-      description: Online Hugging Face endpoint using the TGI-compatible generate API.
-      runtime:
-        id: hugging-face-tgi
+  chat:
+    runtimes:
+      hugging-face-tgi:
+        type: HUGGING_FACE_TGI
+        base-url: https://example.endpoints.huggingface.cloud
+        api-key: ${HF_API_KEY}
+    models:
+      hf-mistral:
+        enabled: true
+        display-order: 70
+        display-name: Hugging Face Mistral
+        description: Online Hugging Face endpoint using the TGI-compatible generate API.
+        runtime:
+          id: hugging-face-tgi
 ```
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.

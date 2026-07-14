@@ -49,9 +49,9 @@ class ConfigurationPropertiesValidationTest {
     @Test
     fun `fails binding invalid chat model availability configuration`() {
         propertyContext(ChatModelAvailabilityPropertiesConfiguration::class.java)
-            .withPropertyValues("aisme.chat-model-availability.cache-ttl=0s")
+            .withPropertyValues("aisme.chat.model-availability.cache-ttl=0s")
             .run { context ->
-                context.failureMessage() shouldContain "aisme.chat-model-availability.cache-ttl"
+                context.failureMessage() shouldContain "aisme.chat.model-availability.cache-ttl"
             }
     }
 
@@ -59,12 +59,12 @@ class ConfigurationPropertiesValidationTest {
     fun `fails creating model catalog when model references unknown runtime`() {
         propertyContext(ChatModelCatalogConfiguration::class.java)
             .withPropertyValues(
-                "aisme.chat-runtimes.local-ollama.type=OLLAMA",
-                "aisme.chat-runtimes.local-ollama.base-url=http://localhost:11434",
-                "aisme.chat-models.cloud-gpt.enabled=true",
-                "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
-                "aisme.chat-models.cloud-gpt.runtime.id=missing-runtime",
-                "aisme.chat-models.cloud-gpt.runtime.model-name=local-model",
+                "aisme.chat.runtimes.local-ollama.type=OLLAMA",
+                "aisme.chat.runtimes.local-ollama.base-url=http://localhost:11434",
+                "aisme.chat.models.cloud-gpt.enabled=true",
+                "aisme.chat.models.cloud-gpt.display-name=Cloud GPT",
+                "aisme.chat.models.cloud-gpt.runtime.id=missing-runtime",
+                "aisme.chat.models.cloud-gpt.runtime.model-name=local-model",
             )
             .run { context ->
                 context.failureMessage() shouldContain "runtime.id"

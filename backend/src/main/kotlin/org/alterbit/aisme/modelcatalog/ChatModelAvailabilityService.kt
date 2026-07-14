@@ -28,7 +28,7 @@ class ChatModelAvailabilityService(
         val availability = cachedAvailability(model)
             ?: checker.check(
                 model = model,
-                timeout = properties.timeout,
+                apiTimeout = properties.timeout,
             ).also { cacheAvailability(model, it) }
                 .also {
                     logger.info(

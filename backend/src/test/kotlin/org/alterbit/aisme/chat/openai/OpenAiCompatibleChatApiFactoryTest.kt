@@ -44,7 +44,7 @@ class OpenAiCompatibleChatApiFactoryTest {
         val api = RestClientOpenAiCompatibleChatApiFactory().create(
             baseUrl = "http://localhost:${server.address.port}/v1",
             apiKey = "test-api-key",
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         val response = api.chat(

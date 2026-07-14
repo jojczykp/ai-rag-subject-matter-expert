@@ -12,7 +12,7 @@ class ChatPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
-            "aisme.chat.timeout=45s",
+            "aisme.chat.api-timeout=45s",
             "aisme.chat.relevant-chunk-limit=3",
         )
 
@@ -21,7 +21,7 @@ class ChatPropertiesOverrideTest {
         contextRunner.run { context ->
             val properties = context.getBean<ChatProperties>()
 
-            properties.timeout shouldBe Duration.ofSeconds(45)
+            properties.apiTimeout shouldBe Duration.ofSeconds(45)
             properties.relevantChunkLimit shouldBe 3
         }
     }

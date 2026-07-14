@@ -54,7 +54,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.AVAILABLE
@@ -69,7 +69,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
         val availability = checker.check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -83,7 +83,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 mode = ChatModelMode.LOCAL_SERVER,
                 availableOffline = true,
             ),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -97,7 +97,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = false,
             ),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -113,7 +113,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         )
         val availability = checker(model = model).check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -128,7 +128,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         )
         val availability = checker(model = model).check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -146,7 +146,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
         val availability = checker(model = model).check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -161,7 +161,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         )
         val availability = checker(model = model).check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.MISCONFIGURED
@@ -178,7 +178,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             runtimeReady = false,
         ).check(
             model = model,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         availability shouldBe ChatModelAvailability.UNAVAILABLE

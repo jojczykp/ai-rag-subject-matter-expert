@@ -28,7 +28,7 @@ class EmbeddedLlamaAiModelClientProvider(
                         model = model,
                         chatApi = llamaServerChatApiFactory.create(
                             baseUrl = baseUrl,
-                            timeout = chatProperties.timeout,
+                            apiTimeout = chatProperties.apiTimeout,
                         ),
                     )
                 } else {

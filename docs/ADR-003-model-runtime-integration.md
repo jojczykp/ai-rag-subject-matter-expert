@@ -21,7 +21,7 @@ adapters behind the internal `AiModelClient` interface.
 
 Configured models are defined statically in application configuration. Chat
 requests must include `modelId`; there is no default chat model in the initial
-scope. The model list is configured directly under `aisme.chat-models`.
+scope. The model list is configured directly under `aisme.chat.models`.
 
 Runtime integration follows the component flow documented in
 [Architecture](ARCHITECTURE.md).
@@ -124,18 +124,19 @@ define display metadata and model-specific settings, then reference a runtime by
 
 ```yaml
 aisme:
-  chat-runtimes:
-    local-ollama:
-      type: OLLAMA
-      base-url: http://localhost:11434
-  chat-models:
-    local-ollama-llama:
-      enabled: true
-      display-order: 10
-      display-name: Local Ollama Llama
-      runtime:
-        id: local-ollama
-        model-name: llama3.2
+  chat:
+    runtimes:
+      local-ollama:
+        type: OLLAMA
+        base-url: http://localhost:11434
+    models:
+      local-ollama-llama:
+        enabled: true
+        display-order: 10
+        display-name: Local Ollama Llama
+        runtime:
+          id: local-ollama
+          model-name: llama3.2
 ```
 
 Use one statically configured embedding model:
@@ -169,7 +170,7 @@ Rationale:
 - [x] Provider-specific classes stay outside controller and domain code.
 - [x] `ChatModelRegistry` becomes the source of truth for configured models,
       runtime mode, availability, and user-facing labels.
-- [x] `ChatModelRegistry` reads configured models from `aisme.chat-models`.
+- [x] `ChatModelRegistry` reads configured models from `aisme.chat.models`.
 - [x] Chat requests fail validation when `modelId` is missing.
 - [x] Model responses use the provider-neutral availability states defined in
       this ADR.

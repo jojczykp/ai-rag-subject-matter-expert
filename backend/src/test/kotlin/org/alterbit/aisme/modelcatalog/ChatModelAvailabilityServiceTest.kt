@@ -127,9 +127,9 @@ class ChatModelAvailabilityServiceTest {
         override fun supports(model: ChatModelDescriptor): Boolean =
             model.runtime == supportedRuntime
 
-        override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability {
+        override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability {
             checkedModels += model.id
-            checkedTimeouts += timeout
+            checkedTimeouts += apiTimeout
             return availability
         }
     }

@@ -11,14 +11,14 @@ class ChatModelRegistry(
 
     private val runtimesById: Map<String, ChatModelRuntimeConfigProperties> = properties.chatRuntimesById
         .also { chatRuntimesById ->
-            require(chatRuntimesById.isNotEmpty()) { "aisme.chat-runtimes must contain at least one runtime" }
-            require(chatRuntimesById.keys.none { it.isBlank() }) { "aisme.chat-runtimes must not contain blank ids" }
+            require(chatRuntimesById.isNotEmpty()) { "aisme.chat.runtimes must contain at least one runtime" }
+            require(chatRuntimesById.keys.none { it.isBlank() }) { "aisme.chat.runtimes must not contain blank ids" }
         }
 
     private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModelsById
         .also { modelsById ->
-            require(modelsById.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
-            require(modelsById.keys.none { it.isBlank() }) { "aisme.chat-models must not contain blank ids" }
+            require(modelsById.isNotEmpty()) { "aisme.chat.models must contain at least one model" }
+            require(modelsById.keys.none { it.isBlank() }) { "aisme.chat.models must not contain blank ids" }
         }
         .entries
         .map { entry ->
@@ -31,7 +31,7 @@ class ChatModelRegistry(
         .onEach { it.validateRuntimeConfiguration() }
         .map { it.model.toDescriptor(id = it.id, configuredRuntime = runtimesById.getValue(it.model.requireRuntimeId())) }
         .also { models ->
-            require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
+            require(models.isNotEmpty()) { "aisme.chat.models must contain at least one model" }
         }
         .sortedWith(compareBy<ChatModelDescriptor> { it.displayOrder ?: Int.MAX_VALUE }.thenBy { it.id })
         .associateBy { it.id }
@@ -58,7 +58,7 @@ class ChatModelRegistry(
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 
     private fun IndexedChatModelProperties.validateRuntimeConfiguration() {
-        val modelPrefix = "aisme.chat-models.$id"
+        val modelPrefix = "aisme.chat.models.$id"
         val runtimeId = model.requireRuntimeId()
         val runtime = runtimesById[runtimeId]
         require(runtime != null) { "$modelPrefix.runtime.id references unknown runtime '$runtimeId'" }
@@ -70,7 +70,7 @@ class ChatModelRegistry(
 
         fun requireRuntimeConfigured(value: String?, propertyName: String) {
             require(value != null) {
-                "aisme.chat-runtimes.$runtimeId.$propertyName is required for ${runtime.type} runtimes"
+                "aisme.chat.runtimes.$runtimeId.$propertyName is required for ${runtime.type} runtimes"
             }
         }
 

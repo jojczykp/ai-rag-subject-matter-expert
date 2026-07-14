@@ -13,7 +13,7 @@ class OnlineChatModelAvailabilityChecker : ChatModelAvailabilityChecker {
             model.runtime == ChatModelRuntime.HUGGING_FACE_TGI ||
             model.runtime == ChatModelRuntime.SPRING_AI
 
-    override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+    override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
         when (model.runtime) {
             ChatModelRuntime.OPENAI_COMPATIBLE ->
                 if (model.apiKey.isNullOrBlank()) {

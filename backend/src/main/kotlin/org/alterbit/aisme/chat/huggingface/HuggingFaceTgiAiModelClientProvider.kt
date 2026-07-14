@@ -25,7 +25,7 @@ class HuggingFaceTgiAiModelClientProvider(
                 chatApi = huggingFaceTgiChatApiFactory.create(
                     baseUrl = model.requireHuggingFaceTgiBaseUrl(),
                     apiKey = model.apiKey,
-                    timeout = chatProperties.timeout,
+                    apiTimeout = chatProperties.apiTimeout,
                 ),
             )
         }

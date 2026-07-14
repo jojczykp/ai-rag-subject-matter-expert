@@ -25,7 +25,7 @@ class LlamaServerReadinessProbeTest {
 
         val ready = RestClientLlamaServerReadinessProbe().awaitReady(
             baseUrl = "http://localhost:${server.address.port}",
-            timeout = Duration.ofSeconds(1),
+            apiTimeout = Duration.ofSeconds(1),
         )
 
         ready shouldBe true
@@ -40,7 +40,7 @@ class LlamaServerReadinessProbeTest {
 
         val ready = RestClientLlamaServerReadinessProbe().awaitReady(
             baseUrl = "http://localhost:${server.address.port}",
-            timeout = Duration.ofMillis(10),
+            apiTimeout = Duration.ofMillis(10),
         )
 
         ready shouldBe false

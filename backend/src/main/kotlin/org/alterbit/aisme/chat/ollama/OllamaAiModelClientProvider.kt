@@ -22,7 +22,7 @@ class OllamaAiModelClientProvider(
             logger.info("Creating Ollama AI model client for model '{}'", model.id)
             OllamaAiModelClient(
                 model = model,
-                chatApi = ollamaChatApiFactory.create(model.requireBaseUrl(), chatProperties.timeout),
+                chatApi = ollamaChatApiFactory.create(model.requireBaseUrl(), chatProperties.apiTimeout),
             )
         }
 

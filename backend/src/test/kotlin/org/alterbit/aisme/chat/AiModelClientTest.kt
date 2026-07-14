@@ -18,7 +18,7 @@ class AiModelClientTest {
                     chunkIndex = 0,
                 ),
             ),
-            timeout = Duration.ofSeconds(60),
+            apiTimeout = Duration.ofSeconds(60),
         )
 
         val response = client.chat(request)

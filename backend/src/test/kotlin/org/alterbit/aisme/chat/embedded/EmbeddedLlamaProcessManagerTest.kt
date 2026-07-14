@@ -227,7 +227,7 @@ class EmbeddedLlamaProcessManagerTest {
     private class FakeReadinessProbe(
         private val ready: Boolean = true,
     ) : LlamaServerReadinessProbe {
-        override fun awaitReady(baseUrl: String, timeout: Duration): Boolean =
+        override fun awaitReady(baseUrl: String, apiTimeout: Duration): Boolean =
             ready
     }
 
@@ -252,7 +252,7 @@ class EmbeddedLlamaProcessManagerTest {
         override fun waitFor(): Int =
             0
 
-        override fun waitFor(timeout: Long, unit: TimeUnit): Boolean =
+        override fun waitFor(apiTimeout: Long, unit: TimeUnit): Boolean =
             if (processStopsGracefully) {
                 true
             } else {

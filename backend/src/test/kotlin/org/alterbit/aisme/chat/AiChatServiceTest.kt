@@ -33,7 +33,7 @@ class AiChatServiceTest {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
-            chatProperties = ChatProperties(timeout = Duration.ofSeconds(45)),
+            chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(45)),
             chatContextRetriever = chatContextRetriever,
             aiModelClients = aiModelClients(localModelClient, cloudModelClient),
         )
@@ -52,7 +52,7 @@ class AiChatServiceTest {
                 modelId = "local-ollama-llama",
                 message = "How should I cook rice?",
                 contextChunks = contextChunks,
-                timeout = Duration.ofSeconds(45),
+                apiTimeout = Duration.ofSeconds(45),
             ),
         )
         chatContextRetriever.messages shouldContainExactly listOf("How should I cook rice?")
@@ -197,7 +197,7 @@ class AiChatServiceTest {
     }
 
     @Test
-    fun `maps model client timeout to provider timeout`() {
+    fun `maps model client apiTimeout to provider apiTimeout`() {
         val service = AiChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
@@ -321,7 +321,7 @@ class AiChatServiceTest {
                     override fun supports(model: ChatModelDescriptor): Boolean =
                         model.id == "local-ollama-llama"
 
-                    override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+                    override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
                         availability
                 },
             ),

@@ -215,13 +215,13 @@ model for each request.
 `AiModelClient` is the internal provider-neutral interface. Each runtime gets
 an adapter that implements this interface. A client instance represents one
 configured application model. Provider components can create multiple client
-instances from `aisme.chat-models` when one runtime supports multiple models.
+instances from `aisme.chat.models` when one runtime supports multiple models.
 
 - [x] Add `AiModelClient`.
 - [x] Add request and response DTOs.
 - [x] Add synchronous chat support.
 - [x] Add structured error handling.
-- [x] Add configurable timeout behavior.
+- [x] Add configurable API timeout behavior.
 - [x] Add tests for implemented adapter contracts.
 
 Draft interface:
@@ -270,9 +270,9 @@ embedding model metadata or chunking strategy changes. The schema diagram is mai
 Configuration should make model availability and runtime mode explicit.
 
 - [x] Add bundled document resource folder configuration.
-- [x] Keep model selection in a single `aisme.chat-models` catalog with keyed
+- [x] Keep model selection in a single `aisme.chat.models` catalog with keyed
       model ids, per-model `enabled` flags, and optional display order.
-- [x] Add configuration properties for `aisme.chat-models`.
+- [x] Add configuration properties for `aisme.chat.models`.
 - [x] Add environment variable support for cloud credentials.
 - [x] Add validation for missing required provider settings.
 - [x] Report missing OpenAI-compatible credentials as model misconfiguration
@@ -285,6 +285,7 @@ Example model catalog configuration:
 aisme:
   documents:
     location: classpath:/subject-documents/
+
   embedding:
     runtimes:
       local-onnx:
@@ -298,96 +299,25 @@ aisme:
         dimensions: 384
         runtime:
           id: local-onnx
-  chat-runtimes:
-    embedded-llama:
-      type: EMBEDDED_LLAMA
-      asset-directory: ./models/llama
-      server-executable-path: ./models/llama/bin/llama-server
-    local-ollama:
-      type: OLLAMA
-      base-url: http://localhost:11434
-    openai-compatible:
-      type: OPENAI_COMPATIBLE
-      base-url: https://api.example.com/v1
-      api-key: ${OPENAI_API_KEY:}
-    hugging-face-tgi:
-      type: HUGGING_FACE_TGI
-      base-url: https://example.endpoints.huggingface.cloud
-      api-key: ${HF_API_KEY:}
-    spring-ai:
-      type: SPRING_AI
-  chat-models:
-    embedded-qwen-0-5b:
-      enabled: true
-      display-order: 10
-      display-name: Embedded Qwen 0.5B
-      description: Fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-0.5b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-qwen-1-5b:
-      enabled: true
-      display-order: 20
-      display-name: Embedded Qwen 1.5B
-      description: Smarter fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-1.5b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-qwen-3b:
-      enabled: true
-      display-order: 30
-      display-name: Embedded Qwen 3B
-      description: Larger fully offline embedded model backed by a local GGUF asset.
-      runtime:
-        id: embedded-llama
-        model-name: qwen2.5-3b-instruct-q4_k_m
-        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    embedded-mistral-7b:
-      enabled: true
-      display-order: 40
-      display-name: Embedded Mistral 7B
-      description: Heavier fully offline embedded model for stronger local answers.
-      runtime:
-        id: embedded-llama
-        model-name: mistral-7b-instruct-v0.3-q4_k_m
-        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-    local-ollama-llama:
-      enabled: true
-      display-order: 50
-      display-name: Local Ollama Llama
-      description: Local Ollama model for chat requests when Ollama is running on this machine.
-      runtime:
-        id: local-ollama
-        model-name: llama3.2
-    openai-compatible-example:
-      enabled: true
-      display-order: 60
-      display-name: OpenAI-Compatible Cloud Example
-      description: Online OpenAI-compatible model for cloud-hosted chat requests.
-      runtime:
-        id: openai-compatible
-        model-name: example-chat-model
-    hugging-face-tgi-example:
-      enabled: true
-      display-order: 70
-      display-name: Hugging Face TGI Example
-      description: Online Hugging Face endpoint using the TGI-compatible generate API.
-      runtime:
-        id: hugging-face-tgi
+
   chat:
-    timeout: 60s
-  chat-model-availability:
-    timeout: 5s
+    api-timeout: 60s
+    relevant-chunk-limit: 5
+    model-availability:
+      timeout: 5s
+      cache-ttl: 5s
+    runtimes:
+      local-ollama:
+        type: OLLAMA
+        base-url: http://localhost:11434
+    models:
+      local-ollama-llama:
+        enabled: true
+        display-order: 50
+        display-name: Local Ollama Llama
+        runtime:
+          id: local-ollama
+          model-name: llama3.2
 ```
 
 ## User Experience

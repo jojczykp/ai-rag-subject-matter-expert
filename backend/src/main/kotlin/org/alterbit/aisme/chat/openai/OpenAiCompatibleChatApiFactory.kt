@@ -11,7 +11,7 @@ interface OpenAiCompatibleChatApiFactory {
     fun create(
         baseUrl: String,
         apiKey: String,
-        timeout: Duration,
+        apiTimeout: Duration,
     ): OpenAiCompatibleChatApi
 }
 
@@ -20,11 +20,11 @@ class RestClientOpenAiCompatibleChatApiFactory : OpenAiCompatibleChatApiFactory 
     override fun create(
         baseUrl: String,
         apiKey: String,
-        timeout: Duration,
+        apiTimeout: Duration,
     ): OpenAiCompatibleChatApi {
         val requestFactory = SimpleClientHttpRequestFactory().apply {
-            setConnectTimeout(timeout)
-            setReadTimeout(timeout)
+            setConnectTimeout(apiTimeout)
+            setReadTimeout(apiTimeout)
         }
         val restClient = RestClient.builder()
             .baseUrl(baseUrl)

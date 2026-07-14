@@ -11,7 +11,7 @@ class ChatModelAvailabilityCheckerTest {
             override fun supports(model: ChatModelDescriptor): Boolean =
                 model.runtime == ChatModelRuntime.OLLAMA
 
-            override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+            override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
                 ChatModelAvailability.AVAILABLE
         }
 
@@ -19,7 +19,7 @@ class ChatModelAvailabilityCheckerTest {
         checker.supports(chatModel(runtime = ChatModelRuntime.SPRING_AI)) shouldBe false
         checker.check(
             model = chatModel(runtime = ChatModelRuntime.OLLAMA),
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         ) shouldBe ChatModelAvailability.AVAILABLE
     }
 }

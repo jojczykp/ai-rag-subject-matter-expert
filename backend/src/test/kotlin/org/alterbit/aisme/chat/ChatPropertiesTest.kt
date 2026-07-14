@@ -7,21 +7,21 @@ import org.junit.jupiter.api.Test
 
 class ChatPropertiesTest {
     @Test
-    fun `rejects zero timeout`() {
+    fun `rejects zero apiTimeout`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ChatProperties(timeout = Duration.ZERO)
+            ChatProperties(apiTimeout = Duration.ZERO)
         }
 
-        exception.message shouldContain "aisme.chat.timeout"
+        exception.message shouldContain "aisme.chat.api-timeout"
     }
 
     @Test
-    fun `rejects negative timeout`() {
+    fun `rejects negative apiTimeout`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ChatProperties(timeout = Duration.ofSeconds(-1))
+            ChatProperties(apiTimeout = Duration.ofSeconds(-1))
         }
 
-        exception.message shouldContain "aisme.chat.timeout"
+        exception.message shouldContain "aisme.chat.api-timeout"
     }
 
     @Test

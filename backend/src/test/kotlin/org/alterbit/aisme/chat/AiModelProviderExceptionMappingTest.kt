@@ -12,7 +12,7 @@ import org.springframework.web.client.ResourceAccessException
 
 class AiModelProviderExceptionMappingTest {
     @Test
-    fun `maps socket timeout to provider timeout exception`() {
+    fun `maps socket apiTimeout to provider apiTimeout exception`() {
         val exception = ResourceAccessException("Read timed out", SocketTimeoutException("Read timed out"))
             .toAiModelProviderException(
                 modelId = "cloud-gpt",
@@ -25,7 +25,7 @@ class AiModelProviderExceptionMappingTest {
     }
 
     @Test
-    fun `maps http timeout to provider timeout exception`() {
+    fun `maps http apiTimeout to provider apiTimeout exception`() {
         val exception = ResourceAccessException("Request timed out", HttpTimeoutException("Request timed out"))
             .toAiModelProviderException(
                 modelId = "cloud-gpt",
@@ -38,7 +38,7 @@ class AiModelProviderExceptionMappingTest {
     }
 
     @Test
-    fun `maps interrupted IO timeout to provider timeout exception`() {
+    fun `maps interrupted IO apiTimeout to provider apiTimeout exception`() {
         val exception = ResourceAccessException("Request interrupted", InterruptedIOException("Request interrupted"))
             .toAiModelProviderException(
                 modelId = "cloud-gpt",

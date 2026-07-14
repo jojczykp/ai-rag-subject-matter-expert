@@ -40,7 +40,7 @@ class AiChatService(
             modelId = chatModel.id,
             message = request.message,
             contextChunks = contextChunks,
-            timeout = chatProperties.timeout,
+            apiTimeout = chatProperties.apiTimeout,
         )
 
         val modelResponse = try {

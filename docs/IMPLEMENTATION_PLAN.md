@@ -51,7 +51,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add provider-neutral chat request and response DTOs.
 - [x] Add `AiModelClient` interface.
 - [x] Add fake model client for deterministic application-flow tests.
-- [x] Add `ChatModelRegistry` backed by static `aisme.chat-models` configuration.
+- [x] Add `ChatModelRegistry` backed by static `aisme.chat.models` configuration.
 - [x] Require `modelId` on chat requests.
 - [x] Add `GET /models`.
 - [x] Add `POST /chat`.
@@ -61,7 +61,7 @@ All implementation items are TODO until delivered and verified.
       model availability states.
 - [x] Add consistent error responses with `code`, `message`, and optional
       `details`.
-- [x] Add configurable chat timeout with `60s` default.
+- [x] Add configurable chat API timeout with `60s` default.
 - [x] Add configurable model availability timeout with `5s` default.
 - [x] Add `ChatModelAvailabilityService`.
 - [x] Use `ChatModelAvailabilityService` in `GET /models`.
@@ -76,7 +76,7 @@ All implementation items are TODO until delivered and verified.
 
 - [x] Add Spring AI Ollama dependency or adapter dependency selected during
       implementation.
-- [x] Add local Ollama model configuration under `aisme.chat-models`.
+- [x] Add local Ollama model configuration under `aisme.chat.models`.
 - [x] Add Ollama adapter behind `AiModelClient`.
 - [x] Support Ollama running at `http://localhost:11434`.
 - [x] Support user-configured Ollama base URLs.
@@ -92,7 +92,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add OpenAI-compatible cloud adapter.
 - [x] Add Hugging Face Inference Endpoint / TGI adapter.
 - [x] Add runtime-specific chat model configuration validation.
-- [x] Add timeout and provider-error mapping.
+- [x] Add API timeout and provider-error mapping.
 - [x] Add tagged OpenAI-compatible application-flow test with a local mock
       provider.
 - [x] Add tagged Hugging Face TGI application-flow test with a local mock

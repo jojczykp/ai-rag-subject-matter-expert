@@ -20,13 +20,13 @@ class AiModelChatRequestTest {
             modelId = "local-llama",
             message = "How should I cook rice?",
             contextChunks = listOf(contextChunk),
-            timeout = Duration.ofSeconds(60),
+            apiTimeout = Duration.ofSeconds(60),
         )
 
         request.modelId shouldBe "local-llama"
         request.message shouldBe "How should I cook rice?"
         request.contextChunks shouldContainExactly listOf(contextChunk)
-        request.timeout shouldBe Duration.ofSeconds(60)
+        request.apiTimeout shouldBe Duration.ofSeconds(60)
     }
 
     @Test
@@ -36,7 +36,7 @@ class AiModelChatRequestTest {
                 modelId = " ",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
-                timeout = Duration.ofSeconds(60),
+                apiTimeout = Duration.ofSeconds(60),
             )
         }
 
@@ -50,7 +50,7 @@ class AiModelChatRequestTest {
                 modelId = "local-llama",
                 message = " ",
                 contextChunks = emptyList(),
-                timeout = Duration.ofSeconds(60),
+                apiTimeout = Duration.ofSeconds(60),
             )
         }
 
@@ -58,16 +58,16 @@ class AiModelChatRequestTest {
     }
 
     @Test
-    fun `rejects zero timeout`() {
+    fun `rejects zero apiTimeout`() {
         val exception = shouldThrow<IllegalArgumentException> {
             AiModelChatRequest(
                 modelId = "local-llama",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
-                timeout = Duration.ZERO,
+                apiTimeout = Duration.ZERO,
             )
         }
 
-        exception.message shouldContain "timeout"
+        exception.message shouldContain "apiTimeout"
     }
 }

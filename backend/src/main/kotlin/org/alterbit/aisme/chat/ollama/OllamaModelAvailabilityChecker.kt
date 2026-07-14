@@ -17,7 +17,7 @@ class OllamaModelAvailabilityChecker(
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.OLLAMA
 
-    override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability {
+    override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability {
         val baseUrl = model.baseUrl ?: return ChatModelAvailability.MISCONFIGURED.also {
             logger.warn("Ollama model '{}' is missing base URL", model.id)
         }
@@ -28,7 +28,7 @@ class OllamaModelAvailabilityChecker(
         return try {
             logger.info("Checking Ollama availability for model '{}'", model.id)
             val availableModelNames = ollamaChatApiFactory
-                .create(baseUrl = baseUrl, timeout = timeout)
+                .create(baseUrl = baseUrl, apiTimeout = apiTimeout)
                 .modelNames()
 
             if (availableModelNames.any { it.matchesConfiguredOllamaModel(modelName) }) {

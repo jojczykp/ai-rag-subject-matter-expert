@@ -31,7 +31,7 @@ class OpenAiCompatibleAiModelClientProvider(
                 chatApi = openAiCompatibleChatApiFactory.create(
                     baseUrl = model.requireOpenAiCompatibleBaseUrl(),
                     apiKey = apiKey,
-                    timeout = chatProperties.timeout,
+                    apiTimeout = chatProperties.apiTimeout,
                 ),
             )
         }

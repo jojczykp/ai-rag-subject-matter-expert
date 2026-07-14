@@ -7,21 +7,21 @@ import org.junit.jupiter.api.Test
 
 class ChatModelAvailabilityPropertiesTest {
     @Test
-    fun `rejects zero timeout`() {
+    fun `rejects zero apiTimeout`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelAvailabilityProperties(timeout = Duration.ZERO)
         }
 
-        exception.message shouldContain "aisme.chat-model-availability.timeout"
+        exception.message shouldContain "aisme.chat.model-availability.timeout"
     }
 
     @Test
-    fun `rejects negative timeout`() {
+    fun `rejects negative apiTimeout`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelAvailabilityProperties(timeout = Duration.ofSeconds(-1))
         }
 
-        exception.message shouldContain "aisme.chat-model-availability.timeout"
+        exception.message shouldContain "aisme.chat.model-availability.timeout"
     }
 
     @Test
@@ -30,7 +30,7 @@ class ChatModelAvailabilityPropertiesTest {
             ChatModelAvailabilityProperties(cacheTtl = Duration.ZERO)
         }
 
-        exception.message shouldContain "aisme.chat-model-availability.cache-ttl"
+        exception.message shouldContain "aisme.chat.model-availability.cache-ttl"
     }
 
     @Test
@@ -39,6 +39,6 @@ class ChatModelAvailabilityPropertiesTest {
             ChatModelAvailabilityProperties(cacheTtl = Duration.ofSeconds(-1))
         }
 
-        exception.message shouldContain "aisme.chat-model-availability.cache-ttl"
+        exception.message shouldContain "aisme.chat.model-availability.cache-ttl"
     }
 }

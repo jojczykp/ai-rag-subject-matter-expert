@@ -9,13 +9,13 @@ data class ChatModelRuntimeConfigProperties(
 ) {
     init {
         require(baseUrl == null || baseUrl.isNotBlank()) {
-            "aisme.chat-runtimes.base-url must not be blank when configured"
+            "aisme.chat.runtimes.base-url must not be blank when configured"
         }
         require(assetDirectory == null || assetDirectory.isNotBlank()) {
-            "aisme.chat-runtimes.asset-directory must not be blank when configured"
+            "aisme.chat.runtimes.asset-directory must not be blank when configured"
         }
         require(serverExecutablePath == null || serverExecutablePath.isNotBlank()) {
-            "aisme.chat-runtimes.server-executable-path must not be blank when configured"
+            "aisme.chat.runtimes.server-executable-path must not be blank when configured"
         }
     }
 

@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
 interface OllamaChatApiFactory {
-    fun create(baseUrl: String, timeout: Duration): OllamaChatApi
+    fun create(baseUrl: String, apiTimeout: Duration): OllamaChatApi
 }
 
 @Component
 class SpringAiOllamaChatApiFactory : OllamaChatApiFactory {
-    override fun create(baseUrl: String, timeout: Duration): OllamaChatApi {
+    override fun create(baseUrl: String, apiTimeout: Duration): OllamaChatApi {
         val requestFactory = SimpleClientHttpRequestFactory().apply {
-            setConnectTimeout(timeout)
-            setReadTimeout(timeout)
+            setConnectTimeout(apiTimeout)
+            setReadTimeout(apiTimeout)
         }
         val restClientBuilder = RestClient.builder()
             .requestFactory(requestFactory)

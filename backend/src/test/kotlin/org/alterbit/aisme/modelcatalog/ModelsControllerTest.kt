@@ -19,23 +19,23 @@ import org.springframework.test.web.servlet.get
 @SpringBootTest(
     classes = [ModelsControllerTestContext::class],
     properties = [
-        "aisme.chat-models.local-ollama-llama.enabled=true",
-        "aisme.chat-models.local-ollama-llama.display-order=10",
-        "aisme.chat-models.local-ollama-llama.display-name=Local Ollama Llama",
-        "aisme.chat-models.local-ollama-llama.description=Local Ollama model for chat requests.",
-        "aisme.chat-models.local-ollama-llama.runtime.id=local-ollama",
-        "aisme.chat-models.local-ollama-llama.runtime.model-name=llama3.2",
-        "aisme.chat-models.cloud-gpt.enabled=true",
-        "aisme.chat-models.cloud-gpt.display-order=20",
-        "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
-        "aisme.chat-models.cloud-gpt.description=Cloud model for online chat requests.",
-        "aisme.chat-models.cloud-gpt.runtime.id=spring-ai",
-        "aisme.chat-models.embedded-qwen-0-5b.enabled=false",
-        "aisme.chat-models.embedded-qwen-1-5b.enabled=false",
-        "aisme.chat-models.embedded-qwen-3b.enabled=false",
-        "aisme.chat-models.embedded-mistral-7b.enabled=false",
-        "aisme.chat-models.openai-compatible-example.enabled=false",
-        "aisme.chat-models.hugging-face-tgi-example.enabled=false",
+        "aisme.chat.models.local-ollama-llama.enabled=true",
+        "aisme.chat.models.local-ollama-llama.display-order=10",
+        "aisme.chat.models.local-ollama-llama.display-name=Local Ollama Llama",
+        "aisme.chat.models.local-ollama-llama.description=Local Ollama model for chat requests.",
+        "aisme.chat.models.local-ollama-llama.runtime.id=local-ollama",
+        "aisme.chat.models.local-ollama-llama.runtime.model-name=llama3.2",
+        "aisme.chat.models.cloud-gpt.enabled=true",
+        "aisme.chat.models.cloud-gpt.display-order=20",
+        "aisme.chat.models.cloud-gpt.display-name=Cloud GPT",
+        "aisme.chat.models.cloud-gpt.description=Cloud model for online chat requests.",
+        "aisme.chat.models.cloud-gpt.runtime.id=spring-ai",
+        "aisme.chat.models.embedded-qwen-0-5b.enabled=false",
+        "aisme.chat.models.embedded-qwen-1-5b.enabled=false",
+        "aisme.chat.models.embedded-qwen-3b.enabled=false",
+        "aisme.chat.models.embedded-mistral-7b.enabled=false",
+        "aisme.chat.models.openai-compatible-example.enabled=false",
+        "aisme.chat.models.hugging-face-tgi-example.enabled=false",
     ],
 )
 @AutoConfigureMockMvc
@@ -136,7 +136,7 @@ class ModelsControllerTestConfiguration {
             override fun supports(model: ChatModelDescriptor): Boolean =
                 model.id == "local-ollama-llama"
 
-            override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+            override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
                 ChatModelAvailability.AVAILABLE
         }
 }

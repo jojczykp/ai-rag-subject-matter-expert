@@ -31,7 +31,7 @@ class HuggingFaceTgiChatApiFactoryTest {
         val api = RestClientHuggingFaceTgiChatApiFactory().create(
             baseUrl = "http://localhost:${server.address.port}",
             apiKey = "test-api-key",
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         val response = api.generate(
@@ -59,7 +59,7 @@ class HuggingFaceTgiChatApiFactoryTest {
         val api = RestClientHuggingFaceTgiChatApiFactory().create(
             baseUrl = "http://localhost:${server.address.port}",
             apiKey = null,
-            timeout = Duration.ofSeconds(5),
+            apiTimeout = Duration.ofSeconds(5),
         )
 
         api.generate(HuggingFaceTgiGenerateRequest(inputs = "Hello"))

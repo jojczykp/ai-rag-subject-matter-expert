@@ -26,7 +26,7 @@ class OllamaAiModelClientProviderTest {
                 springAiModel(id = "cloud-gpt"),
                 ollamaModel(id = "local-qwen", runtimeId = "local-ollama-alt", modelName = "qwen2.5"),
             ),
-            chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
+            chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(30)),
             ollamaChatApiFactory = factory,
         )
 
@@ -34,11 +34,11 @@ class OllamaAiModelClientProviderTest {
         factory.createdClients shouldContainExactly listOf(
             CreatedOllamaClient(
                 baseUrl = "http://localhost:11434",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
             CreatedOllamaClient(
                 baseUrl = "http://localhost:11435",
-                timeout = Duration.ofSeconds(30),
+                apiTimeout = Duration.ofSeconds(30),
             ),
         )
     }
@@ -106,8 +106,8 @@ class OllamaAiModelClientProviderTest {
     private class FakeOllamaChatApiFactory : OllamaChatApiFactory {
         val createdClients = mutableListOf<CreatedOllamaClient>()
 
-        override fun create(baseUrl: String, timeout: Duration): OllamaChatApi {
-            createdClients += CreatedOllamaClient(baseUrl = baseUrl, timeout = timeout)
+        override fun create(baseUrl: String, apiTimeout: Duration): OllamaChatApi {
+            createdClients += CreatedOllamaClient(baseUrl = baseUrl, apiTimeout = apiTimeout)
             return FakeOllamaChatApi()
         }
     }
@@ -136,6 +136,6 @@ class OllamaAiModelClientProviderTest {
 
     private data class CreatedOllamaClient(
         val baseUrl: String,
-        val timeout: Duration,
+        val apiTimeout: Duration,
     )
 }

@@ -97,7 +97,7 @@ class ChatModelRegistryTest {
             ChatModelRegistry(configuredProperties(chatModelsById = emptyMap()))
         }
 
-        exception.message shouldContain "aisme.chat-models"
+        exception.message shouldContain "aisme.chat.models"
     }
 
     @Test
@@ -154,7 +154,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models.local-ollama-llama.runtime.model-name"
+        exception.message shouldContain "aisme.chat.models.local-ollama-llama.runtime.model-name"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -250,7 +250,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-runtimes"
+        exception.message shouldContain "aisme.chat.runtimes"
     }
 
     @Test

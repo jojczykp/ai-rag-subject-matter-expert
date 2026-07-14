@@ -20,7 +20,7 @@ class EmbeddedOfflineModelAvailabilityChecker(
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.EMBEDDED_LLAMA
 
-    override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
+    override fun check(model: ChatModelDescriptor, apiTimeout: Duration): ChatModelAvailability =
         if (model.mode != ChatModelMode.EMBEDDED_OFFLINE || !model.availableOffline) {
             logger.warn("Embedded model '{}' is misconfigured for offline availability checks", model.id)
             ChatModelAvailability.MISCONFIGURED

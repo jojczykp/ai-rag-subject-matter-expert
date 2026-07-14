@@ -15,7 +15,7 @@ class FakeAiModelClientTest {
                 modelId = "local-llama",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
-                timeout = Duration.ofSeconds(60),
+                apiTimeout = Duration.ofSeconds(60),
             ),
         )
 
@@ -71,6 +71,6 @@ class FakeAiModelClientTest {
             modelId = "local-llama",
             message = message,
             contextChunks = contextChunks,
-            timeout = Duration.ofSeconds(60),
+            apiTimeout = Duration.ofSeconds(60),
         )
 }
