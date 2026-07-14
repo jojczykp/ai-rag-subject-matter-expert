@@ -11,7 +11,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.alterbit.aisme.modelcatalog.ModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
@@ -171,7 +171,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
 @EnableConfigurationProperties(
     ChatProperties::class,
     ChatModelAvailabilityProperties::class,
-    ConfiguredChatModelsProperties::class,
+    ChatModelsProperties::class,
 )
 @Import(
     AiChatService::class,

@@ -7,7 +7,7 @@ import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.alterbit.aisme.modelcatalog.ModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
@@ -125,7 +125,7 @@ class ChatApiIntegrationTest(
 @EnableConfigurationProperties(
     ChatProperties::class,
     ChatModelAvailabilityProperties::class,
-    ConfiguredChatModelsProperties::class,
+    ChatModelsProperties::class,
 )
 @Import(
     AiChatService::class,

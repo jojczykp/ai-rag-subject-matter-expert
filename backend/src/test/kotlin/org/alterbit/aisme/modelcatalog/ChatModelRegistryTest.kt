@@ -314,8 +314,8 @@ class ChatModelRegistryTest {
     private fun configuredProperties(
         chatRuntimesById: Map<String, ChatModelRuntimeConfigProperties> = defaultRuntimes(),
         chatModelsById: Map<String, ChatModelProperties> = mapOf(configuredModel()),
-    ): ConfiguredChatModelsProperties =
-        ConfiguredChatModelsProperties(
+    ): ChatModelsProperties =
+        ChatModelsProperties(
             chatRuntimesById = chatRuntimesById,
             chatModelsById = chatModelsById,
         )

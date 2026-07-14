@@ -5,7 +5,7 @@ import org.alterbit.aisme.api.ApiExceptionHandler
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -137,7 +137,7 @@ class ChatControllerTest(
 @EnableConfigurationProperties(
     ChatProperties::class,
     ChatModelAvailabilityProperties::class,
-    ConfiguredChatModelsProperties::class,
+    ChatModelsProperties::class,
 )
 @Import(
     AiChatService::class,

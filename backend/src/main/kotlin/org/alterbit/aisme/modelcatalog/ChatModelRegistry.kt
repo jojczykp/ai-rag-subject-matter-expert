@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ChatModelRegistry(
-    properties: ConfiguredChatModelsProperties,
+    properties: ChatModelsProperties,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 

@@ -7,7 +7,7 @@ import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
@@ -97,10 +97,10 @@ class ConfigurationPropertiesValidationTest {
     private class ChatModelAvailabilityPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
+    @EnableConfigurationProperties(ChatModelsProperties::class)
     private class ChatModelCatalogConfiguration {
         @Bean
-        fun chatModelRegistry(properties: ConfiguredChatModelsProperties): ChatModelRegistry =
+        fun chatModelRegistry(properties: ChatModelsProperties): ChatModelRegistry =
             ChatModelRegistry(properties)
     }
 }

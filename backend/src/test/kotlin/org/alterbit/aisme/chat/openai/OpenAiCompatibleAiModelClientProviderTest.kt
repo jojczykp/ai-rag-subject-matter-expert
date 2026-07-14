@@ -9,7 +9,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 
@@ -47,7 +47,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
         val exception = shouldThrow<IllegalArgumentException> {
             OpenAiCompatibleAiModelClientProvider(
                 chatModelRegistry = ChatModelRegistry(
-                    ConfiguredChatModelsProperties(
+                    ChatModelsProperties(
                         chatRuntimesById = mapOf(
                             "openai-compatible" to ChatModelRuntimeConfigProperties(
                                 type = ChatModelRuntime.OPENAI_COMPATIBLE,
@@ -84,7 +84,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
 
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            ChatModelsProperties(
                 chatRuntimesById = mapOf(
                     "openai-compatible" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,

@@ -11,7 +11,7 @@ import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
@@ -133,7 +133,7 @@ class OllamaContainerSmokeTest(
 @EnableConfigurationProperties(
     ChatProperties::class,
     ChatModelAvailabilityProperties::class,
-    ConfiguredChatModelsProperties::class,
+    ChatModelsProperties::class,
 )
 @Import(
     AiChatService::class,

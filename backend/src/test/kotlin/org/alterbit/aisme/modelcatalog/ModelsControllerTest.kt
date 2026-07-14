@@ -43,7 +43,7 @@ class ModelsControllerTest(
     private val mockMvc: MockMvc,
 ) {
     @Test
-    fun `lists configured chat models`() {
+    fun `lists chat models`() {
         mockMvc.get("/models")
             .andExpect {
                 status { isOk() }
@@ -114,7 +114,7 @@ class ModelsControllerTest(
 )
 @EnableConfigurationProperties(
     ChatModelAvailabilityProperties::class,
-    ConfiguredChatModelsProperties::class,
+    ChatModelsProperties::class,
 )
 @Import(
     ChatModelAvailabilityService::class,

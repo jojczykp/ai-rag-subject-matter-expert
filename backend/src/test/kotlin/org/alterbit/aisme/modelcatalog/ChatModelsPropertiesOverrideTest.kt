@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class ConfiguredChatModelsPropertiesOverrideTest {
+class ChatModelsPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
@@ -34,7 +34,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
     @Test
     fun `uses configured models`() {
         contextRunner.run { context ->
-            val properties = context.getBean<ConfiguredChatModelsProperties>()
+            val properties = context.getBean<ChatModelsProperties>()
 
             properties.chatModelsById.size shouldBe 2
             val cloudModel = properties.chatModelsById.getValue("cloud-gpt")
@@ -68,6 +68,6 @@ class ConfiguredChatModelsPropertiesOverrideTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
+    @EnableConfigurationProperties(ChatModelsProperties::class)
     private class PropertiesConfiguration
 }

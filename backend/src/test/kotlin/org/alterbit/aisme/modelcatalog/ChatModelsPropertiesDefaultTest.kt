@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class ConfiguredChatModelsPropertiesDefaultTest {
+class ChatModelsPropertiesDefaultTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
@@ -16,11 +16,11 @@ class ConfiguredChatModelsPropertiesDefaultTest {
         contextRunner.run { context ->
             context.startupFailure
                 .shouldNotBeNull()
-                .stackTraceToString() shouldContain "ConfiguredChatModelsProperties"
+                .stackTraceToString() shouldContain "ChatModelsProperties"
         }
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)
+    @EnableConfigurationProperties(ChatModelsProperties::class)
     private class PropertiesConfiguration
 }

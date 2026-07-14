@@ -12,7 +12,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.ai.ollama.api.OllamaApi
 
@@ -48,7 +48,7 @@ class OllamaAiModelClientProviderTest {
         val exception = shouldThrow<IllegalArgumentException> {
             OllamaAiModelClientProvider(
                 chatModelRegistry = ChatModelRegistry(
-                    ConfiguredChatModelsProperties(
+                    ChatModelsProperties(
                         chatRuntimesById = mapOf(
                             "local-ollama" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.OLLAMA),
                         ),
@@ -66,7 +66,7 @@ class OllamaAiModelClientProviderTest {
 
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            ChatModelsProperties(
                 chatRuntimesById = mapOf(
                     "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,

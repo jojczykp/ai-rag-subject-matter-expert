@@ -7,7 +7,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
+import org.alterbit.aisme.modelcatalog.ChatModelsProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 
@@ -79,7 +79,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
 
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            ChatModelsProperties(
                 chatRuntimesById = mapOf(
                     "embedded-llama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.EMBEDDED_LLAMA,
