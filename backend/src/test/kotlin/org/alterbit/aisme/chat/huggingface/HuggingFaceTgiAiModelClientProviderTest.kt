@@ -52,7 +52,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                                 type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                             ),
                         ),
-                        chatModels = listOf(huggingFaceModel()),
+                        chatModelsById = mapOf(huggingFaceModel()),
                     ),
                 ),
                 chatProperties = ChatProperties(),
@@ -64,7 +64,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
         exception.message shouldContain "is required"
     }
 
-    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
@@ -82,7 +82,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                         baseUrl = "http://localhost:11434",
                     ),
                 ),
-                chatModels = models.toList(),
+                chatModelsById = models.toMap(),
             ),
         )
 
@@ -91,17 +91,15 @@ class HuggingFaceTgiAiModelClientProviderTest {
         baseUrl: String? = "https://hf.example.com",
         runtimeId: String = if (baseUrl == "https://qwen.example.com") "hugging-face-tgi-alt" else "hugging-face-tgi",
         apiKey: String? = "test-api-key",
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Hugging Face Mistral",
             runtimeId = runtimeId,
         )
 
-    private fun nonHuggingFaceModel(id: String): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    private fun nonHuggingFaceModel(id: String): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
             runtimeId = "local-ollama",

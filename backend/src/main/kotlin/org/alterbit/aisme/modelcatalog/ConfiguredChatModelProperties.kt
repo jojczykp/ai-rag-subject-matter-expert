@@ -1,8 +1,8 @@
 package org.alterbit.aisme.modelcatalog
 
 data class ConfiguredChatModelProperties(
-    val id: String,
     val enabled: Boolean = false,
+    val displayOrder: Int? = null,
     val displayName: String? = null,
     val description: String? = null,
     val runtimeId: String? = null,
@@ -12,7 +12,9 @@ data class ConfiguredChatModelProperties(
     val runtimeArguments: List<String> = emptyList(),
 ) {
     init {
-        require(id.isNotBlank()) { "aisme.chat-models.id must not be blank" }
+        require(displayOrder == null || displayOrder >= 0) {
+            "aisme.chat-models.display-order must not be negative when configured"
+        }
         require(displayName == null || displayName.isNotBlank()) {
             "aisme.chat-models.display-name must not be blank"
         }
@@ -49,9 +51,13 @@ data class ConfiguredChatModelProperties(
         return runtimeId
     }
 
-    fun toDescriptor(runtime: ConfiguredChatRuntimeProperties): ChatModelDescriptor {
+    fun toDescriptor(
+        id: String,
+        runtime: ConfiguredChatRuntimeProperties,
+    ): ChatModelDescriptor {
         return ChatModelDescriptor(
             id = id,
+            displayOrder = displayOrder,
             displayName = requireDisplayName(),
             description = description.normalizedOptionalValue(),
             runtimeId = requireRuntimeId(),

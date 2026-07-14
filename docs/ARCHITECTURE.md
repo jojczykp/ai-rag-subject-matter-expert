@@ -270,8 +270,8 @@ embedding model metadata or chunking strategy changes. The schema diagram is mai
 Configuration should make model availability and runtime mode explicit.
 
 - [x] Add bundled document resource folder configuration.
-- [x] Keep model selection in a single `aisme.chat-models` catalog with
-      per-model `enabled` flags.
+- [x] Keep model selection in a single `aisme.chat-models` catalog with keyed
+      model ids, per-model `enabled` flags, and optional display order.
 - [x] Add configuration properties for `aisme.chat-models`.
 - [x] Add environment variable support for cloud credentials.
 - [x] Add validation for missing required provider settings.
@@ -311,20 +311,23 @@ aisme:
     spring-ai:
       type: SPRING_AI
   chat-models:
-    - id: local-ollama-llama
+    local-ollama-llama:
       enabled: true
+      display-order: 50
       display-name: Local Ollama Llama
       description: Local Ollama model for chat requests when Ollama is running on this machine.
       runtime-id: local-ollama
       model-name: llama3.2
-    - id: openai-compatible-example
+    openai-compatible-example:
       enabled: true
+      display-order: 60
       display-name: OpenAI-Compatible Cloud Example
       description: Online OpenAI-compatible model for cloud-hosted chat requests.
       runtime-id: openai-compatible
       model-name: example-chat-model
-    - id: hugging-face-tgi-example
+    hugging-face-tgi-example:
       enabled: true
+      display-order: 70
       display-name: Hugging Face TGI Example
       description: Online Hugging Face endpoint using the TGI-compatible generate API.
       runtime-id: hugging-face-tgi

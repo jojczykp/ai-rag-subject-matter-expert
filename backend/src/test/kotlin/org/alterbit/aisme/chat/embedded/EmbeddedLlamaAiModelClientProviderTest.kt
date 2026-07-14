@@ -16,9 +16,9 @@ class EmbeddedLlamaAiModelClientProviderTest {
         val factory = FakeLlamaServerChatApiFactory()
         val provider = EmbeddedLlamaAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "embedded-qwen"),
+                embeddedModel(id = "embedded-qwen", displayOrder = 10),
                 ollamaModel(id = "local-llama"),
-                embeddedModel(id = "embedded-mistral"),
+                embeddedModel(id = "embedded-mistral", displayOrder = 20),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             embeddedLlamaProcessManager = processManager(
@@ -76,7 +76,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
         provider.clients().map { it.modelId } shouldContainExactly listOf("configured-runtime-model")
     }
 
-    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
@@ -90,20 +90,21 @@ class EmbeddedLlamaAiModelClientProviderTest {
                         baseUrl = "http://localhost:11434",
                     ),
                 ),
-                chatModels = models.toList().withFallbackModelWhenNoneEnabled(),
+                chatModelsById = models.toMap().withFallbackModelWhenNoneEnabled(),
             ),
         )
 
-    private fun List<ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): List<ConfiguredChatModelProperties> =
-        if (any { it.enabled }) this else this + ollamaModel(id = "local-llama")
+    private fun Map<String, ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): Map<String, ConfiguredChatModelProperties> =
+        if (values.any { it.enabled }) this else this + ollamaModel(id = "local-llama")
 
     private fun embeddedModel(
         id: String,
         enabled: Boolean = true,
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+        displayOrder: Int? = null,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = enabled,
+            displayOrder = displayOrder,
             displayName = "Embedded Qwen",
             runtimeId = "embedded-llama",
             modelName = "qwen2.5",
@@ -111,9 +112,8 @@ class EmbeddedLlamaAiModelClientProviderTest {
             contextSize = 4096,
         )
 
-    private fun ollamaModel(id: String): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    private fun ollamaModel(id: String): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
             runtimeId = "local-ollama",
@@ -126,7 +126,9 @@ class EmbeddedLlamaAiModelClientProviderTest {
     ): EmbeddedLlamaProcessManager =
         EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
-                *modelIds.map { id -> embeddedModel(id = id) }.toTypedArray(),
+                *modelIds.mapIndexed { index, id ->
+                    embeddedModel(id = id, displayOrder = index)
+                }.toTypedArray(),
             ),
             portAllocator = fixedPortAllocator(*ports),
             processLauncher = FakeEmbeddedLlamaProcessLauncher(),

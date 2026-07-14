@@ -53,7 +53,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
                                 apiKey = "test-api-key",
                             ),
                         ),
-                        chatModels = listOf(openAiModel()),
+                        chatModelsById = mapOf(openAiModel()),
                     ),
                 ),
                 chatProperties = ChatProperties(),
@@ -81,7 +81,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
         factory.createdClients.map { it.apiKey } shouldContainExactly listOf("test-api-key")
     }
 
-    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
@@ -104,7 +104,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
                         baseUrl = "http://localhost:11434",
                     ),
                 ),
-                chatModels = models.toList(),
+                chatModelsById = models.toMap(),
             ),
         )
 
@@ -113,18 +113,16 @@ class OpenAiCompatibleAiModelClientProviderTest {
         runtimeId: String? = null,
         modelName: String? = "gpt-4.1-mini",
         apiKey: String? = "test-api-key",
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Cloud GPT",
             runtimeId = runtimeId ?: if (apiKey == null) "openai-compatible-no-key" else "openai-compatible",
             modelName = modelName,
         )
 
-    private fun ollamaModel(id: String): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    private fun ollamaModel(id: String): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
             runtimeId = "local-ollama",

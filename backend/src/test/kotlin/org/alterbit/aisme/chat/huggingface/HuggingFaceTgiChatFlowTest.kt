@@ -89,10 +89,9 @@ class HuggingFaceTgiChatFlowTest(
             registry.add("aisme.runtimes.hugging-face-tgi.type") { "HUGGING_FACE_ENDPOINT" }
             registry.add("aisme.runtimes.hugging-face-tgi.base-url") { "http://localhost:${server.address.port}" }
             registry.add("aisme.runtimes.hugging-face-tgi.api-key") { "test-api-key" }
-            registry.add("aisme.chat-models[0].id") { "mock-hugging-face" }
-            registry.add("aisme.chat-models[0].enabled") { "true" }
-            registry.add("aisme.chat-models[0].display-name") { "Mock Hugging Face TGI Model" }
-            registry.add("aisme.chat-models[0].runtime-id") { "hugging-face-tgi" }
+            registry.add("aisme.chat-models.mock-hugging-face.enabled") { "true" }
+            registry.add("aisme.chat-models.mock-hugging-face.display-name") { "Mock Hugging Face TGI Model" }
+            registry.add("aisme.chat-models.mock-hugging-face.runtime-id") { "hugging-face-tgi" }
         }
 
         @JvmStatic

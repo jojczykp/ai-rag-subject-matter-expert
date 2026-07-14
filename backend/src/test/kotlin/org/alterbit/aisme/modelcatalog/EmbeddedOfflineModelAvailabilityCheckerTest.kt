@@ -209,9 +209,8 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                             serverExecutablePath = model.serverExecutablePath,
                         ),
                     ),
-                    chatModels = listOf(
-                        ConfiguredChatModelProperties(
-                            id = model.id,
+                    chatModelsById = mapOf(
+                        model.id to ConfiguredChatModelProperties(
                             enabled = true,
                             displayName = model.displayName,
                             runtimeId = model.runtimeId,

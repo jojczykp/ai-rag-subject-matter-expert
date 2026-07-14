@@ -24,11 +24,10 @@ import org.springframework.test.web.servlet.post
 @SpringBootTest(
     classes = [ChatControllerTestContext::class],
     properties = [
-        "aisme.chat-models[0].id=local-ollama-llama",
-        "aisme.chat-models[0].enabled=true",
-        "aisme.chat-models[0].display-name=Local Ollama Llama",
-        "aisme.chat-models[0].runtime-id=local-ollama",
-        "aisme.chat-models[0].model-name=llama3.2",
+        "aisme.chat-models.local-ollama-llama.enabled=true",
+        "aisme.chat-models.local-ollama-llama.display-name=Local Ollama Llama",
+        "aisme.chat-models.local-ollama-llama.runtime-id=local-ollama",
+        "aisme.chat-models.local-ollama-llama.model-name=llama3.2",
     ],
 )
 @AutoConfigureMockMvc

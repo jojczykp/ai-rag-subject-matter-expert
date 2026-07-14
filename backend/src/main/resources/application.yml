@@ -56,8 +56,9 @@ aisme:
     timeout: 5s
     cache-ttl: 5s
   chat-models:
-    - id: embedded-qwen-0-5b
+    embedded-qwen-0-5b:
       enabled: true
+      display-order: 10
       display-name: Embedded Qwen 0.5B
       description: Fully offline embedded model backed by a local GGUF asset.
       runtime-id: embedded-llama
@@ -65,8 +66,9 @@ aisme:
       gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
       context-size: 2048
       runtime-arguments: []
-    - id: embedded-qwen-1-5b
+    embedded-qwen-1-5b:
       enabled: true
+      display-order: 20
       display-name: Embedded Qwen 1.5B
       description: Smarter fully offline embedded model backed by a local GGUF asset.
       runtime-id: embedded-llama
@@ -74,8 +76,9 @@ aisme:
       gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
       context-size: 2048
       runtime-arguments: []
-    - id: embedded-qwen-3b
+    embedded-qwen-3b:
       enabled: true
+      display-order: 30
       display-name: Embedded Qwen 3B
       description: Larger fully offline embedded model backed by a local GGUF asset.
       runtime-id: embedded-llama
@@ -83,8 +86,9 @@ aisme:
       gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
       context-size: 2048
       runtime-arguments: []
-    - id: embedded-mistral-7b
+    embedded-mistral-7b:
       enabled: true
+      display-order: 40
       display-name: Embedded Mistral 7B
       description: Heavier fully offline embedded model for stronger local answers.
       runtime-id: embedded-llama
@@ -92,20 +96,23 @@ aisme:
       gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
       context-size: 2048
       runtime-arguments: []
-    - id: local-ollama-llama
+    local-ollama-llama:
       enabled: true
+      display-order: 50
       display-name: Local Ollama Llama
       description: Local Ollama model for chat requests when Ollama is running on this machine.
       runtime-id: local-ollama
       model-name: llama3.2
-    - id: openai-compatible-example
+    openai-compatible-example:
       enabled: true
+      display-order: 60
       display-name: OpenAI-Compatible Cloud Example
       description: Online OpenAI-compatible model for cloud-hosted chat requests.
       runtime-id: openai-compatible
       model-name: example-chat-model
-    - id: hugging-face-tgi-example
+    hugging-face-tgi-example:
       enabled: true
+      display-order: 70
       display-name: Hugging Face TGI Example
       description: Online Hugging Face endpoint using the TGI-compatible generate API.
       runtime-id: hugging-face-tgi

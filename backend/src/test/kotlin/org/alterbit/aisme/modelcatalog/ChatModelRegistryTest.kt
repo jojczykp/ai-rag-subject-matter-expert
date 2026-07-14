@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test
 
 class ChatModelRegistryTest {
     @Test
-    fun `lists configured models in configuration order`() {
+    fun `lists configured models in display order`() {
         val registry = ChatModelRegistry(
             configuredProperties(
-                chatModels = listOf(
-                    configuredModel(id = "first-model"),
-                    configuredModel(id = "second-model"),
+                chatModelsById = mapOf(
+                    configuredModel(id = "second-model", displayOrder = 20),
+                    configuredModel(id = "first-model", displayOrder = 10),
                 ),
             ),
         )
@@ -31,7 +31,7 @@ class ChatModelRegistryTest {
     fun `finds configured model by id`() {
         val registry = ChatModelRegistry(
             configuredProperties(
-                chatModels = listOf(
+                chatModelsById = mapOf(
                     configuredModel(id = "local-ollama-llama"),
                 ),
             ),
@@ -60,7 +60,7 @@ class ChatModelRegistryTest {
     fun `ignores disabled configured models`() {
         val registry = ChatModelRegistry(
             configuredProperties(
-                chatModels = listOf(
+                chatModelsById = mapOf(
                     configuredModel(id = "enabled-model"),
                     configuredModel(id = "disabled-model", enabled = false),
                 ),
@@ -94,26 +94,25 @@ class ChatModelRegistryTest {
     @Test
     fun `rejects empty configured model list`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ChatModelRegistry(configuredProperties(chatModels = emptyList()))
+            ChatModelRegistry(configuredProperties(chatModelsById = emptyMap()))
         }
 
         exception.message shouldContain "aisme.chat-models"
     }
 
     @Test
-    fun `rejects duplicate configured model ids`() {
+    fun `rejects blank configured model id`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModels = listOf(
-                        configuredModel(id = "duplicate-model"),
-                        configuredModel(id = "duplicate-model"),
+                    chatModelsById = mapOf(
+                        "" to configuredModelValue(),
                     ),
                 ),
             )
         }
 
-        exception.message shouldContain "duplicate"
+        exception.message shouldContain "blank ids"
     }
 
     @Test
@@ -121,7 +120,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModels = listOf(ConfiguredChatModelProperties(id = "missing-config", enabled = true)),
+                    chatModelsById = mapOf("missing-config" to ConfiguredChatModelProperties(enabled = true)),
                 ),
             )
         }
@@ -135,7 +134,7 @@ class ChatModelRegistryTest {
             ChatModelRegistry(
                 configuredProperties(
                     runtimes = mapOf("local-ollama" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.OLLAMA)),
-                    chatModels = listOf(configuredModel()),
+                    chatModelsById = mapOf(configuredModel()),
                 ),
             )
         }
@@ -150,12 +149,12 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModels = listOf(configuredModel(modelName = null)),
+                    chatModelsById = mapOf(configuredModel(modelName = null)),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].model-name"
+        exception.message shouldContain "aisme.chat-models.local-ollama-llama.model-name"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -170,7 +169,7 @@ class ChatModelRegistryTest {
                         baseUrl = "https://api.example.com/v1",
                     ),
                 ),
-                chatModels = listOf(
+                chatModelsById = mapOf(
                     configuredModel(
                         id = "cloud-gpt",
                         runtimeId = "openai-compatible-no-key",
@@ -195,7 +194,7 @@ class ChatModelRegistryTest {
                             type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                         ),
                     ),
-                    chatModels = listOf(
+                    chatModelsById = mapOf(
                         configuredModel(runtimeId = "hugging-face-tgi-missing-url", modelName = null),
                     ),
                 ),
@@ -211,7 +210,7 @@ class ChatModelRegistryTest {
     fun `allows online Hugging Face endpoint model without api key`() {
         val registry = ChatModelRegistry(
             configuredProperties(
-                chatModels = listOf(
+                chatModelsById = mapOf(
                     configuredModel(id = "hf-endpoint", runtimeId = "hugging-face-tgi", modelName = null),
                 ),
             ),
@@ -227,7 +226,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModels = listOf(
+                    chatModelsById = mapOf(
                         configuredModel(
                             runtimeId = "missing-runtime",
                         ),
@@ -246,7 +245,7 @@ class ChatModelRegistryTest {
             ChatModelRegistry(
                 configuredProperties(
                     runtimes = emptyMap(),
-                    chatModels = listOf(configuredModel()),
+                    chatModelsById = mapOf(configuredModel()),
                 ),
             )
         }
@@ -259,7 +258,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModels = listOf(
+                    chatModelsById = mapOf(
                         configuredModel(
                             runtimeId = "embedded-llama",
                             modelName = "qwen2.5",
@@ -276,13 +275,14 @@ class ChatModelRegistryTest {
     private fun configuredModel(
         id: String = "local-ollama-llama",
         enabled: Boolean = true,
+        displayOrder: Int? = null,
         runtimeId: String? = "local-ollama",
         modelName: String? = "llama3.2",
         ggufFile: String? = "models/qwen.gguf",
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to configuredModelValue(
             enabled = enabled,
+            displayOrder = displayOrder,
             displayName = "Local Ollama Llama",
             runtimeId = runtimeId,
             modelName = modelName,
@@ -290,13 +290,32 @@ class ChatModelRegistryTest {
             contextSize = 2048,
         )
 
+    private fun configuredModelValue(
+        enabled: Boolean = true,
+        displayOrder: Int? = null,
+        displayName: String? = "Local Ollama Llama",
+        runtimeId: String? = "local-ollama",
+        modelName: String? = "llama3.2",
+        ggufFile: String? = "models/qwen.gguf",
+        contextSize: Int? = 2048,
+    ): ConfiguredChatModelProperties =
+        ConfiguredChatModelProperties(
+            enabled = enabled,
+            displayOrder = displayOrder,
+            displayName = displayName,
+            runtimeId = runtimeId,
+            modelName = modelName,
+            ggufFile = ggufFile,
+            contextSize = contextSize,
+        )
+
     private fun configuredProperties(
         runtimes: Map<String, ConfiguredChatRuntimeProperties> = defaultRuntimes(),
-        chatModels: List<ConfiguredChatModelProperties> = listOf(configuredModel()),
+        chatModelsById: Map<String, ConfiguredChatModelProperties> = mapOf(configuredModel()),
     ): ConfiguredChatModelsProperties =
         ConfiguredChatModelsProperties(
             runtimes = runtimes,
-            chatModels = chatModels,
+            chatModelsById = chatModelsById,
         )
 
     private fun defaultRuntimes(): Map<String, ConfiguredChatRuntimeProperties> =

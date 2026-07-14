@@ -15,19 +15,25 @@ class ChatModelRegistry(
             require(runtimes.keys.none { it.isBlank() }) { "aisme.runtimes must not contain blank ids" }
         }
 
-    private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModels
-        .also { models ->
-            require(models.map { it.id }.distinct().size == models.size) {
-                "aisme.chat-models must not contain duplicate ids"
-            }
+    private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModelsById
+        .also { modelsById ->
+            require(modelsById.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
+            require(modelsById.keys.none { it.isBlank() }) { "aisme.chat-models must not contain blank ids" }
         }
-        .mapIndexed { index, model -> IndexedConfiguredChatModel(index = index, model = model) }
+        .entries
+        .map { entry ->
+            IndexedConfiguredChatModel(
+                id = entry.key,
+                model = entry.value,
+            )
+        }
         .filter { it.model.enabled }
         .onEach { it.validateRuntimeConfiguration() }
-        .map { it.model.toDescriptor(runtime = runtimesById.getValue(it.model.requireRuntimeId())) }
+        .map { it.model.toDescriptor(id = it.id, runtime = runtimesById.getValue(it.model.requireRuntimeId())) }
         .also { models ->
             require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
         }
+        .sortedWith(compareBy<ChatModelDescriptor> { it.displayOrder ?: Int.MAX_VALUE }.thenBy { it.id })
         .associateBy { it.id }
         .also { models ->
             logger.info("Configured {} enabled chat model(s)", models.size)
@@ -52,11 +58,11 @@ class ChatModelRegistry(
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 
     private fun IndexedConfiguredChatModel.validateRuntimeConfiguration() {
-        val modelPrefix = "aisme.chat-models[$index]"
+        val modelPrefix = "aisme.chat-models.$id"
         val runtimeId = model.requireRuntimeId()
         val runtime = runtimesById[runtimeId]
         require(runtime != null) { "$modelPrefix.runtime-id references unknown runtime '$runtimeId'" }
-        val descriptor = model.toDescriptor(runtime)
+        val descriptor = model.toDescriptor(id = id, runtime = runtime)
 
         fun requireConfigured(value: String?, propertyName: String) {
             require(value != null) { "$modelPrefix.$propertyName is required for ${runtime.type} models" }
@@ -98,7 +104,7 @@ class ChatModelRegistry(
     }
 
     private data class IndexedConfiguredChatModel(
-        val index: Int,
+        val id: String,
         val model: ConfiguredChatModelProperties,
     )
 }

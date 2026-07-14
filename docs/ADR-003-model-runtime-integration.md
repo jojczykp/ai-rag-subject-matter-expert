@@ -118,9 +118,9 @@ availability checks are implemented, configured models are reported as
 ## Configuration Shape
 
 Use a runtime catalog plus a chat model catalog. Runtime entries define shared
-provider connection details. Chat models define user-selectable model ids,
-display metadata, and model-specific settings, then reference a runtime by
-`runtime-id`.
+provider connection details. Chat models are keyed by user-selectable model id,
+define display metadata and model-specific settings, then reference a runtime by
+`runtime-id`. `display-order` controls API and UI ordering when configured.
 
 ```yaml
 aisme:
@@ -129,8 +129,9 @@ aisme:
       type: OLLAMA
       base-url: http://localhost:11434
   chat-models:
-    - id: local-ollama-llama
+    local-ollama-llama:
       enabled: true
+      display-order: 10
       display-name: Local Ollama Llama
       runtime-id: local-ollama
       model-name: llama3.2

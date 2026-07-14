@@ -43,6 +43,7 @@ class EmbeddedLlamaProcessManagerTest {
             chatModelRegistry = chatModelRegistry(
                 embeddedModel(
                     id = "embedded-qwen",
+                    displayOrder = 10,
                     ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
                     contextSize = 2048,
                     runtimeArguments = listOf("--threads", "8"),
@@ -50,6 +51,7 @@ class EmbeddedLlamaProcessManagerTest {
                 ollamaModel(id = "local-llama"),
                 embeddedModel(
                     id = "embedded-mistral",
+                    displayOrder = 20,
                     ggufFile = "/opt/models/qwen.gguf",
                     contextSize = 8192,
                 ),
@@ -149,7 +151,7 @@ class EmbeddedLlamaProcessManagerTest {
         launcher.processes.single().destroyed shouldBe true
     }
 
-    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
@@ -163,23 +165,24 @@ class EmbeddedLlamaProcessManagerTest {
                         baseUrl = "http://localhost:11434",
                     ),
                 ),
-                chatModels = models.toList().withFallbackModelWhenNoneEnabled(),
+                chatModelsById = models.toMap().withFallbackModelWhenNoneEnabled(),
             ),
         )
 
-    private fun List<ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): List<ConfiguredChatModelProperties> =
-        if (any { it.enabled }) this else this + ollamaModel(id = "local-llama")
+    private fun Map<String, ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): Map<String, ConfiguredChatModelProperties> =
+        if (values.any { it.enabled }) this else this + ollamaModel(id = "local-llama")
 
     private fun embeddedModel(
         id: String,
         enabled: Boolean = true,
+        displayOrder: Int? = null,
         ggufFile: String = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = enabled,
+            displayOrder = displayOrder,
             displayName = "Embedded Qwen",
             runtimeId = "embedded-llama",
             modelName = "qwen2.5",
@@ -188,9 +191,8 @@ class EmbeddedLlamaProcessManagerTest {
             runtimeArguments = runtimeArguments,
         )
 
-    private fun ollamaModel(id: String): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    private fun ollamaModel(id: String): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
             runtimeId = "local-ollama",

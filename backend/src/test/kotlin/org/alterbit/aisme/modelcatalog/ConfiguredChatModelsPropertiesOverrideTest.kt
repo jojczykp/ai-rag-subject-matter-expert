@@ -1,6 +1,5 @@
 package org.alterbit.aisme.modelcatalog
 
-import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
@@ -18,18 +17,18 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             "aisme.runtimes.embedded-llama.type=EMBEDDED_OFFLINE",
             "aisme.runtimes.embedded-llama.asset-directory=./models/llama",
             "aisme.runtimes.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
-            "aisme.chat-models[0].id=cloud-gpt",
-            "aisme.chat-models[0].enabled=true",
-            "aisme.chat-models[0].display-name=Cloud GPT",
-            "aisme.chat-models[0].runtime-id=openai-compatible",
-            "aisme.chat-models[0].model-name=gpt-4.1-mini",
-            "aisme.chat-models[1].id=embedded-qwen",
-            "aisme.chat-models[1].enabled=true",
-            "aisme.chat-models[1].display-name=Embedded Qwen",
-            "aisme.chat-models[1].runtime-id=embedded-llama",
-            "aisme.chat-models[1].model-name=qwen2.5",
-            "aisme.chat-models[1].gguf-file=models/qwen.gguf",
-            "aisme.chat-models[1].context-size=2048",
+            "aisme.chat-models.cloud-gpt.enabled=true",
+            "aisme.chat-models.cloud-gpt.display-order=10",
+            "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
+            "aisme.chat-models.cloud-gpt.runtime-id=openai-compatible",
+            "aisme.chat-models.cloud-gpt.model-name=gpt-4.1-mini",
+            "aisme.chat-models.embedded-qwen.enabled=true",
+            "aisme.chat-models.embedded-qwen.display-order=20",
+            "aisme.chat-models.embedded-qwen.display-name=Embedded Qwen",
+            "aisme.chat-models.embedded-qwen.runtime-id=embedded-llama",
+            "aisme.chat-models.embedded-qwen.model-name=qwen2.5",
+            "aisme.chat-models.embedded-qwen.gguf-file=models/qwen.gguf",
+            "aisme.chat-models.embedded-qwen.context-size=2048",
         )
 
     @Test
@@ -37,11 +36,11 @@ class ConfiguredChatModelsPropertiesOverrideTest {
         contextRunner.run { context ->
             val properties = context.getBean<ConfiguredChatModelsProperties>()
 
-            properties.chatModels shouldHaveSize 2
-            val cloudModel = properties.chatModels[0]
+            properties.chatModelsById.size shouldBe 2
+            val cloudModel = properties.chatModelsById.getValue("cloud-gpt")
             val cloudRuntime = properties.runtimes.getValue(cloudModel.requireRuntimeId())
-            cloudModel.id shouldBe "cloud-gpt"
             cloudModel.enabled shouldBe true
+            cloudModel.displayOrder shouldBe 10
             cloudModel.displayName shouldBe "Cloud GPT"
             cloudModel.runtimeId shouldBe "openai-compatible"
             cloudModel.modelName shouldBe "gpt-4.1-mini"
@@ -51,10 +50,10 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             cloudRuntime.baseUrl shouldBe "https://api.example.com/v1"
             cloudRuntime.apiKey shouldBe "test-api-key"
 
-            val embeddedModel = properties.chatModels[1]
+            val embeddedModel = properties.chatModelsById.getValue("embedded-qwen")
             val embeddedRuntime = properties.runtimes.getValue(embeddedModel.requireRuntimeId())
-            embeddedModel.id shouldBe "embedded-qwen"
             embeddedModel.enabled shouldBe true
+            embeddedModel.displayOrder shouldBe 20
             embeddedModel.displayName shouldBe "Embedded Qwen"
             embeddedModel.runtimeId shouldBe "embedded-llama"
             embeddedModel.modelName shouldBe "qwen2.5"

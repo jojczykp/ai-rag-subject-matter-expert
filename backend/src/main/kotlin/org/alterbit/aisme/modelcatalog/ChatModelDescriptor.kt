@@ -11,6 +11,7 @@ data class ChatModelDescriptor(
     val baseUrl: String?,
     val modelName: String?,
     val apiKey: String?,
+    val displayOrder: Int? = null,
     val runtimeId: String = runtime.name,
     val assetDirectory: String? = null,
     val serverExecutablePath: String? = null,
@@ -20,6 +21,9 @@ data class ChatModelDescriptor(
 ) {
     init {
         require(id.isNotBlank()) { "model id must not be blank" }
+        require(displayOrder == null || displayOrder >= 0) {
+            "model displayOrder must not be negative when configured"
+        }
         require(displayName.isNotBlank()) { "model display name must not be blank" }
         require(runtimeId.isNotBlank()) { "model runtimeId must not be blank" }
         require(description == null || description.isNotBlank()) {

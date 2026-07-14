@@ -51,7 +51,7 @@ class OllamaAiModelClientProviderTest {
                         runtimes = mapOf(
                             "local-ollama" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.OLLAMA),
                         ),
-                        chatModels = listOf(ollamaModel()),
+                        chatModelsById = mapOf(ollamaModel()),
                     ),
                 ),
                 chatProperties = ChatProperties(),
@@ -63,7 +63,7 @@ class OllamaAiModelClientProviderTest {
         exception.message shouldContain "is required"
     }
 
-    private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
@@ -77,7 +77,7 @@ class OllamaAiModelClientProviderTest {
                     ),
                     "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
                 ),
-                chatModels = models.toList(),
+                chatModelsById = models.toMap(),
             ),
         )
 
@@ -85,18 +85,16 @@ class OllamaAiModelClientProviderTest {
         id: String = "local-llama",
         runtimeId: String? = "local-ollama",
         modelName: String? = "llama3.2",
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    ): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
             runtimeId = runtimeId,
             modelName = modelName,
         )
 
-    private fun springAiModel(id: String): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
-            id = id,
+    private fun springAiModel(id: String): Pair<String, ConfiguredChatModelProperties> =
+        id to ConfiguredChatModelProperties(
             enabled = true,
             displayName = "Cloud GPT",
             runtimeId = "spring-ai",

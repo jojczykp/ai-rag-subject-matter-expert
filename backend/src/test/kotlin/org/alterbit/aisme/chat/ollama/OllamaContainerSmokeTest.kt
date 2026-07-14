@@ -115,11 +115,10 @@ class OllamaContainerSmokeTest(
             registry.add("aisme.runtimes.local-ollama.base-url") {
                 "http://${ollama.host}:${ollama.getMappedPort(OLLAMA_PORT)}"
             }
-            registry.add("aisme.chat-models[0].id") { "container-ollama" }
-            registry.add("aisme.chat-models[0].enabled") { "true" }
-            registry.add("aisme.chat-models[0].display-name") { "Container Ollama" }
-            registry.add("aisme.chat-models[0].runtime-id") { "local-ollama" }
-            registry.add("aisme.chat-models[0].model-name") { testModelName }
+            registry.add("aisme.chat-models.container-ollama.enabled") { "true" }
+            registry.add("aisme.chat-models.container-ollama.display-name") { "Container Ollama" }
+            registry.add("aisme.chat-models.container-ollama.runtime-id") { "local-ollama" }
+            registry.add("aisme.chat-models.container-ollama.model-name") { testModelName }
         }
     }
 }

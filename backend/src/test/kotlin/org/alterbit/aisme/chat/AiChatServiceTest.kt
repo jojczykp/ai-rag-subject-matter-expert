@@ -292,16 +292,14 @@ class AiChatServiceTest {
                     ),
                     "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
                 ),
-                chatModels = listOf(
-                    ConfiguredChatModelProperties(
-                        id = "local-ollama-llama",
+                chatModelsById = mapOf(
+                    "local-ollama-llama" to ConfiguredChatModelProperties(
                         enabled = true,
                         displayName = "Local Ollama Llama",
                         runtimeId = "local-ollama",
                         modelName = "llama3.2",
                     ),
-                    ConfiguredChatModelProperties(
-                        id = "cloud-gpt",
+                    "cloud-gpt" to ConfiguredChatModelProperties(
                         enabled = true,
                         displayName = "Cloud GPT",
                         runtimeId = "spring-ai",
