@@ -478,12 +478,13 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
 | `aisme.documents.chunk-size` | `700` | Maximum character count per indexed document chunk. |
 | `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
-| `aisme.embedding-model.id` | `local-bge-small` | Stable embedding model identifier stored with embeddings. |
-| `aisme.embedding-model.version` | `1.5` | Embedding model version stored with embeddings. |
-| `aisme.embedding-model.dimensions` | `384` | Embedding vector dimension. |
-| `aisme.embedding-model.runtime` | `ONNX` | Local embedding runtime. |
-| `aisme.embedding-model.model-path` | `./models/bge-small-en-v1.5/model.onnx` | ONNX model file path. |
-| `aisme.embedding-model.tokenizer-path` | `./models/bge-small-en-v1.5/tokenizer.json` | tokenizer file path. |
+| `aisme.embedding-runtimes.<runtime-id>.type` | required | Embedding runtime adapter. Currently `ONNX`. |
+| `aisme.embedding-runtimes.<runtime-id>.model-path` | ONNX only | ONNX model file path. |
+| `aisme.embedding-runtimes.<runtime-id>.tokenizer-path` | ONNX only | tokenizer file path. |
+| `aisme.embedding-models.<model-id>.enabled` | `true` in example config | Whether this embedding model is active. Exactly one model must be enabled. |
+| `aisme.embedding-models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
+| `aisme.embedding-models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |
+| `aisme.embedding-models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.embedding-runtimes`. |
 | `aisme.chat.timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat-model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
@@ -516,9 +517,18 @@ the application JAR and are ignored by git:
 
 ```yaml
 aisme:
-  embedding-model:
-    model-path: ./models/bge-small-en-v1.5/model.onnx
-    tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  embedding-runtimes:
+    local-onnx:
+      type: ONNX
+      model-path: ./models/bge-small-en-v1.5/model.onnx
+      tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  embedding-models:
+    local-bge-small:
+      enabled: true
+      version: "1.5"
+      dimensions: 384
+      runtime:
+        id: local-onnx
 ```
 
 The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).

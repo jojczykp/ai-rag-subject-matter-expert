@@ -7,12 +7,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class EmbeddingModelPropertiesDefaultTest {
+class EmbeddingModelsPropertiesDefaultTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
-    fun `uses default embedding model configuration`() {
+    fun `uses configured default embedding model catalog`() {
         contextRunner.run { context ->
             val properties = context.getBean<EmbeddingModelProperties>()
 
@@ -26,6 +26,10 @@ class EmbeddingModelPropertiesDefaultTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(EmbeddingModelProperties::class)
-    private class PropertiesConfiguration
+    @EnableConfigurationProperties(EmbeddingModelsProperties::class)
+    private class PropertiesConfiguration {
+        @org.springframework.context.annotation.Bean
+        fun embeddingModelProperties(properties: EmbeddingModelsProperties): EmbeddingModelProperties =
+            properties.activeModel()
+    }
 }

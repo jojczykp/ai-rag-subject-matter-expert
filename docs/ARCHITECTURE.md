@@ -285,13 +285,18 @@ Example model catalog configuration:
 aisme:
   documents:
     location: classpath:/subject-documents/
-  embedding-model:
-    id: local-bge-small
-    version: "1.5"
-    dimensions: 384
-    runtime: ONNX
-    model-path: ./models/bge-small-en-v1.5/model.onnx
-    tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  embedding-runtimes:
+    local-onnx:
+      type: ONNX
+      model-path: ./models/bge-small-en-v1.5/model.onnx
+      tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+  embedding-models:
+    local-bge-small:
+      enabled: true
+      version: "1.5"
+      dimensions: 384
+      runtime:
+        id: local-onnx
   chat-runtimes:
     embedded-llama:
       type: EMBEDDED_LLAMA

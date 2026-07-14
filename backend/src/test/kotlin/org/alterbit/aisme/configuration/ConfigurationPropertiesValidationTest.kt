@@ -4,7 +4,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
-import org.alterbit.aisme.embedding.EmbeddingModelProperties
+import org.alterbit.aisme.embedding.EmbeddingModelsProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelsProperties
@@ -31,9 +31,9 @@ class ConfigurationPropertiesValidationTest {
     @Test
     fun `fails binding invalid embedding model configuration`() {
         propertyContext(EmbeddingModelPropertiesConfiguration::class.java)
-            .withPropertyValues("aisme.embedding-model.dimensions=0")
+            .withPropertyValues("aisme.embedding-models.local-bge-small.dimensions=0")
             .run { context ->
-                context.failureMessage() shouldContain "aisme.embedding-model.dimensions"
+                context.failureMessage() shouldContain "aisme.embedding-models.dimensions"
             }
     }
 
@@ -85,7 +85,7 @@ class ConfigurationPropertiesValidationTest {
     private class DocumentsPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(EmbeddingModelProperties::class)
+    @EnableConfigurationProperties(EmbeddingModelsProperties::class)
     private class EmbeddingModelPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)

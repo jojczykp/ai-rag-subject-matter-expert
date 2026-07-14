@@ -7,16 +7,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.context.annotation.Configuration
 
-class EmbeddingModelPropertiesOverrideTest {
+class EmbeddingModelsPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
-            "aisme.embedding-model.id=custom-embedding",
-            "aisme.embedding-model.version=2026-01",
-            "aisme.embedding-model.runtime=ONNX",
-            "aisme.embedding-model.model-path=/models/custom/model.onnx",
-            "aisme.embedding-model.tokenizer-path=/models/custom/tokenizer.json",
-            "aisme.embedding-model.dimensions=768",
+            "aisme.embedding-runtimes.custom-onnx.type=ONNX",
+            "aisme.embedding-runtimes.custom-onnx.model-path=/models/custom/model.onnx",
+            "aisme.embedding-runtimes.custom-onnx.tokenizer-path=/models/custom/tokenizer.json",
+            "aisme.embedding-models.custom-embedding.enabled=true",
+            "aisme.embedding-models.custom-embedding.version=2026-01",
+            "aisme.embedding-models.custom-embedding.dimensions=768",
+            "aisme.embedding-models.custom-embedding.runtime.id=custom-onnx",
         )
 
     @Test
@@ -34,6 +35,10 @@ class EmbeddingModelPropertiesOverrideTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(EmbeddingModelProperties::class)
-    private class PropertiesConfiguration
+    @EnableConfigurationProperties(EmbeddingModelsProperties::class)
+    private class PropertiesConfiguration {
+        @org.springframework.context.annotation.Bean
+        fun embeddingModelProperties(properties: EmbeddingModelsProperties): EmbeddingModelProperties =
+            properties.activeModel()
+    }
 }

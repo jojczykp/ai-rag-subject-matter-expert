@@ -1,8 +1,5 @@
 package org.alterbit.aisme.embedding
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "aisme.embedding-model")
 data class EmbeddingModelProperties(
     val id: String = "local-bge-small",
     val version: String = "1.5",
@@ -19,10 +16,10 @@ data class EmbeddingModelProperties(
         )
 
     init {
-        require(id.isNotBlank()) { "aisme.embedding-model.id must not be blank" }
-        require(version.isNotBlank()) { "aisme.embedding-model.version must not be blank" }
-        require(dimensions > 0) { "aisme.embedding-model.dimensions must be greater than 0" }
-        require(modelPath.isNotBlank()) { "aisme.embedding-model.model-path must not be blank" }
-        require(tokenizerPath.isNotBlank()) { "aisme.embedding-model.tokenizer-path must not be blank" }
+        require(id.isNotBlank()) { "embedding model id must not be blank" }
+        require(version.isNotBlank()) { "embedding model version must not be blank" }
+        require(dimensions > 0) { "embedding model dimensions must be greater than 0" }
+        require(modelPath.isNotBlank()) { "embedding model model-path must not be blank" }
+        require(tokenizerPath.isNotBlank()) { "embedding model tokenizer-path must not be blank" }
     }
 }
