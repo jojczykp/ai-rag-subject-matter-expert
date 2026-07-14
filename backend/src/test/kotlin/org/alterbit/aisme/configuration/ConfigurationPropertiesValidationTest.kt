@@ -63,11 +63,11 @@ class ConfigurationPropertiesValidationTest {
                 "aisme.runtimes.local-ollama.base-url=http://localhost:11434",
                 "aisme.chat-models.cloud-gpt.enabled=true",
                 "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
-                "aisme.chat-models.cloud-gpt.runtime-id=missing-runtime",
-                "aisme.chat-models.cloud-gpt.model-name=local-model",
+                "aisme.chat-models.cloud-gpt.runtime.id=missing-runtime",
+                "aisme.chat-models.cloud-gpt.runtime.model-name=local-model",
             )
             .run { context ->
-                context.failureMessage() shouldContain "runtime-id"
+                context.failureMessage() shouldContain "runtime.id"
                 context.failureMessage() shouldContain "missing-runtime"
             }
     }

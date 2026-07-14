@@ -7,9 +7,10 @@ import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
 import org.junit.jupiter.api.Test
 
 class HuggingFaceTgiAiModelClientProviderTest {
@@ -48,7 +49,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                 chatModelRegistry = ChatModelRegistry(
                     ConfiguredChatModelsProperties(
                         runtimes = mapOf(
-                            "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+                            "hugging-face-tgi" to ChatRuntimeProperties(
                                 type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                             ),
                         ),
@@ -64,20 +65,20 @@ class HuggingFaceTgiAiModelClientProviderTest {
         exception.message shouldContain "is required"
     }
 
-    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
-                    "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+                    "hugging-face-tgi" to ChatRuntimeProperties(
                         type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                         baseUrl = "https://hf.example.com",
                         apiKey = "test-api-key",
                     ),
-                    "hugging-face-tgi-alt" to ConfiguredChatRuntimeProperties(
+                    "hugging-face-tgi-alt" to ChatRuntimeProperties(
                         type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                         baseUrl = "https://qwen.example.com",
                     ),
-                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                    "local-ollama" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
@@ -91,19 +92,21 @@ class HuggingFaceTgiAiModelClientProviderTest {
         baseUrl: String? = "https://hf.example.com",
         runtimeId: String = if (baseUrl == "https://qwen.example.com") "hugging-face-tgi-alt" else "hugging-face-tgi",
         apiKey: String? = "test-api-key",
-    ): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    ): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = true,
             displayName = "Hugging Face Mistral",
-            runtimeId = runtimeId,
+            runtime = ChatModelRuntimeProperties(id = runtimeId),
         )
 
-    private fun nonHuggingFaceModel(id: String): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    private fun nonHuggingFaceModel(id: String): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
-            runtimeId = "local-ollama",
-            modelName = "llama3.2",
+            runtime = ChatModelRuntimeProperties(
+                id = "local-ollama",
+                modelName = "llama3.2",
+            ),
         )
 
     private class FakeHuggingFaceTgiChatApiFactory : HuggingFaceTgiChatApiFactory {

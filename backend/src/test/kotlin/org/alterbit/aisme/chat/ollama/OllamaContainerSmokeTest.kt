@@ -117,8 +117,8 @@ class OllamaContainerSmokeTest(
             }
             registry.add("aisme.chat-models.container-ollama.enabled") { "true" }
             registry.add("aisme.chat-models.container-ollama.display-name") { "Container Ollama" }
-            registry.add("aisme.chat-models.container-ollama.runtime-id") { "local-ollama" }
-            registry.add("aisme.chat-models.container-ollama.model-name") { testModelName }
+            registry.add("aisme.chat-models.container-ollama.runtime.id") { "local-ollama" }
+            registry.add("aisme.chat-models.container-ollama.runtime.model-name") { testModelName }
         }
     }
 }

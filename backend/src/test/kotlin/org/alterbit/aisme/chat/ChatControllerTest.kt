@@ -26,8 +26,8 @@ import org.springframework.test.web.servlet.post
     properties = [
         "aisme.chat-models.local-ollama-llama.enabled=true",
         "aisme.chat-models.local-ollama-llama.display-name=Local Ollama Llama",
-        "aisme.chat-models.local-ollama-llama.runtime-id=local-ollama",
-        "aisme.chat-models.local-ollama-llama.model-name=llama3.2",
+        "aisme.chat-models.local-ollama-llama.runtime.id=local-ollama",
+        "aisme.chat-models.local-ollama-llama.runtime.model-name=llama3.2",
     ],
 )
 @AutoConfigureMockMvc

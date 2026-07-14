@@ -498,11 +498,11 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat-models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
 | `aisme.chat-models.<model-id>.display-name` | required when enabled | Human-readable model name. |
 | `aisme.chat-models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
-| `aisme.chat-models.<model-id>.runtime-id` | required when enabled | Runtime id from `aisme.runtimes`. |
-| `aisme.chat-models.<model-id>.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
-| `aisme.chat-models.<model-id>.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
-| `aisme.chat-models.<model-id>.context-size` | embedded only | Context size passed to `llama-server`. |
-| `aisme.chat-models.<model-id>.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
+| `aisme.chat-models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.runtimes`. |
+| `aisme.chat-models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
+| `aisme.chat-models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
+| `aisme.chat-models.<model-id>.runtime.context-size` | embedded only | Context size passed to `llama-server`. |
+| `aisme.chat-models.<model-id>.runtime.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
 
 Runtime and mode combinations are intentionally narrow in the initial scope:
 `OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_ENDPOINT`
@@ -550,41 +550,45 @@ aisme:
       display-order: 10
       display-name: Embedded Qwen 0.5B
       description: Fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-0.5b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-0.5b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-qwen-1-5b:
       enabled: true
       display-order: 20
       display-name: Embedded Qwen 1.5B
       description: Smarter fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-1.5b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-1.5b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-qwen-3b:
       enabled: true
       display-order: 30
       display-name: Embedded Qwen 3B
       description: Larger fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-3b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-3b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-mistral-7b:
       enabled: true
       display-order: 40
       display-name: Embedded Mistral 7B
       description: Heavier fully offline embedded model for stronger local answers.
-      runtime-id: embedded-llama
-      model-name: mistral-7b-instruct-v0.3-q4_k_m
-      gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: mistral-7b-instruct-v0.3-q4_k_m
+        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
 ```
 
 Embedded models are enabled by default. Each becomes selectable
@@ -621,8 +625,9 @@ aisme:
       display-order: 50
       display-name: Local Ollama Llama
       description: Local Ollama model for chat requests when Ollama is running on this machine.
-      runtime-id: local-ollama
-      model-name: llama3.2
+      runtime:
+        id: local-ollama
+        model-name: llama3.2
 ```
 
 The application-owned `aisme.chat-models` configuration is the source of truth
@@ -646,8 +651,9 @@ aisme:
       display-order: 60
       display-name: Cloud GPT
       description: Online OpenAI-compatible model for cloud-hosted chat requests.
-      runtime-id: openai-compatible
-      model-name: gpt-4.1-mini
+      runtime:
+        id: openai-compatible
+        model-name: gpt-4.1-mini
 ```
 
 The adapter sends non-streaming chat-completion requests to
@@ -672,7 +678,8 @@ aisme:
       display-order: 70
       display-name: Hugging Face Mistral
       description: Online Hugging Face endpoint using the TGI-compatible generate API.
-      runtime-id: hugging-face-tgi
+      runtime:
+        id: hugging-face-tgi
 ```
 
 The adapter sends non-streaming TGI-compatible requests to `/generate`.

@@ -61,61 +61,68 @@ aisme:
       display-order: 10
       display-name: Embedded Qwen 0.5B
       description: Fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-0.5b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-0.5b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-qwen-1-5b:
       enabled: true
       display-order: 20
       display-name: Embedded Qwen 1.5B
       description: Smarter fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-1.5b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-1.5b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-qwen-3b:
       enabled: true
       display-order: 30
       display-name: Embedded Qwen 3B
       description: Larger fully offline embedded model backed by a local GGUF asset.
-      runtime-id: embedded-llama
-      model-name: qwen2.5-3b-instruct-q4_k_m
-      gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: qwen2.5-3b-instruct-q4_k_m
+        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     embedded-mistral-7b:
       enabled: true
       display-order: 40
       display-name: Embedded Mistral 7B
       description: Heavier fully offline embedded model for stronger local answers.
-      runtime-id: embedded-llama
-      model-name: mistral-7b-instruct-v0.3-q4_k_m
-      gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-      context-size: 2048
-      runtime-arguments: []
+      runtime:
+        id: embedded-llama
+        model-name: mistral-7b-instruct-v0.3-q4_k_m
+        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+        context-size: 2048
+        runtime-arguments: []
     local-ollama-llama:
       enabled: true
       display-order: 50
       display-name: Local Ollama Llama
       description: Local Ollama model for chat requests when Ollama is running on this machine.
-      runtime-id: local-ollama
-      model-name: llama3.2
+      runtime:
+        id: local-ollama
+        model-name: llama3.2
     openai-compatible-example:
       enabled: true
       display-order: 60
       display-name: OpenAI-Compatible Cloud Example
       description: Online OpenAI-compatible model for cloud-hosted chat requests.
-      runtime-id: openai-compatible
-      model-name: example-chat-model
+      runtime:
+        id: openai-compatible
+        model-name: example-chat-model
     hugging-face-tgi-example:
       enabled: true
       display-order: 70
       display-name: Hugging Face TGI Example
       description: Online Hugging Face endpoint using the TGI-compatible generate API.
-      runtime-id: hugging-face-tgi
+      runtime:
+        id: hugging-face-tgi
 
 management:
   info:

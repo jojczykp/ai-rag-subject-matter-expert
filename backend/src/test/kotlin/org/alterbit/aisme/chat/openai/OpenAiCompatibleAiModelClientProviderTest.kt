@@ -7,9 +7,10 @@ import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
 import org.junit.jupiter.api.Test
 
 class OpenAiCompatibleAiModelClientProviderTest {
@@ -48,7 +49,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
                 chatModelRegistry = ChatModelRegistry(
                     ConfiguredChatModelsProperties(
                         runtimes = mapOf(
-                            "openai-compatible" to ConfiguredChatRuntimeProperties(
+                            "openai-compatible" to ChatRuntimeProperties(
                                 type = ChatModelRuntime.OPENAI_COMPATIBLE,
                                 apiKey = "test-api-key",
                             ),
@@ -81,25 +82,25 @@ class OpenAiCompatibleAiModelClientProviderTest {
         factory.createdClients.map { it.apiKey } shouldContainExactly listOf("test-api-key")
     }
 
-    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
-                    "openai-compatible" to ConfiguredChatRuntimeProperties(
+                    "openai-compatible" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://api.example.com/v1",
                         apiKey = "test-api-key",
                     ),
-                    "openai-compatible-alt" to ConfiguredChatRuntimeProperties(
+                    "openai-compatible-alt" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://gateway.example.com/v1",
                         apiKey = "test-api-key",
                     ),
-                    "openai-compatible-no-key" to ConfiguredChatRuntimeProperties(
+                    "openai-compatible-no-key" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://no-key.example.com/v1",
                     ),
-                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                    "local-ollama" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
@@ -113,20 +114,24 @@ class OpenAiCompatibleAiModelClientProviderTest {
         runtimeId: String? = null,
         modelName: String? = "gpt-4.1-mini",
         apiKey: String? = "test-api-key",
-    ): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    ): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = true,
             displayName = "Cloud GPT",
-            runtimeId = runtimeId ?: if (apiKey == null) "openai-compatible-no-key" else "openai-compatible",
-            modelName = modelName,
+            runtime = ChatModelRuntimeProperties(
+                id = runtimeId ?: if (apiKey == null) "openai-compatible-no-key" else "openai-compatible",
+                modelName = modelName,
+            ),
         )
 
-    private fun ollamaModel(id: String): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    private fun ollamaModel(id: String): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
-            runtimeId = "local-ollama",
-            modelName = "llama3.2",
+            runtime = ChatModelRuntimeProperties(
+                id = "local-ollama",
+                modelName = "llama3.2",
+            ),
         )
 
     private class FakeOpenAiCompatibleChatApiFactory : OpenAiCompatibleChatApiFactory {

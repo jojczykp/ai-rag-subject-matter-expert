@@ -1,6 +1,6 @@
 package org.alterbit.aisme.modelcatalog
 
-data class ConfiguredChatRuntimeProperties(
+data class ChatRuntimeProperties(
     val type: ChatModelRuntime,
     val baseUrl: String? = null,
     val apiKey: String? = null,

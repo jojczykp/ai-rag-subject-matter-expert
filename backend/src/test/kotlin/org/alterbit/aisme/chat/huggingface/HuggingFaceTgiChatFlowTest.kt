@@ -91,7 +91,7 @@ class HuggingFaceTgiChatFlowTest(
             registry.add("aisme.runtimes.hugging-face-tgi.api-key") { "test-api-key" }
             registry.add("aisme.chat-models.mock-hugging-face.enabled") { "true" }
             registry.add("aisme.chat-models.mock-hugging-face.display-name") { "Mock Hugging Face TGI Model" }
-            registry.add("aisme.chat-models.mock-hugging-face.runtime-id") { "hugging-face-tgi" }
+            registry.add("aisme.chat-models.mock-hugging-face.runtime.id") { "hugging-face-tgi" }
         }
 
         @JvmStatic

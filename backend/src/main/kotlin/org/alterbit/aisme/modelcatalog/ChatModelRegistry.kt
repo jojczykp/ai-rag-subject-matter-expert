@@ -9,7 +9,7 @@ class ChatModelRegistry(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val runtimesById: Map<String, ConfiguredChatRuntimeProperties> = properties.runtimes
+    private val runtimesById: Map<String, ChatRuntimeProperties> = properties.runtimes
         .also { runtimes ->
             require(runtimes.isNotEmpty()) { "aisme.runtimes must contain at least one runtime" }
             require(runtimes.keys.none { it.isBlank() }) { "aisme.runtimes must not contain blank ids" }
@@ -22,14 +22,14 @@ class ChatModelRegistry(
         }
         .entries
         .map { entry ->
-            IndexedConfiguredChatModel(
+            IndexedChatModelProperties(
                 id = entry.key,
                 model = entry.value,
             )
         }
         .filter { it.model.enabled }
         .onEach { it.validateRuntimeConfiguration() }
-        .map { it.model.toDescriptor(id = it.id, runtime = runtimesById.getValue(it.model.requireRuntimeId())) }
+        .map { it.model.toDescriptor(id = it.id, configuredRuntime = runtimesById.getValue(it.model.requireRuntimeId())) }
         .also { models ->
             require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
         }
@@ -57,12 +57,12 @@ class ChatModelRegistry(
     fun getByIdOrThrow(modelId: String): ChatModelDescriptor =
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 
-    private fun IndexedConfiguredChatModel.validateRuntimeConfiguration() {
+    private fun IndexedChatModelProperties.validateRuntimeConfiguration() {
         val modelPrefix = "aisme.chat-models.$id"
         val runtimeId = model.requireRuntimeId()
         val runtime = runtimesById[runtimeId]
-        require(runtime != null) { "$modelPrefix.runtime-id references unknown runtime '$runtimeId'" }
-        val descriptor = model.toDescriptor(id = id, runtime = runtime)
+        require(runtime != null) { "$modelPrefix.runtime.id references unknown runtime '$runtimeId'" }
+        val descriptor = model.toDescriptor(id = id, configuredRuntime = runtime)
 
         fun requireConfigured(value: String?, propertyName: String) {
             require(value != null) { "$modelPrefix.$propertyName is required for ${runtime.type} models" }
@@ -77,12 +77,12 @@ class ChatModelRegistry(
         when (runtime.type) {
             ChatModelRuntime.OLLAMA -> {
                 requireConfigured(descriptor.baseUrl, "base-url")
-                requireConfigured(model.modelName, "model-name")
+                requireConfigured(model.runtime.modelName, "runtime.model-name")
             }
 
             ChatModelRuntime.OPENAI_COMPATIBLE -> {
                 requireConfigured(descriptor.baseUrl, "base-url")
-                requireConfigured(model.modelName, "model-name")
+                requireConfigured(model.runtime.modelName, "runtime.model-name")
             }
 
             ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {
@@ -96,15 +96,15 @@ class ChatModelRegistry(
             ChatModelRuntime.EMBEDDED_OFFLINE -> {
                 requireRuntimeConfigured(runtime.assetDirectory, "asset-directory")
                 requireRuntimeConfigured(runtime.serverExecutablePath, "server-executable-path")
-                requireConfigured(model.modelName, "model-name")
-                requireConfigured(model.ggufFile, "gguf-file")
-                requireConfigured(model.contextSize?.toString(), "context-size")
+                requireConfigured(model.runtime.modelName, "runtime.model-name")
+                requireConfigured(model.runtime.ggufFile, "runtime.gguf-file")
+                requireConfigured(model.runtime.contextSize?.toString(), "runtime.context-size")
             }
         }
     }
 
-    private data class IndexedConfiguredChatModel(
+    private data class IndexedChatModelProperties(
         val id: String,
-        val model: ConfiguredChatModelProperties,
+        val model: ChatModelProperties,
     )
 }

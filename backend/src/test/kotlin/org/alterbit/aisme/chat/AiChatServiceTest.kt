@@ -16,9 +16,10 @@ import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
@@ -286,23 +287,25 @@ class AiChatServiceTest {
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
-                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                    "local-ollama" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
-                    "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+                    "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
                 ),
                 chatModelsById = mapOf(
-                    "local-ollama-llama" to ConfiguredChatModelProperties(
+                    "local-ollama-llama" to ChatModelProperties(
                         enabled = true,
                         displayName = "Local Ollama Llama",
-                        runtimeId = "local-ollama",
-                        modelName = "llama3.2",
+                        runtime = ChatModelRuntimeProperties(
+                            id = "local-ollama",
+                            modelName = "llama3.2",
+                        ),
                     ),
-                    "cloud-gpt" to ConfiguredChatModelProperties(
+                    "cloud-gpt" to ChatModelProperties(
                         enabled = true,
                         displayName = "Cloud GPT",
-                        runtimeId = "spring-ai",
+                        runtime = ChatModelRuntimeProperties(id = "spring-ai"),
                     ),
                 ),
             ),

@@ -106,8 +106,8 @@ class OpenAiCompatibleChatFlowTest(
             registry.add("aisme.runtimes.openai-compatible.api-key") { "test-api-key" }
             registry.add("aisme.chat-models.mock-openai.enabled") { "true" }
             registry.add("aisme.chat-models.mock-openai.display-name") { "Mock OpenAI-Compatible Model" }
-            registry.add("aisme.chat-models.mock-openai.runtime-id") { "openai-compatible" }
-            registry.add("aisme.chat-models.mock-openai.model-name") { "mock-chat-model" }
+            registry.add("aisme.chat-models.mock-openai.runtime.id") { "openai-compatible" }
+            registry.add("aisme.chat-models.mock-openai.runtime.model-name") { "mock-chat-model" }
         }
 
         @JvmStatic

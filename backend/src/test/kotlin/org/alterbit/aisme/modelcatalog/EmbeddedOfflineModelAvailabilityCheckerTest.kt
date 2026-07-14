@@ -203,21 +203,23 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
             chatModelRegistry = ChatModelRegistry(
                 ConfiguredChatModelsProperties(
                     runtimes = mapOf(
-                        "embedded-llama" to ConfiguredChatRuntimeProperties(
+                        "embedded-llama" to ChatRuntimeProperties(
                             type = ChatModelRuntime.EMBEDDED_OFFLINE,
                             assetDirectory = model.assetDirectory,
                             serverExecutablePath = model.serverExecutablePath,
                         ),
                     ),
                     chatModelsById = mapOf(
-                        model.id to ConfiguredChatModelProperties(
+                        model.id to ChatModelProperties(
                             enabled = true,
                             displayName = model.displayName,
-                            runtimeId = model.runtimeId,
-                            modelName = model.modelName,
-                            ggufFile = model.ggufFile,
-                            contextSize = model.contextSize,
-                            runtimeArguments = model.runtimeArguments,
+                            runtime = ChatModelRuntimeProperties(
+                                id = model.runtimeId,
+                                modelName = model.modelName,
+                                ggufFile = model.ggufFile,
+                                contextSize = model.contextSize,
+                                runtimeArguments = model.runtimeArguments,
+                            ),
                         ),
                     ),
                 ),

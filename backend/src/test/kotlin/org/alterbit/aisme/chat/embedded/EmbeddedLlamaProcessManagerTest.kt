@@ -12,9 +12,10 @@ import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
-import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.DefaultApplicationArguments
 
@@ -151,16 +152,16 @@ class EmbeddedLlamaProcessManagerTest {
         launcher.processes.single().destroyed shouldBe true
     }
 
-    private fun chatModelRegistry(vararg models: Pair<String, ConfiguredChatModelProperties>): ChatModelRegistry =
+    private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
-                    "embedded-llama" to ConfiguredChatRuntimeProperties(
+                    "embedded-llama" to ChatRuntimeProperties(
                         type = ChatModelRuntime.EMBEDDED_OFFLINE,
                         assetDirectory = "./models/llama",
                         serverExecutablePath = "./models/llama/bin/llama-server",
                     ),
-                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                    "local-ollama" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
@@ -169,7 +170,7 @@ class EmbeddedLlamaProcessManagerTest {
             ),
         )
 
-    private fun Map<String, ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): Map<String, ConfiguredChatModelProperties> =
+    private fun Map<String, ChatModelProperties>.withFallbackModelWhenNoneEnabled(): Map<String, ChatModelProperties> =
         if (values.any { it.enabled }) this else this + ollamaModel(id = "local-llama")
 
     private fun embeddedModel(
@@ -179,24 +180,28 @@ class EmbeddedLlamaProcessManagerTest {
         ggufFile: String = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
         contextSize: Int = 4096,
         runtimeArguments: List<String> = emptyList(),
-    ): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    ): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = enabled,
             displayOrder = displayOrder,
             displayName = "Embedded Qwen",
-            runtimeId = "embedded-llama",
-            modelName = "qwen2.5",
-            ggufFile = ggufFile,
-            contextSize = contextSize,
-            runtimeArguments = runtimeArguments,
+            runtime = ChatModelRuntimeProperties(
+                id = "embedded-llama",
+                modelName = "qwen2.5",
+                ggufFile = ggufFile,
+                contextSize = contextSize,
+                runtimeArguments = runtimeArguments,
+            ),
         )
 
-    private fun ollamaModel(id: String): Pair<String, ConfiguredChatModelProperties> =
-        id to ConfiguredChatModelProperties(
+    private fun ollamaModel(id: String): Pair<String, ChatModelProperties> =
+        id to ChatModelProperties(
             enabled = true,
             displayName = "Local Llama",
-            runtimeId = "local-ollama",
-            modelName = "llama3.2",
+            runtime = ChatModelRuntimeProperties(
+                id = "local-ollama",
+                modelName = "llama3.2",
+            ),
         )
 
     private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {

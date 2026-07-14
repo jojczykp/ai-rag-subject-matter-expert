@@ -20,15 +20,15 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             "aisme.chat-models.cloud-gpt.enabled=true",
             "aisme.chat-models.cloud-gpt.display-order=10",
             "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
-            "aisme.chat-models.cloud-gpt.runtime-id=openai-compatible",
-            "aisme.chat-models.cloud-gpt.model-name=gpt-4.1-mini",
+            "aisme.chat-models.cloud-gpt.runtime.id=openai-compatible",
+            "aisme.chat-models.cloud-gpt.runtime.model-name=gpt-4.1-mini",
             "aisme.chat-models.embedded-qwen.enabled=true",
             "aisme.chat-models.embedded-qwen.display-order=20",
             "aisme.chat-models.embedded-qwen.display-name=Embedded Qwen",
-            "aisme.chat-models.embedded-qwen.runtime-id=embedded-llama",
-            "aisme.chat-models.embedded-qwen.model-name=qwen2.5",
-            "aisme.chat-models.embedded-qwen.gguf-file=models/qwen.gguf",
-            "aisme.chat-models.embedded-qwen.context-size=2048",
+            "aisme.chat-models.embedded-qwen.runtime.id=embedded-llama",
+            "aisme.chat-models.embedded-qwen.runtime.model-name=qwen2.5",
+            "aisme.chat-models.embedded-qwen.runtime.gguf-file=models/qwen.gguf",
+            "aisme.chat-models.embedded-qwen.runtime.context-size=2048",
         )
 
     @Test
@@ -42,8 +42,8 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             cloudModel.enabled shouldBe true
             cloudModel.displayOrder shouldBe 10
             cloudModel.displayName shouldBe "Cloud GPT"
-            cloudModel.runtimeId shouldBe "openai-compatible"
-            cloudModel.modelName shouldBe "gpt-4.1-mini"
+            cloudModel.runtime.id shouldBe "openai-compatible"
+            cloudModel.runtime.modelName shouldBe "gpt-4.1-mini"
             cloudRuntime.type shouldBe ChatModelRuntime.OPENAI_COMPATIBLE
             cloudRuntime.mode shouldBe ChatModelMode.ONLINE
             cloudRuntime.availableOffline shouldBe false
@@ -55,10 +55,10 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             embeddedModel.enabled shouldBe true
             embeddedModel.displayOrder shouldBe 20
             embeddedModel.displayName shouldBe "Embedded Qwen"
-            embeddedModel.runtimeId shouldBe "embedded-llama"
-            embeddedModel.modelName shouldBe "qwen2.5"
-            embeddedModel.ggufFile shouldBe "models/qwen.gguf"
-            embeddedModel.contextSize shouldBe 2048
+            embeddedModel.runtime.id shouldBe "embedded-llama"
+            embeddedModel.runtime.modelName shouldBe "qwen2.5"
+            embeddedModel.runtime.ggufFile shouldBe "models/qwen.gguf"
+            embeddedModel.runtime.contextSize shouldBe 2048
             embeddedRuntime.type shouldBe ChatModelRuntime.EMBEDDED_OFFLINE
             embeddedRuntime.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
             embeddedRuntime.availableOffline shouldBe true

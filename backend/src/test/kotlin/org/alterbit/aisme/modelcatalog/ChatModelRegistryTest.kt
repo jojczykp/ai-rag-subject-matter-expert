@@ -120,7 +120,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    chatModelsById = mapOf("missing-config" to ConfiguredChatModelProperties(enabled = true)),
+                    chatModelsById = mapOf("missing-config" to ChatModelProperties(enabled = true)),
                 ),
             )
         }
@@ -133,7 +133,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    runtimes = mapOf("local-ollama" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.OLLAMA)),
+                    runtimes = mapOf("local-ollama" to ChatRuntimeProperties(type = ChatModelRuntime.OLLAMA)),
                     chatModelsById = mapOf(configuredModel()),
                 ),
             )
@@ -154,7 +154,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "aisme.chat-models.local-ollama-llama.model-name"
+        exception.message shouldContain "aisme.chat-models.local-ollama-llama.runtime.model-name"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -164,7 +164,7 @@ class ChatModelRegistryTest {
         val registry = ChatModelRegistry(
             configuredProperties(
                 runtimes = mapOf(
-                    "openai-compatible-no-key" to ConfiguredChatRuntimeProperties(
+                    "openai-compatible-no-key" to ChatRuntimeProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://api.example.com/v1",
                     ),
@@ -190,7 +190,7 @@ class ChatModelRegistryTest {
             ChatModelRegistry(
                 configuredProperties(
                     runtimes = mapOf(
-                        "hugging-face-tgi-missing-url" to ConfiguredChatRuntimeProperties(
+                        "hugging-face-tgi-missing-url" to ChatRuntimeProperties(
                             type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                         ),
                     ),
@@ -235,7 +235,7 @@ class ChatModelRegistryTest {
             )
         }
 
-        exception.message shouldContain "runtime-id"
+        exception.message shouldContain "runtime.id"
         exception.message shouldContain "missing-runtime"
     }
 
@@ -279,7 +279,7 @@ class ChatModelRegistryTest {
         runtimeId: String? = "local-ollama",
         modelName: String? = "llama3.2",
         ggufFile: String? = "models/qwen.gguf",
-    ): Pair<String, ConfiguredChatModelProperties> =
+    ): Pair<String, ChatModelProperties> =
         id to configuredModelValue(
             enabled = enabled,
             displayOrder = displayOrder,
@@ -298,45 +298,47 @@ class ChatModelRegistryTest {
         modelName: String? = "llama3.2",
         ggufFile: String? = "models/qwen.gguf",
         contextSize: Int? = 2048,
-    ): ConfiguredChatModelProperties =
-        ConfiguredChatModelProperties(
+    ): ChatModelProperties =
+        ChatModelProperties(
             enabled = enabled,
             displayOrder = displayOrder,
             displayName = displayName,
-            runtimeId = runtimeId,
-            modelName = modelName,
-            ggufFile = ggufFile,
-            contextSize = contextSize,
+            runtime = ChatModelRuntimeProperties(
+                id = runtimeId,
+                modelName = modelName,
+                ggufFile = ggufFile,
+                contextSize = contextSize,
+            ),
         )
 
     private fun configuredProperties(
-        runtimes: Map<String, ConfiguredChatRuntimeProperties> = defaultRuntimes(),
-        chatModelsById: Map<String, ConfiguredChatModelProperties> = mapOf(configuredModel()),
+        runtimes: Map<String, ChatRuntimeProperties> = defaultRuntimes(),
+        chatModelsById: Map<String, ChatModelProperties> = mapOf(configuredModel()),
     ): ConfiguredChatModelsProperties =
         ConfiguredChatModelsProperties(
             runtimes = runtimes,
             chatModelsById = chatModelsById,
         )
 
-    private fun defaultRuntimes(): Map<String, ConfiguredChatRuntimeProperties> =
+    private fun defaultRuntimes(): Map<String, ChatRuntimeProperties> =
         mapOf(
-            "embedded-llama" to ConfiguredChatRuntimeProperties(
+            "embedded-llama" to ChatRuntimeProperties(
                 type = ChatModelRuntime.EMBEDDED_OFFLINE,
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
             ),
-            "local-ollama" to ConfiguredChatRuntimeProperties(
+            "local-ollama" to ChatRuntimeProperties(
                 type = ChatModelRuntime.OLLAMA,
                 baseUrl = "http://localhost:11434",
             ),
-            "openai-compatible" to ConfiguredChatRuntimeProperties(
+            "openai-compatible" to ChatRuntimeProperties(
                 type = ChatModelRuntime.OPENAI_COMPATIBLE,
                 baseUrl = "https://api.example.com/v1",
             ),
-            "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+            "hugging-face-tgi" to ChatRuntimeProperties(
                 type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                 baseUrl = "https://example.endpoints.huggingface.cloud",
             ),
-            "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+            "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
         )
 }
