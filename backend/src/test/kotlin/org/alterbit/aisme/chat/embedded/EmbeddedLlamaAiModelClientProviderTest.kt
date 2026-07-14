@@ -8,7 +8,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 
 class EmbeddedLlamaAiModelClientProviderTest {
@@ -80,13 +80,13 @@ class EmbeddedLlamaAiModelClientProviderTest {
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
-                runtimes = mapOf(
-                    "embedded-llama" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "embedded-llama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.EMBEDDED_LLAMA,
                         assetDirectory = "./models/llama",
                         serverExecutablePath = "./models/llama/bin/llama-server",
                     ),
-                    "local-ollama" to ChatRuntimeProperties(
+                    "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),

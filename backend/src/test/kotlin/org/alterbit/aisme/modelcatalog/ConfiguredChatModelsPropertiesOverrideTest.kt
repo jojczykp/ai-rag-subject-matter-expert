@@ -11,12 +11,12 @@ class ConfiguredChatModelsPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
-            "aisme.runtimes.openai-compatible.type=OPENAI_COMPATIBLE",
-            "aisme.runtimes.openai-compatible.base-url=https://api.example.com/v1",
-            "aisme.runtimes.openai-compatible.api-key=test-api-key",
-            "aisme.runtimes.embedded-llama.type=EMBEDDED_LLAMA",
-            "aisme.runtimes.embedded-llama.asset-directory=./models/llama",
-            "aisme.runtimes.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
+            "aisme.chat-runtimes.openai-compatible.type=OPENAI_COMPATIBLE",
+            "aisme.chat-runtimes.openai-compatible.base-url=https://api.example.com/v1",
+            "aisme.chat-runtimes.openai-compatible.api-key=test-api-key",
+            "aisme.chat-runtimes.embedded-llama.type=EMBEDDED_LLAMA",
+            "aisme.chat-runtimes.embedded-llama.asset-directory=./models/llama",
+            "aisme.chat-runtimes.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
             "aisme.chat-models.cloud-gpt.enabled=true",
             "aisme.chat-models.cloud-gpt.display-order=10",
             "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
@@ -38,7 +38,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
 
             properties.chatModelsById.size shouldBe 2
             val cloudModel = properties.chatModelsById.getValue("cloud-gpt")
-            val cloudRuntime = properties.runtimes.getValue(cloudModel.requireRuntimeId())
+            val cloudRuntime = properties.chatRuntimesById.getValue(cloudModel.requireRuntimeId())
             cloudModel.enabled shouldBe true
             cloudModel.displayOrder shouldBe 10
             cloudModel.displayName shouldBe "Cloud GPT"
@@ -51,7 +51,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             cloudRuntime.apiKey shouldBe "test-api-key"
 
             val embeddedModel = properties.chatModelsById.getValue("embedded-qwen")
-            val embeddedRuntime = properties.runtimes.getValue(embeddedModel.requireRuntimeId())
+            val embeddedRuntime = properties.chatRuntimesById.getValue(embeddedModel.requireRuntimeId())
             embeddedModel.enabled shouldBe true
             embeddedModel.displayOrder shouldBe 20
             embeddedModel.displayName shouldBe "Embedded Qwen"

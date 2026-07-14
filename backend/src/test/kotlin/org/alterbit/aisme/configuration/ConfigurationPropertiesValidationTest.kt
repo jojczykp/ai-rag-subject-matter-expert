@@ -59,8 +59,8 @@ class ConfigurationPropertiesValidationTest {
     fun `fails creating model catalog when model references unknown runtime`() {
         propertyContext(ChatModelCatalogConfiguration::class.java)
             .withPropertyValues(
-                "aisme.runtimes.local-ollama.type=OLLAMA",
-                "aisme.runtimes.local-ollama.base-url=http://localhost:11434",
+                "aisme.chat-runtimes.local-ollama.type=OLLAMA",
+                "aisme.chat-runtimes.local-ollama.base-url=http://localhost:11434",
                 "aisme.chat-models.cloud-gpt.enabled=true",
                 "aisme.chat-models.cloud-gpt.display-name=Cloud GPT",
                 "aisme.chat-models.cloud-gpt.runtime.id=missing-runtime",

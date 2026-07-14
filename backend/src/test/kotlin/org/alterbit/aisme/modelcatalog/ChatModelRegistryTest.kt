@@ -133,7 +133,7 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    runtimes = mapOf("local-ollama" to ChatRuntimeProperties(type = ChatModelRuntime.OLLAMA)),
+                    chatRuntimesById = mapOf("local-ollama" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.OLLAMA)),
                     chatModelsById = mapOf(configuredModel()),
                 ),
             )
@@ -163,8 +163,8 @@ class ChatModelRegistryTest {
     fun `allows OpenAI-compatible model without api key`() {
         val registry = ChatModelRegistry(
             configuredProperties(
-                runtimes = mapOf(
-                    "openai-compatible-no-key" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "openai-compatible-no-key" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://api.example.com/v1",
                     ),
@@ -189,8 +189,8 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    runtimes = mapOf(
-                        "hugging-face-tgi-missing-url" to ChatRuntimeProperties(
+                    chatRuntimesById = mapOf(
+                        "hugging-face-tgi-missing-url" to ChatModelRuntimeConfigProperties(
                             type = ChatModelRuntime.HUGGING_FACE_TGI,
                         ),
                     ),
@@ -244,13 +244,13 @@ class ChatModelRegistryTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
                 configuredProperties(
-                    runtimes = emptyMap(),
+                    chatRuntimesById = emptyMap(),
                     chatModelsById = mapOf(configuredModel()),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.runtimes"
+        exception.message shouldContain "aisme.chat-runtimes"
     }
 
     @Test
@@ -312,33 +312,33 @@ class ChatModelRegistryTest {
         )
 
     private fun configuredProperties(
-        runtimes: Map<String, ChatRuntimeProperties> = defaultRuntimes(),
+        chatRuntimesById: Map<String, ChatModelRuntimeConfigProperties> = defaultRuntimes(),
         chatModelsById: Map<String, ChatModelProperties> = mapOf(configuredModel()),
     ): ConfiguredChatModelsProperties =
         ConfiguredChatModelsProperties(
-            runtimes = runtimes,
+            chatRuntimesById = chatRuntimesById,
             chatModelsById = chatModelsById,
         )
 
-    private fun defaultRuntimes(): Map<String, ChatRuntimeProperties> =
+    private fun defaultRuntimes(): Map<String, ChatModelRuntimeConfigProperties> =
         mapOf(
-            "embedded-llama" to ChatRuntimeProperties(
+            "embedded-llama" to ChatModelRuntimeConfigProperties(
                 type = ChatModelRuntime.EMBEDDED_LLAMA,
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
             ),
-            "local-ollama" to ChatRuntimeProperties(
+            "local-ollama" to ChatModelRuntimeConfigProperties(
                 type = ChatModelRuntime.OLLAMA,
                 baseUrl = "http://localhost:11434",
             ),
-            "openai-compatible" to ChatRuntimeProperties(
+            "openai-compatible" to ChatModelRuntimeConfigProperties(
                 type = ChatModelRuntime.OPENAI_COMPATIBLE,
                 baseUrl = "https://api.example.com/v1",
             ),
-            "hugging-face-tgi" to ChatRuntimeProperties(
+            "hugging-face-tgi" to ChatModelRuntimeConfigProperties(
                 type = ChatModelRuntime.HUGGING_FACE_TGI,
                 baseUrl = "https://example.endpoints.huggingface.cloud",
             ),
-            "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+            "spring-ai" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.SPRING_AI),
         )
 }

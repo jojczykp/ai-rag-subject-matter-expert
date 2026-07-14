@@ -86,9 +86,9 @@ class HuggingFaceTgiChatFlowTest(
         @JvmStatic
         @DynamicPropertySource
         fun huggingFaceTgiProperties(registry: DynamicPropertyRegistry) {
-            registry.add("aisme.runtimes.hugging-face-tgi.type") { "HUGGING_FACE_TGI" }
-            registry.add("aisme.runtimes.hugging-face-tgi.base-url") { "http://localhost:${server.address.port}" }
-            registry.add("aisme.runtimes.hugging-face-tgi.api-key") { "test-api-key" }
+            registry.add("aisme.chat-runtimes.hugging-face-tgi.type") { "HUGGING_FACE_TGI" }
+            registry.add("aisme.chat-runtimes.hugging-face-tgi.base-url") { "http://localhost:${server.address.port}" }
+            registry.add("aisme.chat-runtimes.hugging-face-tgi.api-key") { "test-api-key" }
             registry.add("aisme.chat-models.mock-hugging-face.enabled") { "true" }
             registry.add("aisme.chat-models.mock-hugging-face.display-name") { "Mock Hugging Face TGI Model" }
             registry.add("aisme.chat-models.mock-hugging-face.runtime.id") { "hugging-face-tgi" }

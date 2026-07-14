@@ -124,7 +124,7 @@ define display metadata and model-specific settings, then reference a runtime by
 
 ```yaml
 aisme:
-  runtimes:
+  chat-runtimes:
     local-ollama:
       type: OLLAMA
       base-url: http://localhost:11434

@@ -19,7 +19,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
@@ -286,12 +286,12 @@ class AiChatServiceTest {
     private fun chatModelRegistry(): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
-                runtimes = mapOf(
-                    "local-ollama" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
-                    "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+                    "spring-ai" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.SPRING_AI),
                 ),
                 chatModelsById = mapOf(
                     "local-ollama-llama" to ChatModelProperties(

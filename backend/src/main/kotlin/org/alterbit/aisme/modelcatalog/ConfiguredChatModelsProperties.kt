@@ -5,7 +5,8 @@ import org.springframework.boot.context.properties.bind.Name
 
 @ConfigurationProperties(prefix = "aisme")
 data class ConfiguredChatModelsProperties(
-    val runtimes: Map<String, ChatRuntimeProperties>,
+    @param:Name("chat-runtimes")
+    val chatRuntimesById: Map<String, ChatModelRuntimeConfigProperties>,
     @param:Name("chat-models")
     val chatModelsById: Map<String, ChatModelProperties>,
 )

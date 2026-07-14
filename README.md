@@ -488,17 +488,17 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat-model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
 | `aisme.chat-model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
-| `aisme.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
-| `aisme.runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
-| `aisme.runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
-| `aisme.runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
-| `aisme.runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
+| `aisme.chat-runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
+| `aisme.chat-runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
+| `aisme.chat-runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
+| `aisme.chat-runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
+| `aisme.chat-runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
 | `aisme.chat-models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
 | `aisme.chat-models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
 | `aisme.chat-models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
 | `aisme.chat-models.<model-id>.display-name` | required when enabled | Human-readable model name. |
 | `aisme.chat-models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
-| `aisme.chat-models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.runtimes`. |
+| `aisme.chat-models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.chat-runtimes`. |
 | `aisme.chat-models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
 | `aisme.chat-models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
 | `aisme.chat-models.<model-id>.runtime.context-size` | embedded only | Context size passed to `llama-server`. |
@@ -539,7 +539,7 @@ configuration points to external files outside the application JAR:
 
 ```yaml
 aisme:
-  runtimes:
+  chat-runtimes:
     embedded-llama:
       type: EMBEDDED_LLAMA
       asset-directory: ./models/llama
@@ -615,7 +615,7 @@ The default chat model entry points to Ollama at `http://localhost:11434`:
 
 ```yaml
 aisme:
-  runtimes:
+  chat-runtimes:
     local-ollama:
       type: OLLAMA
       base-url: http://localhost:11434
@@ -640,7 +640,7 @@ OpenAI-compatible chat providers can be configured as selectable online models:
 
 ```yaml
 aisme:
-  runtimes:
+  chat-runtimes:
     openai-compatible:
       type: OPENAI_COMPATIBLE
       base-url: https://api.openai.com/v1
@@ -667,7 +667,7 @@ Hugging Face Inference Endpoints can be configured as selectable online models:
 
 ```yaml
 aisme:
-  runtimes:
+  chat-runtimes:
     hugging-face-tgi:
       type: HUGGING_FACE_TGI
       base-url: https://example.endpoints.huggingface.cloud

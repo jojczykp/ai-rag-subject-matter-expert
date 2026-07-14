@@ -34,7 +34,7 @@ data class ChatModelProperties(
 
     fun toDescriptor(
         id: String,
-        configuredRuntime: ChatRuntimeProperties,
+        configuredRuntime: ChatModelRuntimeConfigProperties,
     ): ChatModelDescriptor {
         return ChatModelDescriptor(
             id = id,

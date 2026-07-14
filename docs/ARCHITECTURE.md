@@ -292,7 +292,7 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  runtimes:
+  chat-runtimes:
     embedded-llama:
       type: EMBEDDED_LLAMA
       asset-directory: ./models/llama

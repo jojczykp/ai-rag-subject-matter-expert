@@ -111,8 +111,8 @@ class OllamaContainerSmokeTest(
         @JvmStatic
         @DynamicPropertySource
         fun ollamaProperties(registry: DynamicPropertyRegistry) {
-            registry.add("aisme.runtimes.local-ollama.type") { "OLLAMA" }
-            registry.add("aisme.runtimes.local-ollama.base-url") {
+            registry.add("aisme.chat-runtimes.local-ollama.type") { "OLLAMA" }
+            registry.add("aisme.chat-runtimes.local-ollama.base-url") {
                 "http://${ollama.host}:${ollama.getMappedPort(OLLAMA_PORT)}"
             }
             registry.add("aisme.chat-models.container-ollama.enabled") { "true" }

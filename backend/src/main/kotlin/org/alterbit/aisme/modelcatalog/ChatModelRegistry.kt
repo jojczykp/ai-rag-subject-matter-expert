@@ -9,10 +9,10 @@ class ChatModelRegistry(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val runtimesById: Map<String, ChatRuntimeProperties> = properties.runtimes
-        .also { runtimes ->
-            require(runtimes.isNotEmpty()) { "aisme.runtimes must contain at least one runtime" }
-            require(runtimes.keys.none { it.isBlank() }) { "aisme.runtimes must not contain blank ids" }
+    private val runtimesById: Map<String, ChatModelRuntimeConfigProperties> = properties.chatRuntimesById
+        .also { chatRuntimesById ->
+            require(chatRuntimesById.isNotEmpty()) { "aisme.chat-runtimes must contain at least one runtime" }
+            require(chatRuntimesById.keys.none { it.isBlank() }) { "aisme.chat-runtimes must not contain blank ids" }
         }
 
     private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModelsById
@@ -70,7 +70,7 @@ class ChatModelRegistry(
 
         fun requireRuntimeConfigured(value: String?, propertyName: String) {
             require(value != null) {
-                "aisme.runtimes.$runtimeId.$propertyName is required for ${runtime.type} runtimes"
+                "aisme.chat-runtimes.$runtimeId.$propertyName is required for ${runtime.type} runtimes"
             }
         }
 

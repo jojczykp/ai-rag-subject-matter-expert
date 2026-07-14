@@ -202,8 +202,8 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         EmbeddedLlamaProcessManager(
             chatModelRegistry = ChatModelRegistry(
                 ConfiguredChatModelsProperties(
-                    runtimes = mapOf(
-                        "embedded-llama" to ChatRuntimeProperties(
+                    chatRuntimesById = mapOf(
+                        "embedded-llama" to ChatModelRuntimeConfigProperties(
                             type = ChatModelRuntime.EMBEDDED_LLAMA,
                             assetDirectory = model.assetDirectory,
                             serverExecutablePath = model.serverExecutablePath,

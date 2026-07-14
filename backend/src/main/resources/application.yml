@@ -31,7 +31,13 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  runtimes:
+  chat:
+    timeout: 60s
+    relevant-chunk-limit: 5
+  chat-model-availability:
+    timeout: 5s
+    cache-ttl: 5s
+  chat-runtimes:
     embedded-llama:
       type: EMBEDDED_LLAMA
       asset-directory: ./models/llama
@@ -49,12 +55,6 @@ aisme:
       api-key: ${HF_API_KEY:}
     spring-ai:
       type: SPRING_AI
-  chat:
-    timeout: 60s
-    relevant-chunk-limit: 5
-  chat-model-availability:
-    timeout: 5s
-    cache-ttl: 5s
   chat-models:
     embedded-qwen-0-5b:
       enabled: true

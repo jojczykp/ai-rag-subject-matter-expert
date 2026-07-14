@@ -101,9 +101,9 @@ class OpenAiCompatibleChatFlowTest(
         @JvmStatic
         @DynamicPropertySource
         fun openAiCompatibleProperties(registry: DynamicPropertyRegistry) {
-            registry.add("aisme.runtimes.openai-compatible.type") { "OPENAI_COMPATIBLE" }
-            registry.add("aisme.runtimes.openai-compatible.base-url") { "http://localhost:${server.address.port}/v1" }
-            registry.add("aisme.runtimes.openai-compatible.api-key") { "test-api-key" }
+            registry.add("aisme.chat-runtimes.openai-compatible.type") { "OPENAI_COMPATIBLE" }
+            registry.add("aisme.chat-runtimes.openai-compatible.base-url") { "http://localhost:${server.address.port}/v1" }
+            registry.add("aisme.chat-runtimes.openai-compatible.api-key") { "test-api-key" }
             registry.add("aisme.chat-models.mock-openai.enabled") { "true" }
             registry.add("aisme.chat-models.mock-openai.display-name") { "Mock OpenAI-Compatible Model" }
             registry.add("aisme.chat-models.mock-openai.runtime.id") { "openai-compatible" }

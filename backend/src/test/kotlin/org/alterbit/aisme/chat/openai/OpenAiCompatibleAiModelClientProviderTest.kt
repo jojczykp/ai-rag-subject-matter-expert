@@ -10,7 +10,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 
 class OpenAiCompatibleAiModelClientProviderTest {
@@ -48,8 +48,8 @@ class OpenAiCompatibleAiModelClientProviderTest {
             OpenAiCompatibleAiModelClientProvider(
                 chatModelRegistry = ChatModelRegistry(
                     ConfiguredChatModelsProperties(
-                        runtimes = mapOf(
-                            "openai-compatible" to ChatRuntimeProperties(
+                        chatRuntimesById = mapOf(
+                            "openai-compatible" to ChatModelRuntimeConfigProperties(
                                 type = ChatModelRuntime.OPENAI_COMPATIBLE,
                                 apiKey = "test-api-key",
                             ),
@@ -85,22 +85,22 @@ class OpenAiCompatibleAiModelClientProviderTest {
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
-                runtimes = mapOf(
-                    "openai-compatible" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "openai-compatible" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://api.example.com/v1",
                         apiKey = "test-api-key",
                     ),
-                    "openai-compatible-alt" to ChatRuntimeProperties(
+                    "openai-compatible-alt" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://gateway.example.com/v1",
                         apiKey = "test-api-key",
                     ),
-                    "openai-compatible-no-key" to ChatRuntimeProperties(
+                    "openai-compatible-no-key" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OPENAI_COMPATIBLE,
                         baseUrl = "https://no-key.example.com/v1",
                     ),
-                    "local-ollama" to ChatRuntimeProperties(
+                    "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),

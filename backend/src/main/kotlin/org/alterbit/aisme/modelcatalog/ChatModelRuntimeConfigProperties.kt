@@ -1,6 +1,6 @@
 package org.alterbit.aisme.modelcatalog
 
-data class ChatRuntimeProperties(
+data class ChatModelRuntimeConfigProperties(
     val type: ChatModelRuntime,
     val baseUrl: String? = null,
     val apiKey: String? = null,
@@ -9,13 +9,13 @@ data class ChatRuntimeProperties(
 ) {
     init {
         require(baseUrl == null || baseUrl.isNotBlank()) {
-            "aisme.runtimes.base-url must not be blank when configured"
+            "aisme.chat-runtimes.base-url must not be blank when configured"
         }
         require(assetDirectory == null || assetDirectory.isNotBlank()) {
-            "aisme.runtimes.asset-directory must not be blank when configured"
+            "aisme.chat-runtimes.asset-directory must not be blank when configured"
         }
         require(serverExecutablePath == null || serverExecutablePath.isNotBlank()) {
-            "aisme.runtimes.server-executable-path must not be blank when configured"
+            "aisme.chat-runtimes.server-executable-path must not be blank when configured"
         }
     }
 

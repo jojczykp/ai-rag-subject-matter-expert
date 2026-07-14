@@ -10,7 +10,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.junit.jupiter.api.Test
 
 class HuggingFaceTgiAiModelClientProviderTest {
@@ -48,8 +48,8 @@ class HuggingFaceTgiAiModelClientProviderTest {
             HuggingFaceTgiAiModelClientProvider(
                 chatModelRegistry = ChatModelRegistry(
                     ConfiguredChatModelsProperties(
-                        runtimes = mapOf(
-                            "hugging-face-tgi" to ChatRuntimeProperties(
+                        chatRuntimesById = mapOf(
+                            "hugging-face-tgi" to ChatModelRuntimeConfigProperties(
                                 type = ChatModelRuntime.HUGGING_FACE_TGI,
                             ),
                         ),
@@ -68,17 +68,17 @@ class HuggingFaceTgiAiModelClientProviderTest {
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
-                runtimes = mapOf(
-                    "hugging-face-tgi" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "hugging-face-tgi" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.HUGGING_FACE_TGI,
                         baseUrl = "https://hf.example.com",
                         apiKey = "test-api-key",
                     ),
-                    "hugging-face-tgi-alt" to ChatRuntimeProperties(
+                    "hugging-face-tgi-alt" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.HUGGING_FACE_TGI,
                         baseUrl = "https://qwen.example.com",
                     ),
-                    "local-ollama" to ChatRuntimeProperties(
+                    "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),

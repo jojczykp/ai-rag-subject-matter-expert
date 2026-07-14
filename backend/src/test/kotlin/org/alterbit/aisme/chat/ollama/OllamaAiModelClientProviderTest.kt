@@ -9,7 +9,7 @@ import java.time.Instant
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
-import org.alterbit.aisme.modelcatalog.ChatRuntimeProperties
+import org.alterbit.aisme.modelcatalog.ChatModelRuntimeConfigProperties
 import org.alterbit.aisme.modelcatalog.ChatModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
@@ -49,8 +49,8 @@ class OllamaAiModelClientProviderTest {
             OllamaAiModelClientProvider(
                 chatModelRegistry = ChatModelRegistry(
                     ConfiguredChatModelsProperties(
-                        runtimes = mapOf(
-                            "local-ollama" to ChatRuntimeProperties(type = ChatModelRuntime.OLLAMA),
+                        chatRuntimesById = mapOf(
+                            "local-ollama" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.OLLAMA),
                         ),
                         chatModelsById = mapOf(ollamaModel()),
                     ),
@@ -67,16 +67,16 @@ class OllamaAiModelClientProviderTest {
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
-                runtimes = mapOf(
-                    "local-ollama" to ChatRuntimeProperties(
+                chatRuntimesById = mapOf(
+                    "local-ollama" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11434",
                     ),
-                    "local-ollama-alt" to ChatRuntimeProperties(
+                    "local-ollama-alt" to ChatModelRuntimeConfigProperties(
                         type = ChatModelRuntime.OLLAMA,
                         baseUrl = "http://localhost:11435",
                     ),
-                    "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+                    "spring-ai" to ChatModelRuntimeConfigProperties(type = ChatModelRuntime.SPRING_AI),
                 ),
                 chatModelsById = models.toMap(),
             ),
