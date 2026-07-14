@@ -5,20 +5,17 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
-import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
-import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
+import org.alterbit.aisme.chat.embedded.requireEmbeddedAssetDirectory
+import org.alterbit.aisme.chat.embedded.requireEmbeddedGgufFile
+import org.alterbit.aisme.chat.embedded.requireEmbeddedServerExecutablePath
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class EmbeddedOfflineModelAvailabilityChecker(
-    embeddedLlamaProperties: EmbeddedLlamaProperties,
     private val embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
 ) : ChatModelAvailabilityChecker {
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    private val staticAvailabilityByModelId: Map<String, ChatModelAvailability> =
-        buildStaticAvailabilityByModelId(embeddedLlamaProperties)
 
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.EMBEDDED_OFFLINE
@@ -27,30 +24,22 @@ class EmbeddedOfflineModelAvailabilityChecker(
         if (model.mode != ChatModelMode.EMBEDDED_OFFLINE || !model.availableOffline) {
             logger.warn("Embedded model '{}' is misconfigured for offline availability checks", model.id)
             ChatModelAvailability.MISCONFIGURED
-        } else if (staticAvailabilityByModelId[model.id] != ChatModelAvailability.AVAILABLE) {
-            (staticAvailabilityByModelId[model.id] ?: ChatModelAvailability.MISCONFIGURED).also {
-                logger.warn("Embedded model '{}' static asset availability is '{}'", model.id, it)
-            }
         } else {
-            embeddedLlamaProcessManager.availabilityForModelId(model.id).also {
-                logger.info("Embedded model '{}' runtime availability is '{}'", model.id, it)
+            val staticAvailability = model.staticAssetAvailability()
+            if (staticAvailability != ChatModelAvailability.AVAILABLE) {
+                logger.warn("Embedded model '{}' static asset availability is '{}'", model.id, staticAvailability)
+                staticAvailability
+            } else {
+                embeddedLlamaProcessManager.availabilityForModelId(model.id).also {
+                    logger.info("Embedded model '{}' runtime availability is '{}'", model.id, it)
+                }
             }
         }
 
-    private fun buildStaticAvailabilityByModelId(
-        embeddedLlamaProperties: EmbeddedLlamaProperties,
-    ): Map<String, ChatModelAvailability> {
-        return embeddedLlamaProperties.enabledModels().associate { runtimeModel ->
-            runtimeModel.id to embeddedLlamaProperties.availabilityFor(runtimeModel)
-        }
-    }
-
-    private fun EmbeddedLlamaProperties.availabilityFor(
-        runtimeModel: EmbeddedLlamaModelProperties,
-    ): ChatModelAvailability {
-        val assetDirectory = Path.of(assetDirectory)
-        val ggufFile = assetDirectory.resolveConfiguredPath(runtimeModel.ggufFile)
-        val serverExecutable = Path.of(serverExecutablePath)
+    private fun ChatModelDescriptor.staticAssetAvailability(): ChatModelAvailability {
+        val assetDirectory = Path.of(requireEmbeddedAssetDirectory())
+        val ggufFile = assetDirectory.resolveConfiguredPath(requireEmbeddedGgufFile())
+        val serverExecutable = Path.of(requireEmbeddedServerExecutablePath())
 
         val assetProblems = listOfNotNull(
             assetDirectory.problemIfNotReadableDirectory("asset directory"),
@@ -60,11 +49,11 @@ class EmbeddedOfflineModelAvailabilityChecker(
         )
 
         return if (assetProblems.isEmpty()) {
-            logger.info("Embedded model '{}' static assets are available", runtimeModel.id)
+            logger.info("Embedded model '{}' static assets are available", id)
             ChatModelAvailability.AVAILABLE
         } else {
             assetProblems.forEach { problem ->
-                logger.warn("Embedded model '{}' {}", runtimeModel.id, problem)
+                logger.warn("Embedded model '{}' {}", id, problem)
             }
             ChatModelAvailability.MISCONFIGURED
         }

@@ -31,34 +31,24 @@ aisme:
     runtime: ONNX
     model-path: ./models/bge-small-en-v1.5/model.onnx
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-  embedded-llama:
-    asset-directory: ./models/llama
-    server-executable-path: ./models/llama/bin/llama-server
-    models:
-      - id: embedded-qwen-0-5b
-        enabled: true
-        display-name: Embedded Qwen 0.5B
-        gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-      - id: embedded-qwen-1-5b
-        enabled: true
-        display-name: Embedded Qwen 1.5B
-        gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-      - id: embedded-qwen-3b
-        enabled: true
-        display-name: Embedded Qwen 3B
-        gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
-      - id: embedded-mistral-7b
-        enabled: true
-        display-name: Embedded Mistral 7B
-        gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-        context-size: 2048
-        runtime-arguments: []
+  runtimes:
+    embedded-llama:
+      type: EMBEDDED_OFFLINE
+      asset-directory: ./models/llama
+      server-executable-path: ./models/llama/bin/llama-server
+    local-ollama:
+      type: OLLAMA
+      base-url: http://localhost:11434
+    openai-compatible:
+      type: OPENAI_COMPATIBLE
+      base-url: https://api.example.com/v1
+      api-key: ${OPENAI_API_KEY:}
+    hugging-face-tgi:
+      type: HUGGING_FACE_ENDPOINT
+      base-url: https://example.endpoints.huggingface.cloud
+      api-key: ${HF_API_KEY:}
+    spring-ai:
+      type: SPRING_AI
   chat:
     timeout: 60s
     relevant-chunk-limit: 5
@@ -68,67 +58,57 @@ aisme:
   chat-models:
     - id: embedded-qwen-0-5b
       enabled: true
-      config:
-        display-name: Embedded Qwen 0.5B
-        description: Fully offline embedded model backed by a local GGUF asset.
-        runtime: EMBEDDED_OFFLINE
-        mode: EMBEDDED_OFFLINE
-        available-offline: true
+      display-name: Embedded Qwen 0.5B
+      description: Fully offline embedded model backed by a local GGUF asset.
+      runtime-id: embedded-llama
+      model-name: qwen2.5-0.5b-instruct-q4_k_m
+      gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+      context-size: 2048
+      runtime-arguments: []
     - id: embedded-qwen-1-5b
       enabled: true
-      config:
-        display-name: Embedded Qwen 1.5B
-        description: Smarter fully offline embedded model backed by a local GGUF asset.
-        runtime: EMBEDDED_OFFLINE
-        mode: EMBEDDED_OFFLINE
-        available-offline: true
+      display-name: Embedded Qwen 1.5B
+      description: Smarter fully offline embedded model backed by a local GGUF asset.
+      runtime-id: embedded-llama
+      model-name: qwen2.5-1.5b-instruct-q4_k_m
+      gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+      context-size: 2048
+      runtime-arguments: []
     - id: embedded-qwen-3b
       enabled: true
-      config:
-        display-name: Embedded Qwen 3B
-        description: Larger fully offline embedded model backed by a local GGUF asset.
-        runtime: EMBEDDED_OFFLINE
-        mode: EMBEDDED_OFFLINE
-        available-offline: true
+      display-name: Embedded Qwen 3B
+      description: Larger fully offline embedded model backed by a local GGUF asset.
+      runtime-id: embedded-llama
+      model-name: qwen2.5-3b-instruct-q4_k_m
+      gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
+      context-size: 2048
+      runtime-arguments: []
     - id: embedded-mistral-7b
       enabled: true
-      config:
-        display-name: Embedded Mistral 7B
-        description: Heavier fully offline embedded model for stronger local answers.
-        runtime: EMBEDDED_OFFLINE
-        mode: EMBEDDED_OFFLINE
-        available-offline: true
+      display-name: Embedded Mistral 7B
+      description: Heavier fully offline embedded model for stronger local answers.
+      runtime-id: embedded-llama
+      model-name: mistral-7b-instruct-v0.3-q4_k_m
+      gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+      context-size: 2048
+      runtime-arguments: []
     - id: local-ollama-llama
       enabled: true
-      config:
-        display-name: Local Ollama Llama
-        description: Local Ollama model for chat requests when Ollama is running on this machine.
-        runtime: OLLAMA
-        mode: LOCAL_SERVER
-        available-offline: false
-        base-url: http://localhost:11434
-        model-name: llama3.2
+      display-name: Local Ollama Llama
+      description: Local Ollama model for chat requests when Ollama is running on this machine.
+      runtime-id: local-ollama
+      model-name: llama3.2
     - id: openai-compatible-example
       enabled: true
-      config:
-        display-name: OpenAI-Compatible Cloud Example
-        description: Online OpenAI-compatible model for cloud-hosted chat requests.
-        runtime: OPENAI_COMPATIBLE
-        mode: ONLINE
-        available-offline: false
-        base-url: https://api.example.com/v1
-        model-name: example-chat-model
-        api-key: ${OPENAI_API_KEY:}
+      display-name: OpenAI-Compatible Cloud Example
+      description: Online OpenAI-compatible model for cloud-hosted chat requests.
+      runtime-id: openai-compatible
+      model-name: example-chat-model
     - id: hugging-face-tgi-example
       enabled: true
-      config:
-        display-name: Hugging Face TGI Example
-        description: Online Hugging Face endpoint using the TGI-compatible generate API.
-        runtime: HUGGING_FACE_ENDPOINT
-        mode: ONLINE
-        available-offline: false
-        base-url: https://example.endpoints.huggingface.cloud
-        api-key: ${HF_API_KEY:}
+      display-name: Hugging Face TGI Example
+      description: Online Hugging Face endpoint using the TGI-compatible generate API.
+      runtime-id: hugging-face-tgi
 
 management:
   info:

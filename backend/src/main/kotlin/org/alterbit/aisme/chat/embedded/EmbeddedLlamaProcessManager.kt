@@ -6,6 +6,7 @@ import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
+import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.slf4j.LoggerFactory
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component
 @Component
 class EmbeddedLlamaProcessManager(
     chatModelRegistry: ChatModelRegistry,
-    embeddedLlamaProperties: EmbeddedLlamaProperties,
     portAllocator: EphemeralEmbeddedLlamaPortAllocator,
     private val processLauncher: EmbeddedLlamaProcessLauncher,
     private val readinessProbe: LlamaServerReadinessProbe,
@@ -26,7 +26,6 @@ class EmbeddedLlamaProcessManager(
     private val managedModels: List<ManagedEmbeddedLlamaModel> =
         buildManagedModels(
             chatModelRegistry = chatModelRegistry,
-            embeddedLlamaProperties = embeddedLlamaProperties,
             portAllocator = portAllocator,
         )
     private val availabilityByModelId = ConcurrentHashMap(
@@ -93,41 +92,37 @@ class EmbeddedLlamaProcessManager(
 
     private fun buildManagedModels(
         chatModelRegistry: ChatModelRegistry,
-        embeddedLlamaProperties: EmbeddedLlamaProperties,
         portAllocator: EphemeralEmbeddedLlamaPortAllocator,
     ): List<ManagedEmbeddedLlamaModel> {
-        val runtimeModelsById = embeddedLlamaProperties.enabledModels().associateBy { it.id }
-
         return chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
-            .mapNotNull { chatModel ->
-                runtimeModelsById[chatModel.id]?.let { runtimeModel ->
-                    val port = portAllocator.allocate()
-                    ManagedEmbeddedLlamaModel(
-                        modelId = chatModel.id,
-                        port = port,
-                        baseUrl = "http://$LOOPBACK_HOST:$port",
-                        command = embeddedLlamaProperties.commandFor(runtimeModel, port),
-                    )
-                }
+            .map { chatModel ->
+                val port = portAllocator.allocate()
+                ManagedEmbeddedLlamaModel(
+                    modelId = chatModel.id,
+                    port = port,
+                    baseUrl = "http://$LOOPBACK_HOST:$port",
+                    command = chatModel.commandFor(port),
+                )
             }
     }
 
-    private fun EmbeddedLlamaProperties.commandFor(
-        model: EmbeddedLlamaModelProperties,
+    private fun ChatModelDescriptor.commandFor(
         port: Int,
     ): List<String> =
         listOf(
-            Path.of(serverExecutablePath).absoluteNormalizedPath(),
+            Path.of(requireEmbeddedServerExecutablePath()).absoluteNormalizedPath(),
             "--host",
             LOOPBACK_HOST,
             "--port",
             port.toString(),
             "--model",
-            Path.of(assetDirectory).resolveConfiguredPath(model.ggufFile).absoluteNormalizedPath(),
+            Path.of(requireEmbeddedAssetDirectory())
+                .resolveConfiguredPath(requireEmbeddedGgufFile())
+                .absoluteNormalizedPath(),
             "--ctx-size",
-            model.contextSize.toString(),
-        ) + model.runtimeArguments
+            requireEmbeddedContextSize().toString(),
+        ) + runtimeArguments
 
     private fun Path.resolveConfiguredPath(path: String): Path {
         val configuredPath = Path.of(path)

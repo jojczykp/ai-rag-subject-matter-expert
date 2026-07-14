@@ -10,12 +10,11 @@ import java.nio.file.Path
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
-import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.DefaultApplicationArguments
 
@@ -24,8 +23,7 @@ class EmbeddedLlamaProcessManagerTest {
     fun `does not start processes for disabled embedded llama models`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = false)),
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen", enabled = false)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -43,21 +41,15 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "embedded-qwen"),
-                ollamaModel(id = "local-llama"),
-                embeddedModel(id = "embedded-mistral"),
-            ),
-            embeddedLlamaProperties = embeddedLlamaProperties(
-                runtimeModel(
+                embeddedModel(
                     id = "embedded-qwen",
-                    enabled = true,
                     ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
                     contextSize = 2048,
                     runtimeArguments = listOf("--threads", "8"),
                 ),
-                runtimeModel(
+                ollamaModel(id = "local-llama"),
+                embeddedModel(
                     id = "embedded-mistral",
-                    enabled = true,
                     ggufFile = "/opt/models/qwen.gguf",
                     contextSize = 8192,
                 ),
@@ -105,33 +97,10 @@ class EmbeddedLlamaProcessManagerTest {
     }
 
     @Test
-    fun `skips embedded chat model without matching runtime model`() {
-        val launcher = FakeEmbeddedLlamaProcessLauncher()
-        val manager = EmbeddedLlamaProcessManager(
-            chatModelRegistry = chatModelRegistry(
-                embeddedModel(id = "configured-runtime-model"),
-                embeddedModel(id = "missing-runtime-model"),
-            ),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "configured-runtime-model", enabled = true)),
-            portAllocator = fixedPortAllocator(19001),
-            processLauncher = launcher,
-            readinessProbe = FakeReadinessProbe(),
-            processOutputLogger = noOpOutputLogger(),
-        )
-
-        manager.run(DefaultApplicationArguments())
-
-        manager.baseUrlForModelId("configured-runtime-model") shouldBe "http://127.0.0.1:19001"
-        manager.baseUrlForModelId("missing-runtime-model") shouldBe null
-        launcher.commands.single()[4] shouldBe "19001"
-    }
-
-    @Test
     fun `stops running llama server processes`() {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -150,7 +119,6 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher(processStopsGracefully = false)
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(),
@@ -169,7 +137,6 @@ class EmbeddedLlamaProcessManagerTest {
         val launcher = FakeEmbeddedLlamaProcessLauncher()
         val manager = EmbeddedLlamaProcessManager(
             chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
-            embeddedLlamaProperties = embeddedLlamaProperties(runtimeModel(id = "embedded-qwen", enabled = true)),
             portAllocator = fixedPortAllocator(19001),
             processLauncher = launcher,
             readinessProbe = FakeReadinessProbe(ready = false),
@@ -183,57 +150,51 @@ class EmbeddedLlamaProcessManagerTest {
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
-        ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = models.toList()))
+        ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                runtimes = mapOf(
+                    "embedded-llama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                        assetDirectory = "./models/llama",
+                        serverExecutablePath = "./models/llama/bin/llama-server",
+                    ),
+                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11434",
+                    ),
+                ),
+                chatModels = models.toList().withFallbackModelWhenNoneEnabled(),
+            ),
+        )
 
-    private fun embeddedModel(id: String): ConfiguredChatModelProperties =
+    private fun List<ConfiguredChatModelProperties>.withFallbackModelWhenNoneEnabled(): List<ConfiguredChatModelProperties> =
+        if (any { it.enabled }) this else this + ollamaModel(id = "local-llama")
+
+    private fun embeddedModel(
+        id: String,
+        enabled: Boolean = true,
+        ggufFile: String = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+        contextSize: Int = 4096,
+        runtimeArguments: List<String> = emptyList(),
+    ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
-            enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Embedded Qwen",
-                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
-                mode = ChatModelMode.EMBEDDED_OFFLINE,
-                availableOffline = true,
-            ),
+            enabled = enabled,
+            displayName = "Embedded Qwen",
+            runtimeId = "embedded-llama",
+            modelName = "qwen2.5",
+            ggufFile = ggufFile,
+            contextSize = contextSize,
+            runtimeArguments = runtimeArguments,
         )
 
     private fun ollamaModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Local Llama",
-                runtime = ChatModelRuntime.OLLAMA,
-                mode = ChatModelMode.LOCAL_SERVER,
-                availableOffline = false,
-                baseUrl = "http://localhost:11434",
-                modelName = "llama3.2",
-            ),
-        )
-
-    private fun embeddedLlamaProperties(
-        vararg models: EmbeddedLlamaModelProperties,
-    ): EmbeddedLlamaProperties =
-        EmbeddedLlamaProperties(
-            assetDirectory = "./models/llama",
-            serverExecutablePath = "./models/llama/bin/llama-server",
-            models = models.toList(),
-        )
-
-    private fun runtimeModel(
-        id: String,
-        enabled: Boolean = false,
-        ggufFile: String = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
-        contextSize: Int = 4096,
-        runtimeArguments: List<String> = emptyList(),
-    ): EmbeddedLlamaModelProperties =
-        EmbeddedLlamaModelProperties(
-            id = id,
-            enabled = enabled,
-            displayName = "Embedded Qwen",
-            ggufFile = ggufFile,
-            contextSize = contextSize,
-            runtimeArguments = runtimeArguments,
+            displayName = "Local Llama",
+            runtimeId = "local-ollama",
+            modelName = "llama3.2",
         )
 
     private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {

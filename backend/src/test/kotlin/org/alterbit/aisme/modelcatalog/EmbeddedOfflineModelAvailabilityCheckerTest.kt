@@ -10,11 +10,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 import org.alterbit.aisme.chat.embedded.EphemeralEmbeddedLlamaPortAllocator
-import org.alterbit.aisme.chat.embedded.EmbeddedLlamaModelProperties
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessLauncher
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessManager
 import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProcessOutputLogger
-import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
 import org.alterbit.aisme.chat.embedded.LlamaServerReadinessProbe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -51,22 +49,11 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     @Test
     fun `marks embedded offline model with existing runtime assets as available`() {
         val assets = runtimeAssets()
-        val checker = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                modelId = "embedded-qwen-0-5b",
-                ggufFile = assets.ggufFile.fileName.toString(),
-            ),
-        )
+        val model = embeddedModel(assets = assets)
+        val checker = checker(model = model)
 
         val availability = checker.check(
-            model = chatModel(
-                id = "embedded-qwen-0-5b",
-                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
-                mode = ChatModelMode.EMBEDDED_OFFLINE,
-                availableOffline = true,
-            ),
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -74,29 +61,14 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `keeps startup availability result when files change after checker creation`() {
+    fun `detects static asset changes after checker creation`() {
         val assets = runtimeAssets()
-        val checker = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                ggufFile = assets.ggufFile.fileName.toString(),
-            ),
-        )
+        val model = embeddedModel(assets = assets)
+        val checker = checker(model = model)
         Files.delete(assets.ggufFile)
 
         val availability = checker.check(
-            model = embeddedModel(),
-            timeout = Duration.ofSeconds(5),
-        )
-
-        availability shouldBe ChatModelAvailability.AVAILABLE
-    }
-
-    @Test
-    fun `marks embedded offline model as misconfigured when embedded llama model is disabled`() {
-        val availability = checker(properties = disabledProperties()).check(
-            model = embeddedModel(),
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -105,7 +77,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
     @Test
     fun `marks embedded offline model without offline mode as misconfigured`() {
-        val availability = checker(properties = enabledProperties()).check(
+        val availability = checker().check(
             model = chatModel(
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.LOCAL_SERVER,
@@ -119,7 +91,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
     @Test
     fun `marks embedded offline model without offline flag as misconfigured`() {
-        val availability = checker(properties = enabledProperties()).check(
+        val availability = checker().check(
             model = chatModel(
                 runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
@@ -132,26 +104,15 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     @Test
-    fun `marks embedded offline model as misconfigured when model is not in embedded llama config`() {
-        val availability = checker(properties = enabledProperties(modelId = "other-model")).check(
-            model = embeddedModel(),
-            timeout = Duration.ofSeconds(5),
-        )
-
-        availability shouldBe ChatModelAvailability.MISCONFIGURED
-    }
-
-    @Test
     fun `marks embedded offline model as misconfigured when asset directory is missing`() {
         val assets = runtimeAssets()
         val missingAssetDirectory = tempDirectory.resolve("missing-assets")
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = missingAssetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-            ),
-        ).check(
-            model = embeddedModel(),
+        val model = embeddedModel(
+            assets = assets,
+            assetDirectory = missingAssetDirectory,
+        )
+        val availability = checker(model = model).check(
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -161,14 +122,12 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     @Test
     fun `marks embedded offline model as misconfigured when server executable is missing`() {
         val assets = runtimeAssets()
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = tempDirectory.resolve("missing-llama-server"),
-                ggufFile = assets.ggufFile.fileName.toString(),
-            ),
-        ).check(
-            model = embeddedModel(),
+        val model = embeddedModel(
+            assets = assets,
+            serverExecutablePath = tempDirectory.resolve("missing-llama-server"),
+        )
+        val availability = checker(model = model).check(
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -180,15 +139,13 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         val assets = runtimeAssets()
         val nonExecutableServer = Files.createTempFile(tempDirectory, "llama-server-not-executable-", "")
         nonExecutableServer.toFile().setExecutable(false)
+        val model = embeddedModel(
+            assets = assets,
+            serverExecutablePath = nonExecutableServer,
+        )
 
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = nonExecutableServer,
-                ggufFile = assets.ggufFile.fileName.toString(),
-            ),
-        ).check(
-            model = embeddedModel(),
+        val availability = checker(model = model).check(
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -198,14 +155,12 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     @Test
     fun `logs clear warning when gguf file is missing`(output: CapturedOutput) {
         val assets = runtimeAssets()
-        val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                ggufFile = "missing-model.gguf",
-            ),
-        ).check(
-            model = embeddedModel(),
+        val model = embeddedModel(
+            assets = assets,
+            ggufFile = "missing-model.gguf",
+        )
+        val availability = checker(model = model).check(
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -217,15 +172,12 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     @Test
     fun `marks embedded offline model as unavailable when runtime readiness fails`() {
         val assets = runtimeAssets()
+        val model = embeddedModel(assets = assets)
         val availability = checker(
-            properties = enabledProperties(
-                assetDirectory = assets.assetDirectory,
-                serverExecutablePath = assets.serverExecutable,
-                ggufFile = assets.ggufFile.fileName.toString(),
-            ),
+            model = model,
             runtimeReady = false,
         ).check(
-            model = embeddedModel(),
+            model = model,
             timeout = Duration.ofSeconds(5),
         )
 
@@ -233,95 +185,68 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     }
 
     private fun checker(
-        properties: EmbeddedLlamaProperties = disabledProperties(),
+        model: ChatModelDescriptor = embeddedModel(),
         runtimeReady: Boolean = true,
     ): EmbeddedOfflineModelAvailabilityChecker =
         EmbeddedOfflineModelAvailabilityChecker(
-            embeddedLlamaProperties = properties,
             embeddedLlamaProcessManager = processManager(
-                properties = properties,
+                model = model,
                 runtimeReady = runtimeReady,
             ),
         )
 
     private fun processManager(
-        properties: EmbeddedLlamaProperties,
+        model: ChatModelDescriptor,
         runtimeReady: Boolean,
     ): EmbeddedLlamaProcessManager =
         EmbeddedLlamaProcessManager(
             chatModelRegistry = ChatModelRegistry(
                 ConfiguredChatModelsProperties(
+                    runtimes = mapOf(
+                        "embedded-llama" to ConfiguredChatRuntimeProperties(
+                            type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                            assetDirectory = model.assetDirectory,
+                            serverExecutablePath = model.serverExecutablePath,
+                        ),
+                    ),
                     chatModels = listOf(
                         ConfiguredChatModelProperties(
-                            id = "embedded-qwen-0-5b",
+                            id = model.id,
                             enabled = true,
-                            config = EnabledChatModelProperties(
-                                displayName = "Embedded Qwen 0.5B",
-                                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
-                                mode = ChatModelMode.EMBEDDED_OFFLINE,
-                                availableOffline = true,
-                            ),
+                            displayName = model.displayName,
+                            runtimeId = model.runtimeId,
+                            modelName = model.modelName,
+                            ggufFile = model.ggufFile,
+                            contextSize = model.contextSize,
+                            runtimeArguments = model.runtimeArguments,
                         ),
                     ),
                 ),
             ),
-            embeddedLlamaProperties = properties,
             portAllocator = EphemeralEmbeddedLlamaPortAllocator { 19001 },
             processLauncher = FakeEmbeddedLlamaProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> runtimeReady },
             processOutputLogger = EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         ).also { it.run(DefaultApplicationArguments()) }
 
-    private fun embeddedModel(): ChatModelDescriptor =
+    private fun embeddedModel(
+        assets: RuntimeAssets = runtimeAssets(),
+        assetDirectory: Path = assets.assetDirectory,
+        serverExecutablePath: Path = assets.serverExecutable,
+        ggufFile: String = assets.ggufFile.fileName.toString(),
+    ): ChatModelDescriptor =
         chatModel(
             id = "embedded-qwen-0-5b",
+            runtimeId = "embedded-llama",
             runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
+            assetDirectory = assetDirectory.toString(),
+            serverExecutablePath = serverExecutablePath.toString(),
+            modelName = "qwen2.5",
+            ggufFile = ggufFile,
+            contextSize = 4096,
         )
-
-    private fun enabledProperties(
-        assetDirectory: Path? = null,
-        serverExecutablePath: Path? = null,
-        modelId: String = "embedded-qwen-0-5b",
-        ggufFile: String? = null,
-    ): EmbeddedLlamaProperties {
-        val assets = runtimeAssets()
-        val configuredAssetDirectory = assetDirectory ?: assets.assetDirectory
-        val configuredServerExecutablePath = serverExecutablePath ?: assets.serverExecutable
-        val configuredGgufFile = ggufFile ?: assets.ggufFile.fileName.toString()
-
-        return EmbeddedLlamaProperties(
-            assetDirectory = configuredAssetDirectory.toString(),
-            serverExecutablePath = configuredServerExecutablePath.toString(),
-            models = listOf(
-                EmbeddedLlamaModelProperties(
-                    id = modelId,
-                    enabled = true,
-                    displayName = "Embedded Qwen 0.5B",
-                    ggufFile = configuredGgufFile,
-                    contextSize = 4096,
-                ),
-            ),
-        )
-    }
-
-    private fun disabledProperties(): EmbeddedLlamaProperties {
-        val assets = runtimeAssets()
-        return EmbeddedLlamaProperties(
-            assetDirectory = assets.assetDirectory.toString(),
-            serverExecutablePath = assets.serverExecutable.toString(),
-            models = listOf(
-                EmbeddedLlamaModelProperties(
-                    id = "embedded-qwen-0-5b",
-                    enabled = false,
-                    displayName = "Embedded Qwen 0.5B",
-                    ggufFile = assets.ggufFile.fileName.toString(),
-                    contextSize = 4096,
-                ),
-            ),
-        )
-    }
 
     private fun runtimeAssets(): RuntimeAssets {
         val assetDirectory = Files.createTempDirectory(tempDirectory, "llama-assets-")

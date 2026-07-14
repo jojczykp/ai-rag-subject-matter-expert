@@ -5,12 +5,11 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
 import org.junit.jupiter.api.Test
 
 class OpenAiCompatibleAiModelClientProviderTest {
@@ -21,7 +20,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
             chatModelRegistry = chatModelRegistry(
                 openAiModel(id = "cloud-gpt", modelName = "gpt-4.1-mini"),
                 ollamaModel(id = "local-llama"),
-                openAiModel(id = "cloud-qwen", baseUrl = "https://gateway.example.com/v1", modelName = "qwen-plus"),
+                openAiModel(id = "cloud-qwen", runtimeId = "openai-compatible-alt", modelName = "qwen-plus"),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             openAiCompatibleChatApiFactory = factory,
@@ -46,13 +45,23 @@ class OpenAiCompatibleAiModelClientProviderTest {
     fun `rejects OpenAI-compatible model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             OpenAiCompatibleAiModelClientProvider(
-                chatModelRegistry = chatModelRegistry(openAiModel(baseUrl = null)),
+                chatModelRegistry = ChatModelRegistry(
+                    ConfiguredChatModelsProperties(
+                        runtimes = mapOf(
+                            "openai-compatible" to ConfiguredChatRuntimeProperties(
+                                type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                                apiKey = "test-api-key",
+                            ),
+                        ),
+                        chatModels = listOf(openAiModel()),
+                    ),
+                ),
                 chatProperties = ChatProperties(),
                 openAiCompatibleChatApiFactory = FakeOpenAiCompatibleChatApiFactory(),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.base-url"
+        exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
     }
 
@@ -62,7 +71,7 @@ class OpenAiCompatibleAiModelClientProviderTest {
         val provider = OpenAiCompatibleAiModelClientProvider(
             chatModelRegistry = chatModelRegistry(
                 openAiModel(id = "missing-api-key", apiKey = null),
-                openAiModel(id = "configured-api-key", apiKey = "test-api-key"),
+                openAiModel(id = "configured-api-key"),
             ),
             chatProperties = ChatProperties(),
             openAiCompatibleChatApiFactory = factory,
@@ -73,40 +82,53 @@ class OpenAiCompatibleAiModelClientProviderTest {
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
-        ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = models.toList()))
+        ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                runtimes = mapOf(
+                    "openai-compatible" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                        baseUrl = "https://api.example.com/v1",
+                        apiKey = "test-api-key",
+                    ),
+                    "openai-compatible-alt" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                        baseUrl = "https://gateway.example.com/v1",
+                        apiKey = "test-api-key",
+                    ),
+                    "openai-compatible-no-key" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                        baseUrl = "https://no-key.example.com/v1",
+                    ),
+                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11434",
+                    ),
+                ),
+                chatModels = models.toList(),
+            ),
+        )
 
     private fun openAiModel(
         id: String = "cloud-gpt",
-        baseUrl: String? = "https://api.example.com/v1",
+        runtimeId: String? = null,
         modelName: String? = "gpt-4.1-mini",
         apiKey: String? = "test-api-key",
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Cloud GPT",
-                runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
-                mode = ChatModelMode.ONLINE,
-                availableOffline = false,
-                baseUrl = baseUrl,
-                modelName = modelName,
-                apiKey = apiKey,
-            ),
+            displayName = "Cloud GPT",
+            runtimeId = runtimeId ?: if (apiKey == null) "openai-compatible-no-key" else "openai-compatible",
+            modelName = modelName,
         )
 
     private fun ollamaModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Local Llama",
-                runtime = ChatModelRuntime.OLLAMA,
-                mode = ChatModelMode.LOCAL_SERVER,
-                availableOffline = false,
-                baseUrl = "http://localhost:11434",
-                modelName = "llama3.2",
-            ),
+            displayName = "Local Llama",
+            runtimeId = "local-ollama",
+            modelName = "llama3.2",
         )
 
     private class FakeOpenAiCompatibleChatApiFactory : OpenAiCompatibleChatApiFactory {

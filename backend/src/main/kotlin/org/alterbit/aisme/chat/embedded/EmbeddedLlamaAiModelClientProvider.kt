@@ -12,25 +12,20 @@ import org.springframework.stereotype.Component
 class EmbeddedLlamaAiModelClientProvider(
     chatModelRegistry: ChatModelRegistry,
     chatProperties: ChatProperties,
-    embeddedLlamaProperties: EmbeddedLlamaProperties,
     embeddedLlamaProcessManager: EmbeddedLlamaProcessManager,
     llamaServerChatApiFactory: LlamaServerChatApiFactory,
 ) : AiModelClientProvider {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val clients: List<AiModelClient> = run {
-        val runtimeModelsById = embeddedLlamaProperties.enabledModels().associateBy { it.id }
-
         chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
             .mapNotNull { model ->
                 val baseUrl = embeddedLlamaProcessManager.baseUrlForModelId(model.id)
-                val runtimeModel = runtimeModelsById[model.id]
-                if (baseUrl != null && runtimeModel != null) {
+                if (baseUrl != null) {
                     logger.info("Creating embedded llama AI model client for model '{}'", model.id)
                     EmbeddedLlamaAiModelClient(
                         model = model,
-                        runtimeModel = runtimeModel,
                         chatApi = llamaServerChatApiFactory.create(
                             baseUrl = baseUrl,
                             timeout = chatProperties.timeout,
@@ -38,7 +33,7 @@ class EmbeddedLlamaAiModelClientProvider(
                     )
                 } else {
                     logger.warn(
-                        "Skipping embedded llama AI model client for model '{}' because runtime is not ready or model metadata is missing",
+                        "Skipping embedded llama AI model client for model '{}' because runtime is not ready",
                         model.id,
                     )
                     null

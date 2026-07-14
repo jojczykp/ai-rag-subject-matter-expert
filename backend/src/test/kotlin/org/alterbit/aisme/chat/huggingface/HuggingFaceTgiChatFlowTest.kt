@@ -86,14 +86,13 @@ class HuggingFaceTgiChatFlowTest(
         @JvmStatic
         @DynamicPropertySource
         fun huggingFaceTgiProperties(registry: DynamicPropertyRegistry) {
+            registry.add("aisme.runtimes.hugging-face-tgi.type") { "HUGGING_FACE_ENDPOINT" }
+            registry.add("aisme.runtimes.hugging-face-tgi.base-url") { "http://localhost:${server.address.port}" }
+            registry.add("aisme.runtimes.hugging-face-tgi.api-key") { "test-api-key" }
             registry.add("aisme.chat-models[0].id") { "mock-hugging-face" }
             registry.add("aisme.chat-models[0].enabled") { "true" }
-            registry.add("aisme.chat-models[0].config.display-name") { "Mock Hugging Face TGI Model" }
-            registry.add("aisme.chat-models[0].config.runtime") { "HUGGING_FACE_ENDPOINT" }
-            registry.add("aisme.chat-models[0].config.mode") { "ONLINE" }
-            registry.add("aisme.chat-models[0].config.available-offline") { "false" }
-            registry.add("aisme.chat-models[0].config.base-url") { "http://localhost:${server.address.port}" }
-            registry.add("aisme.chat-models[0].config.api-key") { "test-api-key" }
+            registry.add("aisme.chat-models[0].display-name") { "Mock Hugging Face TGI Model" }
+            registry.add("aisme.chat-models[0].runtime-id") { "hugging-face-tgi" }
         }
 
         @JvmStatic

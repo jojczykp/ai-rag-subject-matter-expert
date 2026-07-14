@@ -11,11 +11,18 @@ fun chatModel(
     baseUrl: String? = "http://localhost:11434",
     modelName: String? = "llama3.2",
     apiKey: String? = null,
+    runtimeId: String = runtime.name,
+    assetDirectory: String? = null,
+    serverExecutablePath: String? = null,
+    ggufFile: String? = null,
+    contextSize: Int? = null,
+    runtimeArguments: List<String> = emptyList(),
 ): ChatModelDescriptor =
     ChatModelDescriptor(
         id = id,
         displayName = displayName,
         description = description,
+        runtimeId = runtimeId,
         runtime = runtime,
         mode = mode,
         availableOffline = availableOffline,
@@ -23,4 +30,9 @@ fun chatModel(
         baseUrl = baseUrl,
         modelName = modelName,
         apiKey = apiKey,
+        assetDirectory = assetDirectory,
+        serverExecutablePath = serverExecutablePath,
+        ggufFile = ggufFile,
+        contextSize = contextSize,
+        runtimeArguments = runtimeArguments,
     )

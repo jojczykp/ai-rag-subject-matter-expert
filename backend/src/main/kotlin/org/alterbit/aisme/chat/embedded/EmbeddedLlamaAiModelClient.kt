@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 
 class EmbeddedLlamaAiModelClient(
     private val model: ChatModelDescriptor,
-    private val runtimeModel: EmbeddedLlamaModelProperties,
     private val chatApi: LlamaServerChatApi,
 ) : AiModelClient {
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -40,3 +39,18 @@ class EmbeddedLlamaAiModelClient(
         )
     }
 }
+
+fun ChatModelDescriptor.requireEmbeddedAssetDirectory(): String =
+    checkNotNull(assetDirectory) { "Embedded llama model '$id' requires assetDirectory" }
+
+fun ChatModelDescriptor.requireEmbeddedServerExecutablePath(): String =
+    checkNotNull(serverExecutablePath) { "Embedded llama model '$id' requires serverExecutablePath" }
+
+fun ChatModelDescriptor.requireEmbeddedModelName(): String =
+    checkNotNull(modelName) { "Embedded llama model '$id' requires modelName" }
+
+fun ChatModelDescriptor.requireEmbeddedGgufFile(): String =
+    checkNotNull(ggufFile) { "Embedded llama model '$id' requires ggufFile" }
+
+fun ChatModelDescriptor.requireEmbeddedContextSize(): Int =
+    checkNotNull(contextSize) { "Embedded llama model '$id' requires contextSize" }

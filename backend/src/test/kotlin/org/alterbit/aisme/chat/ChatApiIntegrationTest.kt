@@ -31,18 +31,13 @@ import org.springframework.test.web.servlet.post
     properties = [
         "aisme.chat-models[0].id=local-ollama-llama",
         "aisme.chat-models[0].enabled=true",
-        "aisme.chat-models[0].config.display-name=Local Ollama Llama",
-        "aisme.chat-models[0].config.runtime=OLLAMA",
-        "aisme.chat-models[0].config.mode=LOCAL_SERVER",
-        "aisme.chat-models[0].config.available-offline=false",
-        "aisme.chat-models[0].config.base-url=http://localhost:11434",
-        "aisme.chat-models[0].config.model-name=llama3.2",
+        "aisme.chat-models[0].display-name=Local Ollama Llama",
+        "aisme.chat-models[0].runtime-id=local-ollama",
+        "aisme.chat-models[0].model-name=llama3.2",
         "aisme.chat-models[1].id=cloud-gpt",
         "aisme.chat-models[1].enabled=true",
-        "aisme.chat-models[1].config.display-name=Cloud GPT",
-        "aisme.chat-models[1].config.runtime=SPRING_AI",
-        "aisme.chat-models[1].config.mode=ONLINE",
-        "aisme.chat-models[1].config.available-offline=false",
+        "aisme.chat-models[1].display-name=Cloud GPT",
+        "aisme.chat-models[1].runtime-id=spring-ai",
     ],
 )
 @AutoConfigureMockMvc

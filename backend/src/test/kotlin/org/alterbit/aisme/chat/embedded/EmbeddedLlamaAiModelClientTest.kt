@@ -16,7 +16,6 @@ class EmbeddedLlamaAiModelClientTest {
     fun `exposes configured model id`() {
         val client = EmbeddedLlamaAiModelClient(
             model = embeddedModel(id = "embedded-qwen-0-5b"),
-            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
@@ -28,7 +27,6 @@ class EmbeddedLlamaAiModelClientTest {
         val chatApi = FakeLlamaServerChatApi(answer = " Use two parts water. ")
         val client = EmbeddedLlamaAiModelClient(
             model = embeddedModel(id = "embedded-qwen-0-5b"),
-            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = chatApi,
         )
 
@@ -63,7 +61,6 @@ class EmbeddedLlamaAiModelClientTest {
     fun `rejects request for another model id`() {
         val client = EmbeddedLlamaAiModelClient(
             model = embeddedModel(id = "embedded-qwen-0-5b"),
-            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(),
         )
 
@@ -78,7 +75,6 @@ class EmbeddedLlamaAiModelClientTest {
     fun `rejects blank provider response`() {
         val client = EmbeddedLlamaAiModelClient(
             model = embeddedModel(id = "embedded-qwen-0-5b"),
-            runtimeModel = runtimeModel(id = "embedded-qwen-0-5b"),
             chatApi = FakeLlamaServerChatApi(answer = " "),
         )
 
@@ -106,14 +102,6 @@ class EmbeddedLlamaAiModelClientTest {
         baseUrl = null,
         modelName = null,
     )
-
-    private fun runtimeModel(id: String): EmbeddedLlamaModelProperties =
-        EmbeddedLlamaModelProperties(
-            id = id,
-            displayName = "Embedded Qwen",
-            ggufFile = "qwen2.5-0.5b-instruct-q4_k_m.gguf",
-            contextSize = 4096,
-        )
 
     private class FakeLlamaServerChatApi(
         private val answer: String = "Fake embedded answer",

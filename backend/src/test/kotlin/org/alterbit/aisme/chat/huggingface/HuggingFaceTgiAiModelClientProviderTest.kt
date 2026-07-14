@@ -5,12 +5,11 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
 import org.junit.jupiter.api.Test
 
 class HuggingFaceTgiAiModelClientProviderTest {
@@ -21,7 +20,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
             chatModelRegistry = chatModelRegistry(
                 huggingFaceModel(id = "hf-mistral", baseUrl = "https://hf.example.com", apiKey = "test-api-key"),
                 nonHuggingFaceModel(id = "local-llama"),
-                huggingFaceModel(id = "hf-qwen", baseUrl = "https://qwen.example.com", apiKey = null),
+                huggingFaceModel(id = "hf-qwen", runtimeId = "hugging-face-tgi-alt", apiKey = null),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             huggingFaceTgiChatApiFactory = factory,
@@ -46,50 +45,67 @@ class HuggingFaceTgiAiModelClientProviderTest {
     fun `rejects Hugging Face endpoint model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             HuggingFaceTgiAiModelClientProvider(
-                chatModelRegistry = chatModelRegistry(huggingFaceModel(baseUrl = null)),
+                chatModelRegistry = ChatModelRegistry(
+                    ConfiguredChatModelsProperties(
+                        runtimes = mapOf(
+                            "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+                                type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                            ),
+                        ),
+                        chatModels = listOf(huggingFaceModel()),
+                    ),
+                ),
                 chatProperties = ChatProperties(),
                 huggingFaceTgiChatApiFactory = FakeHuggingFaceTgiChatApiFactory(),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.base-url"
+        exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
-        ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = models.toList()))
+        ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                runtimes = mapOf(
+                    "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                        baseUrl = "https://hf.example.com",
+                        apiKey = "test-api-key",
+                    ),
+                    "hugging-face-tgi-alt" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                        baseUrl = "https://qwen.example.com",
+                    ),
+                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11434",
+                    ),
+                ),
+                chatModels = models.toList(),
+            ),
+        )
 
     private fun huggingFaceModel(
         id: String = "hf-mistral",
         baseUrl: String? = "https://hf.example.com",
+        runtimeId: String = if (baseUrl == "https://qwen.example.com") "hugging-face-tgi-alt" else "hugging-face-tgi",
         apiKey: String? = "test-api-key",
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Hugging Face Mistral",
-                runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-                mode = ChatModelMode.ONLINE,
-                availableOffline = false,
-                baseUrl = baseUrl,
-                modelName = null,
-                apiKey = apiKey,
-            ),
+            displayName = "Hugging Face Mistral",
+            runtimeId = runtimeId,
         )
 
     private fun nonHuggingFaceModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Local Llama",
-                runtime = ChatModelRuntime.OLLAMA,
-                mode = ChatModelMode.LOCAL_SERVER,
-                availableOffline = false,
-                baseUrl = "http://localhost:11434",
-                modelName = "llama3.2",
-            ),
+            displayName = "Local Llama",
+            runtimeId = "local-ollama",
+            modelName = "llama3.2",
         )
 
     private class FakeHuggingFaceTgiChatApiFactory : HuggingFaceTgiChatApiFactory {

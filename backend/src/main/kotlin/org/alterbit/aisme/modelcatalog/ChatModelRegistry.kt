@@ -9,6 +9,12 @@ class ChatModelRegistry(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
+    private val runtimesById: Map<String, ConfiguredChatRuntimeProperties> = properties.runtimes
+        .also { runtimes ->
+            require(runtimes.isNotEmpty()) { "aisme.runtimes must contain at least one runtime" }
+            require(runtimes.keys.none { it.isBlank() }) { "aisme.runtimes must not contain blank ids" }
+        }
+
     private val modelsById: Map<String, ChatModelDescriptor> = properties.chatModels
         .also { models ->
             require(models.map { it.id }.distinct().size == models.size) {
@@ -17,8 +23,8 @@ class ChatModelRegistry(
         }
         .mapIndexed { index, model -> IndexedConfiguredChatModel(index = index, model = model) }
         .filter { it.model.enabled }
-        .onEach { it.model.validateRuntimeConfiguration(it.index) }
-        .map { it.model.toDescriptor() }
+        .onEach { it.validateRuntimeConfiguration() }
+        .map { it.model.toDescriptor(runtime = runtimesById.getValue(it.model.requireRuntimeId())) }
         .also { models ->
             require(models.isNotEmpty()) { "aisme.chat-models must contain at least one model" }
         }
@@ -27,8 +33,9 @@ class ChatModelRegistry(
             logger.info("Configured {} enabled chat model(s)", models.size)
             models.values.forEach { model ->
                 logger.info(
-                    "Chat model '{}' configured with runtime '{}' and mode '{}'",
+                    "Chat model '{}' configured with runtime id '{}', type '{}', and mode '{}'",
                     model.id,
+                    model.runtimeId,
                     model.runtime,
                     model.mode,
                 )
@@ -44,44 +51,48 @@ class ChatModelRegistry(
     fun getByIdOrThrow(modelId: String): ChatModelDescriptor =
         findById(modelId) ?: throw ChatModelNotFoundException(modelId)
 
-    private fun ConfiguredChatModelProperties.validateRuntimeConfiguration(index: Int) {
-        val prefix = "aisme.chat-models[$index].config"
-        val config = requireEnabledConfig()
+    private fun IndexedConfiguredChatModel.validateRuntimeConfiguration() {
+        val modelPrefix = "aisme.chat-models[$index]"
+        val runtimeId = model.requireRuntimeId()
+        val runtime = runtimesById[runtimeId]
+        require(runtime != null) { "$modelPrefix.runtime-id references unknown runtime '$runtimeId'" }
+        val descriptor = model.toDescriptor(runtime)
 
         fun requireConfigured(value: String?, propertyName: String) {
-            require(value != null) { "$prefix.$propertyName is required for ${config.runtime} models" }
+            require(value != null) { "$modelPrefix.$propertyName is required for ${runtime.type} models" }
         }
 
-        fun requireMode(expectedMode: ChatModelMode) {
-            require(config.mode == expectedMode) {
-                "$prefix.mode must be $expectedMode for ${config.runtime} models"
+        fun requireRuntimeConfigured(value: String?, propertyName: String) {
+            require(value != null) {
+                "aisme.runtimes.$runtimeId.$propertyName is required for ${runtime.type} runtimes"
             }
         }
 
-        when (config.runtime) {
+        when (runtime.type) {
             ChatModelRuntime.OLLAMA -> {
-                requireMode(ChatModelMode.LOCAL_SERVER)
-                requireConfigured(config.baseUrl, "base-url")
-                requireConfigured(config.modelName, "model-name")
+                requireConfigured(descriptor.baseUrl, "base-url")
+                requireConfigured(model.modelName, "model-name")
             }
 
             ChatModelRuntime.OPENAI_COMPATIBLE -> {
-                requireMode(ChatModelMode.ONLINE)
-                requireConfigured(config.baseUrl, "base-url")
-                requireConfigured(config.modelName, "model-name")
+                requireConfigured(descriptor.baseUrl, "base-url")
+                requireConfigured(model.modelName, "model-name")
             }
 
             ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {
-                requireMode(ChatModelMode.ONLINE)
-                requireConfigured(config.baseUrl, "base-url")
+                requireConfigured(descriptor.baseUrl, "base-url")
             }
 
             ChatModelRuntime.SPRING_AI -> {
-                requireMode(ChatModelMode.ONLINE)
+                // Spring AI models rely on Spring AI auto-configuration.
             }
 
             ChatModelRuntime.EMBEDDED_OFFLINE -> {
-                requireMode(ChatModelMode.EMBEDDED_OFFLINE)
+                requireRuntimeConfigured(runtime.assetDirectory, "asset-directory")
+                requireRuntimeConfigured(runtime.serverExecutablePath, "server-executable-path")
+                requireConfigured(model.modelName, "model-name")
+                requireConfigured(model.ggufFile, "gguf-file")
+                requireConfigured(model.contextSize?.toString(), "context-size")
             }
         }
     }

@@ -12,14 +12,13 @@ import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityChecker
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
-import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
+import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
@@ -286,28 +285,26 @@ class AiChatServiceTest {
     private fun chatModelRegistry(): ChatModelRegistry =
         ChatModelRegistry(
             ConfiguredChatModelsProperties(
+                runtimes = mapOf(
+                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11434",
+                    ),
+                    "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+                ),
                 chatModels = listOf(
                     ConfiguredChatModelProperties(
                         id = "local-ollama-llama",
                         enabled = true,
-                        config = EnabledChatModelProperties(
-                            displayName = "Local Ollama Llama",
-                            runtime = ChatModelRuntime.OLLAMA,
-                            mode = ChatModelMode.LOCAL_SERVER,
-                            availableOffline = false,
-                            baseUrl = "http://localhost:11434",
-                            modelName = "llama3.2",
-                        ),
+                        displayName = "Local Ollama Llama",
+                        runtimeId = "local-ollama",
+                        modelName = "llama3.2",
                     ),
                     ConfiguredChatModelProperties(
                         id = "cloud-gpt",
                         enabled = true,
-                        config = EnabledChatModelProperties(
-                            displayName = "Cloud GPT",
-                            runtime = ChatModelRuntime.SPRING_AI,
-                            mode = ChatModelMode.ONLINE,
-                            availableOffline = false,
-                        ),
+                        displayName = "Cloud GPT",
+                        runtimeId = "spring-ai",
                     ),
                 ),
             ),

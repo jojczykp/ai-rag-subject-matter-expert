@@ -3,7 +3,6 @@ package org.alterbit.aisme.configuration
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.chat.embedded.EmbeddedLlamaProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
@@ -57,21 +56,20 @@ class ConfigurationPropertiesValidationTest {
     }
 
     @Test
-    fun `fails creating model catalog from invalid runtime and mode configuration`() {
+    fun `fails creating model catalog when model references unknown runtime`() {
         propertyContext(ChatModelCatalogConfiguration::class.java)
             .withPropertyValues(
+                "aisme.runtimes.local-ollama.type=OLLAMA",
+                "aisme.runtimes.local-ollama.base-url=http://localhost:11434",
                 "aisme.chat-models[0].id=cloud-gpt",
                 "aisme.chat-models[0].enabled=true",
-                "aisme.chat-models[0].config.display-name=Cloud GPT",
-                "aisme.chat-models[0].config.runtime=OPENAI_COMPATIBLE",
-                "aisme.chat-models[0].config.mode=LOCAL_SERVER",
-                "aisme.chat-models[0].config.available-offline=false",
-                "aisme.chat-models[0].config.base-url=http://localhost:8000/v1",
-                "aisme.chat-models[0].config.model-name=local-model",
+                "aisme.chat-models[0].display-name=Cloud GPT",
+                "aisme.chat-models[0].runtime-id=missing-runtime",
+                "aisme.chat-models[0].model-name=local-model",
             )
             .run { context ->
-                context.failureMessage() shouldContain "aisme.chat-models[0].config.mode"
-                context.failureMessage() shouldContain "ONLINE"
+                context.failureMessage() shouldContain "runtime-id"
+                context.failureMessage() shouldContain "missing-runtime"
             }
     }
 
@@ -98,10 +96,6 @@ class ConfigurationPropertiesValidationTest {
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties(ChatModelAvailabilityProperties::class)
     private class ChatModelAvailabilityPropertiesConfiguration
-
-    @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(EmbeddedLlamaProperties::class)
-    private class EmbeddedLlamaPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties(ConfiguredChatModelsProperties::class)

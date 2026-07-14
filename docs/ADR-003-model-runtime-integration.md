@@ -117,22 +117,23 @@ availability checks are implemented, configured models are reported as
 
 ## Configuration Shape
 
-Use a catalog list for configured models. `id` and `enabled` identify and
-control the entry; provider details live under `config` and are required only
-for enabled entries.
+Use a runtime catalog plus a chat model catalog. Runtime entries define shared
+provider connection details. Chat models define user-selectable model ids,
+display metadata, and model-specific settings, then reference a runtime by
+`runtime-id`.
 
 ```yaml
 aisme:
+  runtimes:
+    local-ollama:
+      type: OLLAMA
+      base-url: http://localhost:11434
   chat-models:
     - id: local-ollama-llama
       enabled: true
-      config:
-        display-name: Local Ollama Llama
-        runtime: OLLAMA
-        mode: LOCAL_SERVER
-        base-url: http://localhost:11434
-        model-name: llama3.2
-        available-offline: false
+      display-name: Local Ollama Llama
+      runtime-id: local-ollama
+      model-name: llama3.2
 ```
 
 Use one statically configured embedding model:

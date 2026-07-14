@@ -7,12 +7,11 @@ import io.kotest.matchers.string.shouldContain
 import java.time.Duration
 import java.time.Instant
 import org.alterbit.aisme.chat.ChatProperties
-import org.alterbit.aisme.modelcatalog.ChatModelMode
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
+import org.alterbit.aisme.modelcatalog.ConfiguredChatRuntimeProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelProperties
 import org.alterbit.aisme.modelcatalog.ConfiguredChatModelsProperties
-import org.alterbit.aisme.modelcatalog.EnabledChatModelProperties
 import org.junit.jupiter.api.Test
 import org.springframework.ai.ollama.api.OllamaApi
 
@@ -24,7 +23,7 @@ class OllamaAiModelClientProviderTest {
             chatModelRegistry = chatModelRegistry(
                 ollamaModel(id = "local-llama", modelName = "llama3.2"),
                 springAiModel(id = "cloud-gpt"),
-                ollamaModel(id = "local-qwen", baseUrl = "http://localhost:11435", modelName = "qwen2.5"),
+                ollamaModel(id = "local-qwen", runtimeId = "local-ollama-alt", modelName = "qwen2.5"),
             ),
             chatProperties = ChatProperties(timeout = Duration.ofSeconds(30)),
             ollamaChatApiFactory = factory,
@@ -47,47 +46,60 @@ class OllamaAiModelClientProviderTest {
     fun `rejects ollama model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             OllamaAiModelClientProvider(
-                chatModelRegistry = chatModelRegistry(ollamaModel(baseUrl = null)),
+                chatModelRegistry = ChatModelRegistry(
+                    ConfiguredChatModelsProperties(
+                        runtimes = mapOf(
+                            "local-ollama" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.OLLAMA),
+                        ),
+                        chatModels = listOf(ollamaModel()),
+                    ),
+                ),
                 chatProperties = ChatProperties(),
                 ollamaChatApiFactory = FakeOllamaChatApiFactory(),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.base-url"
+        exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
     }
 
     private fun chatModelRegistry(vararg models: ConfiguredChatModelProperties): ChatModelRegistry =
-        ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = models.toList()))
+        ChatModelRegistry(
+            ConfiguredChatModelsProperties(
+                runtimes = mapOf(
+                    "local-ollama" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11434",
+                    ),
+                    "local-ollama-alt" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OLLAMA,
+                        baseUrl = "http://localhost:11435",
+                    ),
+                    "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
+                ),
+                chatModels = models.toList(),
+            ),
+        )
 
     private fun ollamaModel(
         id: String = "local-llama",
-        baseUrl: String? = "http://localhost:11434",
+        runtimeId: String? = "local-ollama",
         modelName: String? = "llama3.2",
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Local Llama",
-                runtime = ChatModelRuntime.OLLAMA,
-                mode = ChatModelMode.LOCAL_SERVER,
-                availableOffline = false,
-                baseUrl = baseUrl,
-                modelName = modelName,
-            ),
+            displayName = "Local Llama",
+            runtimeId = runtimeId,
+            modelName = modelName,
         )
 
     private fun springAiModel(id: String): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = true,
-            config = EnabledChatModelProperties(
-                displayName = "Cloud GPT",
-                runtime = ChatModelRuntime.SPRING_AI,
-                mode = ChatModelMode.ONLINE,
-                availableOffline = false,
-            ),
+            displayName = "Cloud GPT",
+            runtimeId = "spring-ai",
         )
 
     private class FakeOllamaChatApiFactory : OllamaChatApiFactory {

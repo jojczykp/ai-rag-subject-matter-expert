@@ -10,7 +10,7 @@ class ChatModelRegistryTest {
     @Test
     fun `lists configured models in configuration order`() {
         val registry = ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            configuredProperties(
                 chatModels = listOf(
                     configuredModel(id = "first-model"),
                     configuredModel(id = "second-model"),
@@ -30,7 +30,7 @@ class ChatModelRegistryTest {
     @Test
     fun `finds configured model by id`() {
         val registry = ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            configuredProperties(
                 chatModels = listOf(
                     configuredModel(id = "local-ollama-llama"),
                 ),
@@ -51,7 +51,7 @@ class ChatModelRegistryTest {
 
     @Test
     fun `returns null when configured model is not found`() {
-        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
+        val registry = ChatModelRegistry(configuredProperties())
 
         registry.findById("missing-model") shouldBe null
     }
@@ -59,7 +59,7 @@ class ChatModelRegistryTest {
     @Test
     fun `ignores disabled configured models`() {
         val registry = ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            configuredProperties(
                 chatModels = listOf(
                     configuredModel(id = "enabled-model"),
                     configuredModel(id = "disabled-model", enabled = false),
@@ -73,7 +73,7 @@ class ChatModelRegistryTest {
 
     @Test
     fun `gets configured model by id or throws`() {
-        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
+        val registry = ChatModelRegistry(configuredProperties())
 
         val model = registry.getByIdOrThrow("local-ollama-llama")
 
@@ -82,7 +82,7 @@ class ChatModelRegistryTest {
 
     @Test
     fun `throws when getting missing configured model by id`() {
-        val registry = ChatModelRegistry(ConfiguredChatModelsProperties())
+        val registry = ChatModelRegistry(configuredProperties())
 
         val exception = shouldThrow<ChatModelNotFoundException> {
             registry.getByIdOrThrow("missing-model")
@@ -94,7 +94,7 @@ class ChatModelRegistryTest {
     @Test
     fun `rejects empty configured model list`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ChatModelRegistry(ConfiguredChatModelsProperties(chatModels = emptyList()))
+            ChatModelRegistry(configuredProperties(chatModels = emptyList()))
         }
 
         exception.message shouldContain "aisme.chat-models"
@@ -104,7 +104,7 @@ class ChatModelRegistryTest {
     fun `rejects duplicate configured model ids`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
+                configuredProperties(
                     chatModels = listOf(
                         configuredModel(id = "duplicate-model"),
                         configuredModel(id = "duplicate-model"),
@@ -119,23 +119,28 @@ class ChatModelRegistryTest {
     @Test
     fun `rejects enabled model without config`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ConfiguredChatModelProperties(id = "missing-config", enabled = true)
+            ChatModelRegistry(
+                configuredProperties(
+                    chatModels = listOf(ConfiguredChatModelProperties(id = "missing-config", enabled = true)),
+                ),
+            )
         }
 
-        exception.message shouldContain "config"
+        exception.message shouldContain "is required"
     }
 
     @Test
     fun `rejects ollama model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
-                    chatModels = listOf(configuredModel(baseUrl = null)),
+                configuredProperties(
+                    runtimes = mapOf("local-ollama" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.OLLAMA)),
+                    chatModels = listOf(configuredModel()),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.base-url"
+        exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -144,13 +149,13 @@ class ChatModelRegistryTest {
     fun `rejects ollama model without model name`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
+                configuredProperties(
                     chatModels = listOf(configuredModel(modelName = null)),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.model-name"
+        exception.message shouldContain "aisme.chat-models[0].model-name"
         exception.message shouldContain "is required"
         exception.message shouldContain "OLLAMA"
     }
@@ -158,15 +163,18 @@ class ChatModelRegistryTest {
     @Test
     fun `allows OpenAI-compatible model without api key`() {
         val registry = ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            configuredProperties(
+                runtimes = mapOf(
+                    "openai-compatible-no-key" to ConfiguredChatRuntimeProperties(
+                        type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                        baseUrl = "https://api.example.com/v1",
+                    ),
+                ),
                 chatModels = listOf(
                     configuredModel(
                         id = "cloud-gpt",
-                        runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
-                        mode = ChatModelMode.ONLINE,
-                        baseUrl = "https://api.example.com/v1",
+                        runtimeId = "openai-compatible-no-key",
                         modelName = "gpt-4.1-mini",
-                        apiKey = null,
                     ),
                 ),
             ),
@@ -181,21 +189,20 @@ class ChatModelRegistryTest {
     fun `rejects Hugging Face endpoint model without base url`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
-                    chatModels = listOf(
-                        configuredModel(
-                            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-                            mode = ChatModelMode.ONLINE,
-                            baseUrl = null,
-                            modelName = null,
-                            apiKey = "test-api-key",
+                configuredProperties(
+                    runtimes = mapOf(
+                        "hugging-face-tgi-missing-url" to ConfiguredChatRuntimeProperties(
+                            type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
                         ),
+                    ),
+                    chatModels = listOf(
+                        configuredModel(runtimeId = "hugging-face-tgi-missing-url", modelName = null),
                     ),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.base-url"
+        exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
         exception.message shouldContain "HUGGING_FACE_ENDPOINT"
     }
@@ -203,16 +210,9 @@ class ChatModelRegistryTest {
     @Test
     fun `allows online Hugging Face endpoint model without api key`() {
         val registry = ChatModelRegistry(
-            ConfiguredChatModelsProperties(
+            configuredProperties(
                 chatModels = listOf(
-                    configuredModel(
-                        id = "hf-endpoint",
-                        runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-                        mode = ChatModelMode.ONLINE,
-                        baseUrl = "https://example.endpoints.huggingface.cloud",
-                        modelName = null,
-                        apiKey = null,
-                    ),
+                    configuredModel(id = "hf-endpoint", runtimeId = "hugging-face-tgi", modelName = null),
                 ),
             ),
         )
@@ -223,90 +223,101 @@ class ChatModelRegistryTest {
     }
 
     @Test
-    fun `rejects OpenAI-compatible model configured as local server`() {
+    fun `rejects model with unknown runtime id`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
+                configuredProperties(
                     chatModels = listOf(
                         configuredModel(
-                            runtime = ChatModelRuntime.OPENAI_COMPATIBLE,
-                            mode = ChatModelMode.LOCAL_SERVER,
-                            baseUrl = "http://localhost:8000/v1",
-                            modelName = "local-model",
+                            runtimeId = "missing-runtime",
                         ),
                     ),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.mode"
-        exception.message shouldContain "ONLINE"
-        exception.message shouldContain "OPENAI_COMPATIBLE"
+        exception.message shouldContain "runtime-id"
+        exception.message shouldContain "missing-runtime"
     }
 
     @Test
-    fun `rejects Hugging Face endpoint model configured as local server`() {
+    fun `rejects empty runtime list`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
-                    chatModels = listOf(
-                        configuredModel(
-                            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
-                            mode = ChatModelMode.LOCAL_SERVER,
-                            baseUrl = "http://localhost:8080",
-                            modelName = null,
-                        ),
-                    ),
+                configuredProperties(
+                    runtimes = emptyMap(),
+                    chatModels = listOf(configuredModel()),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.mode"
-        exception.message shouldContain "ONLINE"
-        exception.message shouldContain "HUGGING_FACE_ENDPOINT"
+        exception.message shouldContain "aisme.runtimes"
     }
 
     @Test
-    fun `rejects embedded offline model configured as online`() {
+    fun `rejects embedded offline model without gguf file`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelRegistry(
-                ConfiguredChatModelsProperties(
+                configuredProperties(
                     chatModels = listOf(
                         configuredModel(
-                            runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
-                            mode = ChatModelMode.ONLINE,
-                            baseUrl = null,
-                            modelName = null,
+                            runtimeId = "embedded-llama",
+                            modelName = "qwen2.5",
+                            ggufFile = null,
                         ),
                     ),
                 ),
             )
         }
 
-        exception.message shouldContain "aisme.chat-models[0].config.mode"
-        exception.message shouldContain "EMBEDDED_OFFLINE"
+        exception.message shouldContain "gguf-file"
     }
 
     private fun configuredModel(
         id: String = "local-ollama-llama",
         enabled: Boolean = true,
-        runtime: ChatModelRuntime = ChatModelRuntime.OLLAMA,
-        mode: ChatModelMode = ChatModelMode.LOCAL_SERVER,
-        baseUrl: String? = "http://localhost:11434",
+        runtimeId: String? = "local-ollama",
         modelName: String? = "llama3.2",
-        apiKey: String? = null,
+        ggufFile: String? = "models/qwen.gguf",
     ): ConfiguredChatModelProperties =
         ConfiguredChatModelProperties(
             id = id,
             enabled = enabled,
-            config = EnabledChatModelProperties(
-                displayName = "Local Ollama Llama",
-                runtime = runtime,
-                mode = mode,
-                availableOffline = false,
-                baseUrl = baseUrl,
-                modelName = modelName,
-                apiKey = apiKey,
+            displayName = "Local Ollama Llama",
+            runtimeId = runtimeId,
+            modelName = modelName,
+            ggufFile = ggufFile,
+            contextSize = 2048,
+        )
+
+    private fun configuredProperties(
+        runtimes: Map<String, ConfiguredChatRuntimeProperties> = defaultRuntimes(),
+        chatModels: List<ConfiguredChatModelProperties> = listOf(configuredModel()),
+    ): ConfiguredChatModelsProperties =
+        ConfiguredChatModelsProperties(
+            runtimes = runtimes,
+            chatModels = chatModels,
+        )
+
+    private fun defaultRuntimes(): Map<String, ConfiguredChatRuntimeProperties> =
+        mapOf(
+            "embedded-llama" to ConfiguredChatRuntimeProperties(
+                type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                assetDirectory = "./models/llama",
+                serverExecutablePath = "./models/llama/bin/llama-server",
             ),
+            "local-ollama" to ConfiguredChatRuntimeProperties(
+                type = ChatModelRuntime.OLLAMA,
+                baseUrl = "http://localhost:11434",
+            ),
+            "openai-compatible" to ConfiguredChatRuntimeProperties(
+                type = ChatModelRuntime.OPENAI_COMPATIBLE,
+                baseUrl = "https://api.example.com/v1",
+            ),
+            "hugging-face-tgi" to ConfiguredChatRuntimeProperties(
+                type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                baseUrl = "https://example.endpoints.huggingface.cloud",
+            ),
+            "spring-ai" to ConfiguredChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
         )
 }
