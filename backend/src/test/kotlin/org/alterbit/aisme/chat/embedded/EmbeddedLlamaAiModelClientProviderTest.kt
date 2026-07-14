@@ -82,7 +82,7 @@ class EmbeddedLlamaAiModelClientProviderTest {
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
                     "embedded-llama" to ChatRuntimeProperties(
-                        type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                        type = ChatModelRuntime.EMBEDDED_LLAMA,
                         assetDirectory = "./models/llama",
                         serverExecutablePath = "./models/llama/bin/llama-server",
                     ),

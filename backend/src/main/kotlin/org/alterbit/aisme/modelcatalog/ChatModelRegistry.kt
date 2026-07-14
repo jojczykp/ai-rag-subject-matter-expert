@@ -85,7 +85,7 @@ class ChatModelRegistry(
                 requireConfigured(model.runtime.modelName, "runtime.model-name")
             }
 
-            ChatModelRuntime.HUGGING_FACE_ENDPOINT -> {
+            ChatModelRuntime.HUGGING_FACE_TGI -> {
                 requireConfigured(descriptor.baseUrl, "base-url")
             }
 
@@ -93,7 +93,7 @@ class ChatModelRegistry(
                 // Spring AI models rely on Spring AI auto-configuration.
             }
 
-            ChatModelRuntime.EMBEDDED_OFFLINE -> {
+            ChatModelRuntime.EMBEDDED_LLAMA -> {
                 requireRuntimeConfigured(runtime.assetDirectory, "asset-directory")
                 requireRuntimeConfigured(runtime.serverExecutablePath, "server-executable-path")
                 requireConfigured(model.runtime.modelName, "runtime.model-name")

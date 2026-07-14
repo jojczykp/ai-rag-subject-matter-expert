@@ -23,12 +23,12 @@ data class ChatRuntimeProperties(
         when (type) {
             ChatModelRuntime.OLLAMA -> ChatModelMode.LOCAL_SERVER
             ChatModelRuntime.OPENAI_COMPATIBLE,
-            ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+            ChatModelRuntime.HUGGING_FACE_TGI,
             ChatModelRuntime.SPRING_AI,
             -> ChatModelMode.ONLINE
-            ChatModelRuntime.EMBEDDED_OFFLINE -> ChatModelMode.EMBEDDED_OFFLINE
+            ChatModelRuntime.EMBEDDED_LLAMA -> ChatModelMode.EMBEDDED_OFFLINE
         }
 
     val availableOffline: Boolean =
-        type == ChatModelRuntime.EMBEDDED_OFFLINE
+        type == ChatModelRuntime.EMBEDDED_LLAMA
 }

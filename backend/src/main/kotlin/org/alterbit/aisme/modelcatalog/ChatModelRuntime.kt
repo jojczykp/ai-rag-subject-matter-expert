@@ -22,12 +22,12 @@ enum class ChatModelRuntime(
         providerLabel = "Ollama",
         runtimeRequirements = listOf(REQUIRES_OLLAMA_SERVER),
     ),
-    HUGGING_FACE_ENDPOINT(
+    HUGGING_FACE_TGI(
         providerLabel = "Hugging Face TGI",
         runtimeRequirements = listOf(REQUIRES_NETWORK),
     ),
-    EMBEDDED_OFFLINE(
-        providerLabel = "Embedded offline",
+    EMBEDDED_LLAMA(
+        providerLabel = "Embedded llama",
         runtimeRequirements = listOf(REQUIRES_LOCAL_GGUF_MODEL, REQUIRES_LLAMA_SERVER_EXECUTABLE),
     ),
 }

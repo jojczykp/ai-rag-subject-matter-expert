@@ -95,7 +95,7 @@ class EmbeddedLlamaProcessManager(
         portAllocator: EphemeralEmbeddedLlamaPortAllocator,
     ): List<ManagedEmbeddedLlamaModel> {
         return chatModelRegistry.chatModels()
-            .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
+            .filter { it.runtime == ChatModelRuntime.EMBEDDED_LLAMA }
             .map { chatModel ->
                 val port = portAllocator.allocate()
                 ManagedEmbeddedLlamaModel(

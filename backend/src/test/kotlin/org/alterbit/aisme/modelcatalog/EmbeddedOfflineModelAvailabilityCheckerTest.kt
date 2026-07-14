@@ -32,7 +32,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
 
         checker.supports(
             chatModel(
-                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+                runtime = ChatModelRuntime.EMBEDDED_LLAMA,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = true,
             ),
@@ -79,7 +79,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     fun `marks embedded offline model without offline mode as misconfigured`() {
         val availability = checker().check(
             model = chatModel(
-                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+                runtime = ChatModelRuntime.EMBEDDED_LLAMA,
                 mode = ChatModelMode.LOCAL_SERVER,
                 availableOffline = true,
             ),
@@ -93,7 +93,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
     fun `marks embedded offline model without offline flag as misconfigured`() {
         val availability = checker().check(
             model = chatModel(
-                runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+                runtime = ChatModelRuntime.EMBEDDED_LLAMA,
                 mode = ChatModelMode.EMBEDDED_OFFLINE,
                 availableOffline = false,
             ),
@@ -204,7 +204,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                 ConfiguredChatModelsProperties(
                     runtimes = mapOf(
                         "embedded-llama" to ChatRuntimeProperties(
-                            type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                            type = ChatModelRuntime.EMBEDDED_LLAMA,
                             assetDirectory = model.assetDirectory,
                             serverExecutablePath = model.serverExecutablePath,
                         ),
@@ -239,7 +239,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
         chatModel(
             id = "embedded-qwen-0-5b",
             runtimeId = "embedded-llama",
-            runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+            runtime = ChatModelRuntime.EMBEDDED_LLAMA,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
             assetDirectory = assetDirectory.toString(),

@@ -74,7 +74,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
                     value("embedded-ready")
                 }
                 jsonPath("$.models[0].runtime") {
-                    value("EMBEDDED_OFFLINE")
+                    value("EMBEDDED_LLAMA")
                 }
                 jsonPath("$.models[0].mode") {
                     value("EMBEDDED_OFFLINE")
@@ -212,7 +212,7 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
     fun embeddedAvailabilityChecker(): ChatModelAvailabilityChecker =
         object : ChatModelAvailabilityChecker {
             override fun supports(model: ChatModelDescriptor): Boolean =
-                model.runtime == ChatModelRuntime.EMBEDDED_OFFLINE
+                model.runtime == ChatModelRuntime.EMBEDDED_LLAMA
 
             override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
                 when (model.id) {

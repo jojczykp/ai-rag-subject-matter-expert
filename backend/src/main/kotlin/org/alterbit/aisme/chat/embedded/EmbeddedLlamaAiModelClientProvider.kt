@@ -19,7 +19,7 @@ class EmbeddedLlamaAiModelClientProvider(
 
     private val clients: List<AiModelClient> = run {
         chatModelRegistry.chatModels()
-            .filter { it.runtime == ChatModelRuntime.EMBEDDED_OFFLINE }
+            .filter { it.runtime == ChatModelRuntime.EMBEDDED_LLAMA }
             .mapNotNull { model ->
                 val baseUrl = embeddedLlamaProcessManager.baseUrlForModelId(model.id)
                 if (baseUrl != null) {

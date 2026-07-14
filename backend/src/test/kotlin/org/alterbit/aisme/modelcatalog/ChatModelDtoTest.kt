@@ -51,7 +51,7 @@ class ChatModelDtoTest {
     @Test
     fun `maps embedded offline runtime requirements`() {
         val dto = descriptor(
-            runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+            runtime = ChatModelRuntime.EMBEDDED_LLAMA,
             mode = ChatModelMode.EMBEDDED_OFFLINE,
             availableOffline = true,
         ).toDto()
@@ -65,7 +65,7 @@ class ChatModelDtoTest {
     @Test
     fun `maps Hugging Face endpoint runtime requirements`() {
         val dto = descriptor(
-            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+            runtime = ChatModelRuntime.HUGGING_FACE_TGI,
             mode = ChatModelMode.ONLINE,
             availableOffline = false,
         ).toDto()

@@ -14,7 +14,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             "aisme.runtimes.openai-compatible.type=OPENAI_COMPATIBLE",
             "aisme.runtimes.openai-compatible.base-url=https://api.example.com/v1",
             "aisme.runtimes.openai-compatible.api-key=test-api-key",
-            "aisme.runtimes.embedded-llama.type=EMBEDDED_OFFLINE",
+            "aisme.runtimes.embedded-llama.type=EMBEDDED_LLAMA",
             "aisme.runtimes.embedded-llama.asset-directory=./models/llama",
             "aisme.runtimes.embedded-llama.server-executable-path=./models/llama/bin/llama-server",
             "aisme.chat-models.cloud-gpt.enabled=true",
@@ -59,7 +59,7 @@ class ConfiguredChatModelsPropertiesOverrideTest {
             embeddedModel.runtime.modelName shouldBe "qwen2.5"
             embeddedModel.runtime.ggufFile shouldBe "models/qwen.gguf"
             embeddedModel.runtime.contextSize shouldBe 2048
-            embeddedRuntime.type shouldBe ChatModelRuntime.EMBEDDED_OFFLINE
+            embeddedRuntime.type shouldBe ChatModelRuntime.EMBEDDED_LLAMA
             embeddedRuntime.mode shouldBe ChatModelMode.EMBEDDED_OFFLINE
             embeddedRuntime.availableOffline shouldBe true
             embeddedRuntime.baseUrl shouldBe null

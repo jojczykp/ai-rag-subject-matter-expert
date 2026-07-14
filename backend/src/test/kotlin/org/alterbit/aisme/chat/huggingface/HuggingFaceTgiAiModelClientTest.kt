@@ -96,7 +96,7 @@ class HuggingFaceTgiAiModelClientTest {
         chatModel(
             id = id,
             displayName = "Hugging Face Mistral",
-            runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+            runtime = ChatModelRuntime.HUGGING_FACE_TGI,
             mode = ChatModelMode.ONLINE,
             availableOffline = false,
             baseUrl = "https://hf.example.com",

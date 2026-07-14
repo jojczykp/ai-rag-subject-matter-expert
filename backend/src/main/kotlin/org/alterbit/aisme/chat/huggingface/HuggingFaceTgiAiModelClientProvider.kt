@@ -17,7 +17,7 @@ class HuggingFaceTgiAiModelClientProvider(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val clients: List<AiModelClient> = chatModelRegistry.chatModels()
-        .filter { it.runtime == ChatModelRuntime.HUGGING_FACE_ENDPOINT }
+        .filter { it.runtime == ChatModelRuntime.HUGGING_FACE_TGI }
         .map { model ->
             logger.info("Creating Hugging Face TGI AI model client for model '{}'", model.id)
             HuggingFaceTgiAiModelClient(

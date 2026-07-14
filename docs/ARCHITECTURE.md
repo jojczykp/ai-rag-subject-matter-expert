@@ -148,8 +148,8 @@ enum class ChatModelRuntime {
     SPRING_AI,
     OPENAI_COMPATIBLE,
     OLLAMA,
-    HUGGING_FACE_ENDPOINT,
-    EMBEDDED_OFFLINE,
+    HUGGING_FACE_TGI,
+    EMBEDDED_LLAMA,
 }
 
 enum class ChatModelMode {
@@ -294,7 +294,7 @@ aisme:
     tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
   runtimes:
     embedded-llama:
-      type: EMBEDDED_OFFLINE
+      type: EMBEDDED_LLAMA
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
     local-ollama:
@@ -305,7 +305,7 @@ aisme:
       base-url: https://api.example.com/v1
       api-key: ${OPENAI_API_KEY:}
     hugging-face-tgi:
-      type: HUGGING_FACE_ENDPOINT
+      type: HUGGING_FACE_TGI
       base-url: https://example.endpoints.huggingface.cloud
       api-key: ${HF_API_KEY:}
     spring-ai:

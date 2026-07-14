@@ -488,7 +488,7 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat-model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
 | `aisme.chat-model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
-| `aisme.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_ENDPOINT`, `EMBEDDED_OFFLINE`, or `SPRING_AI`. |
+| `aisme.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
 | `aisme.runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
 | `aisme.runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
 | `aisme.runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
@@ -505,8 +505,8 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat-models.<model-id>.runtime.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
 
 Runtime and mode combinations are intentionally narrow in the initial scope:
-`OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_ENDPOINT`
-use `ONLINE`, `EMBEDDED_OFFLINE` uses `EMBEDDED_OFFLINE`, and `SPRING_AI` uses
+`OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_TGI`
+use `ONLINE`, `EMBEDDED_LLAMA` uses `EMBEDDED_OFFLINE`, and `SPRING_AI` uses
 `ONLINE`.
 
 ### Local Embedding Model
@@ -541,7 +541,7 @@ configuration points to external files outside the application JAR:
 aisme:
   runtimes:
     embedded-llama:
-      type: EMBEDDED_OFFLINE
+      type: EMBEDDED_LLAMA
       asset-directory: ./models/llama
       server-executable-path: ./models/llama/bin/llama-server
   chat-models:
@@ -669,7 +669,7 @@ Hugging Face Inference Endpoints can be configured as selectable online models:
 aisme:
   runtimes:
     hugging-face-tgi:
-      type: HUGGING_FACE_ENDPOINT
+      type: HUGGING_FACE_TGI
       base-url: https://example.endpoints.huggingface.cloud
       api-key: ${HF_API_KEY}
   chat-models:

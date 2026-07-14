@@ -18,7 +18,7 @@ class EmbeddedOfflineModelAvailabilityChecker(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun supports(model: ChatModelDescriptor): Boolean =
-        model.runtime == ChatModelRuntime.EMBEDDED_OFFLINE
+        model.runtime == ChatModelRuntime.EMBEDDED_LLAMA
 
     override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
         if (model.mode != ChatModelMode.EMBEDDED_OFFLINE || !model.availableOffline) {

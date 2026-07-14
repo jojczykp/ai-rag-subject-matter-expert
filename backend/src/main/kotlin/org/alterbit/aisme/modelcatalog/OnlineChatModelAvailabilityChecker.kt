@@ -10,7 +10,7 @@ class OnlineChatModelAvailabilityChecker : ChatModelAvailabilityChecker {
 
     override fun supports(model: ChatModelDescriptor): Boolean =
         model.runtime == ChatModelRuntime.OPENAI_COMPATIBLE ||
-            model.runtime == ChatModelRuntime.HUGGING_FACE_ENDPOINT ||
+            model.runtime == ChatModelRuntime.HUGGING_FACE_TGI ||
             model.runtime == ChatModelRuntime.SPRING_AI
 
     override fun check(model: ChatModelDescriptor, timeout: Duration): ChatModelAvailability =
@@ -24,7 +24,7 @@ class OnlineChatModelAvailabilityChecker : ChatModelAvailabilityChecker {
                     ChatModelAvailability.CONFIGURED
                 }
 
-            ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+            ChatModelRuntime.HUGGING_FACE_TGI,
             ChatModelRuntime.SPRING_AI,
             -> {
                 logger.info("Online model '{}' is configured for runtime '{}'", model.id, model.runtime)
@@ -32,7 +32,7 @@ class OnlineChatModelAvailabilityChecker : ChatModelAvailabilityChecker {
             }
 
             ChatModelRuntime.OLLAMA,
-            ChatModelRuntime.EMBEDDED_OFFLINE, -> {
+            ChatModelRuntime.EMBEDDED_LLAMA, -> {
                 logger.warn("Online availability checker does not support model '{}' with runtime '{}'", model.id, model.runtime)
                 ChatModelAvailability.MISCONFIGURED
             }

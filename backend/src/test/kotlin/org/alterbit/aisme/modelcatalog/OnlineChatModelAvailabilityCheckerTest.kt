@@ -10,14 +10,14 @@ class OnlineChatModelAvailabilityCheckerTest {
     @Test
     fun `supports online model runtimes`() {
         checker.supports(chatModel(runtime = ChatModelRuntime.OPENAI_COMPATIBLE)) shouldBe true
-        checker.supports(chatModel(runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT)) shouldBe true
+        checker.supports(chatModel(runtime = ChatModelRuntime.HUGGING_FACE_TGI)) shouldBe true
         checker.supports(chatModel(runtime = ChatModelRuntime.SPRING_AI)) shouldBe true
     }
 
     @Test
     fun `does not support local model runtimes`() {
         checker.supports(chatModel(runtime = ChatModelRuntime.OLLAMA)) shouldBe false
-        checker.supports(chatModel(runtime = ChatModelRuntime.EMBEDDED_OFFLINE)) shouldBe false
+        checker.supports(chatModel(runtime = ChatModelRuntime.EMBEDDED_LLAMA)) shouldBe false
     }
 
     @Test
@@ -50,7 +50,7 @@ class OnlineChatModelAvailabilityCheckerTest {
     fun `marks Hugging Face endpoint model as configured without api key`() {
         val availability = checker.check(
             model = chatModel(
-                runtime = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                runtime = ChatModelRuntime.HUGGING_FACE_TGI,
                 apiKey = null,
             ),
             timeout = Duration.ofSeconds(5),

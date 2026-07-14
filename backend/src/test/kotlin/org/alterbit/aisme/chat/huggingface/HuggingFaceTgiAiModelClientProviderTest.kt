@@ -50,7 +50,7 @@ class HuggingFaceTgiAiModelClientProviderTest {
                     ConfiguredChatModelsProperties(
                         runtimes = mapOf(
                             "hugging-face-tgi" to ChatRuntimeProperties(
-                                type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                                type = ChatModelRuntime.HUGGING_FACE_TGI,
                             ),
                         ),
                         chatModelsById = mapOf(huggingFaceModel()),
@@ -70,12 +70,12 @@ class HuggingFaceTgiAiModelClientProviderTest {
             ConfiguredChatModelsProperties(
                 runtimes = mapOf(
                     "hugging-face-tgi" to ChatRuntimeProperties(
-                        type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                        type = ChatModelRuntime.HUGGING_FACE_TGI,
                         baseUrl = "https://hf.example.com",
                         apiKey = "test-api-key",
                     ),
                     "hugging-face-tgi-alt" to ChatRuntimeProperties(
-                        type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                        type = ChatModelRuntime.HUGGING_FACE_TGI,
                         baseUrl = "https://qwen.example.com",
                     ),
                     "local-ollama" to ChatRuntimeProperties(

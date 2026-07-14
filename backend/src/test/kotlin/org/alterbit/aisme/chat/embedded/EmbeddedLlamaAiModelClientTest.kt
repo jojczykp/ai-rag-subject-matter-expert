@@ -96,7 +96,7 @@ class EmbeddedLlamaAiModelClientTest {
     private fun embeddedModel(id: String) = chatModel(
         id = id,
         displayName = "Embedded Qwen",
-        runtime = ChatModelRuntime.EMBEDDED_OFFLINE,
+        runtime = ChatModelRuntime.EMBEDDED_LLAMA,
         mode = ChatModelMode.EMBEDDED_OFFLINE,
         availableOffline = true,
         baseUrl = null,

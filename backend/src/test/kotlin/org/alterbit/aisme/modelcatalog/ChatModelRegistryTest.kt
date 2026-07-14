@@ -191,7 +191,7 @@ class ChatModelRegistryTest {
                 configuredProperties(
                     runtimes = mapOf(
                         "hugging-face-tgi-missing-url" to ChatRuntimeProperties(
-                            type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                            type = ChatModelRuntime.HUGGING_FACE_TGI,
                         ),
                     ),
                     chatModelsById = mapOf(
@@ -203,7 +203,7 @@ class ChatModelRegistryTest {
 
         exception.message shouldContain "base-url"
         exception.message shouldContain "is required"
-        exception.message shouldContain "HUGGING_FACE_ENDPOINT"
+        exception.message shouldContain "HUGGING_FACE_TGI"
     }
 
     @Test
@@ -323,7 +323,7 @@ class ChatModelRegistryTest {
     private fun defaultRuntimes(): Map<String, ChatRuntimeProperties> =
         mapOf(
             "embedded-llama" to ChatRuntimeProperties(
-                type = ChatModelRuntime.EMBEDDED_OFFLINE,
+                type = ChatModelRuntime.EMBEDDED_LLAMA,
                 assetDirectory = "./models/llama",
                 serverExecutablePath = "./models/llama/bin/llama-server",
             ),
@@ -336,7 +336,7 @@ class ChatModelRegistryTest {
                 baseUrl = "https://api.example.com/v1",
             ),
             "hugging-face-tgi" to ChatRuntimeProperties(
-                type = ChatModelRuntime.HUGGING_FACE_ENDPOINT,
+                type = ChatModelRuntime.HUGGING_FACE_TGI,
                 baseUrl = "https://example.endpoints.huggingface.cloud",
             ),
             "spring-ai" to ChatRuntimeProperties(type = ChatModelRuntime.SPRING_AI),
