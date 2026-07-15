@@ -1,6 +1,9 @@
-package org.alterbit.aisme.embedding.catalog
+package org.alterbit.aisme.embedding.api
 
 import java.time.Duration
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityService
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelRegistry
+import org.alterbit.aisme.embedding.catalog.EmbeddingProperties
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 

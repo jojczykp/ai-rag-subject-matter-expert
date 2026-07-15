@@ -1,7 +1,13 @@
-package org.alterbit.aisme.chat
+package org.alterbit.aisme.chat.api
 
 import java.time.Clock
-import org.alterbit.aisme.api.ApiExceptionHandler
+import org.alterbit.aisme.chat.AiChatService
+import org.alterbit.aisme.chat.AiModelClientProvider
+import org.alterbit.aisme.chat.AiModelClients
+import org.alterbit.aisme.chat.ChatContextRetriever
+import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.FakeAiModelClient
+import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry

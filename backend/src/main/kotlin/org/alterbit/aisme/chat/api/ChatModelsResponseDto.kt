@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat.catalog
+package org.alterbit.aisme.chat.api
 
 data class ChatModelsResponseDto(
     val defaultChatModelId: String?,

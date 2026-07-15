@@ -7,6 +7,7 @@ import io.kotest.matchers.string.shouldContain
 import java.net.SocketTimeoutException
 import java.time.Duration
 import java.util.concurrent.CancellationException
+import org.alterbit.aisme.chat.api.ChatRequestDto
 import org.alterbit.aisme.chat.catalog.ChatModelAvailability
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityChecker
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties

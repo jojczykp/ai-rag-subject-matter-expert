@@ -3,12 +3,13 @@ package org.alterbit.aisme.chat
 import io.kotest.matchers.collections.shouldContainExactly
 import java.time.Clock
 import java.time.Duration
-import org.alterbit.aisme.api.ApiExceptionHandler
+import org.alterbit.aisme.web.ApiExceptionHandler
+import org.alterbit.aisme.chat.api.ChatController
+import org.alterbit.aisme.chat.api.ChatModelsController
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelsProperties
-import org.alterbit.aisme.chat.catalog.ChatModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringBootConfiguration

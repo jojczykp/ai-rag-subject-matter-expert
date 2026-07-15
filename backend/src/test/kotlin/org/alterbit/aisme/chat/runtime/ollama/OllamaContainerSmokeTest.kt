@@ -2,10 +2,10 @@ package org.alterbit.aisme.chat.runtime.ollama
 
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
-import org.alterbit.aisme.api.ApiExceptionHandler
+import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClients
-import org.alterbit.aisme.chat.ChatController
+import org.alterbit.aisme.chat.api.ChatController
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties

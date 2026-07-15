@@ -6,10 +6,10 @@ import io.kotest.matchers.shouldBe
 import java.net.InetSocketAddress
 import java.time.Clock
 import java.util.concurrent.CopyOnWriteArrayList
-import org.alterbit.aisme.api.ApiExceptionHandler
+import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClients
-import org.alterbit.aisme.chat.ChatController
+import org.alterbit.aisme.chat.api.ChatController
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties

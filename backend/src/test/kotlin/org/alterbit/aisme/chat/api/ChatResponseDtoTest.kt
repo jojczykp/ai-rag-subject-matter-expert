@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat
+package org.alterbit.aisme.chat.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe

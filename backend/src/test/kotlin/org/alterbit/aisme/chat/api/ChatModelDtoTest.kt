@@ -1,6 +1,12 @@
-package org.alterbit.aisme.chat.catalog
+package org.alterbit.aisme.chat.api
 
 import io.kotest.matchers.shouldBe
+import org.alterbit.aisme.chat.catalog.ChatModelAvailability
+import org.alterbit.aisme.chat.catalog.ChatModelCapability
+import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
+import org.alterbit.aisme.chat.catalog.ChatModelMode
+import org.alterbit.aisme.chat.catalog.ChatModelRuntime
+import org.alterbit.aisme.chat.catalog.ChatModelRuntimeRequirement
 import org.junit.jupiter.api.Test
 
 class ChatModelDtoTest {

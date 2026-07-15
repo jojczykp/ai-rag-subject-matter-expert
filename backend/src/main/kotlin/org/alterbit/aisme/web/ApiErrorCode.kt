@@ -1,4 +1,4 @@
-package org.alterbit.aisme.api
+package org.alterbit.aisme.web
 
 enum class ApiErrorCode {
     INVALID_REQUEST,

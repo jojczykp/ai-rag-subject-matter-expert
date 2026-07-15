@@ -1,6 +1,8 @@
 package org.alterbit.aisme.chat
 
 import java.util.concurrent.CancellationException
+import org.alterbit.aisme.chat.api.ChatRequestDto
+import org.alterbit.aisme.chat.api.ChatResponseDto
 import org.alterbit.aisme.chat.catalog.ChatModelAvailability
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
 import org.alterbit.aisme.chat.catalog.ChatModelDescriptor

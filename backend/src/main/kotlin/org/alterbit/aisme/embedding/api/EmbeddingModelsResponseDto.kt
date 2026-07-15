@@ -1,4 +1,4 @@
-package org.alterbit.aisme.embedding.catalog
+package org.alterbit.aisme.embedding.api
 
 data class EmbeddingModelsResponseDto(
     val defaultEmbeddingModelId: String?,

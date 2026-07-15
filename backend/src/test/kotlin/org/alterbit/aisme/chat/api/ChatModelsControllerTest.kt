@@ -1,8 +1,15 @@
-package org.alterbit.aisme.chat.catalog
+package org.alterbit.aisme.chat.api
 
 import java.time.Clock
 import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailability
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityChecker
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
+import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
+import org.alterbit.aisme.chat.catalog.ChatModelRegistry
+import org.alterbit.aisme.chat.catalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

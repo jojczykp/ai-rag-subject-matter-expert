@@ -1,4 +1,9 @@
-package org.alterbit.aisme.embedding.catalog
+package org.alterbit.aisme.embedding.api
+
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailability
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelDescriptor
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMode
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelRuntime
 
 data class EmbeddingModelDto(
     val id: String,

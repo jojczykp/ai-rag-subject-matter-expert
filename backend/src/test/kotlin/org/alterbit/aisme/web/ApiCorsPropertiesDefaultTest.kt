@@ -1,4 +1,4 @@
-package org.alterbit.aisme.api
+package org.alterbit.aisme.web
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

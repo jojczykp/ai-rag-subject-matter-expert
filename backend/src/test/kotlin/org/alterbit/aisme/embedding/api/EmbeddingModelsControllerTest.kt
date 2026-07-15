@@ -1,6 +1,10 @@
-package org.alterbit.aisme.embedding.catalog
+package org.alterbit.aisme.embedding.api
 
 import java.time.Clock
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityProperties
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityService
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelRegistry
+import org.alterbit.aisme.embedding.catalog.EmbeddingProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

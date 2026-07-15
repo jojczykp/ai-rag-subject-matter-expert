@@ -1,4 +1,4 @@
-package org.alterbit.aisme.api
+package org.alterbit.aisme.web
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

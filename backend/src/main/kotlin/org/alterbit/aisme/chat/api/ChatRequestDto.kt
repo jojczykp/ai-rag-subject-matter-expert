@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat
+package org.alterbit.aisme.chat.api
 
 data class ChatRequestDto(
     val modelId: String,

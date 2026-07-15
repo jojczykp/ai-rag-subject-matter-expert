@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat
+package org.alterbit.aisme.chat.api
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

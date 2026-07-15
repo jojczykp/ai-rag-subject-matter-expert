@@ -1,4 +1,4 @@
-package org.alterbit.aisme.api
+package org.alterbit.aisme.web
 
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException

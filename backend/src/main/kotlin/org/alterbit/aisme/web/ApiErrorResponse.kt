@@ -1,4 +1,4 @@
-package org.alterbit.aisme.api
+package org.alterbit.aisme.web
 
 import com.fasterxml.jackson.annotation.JsonInclude
 

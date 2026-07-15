@@ -1,7 +1,9 @@
-package org.alterbit.aisme.chat.catalog
+package org.alterbit.aisme.chat.api
 
 import java.time.Duration
 import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
+import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
