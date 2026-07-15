@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import java.time.Instant
 import java.util.UUID
 import org.alterbit.aisme.DatabaseTestContext
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRecord

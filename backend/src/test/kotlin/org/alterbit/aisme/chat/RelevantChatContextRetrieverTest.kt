@@ -7,8 +7,8 @@ import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingClientProvider
 import org.alterbit.aisme.embedding.EmbeddingClients
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
-import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelNotFoundException
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.retrieval.RelevantChunk
 import org.alterbit.aisme.retrieval.RelevantChunkRequest

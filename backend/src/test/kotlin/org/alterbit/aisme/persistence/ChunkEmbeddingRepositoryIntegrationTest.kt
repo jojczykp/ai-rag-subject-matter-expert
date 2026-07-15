@@ -3,7 +3,7 @@ package org.alterbit.aisme.persistence
 import io.kotest.matchers.shouldBe
 import java.time.Instant
 import org.alterbit.aisme.DatabaseTestContext
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.testsupport.addPostgresProperties
 import org.alterbit.aisme.testsupport.pgVectorContainer

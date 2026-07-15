@@ -1,6 +1,6 @@
 package org.alterbit.aisme.retrieval
 
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
 
 data class RelevantChunkRequest(
     val embedding: List<Double>,

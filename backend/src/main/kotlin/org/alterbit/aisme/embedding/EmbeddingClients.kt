@@ -1,5 +1,6 @@
 package org.alterbit.aisme.embedding
 
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 

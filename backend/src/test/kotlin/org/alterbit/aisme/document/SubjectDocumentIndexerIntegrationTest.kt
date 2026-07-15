@@ -4,8 +4,8 @@ import io.kotest.matchers.shouldBe
 import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingClientProvider
 import org.alterbit.aisme.embedding.EmbeddingClients
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
-import org.alterbit.aisme.embedding.EmbeddingModelProperties
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelProperties
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.DatabaseTestContext
 import org.alterbit.aisme.persistence.ChunkEmbeddingRepository

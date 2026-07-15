@@ -1,11 +1,11 @@
 package org.alterbit.aisme.chat
 
 import java.util.concurrent.CancellationException
-import org.alterbit.aisme.modelcatalog.ChatModelAvailability
-import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
-import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
-import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
+import org.alterbit.aisme.chat.catalog.ChatModelAvailability
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
+import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
+import org.alterbit.aisme.chat.catalog.ChatModelRegistry
+import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

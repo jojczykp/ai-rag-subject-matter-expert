@@ -2,7 +2,7 @@ package org.alterbit.aisme.persistence
 
 import java.sql.Timestamp
 import java.util.UUID
-import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelMetadata
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Component
 

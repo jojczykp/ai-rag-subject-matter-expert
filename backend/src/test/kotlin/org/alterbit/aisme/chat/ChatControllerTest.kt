@@ -2,10 +2,10 @@ package org.alterbit.aisme.chat
 
 import java.time.Clock
 import org.alterbit.aisme.api.ApiExceptionHandler
-import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
-import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
-import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ChatModelsProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
+import org.alterbit.aisme.chat.catalog.ChatModelRegistry
+import org.alterbit.aisme.chat.catalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

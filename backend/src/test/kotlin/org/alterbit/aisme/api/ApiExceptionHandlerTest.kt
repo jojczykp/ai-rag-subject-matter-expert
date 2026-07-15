@@ -6,10 +6,10 @@ import io.kotest.matchers.shouldBe
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
-import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
-import org.alterbit.aisme.modelcatalog.ChatModelAvailability
-import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
-import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelNotFoundException
+import org.alterbit.aisme.chat.catalog.ChatModelAvailability
+import org.alterbit.aisme.chat.catalog.ChatModelNotFoundException
+import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException

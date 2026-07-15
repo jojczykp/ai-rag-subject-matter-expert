@@ -4,11 +4,11 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
-import org.alterbit.aisme.embedding.EmbeddingModelAvailabilityProperties
-import org.alterbit.aisme.embedding.EmbeddingProperties
-import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
-import org.alterbit.aisme.modelcatalog.ChatModelRegistry
-import org.alterbit.aisme.modelcatalog.ChatModelsProperties
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityProperties
+import org.alterbit.aisme.embedding.catalog.EmbeddingProperties
+import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
+import org.alterbit.aisme.chat.catalog.ChatModelRegistry
+import org.alterbit.aisme.chat.catalog.ChatModelsProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner

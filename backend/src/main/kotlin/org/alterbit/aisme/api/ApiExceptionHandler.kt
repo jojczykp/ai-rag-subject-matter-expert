@@ -3,9 +3,9 @@ package org.alterbit.aisme.api
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
-import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
-import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
-import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
+import org.alterbit.aisme.embedding.catalog.EmbeddingModelNotFoundException
+import org.alterbit.aisme.chat.catalog.ChatModelNotFoundException
+import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
