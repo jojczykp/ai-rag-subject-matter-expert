@@ -38,11 +38,14 @@ export type ChatModelsResponse = {
 
 export type EmbeddingModelRuntime = 'ONNX' | 'OLLAMA'
 
+export type EmbeddingModelMode = 'ONLINE' | 'LOCAL_SERVER' | 'EMBEDDED_OFFLINE'
+
 export type EmbeddingModel = {
   id: string
   enabled: boolean
   displayName: string
   runtime: EmbeddingModelRuntime
+  mode: EmbeddingModelMode
   version: string | null
   dimensions: number | null
   availableOffline: boolean

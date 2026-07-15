@@ -498,6 +498,7 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
 | `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
 | `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is indexed and selectable for retrieval. |
+| `aisme.embedding.models.<model-id>.display-order` | optional | Sort order for embedding model selectors and catalog responses. |
 | `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
 | `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
 | `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |

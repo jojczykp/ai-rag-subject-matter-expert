@@ -18,6 +18,7 @@ aisme:
     models:
       local-bge-small:
         enabled: true
+        display-order: 10
         display-name: Local BGE Small
         version: "1.5"
         dimensions: 384
@@ -27,6 +28,7 @@ aisme:
           tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
       ollama-nomic-embed:
         enabled: true
+        display-order: 20
         display-name: Ollama Nomic Embed
         version: "v1.5"
         dimensions: 768

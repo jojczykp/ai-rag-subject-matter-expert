@@ -19,6 +19,7 @@ data class EmbeddingProperties(
     val modelsById: Map<String, EmbeddingModelConfigProperties> = mapOf(
         "local-bge-small" to EmbeddingModelConfigProperties(
             enabled = true,
+            displayOrder = 10,
             displayName = "Local BGE Small",
             version = "1.5",
             dimensions = 384,
@@ -30,6 +31,7 @@ data class EmbeddingProperties(
         ),
         "ollama-nomic-embed" to EmbeddingModelConfigProperties(
             enabled = true,
+            displayOrder = 20,
             displayName = "Ollama Nomic Embed",
             version = "v1.5",
             dimensions = 768,

@@ -28,10 +28,14 @@ describe('App', () => {
     expect(screen.getByLabelText('Embedding Model')).toHaveValue(
       'ollama-nomic-embed',
     )
+    expect(
+      screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5)' }),
+    ).toBeVisible()
+    expect(screen.getByText('768')).toBeVisible()
+    expect(screen.getAllByText('Local server')).toHaveLength(2)
+    expect(screen.getAllByText('Prompts stay local')).toHaveLength(2)
     expect(screen.getByText('AVAILABLE')).toBeVisible()
-    expect(screen.getByText('LOCAL SERVER')).toBeVisible()
-    expect(screen.getByText('Prompts stay local')).toBeVisible()
-    expect(screen.getByText('requires ollama server')).toBeVisible()
+    expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
   })
 
   it('requires a selected model and message before sending', async () => {

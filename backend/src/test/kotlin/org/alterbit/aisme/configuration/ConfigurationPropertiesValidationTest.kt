@@ -38,6 +38,15 @@ class ConfigurationPropertiesValidationTest {
     }
 
     @Test
+    fun `fails binding negative embedding model display order`() {
+        propertyContext(EmbeddingModelPropertiesConfiguration::class.java)
+            .withPropertyValues("aisme.embedding.models.local-bge-small.display-order=-1")
+            .run { context ->
+                context.failureMessage() shouldContain "aisme.embedding.models.display-order"
+            }
+    }
+
+    @Test
     fun `fails binding invalid chat configuration`() {
         propertyContext(ChatPropertiesConfiguration::class.java)
             .withPropertyValues("aisme.chat.relevant-chunk-limit=0")

@@ -21,6 +21,7 @@ class EmbeddingModelRegistryTest {
                 modelsById = mapOf(
                     "local-bge-small" to EmbeddingModelConfigProperties(
                         enabled = true,
+                        displayOrder = 20,
                         displayName = "Local BGE Small",
                         version = "1.5",
                         dimensions = 384,
@@ -32,6 +33,7 @@ class EmbeddingModelRegistryTest {
                     ),
                     "ollama-nomic-embed" to EmbeddingModelConfigProperties(
                         enabled = false,
+                        displayOrder = 10,
                         displayName = "Ollama Nomic Embed",
                         version = "v1.5",
                         dimensions = 768,
@@ -47,14 +49,18 @@ class EmbeddingModelRegistryTest {
         val embeddingModels = registry.embeddingModels()
 
         embeddingModels shouldHaveSize 2
-        embeddingModels[0].id shouldBe "local-bge-small"
-        embeddingModels[0].enabled shouldBe true
-        embeddingModels[0].displayName shouldBe "Local BGE Small"
-        embeddingModels[0].runtime shouldBe EmbeddingModelRuntime.ONNX
-        embeddingModels[0].version shouldBe "1.5"
-        embeddingModels[0].dimensions shouldBe 384
-        embeddingModels[1].id shouldBe "ollama-nomic-embed"
-        embeddingModels[1].enabled shouldBe false
-        embeddingModels[1].runtime shouldBe EmbeddingModelRuntime.OLLAMA
+        embeddingModels[0].id shouldBe "ollama-nomic-embed"
+        embeddingModels[0].enabled shouldBe false
+        embeddingModels[0].displayOrder shouldBe 10
+        embeddingModels[0].runtime shouldBe EmbeddingModelRuntime.OLLAMA
+        embeddingModels[0].mode shouldBe EmbeddingModelMode.LOCAL_SERVER
+        embeddingModels[1].id shouldBe "local-bge-small"
+        embeddingModels[1].enabled shouldBe true
+        embeddingModels[1].displayOrder shouldBe 20
+        embeddingModels[1].displayName shouldBe "Local BGE Small"
+        embeddingModels[1].runtime shouldBe EmbeddingModelRuntime.ONNX
+        embeddingModels[1].mode shouldBe EmbeddingModelMode.EMBEDDED_OFFLINE
+        embeddingModels[1].version shouldBe "1.5"
+        embeddingModels[1].dimensions shouldBe 384
     }
 }

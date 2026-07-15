@@ -21,13 +21,15 @@ class EmbeddingModelRegistry(
             EmbeddingModelDescriptor(
                 id = modelId,
                 enabled = model.enabled,
+                displayOrder = model.displayOrder,
                 displayName = model.displayName ?: modelId,
                 runtime = runtime.type,
+                mode = runtime.type.mode,
                 version = model.version,
                 dimensions = model.dimensions,
             )
         }
-        .sortedBy { it.id }
+        .sortedWith(compareBy<EmbeddingModelDescriptor> { it.displayOrder ?: Int.MAX_VALUE }.thenBy { it.id })
         .also { models ->
             logger.info("Configured {} embedding model(s)", models.size)
         }
@@ -38,3 +40,9 @@ class EmbeddingModelRegistry(
     fun enabledEmbeddingModelProperties(): List<EmbeddingModelProperties> =
         properties.enabledModels()
 }
+
+private val EmbeddingModelRuntime.mode: EmbeddingModelMode
+    get() = when (this) {
+        EmbeddingModelRuntime.ONNX -> EmbeddingModelMode.EMBEDDED_OFFLINE
+        EmbeddingModelRuntime.OLLAMA -> EmbeddingModelMode.LOCAL_SERVER
+    }

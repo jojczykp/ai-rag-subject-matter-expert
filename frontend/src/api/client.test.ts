@@ -23,9 +23,11 @@ describe('API client', () => {
     expect(response.embeddingModels).toHaveLength(2)
     expect(response.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(response.embeddingModels[0]?.runtime).toBe('ONNX')
+    expect(response.embeddingModels[0]?.mode).toBe('EMBEDDED_OFFLINE')
     expect(response.embeddingModels[0]?.enabled).toBe(true)
     expect(response.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
     expect(response.embeddingModels[1]?.runtime).toBe('OLLAMA')
+    expect(response.embeddingModels[1]?.mode).toBe('LOCAL_SERVER')
     expect(response.embeddingModels[1]?.enabled).toBe(true)
   })
 

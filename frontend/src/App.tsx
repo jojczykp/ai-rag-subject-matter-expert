@@ -146,11 +146,13 @@ function App() {
             <option value="">Select an embedding model</option>
             {enabledEmbeddingModels.map((model) => (
               <option key={model.id} value={model.id}>
-                {model.displayName}
+                {embeddingModelOptionLabel(model)}
               </option>
             ))}
           </select>
         </label>
+
+        <EmbeddingModelDetails model={selectedEmbeddingModel} />
 
         <label className="field" htmlFor="chat-model">
           <span>Chat Model</span>
@@ -279,6 +281,54 @@ function renderMessageContent(content: string): ReactNode[] {
   return nodes
 }
 
+function EmbeddingModelDetails({
+  model,
+}: {
+  model: EmbeddingModel | undefined
+}) {
+  if (!model) {
+    return (
+      <div className="model-details embedding-model-details model-details-empty">
+        Embedding model runtime, dimensions, version, and offline availability
+        appear here after selection.
+      </div>
+    )
+  }
+
+  return (
+    <div className="model-details embedding-model-details">
+      <div>
+        <span>Dimensions</span>
+        <strong>{model.dimensions ?? 'Unknown'}</strong>
+      </div>
+      <div>
+        <span>Mode</span>
+        <strong>{formatModelMode(model.mode)}</strong>
+      </div>
+      <div>
+        <span>Privacy</span>
+        <strong>
+          {embeddingQueryMayLeaveLocalMachine(model)
+            ? 'Prompts may leave this machine'
+            : 'Prompts stay local'}
+        </strong>
+      </div>
+    </div>
+  )
+}
+
+function embeddingModelOptionLabel(model: EmbeddingModel): string {
+  if (!model.version) {
+    return model.displayName
+  }
+
+  return `${model.displayName} (${model.version})`
+}
+
+function embeddingQueryMayLeaveLocalMachine(model: EmbeddingModel): boolean {
+  return model.mode === 'ONLINE'
+}
+
 function ModelDetails({ model }: { model: ChatModel | undefined }) {
   if (!model) {
     return (
@@ -297,7 +347,7 @@ function ModelDetails({ model }: { model: ChatModel | undefined }) {
       </div>
       <div>
         <span>Mode</span>
-        <strong>{model.mode.replaceAll('_', ' ')}</strong>
+        <strong>{formatModelMode(model.mode)}</strong>
       </div>
       <div>
         <span>Privacy</span>
@@ -307,23 +357,18 @@ function ModelDetails({ model }: { model: ChatModel | undefined }) {
             : 'Prompts stay local'}
         </strong>
       </div>
-      <div>
-        <span>Runtime requirements</span>
-        <strong>{runtimeRequirements(model)}</strong>
-      </div>
       {model.description && <p>{model.description}</p>}
     </div>
   )
 }
 
-function runtimeRequirements(model: ChatModel): string {
-  if (model.runtimeRequirements.length === 0) {
-    return 'None'
+function formatModelMode(mode: string): string {
+  if (mode === 'EMBEDDED_OFFLINE') {
+    return 'Offline'
   }
 
-  return model.runtimeRequirements
-    .map((requirement) => requirement.replaceAll('_', ' ').toLowerCase())
-    .join(', ')
+  const label = mode.toLowerCase().replaceAll('_', ' ')
+  return `${label.charAt(0).toUpperCase()}${label.slice(1)}`
 }
 
 function errorMessage(error: unknown, fallback: string): string {

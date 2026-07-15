@@ -39,6 +39,9 @@ class EmbeddingModelsControllerTest(
                 jsonPath("$.embeddingModels[0].runtime") {
                     value("ONNX")
                 }
+                jsonPath("$.embeddingModels[0].mode") {
+                    value("EMBEDDED_OFFLINE")
+                }
                 jsonPath("$.embeddingModels[0].version") {
                     value("1.5")
                 }
@@ -56,6 +59,9 @@ class EmbeddingModelsControllerTest(
                 }
                 jsonPath("$.embeddingModels[1].runtime") {
                     value("OLLAMA")
+                }
+                jsonPath("$.embeddingModels[1].mode") {
+                    value("LOCAL_SERVER")
                 }
                 jsonPath("$.embeddingModels[1].availableOffline") {
                     value(false)

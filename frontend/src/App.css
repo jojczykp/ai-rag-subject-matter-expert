@@ -123,8 +123,10 @@ button:focus-visible {
 }
 
 .model-details div {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
 }
 
 .model-details span {
@@ -135,11 +137,23 @@ button:focus-visible {
 .model-details strong {
   color: var(--text-h);
   font-size: 15px;
+  text-align: right;
 }
 
 .model-details p,
 .model-details-empty {
   color: var(--text);
+  font-size: 14px;
+}
+
+.embedding-model-details {
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  padding-top: 14px;
+}
+
+.embedding-model-details strong {
   font-size: 14px;
 }
 
