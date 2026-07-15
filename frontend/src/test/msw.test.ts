@@ -26,7 +26,7 @@ describe('MSW backend API mocks', () => {
     expect(body.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(body.embeddingModels[0]?.availability).toBe('CONFIGURED')
     expect(body.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
-    expect(body.embeddingModels[1]?.availability).toBe('CONFIGURED')
+    expect(body.embeddingModels[1]?.availability).toBe('AVAILABLE')
   })
 
   it('returns a deterministic chat response', async () => {

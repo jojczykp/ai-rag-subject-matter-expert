@@ -32,15 +32,16 @@ describe('App', () => {
       screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5)' }),
     ).toBeVisible()
     expect(screen.getByText('768')).toBeVisible()
-    expect(screen.getByText('Configured')).toBeVisible()
     expect(screen.getAllByText('Local server')).toHaveLength(2)
     expect(screen.getAllByText('Prompts stay local')).toHaveLength(2)
-    expect(screen.getByText('Available')).toBeVisible()
-    expect(container.querySelectorAll('.availability-dot-amber')).toHaveLength(
-      1,
-    )
+    expect(screen.getAllByText('Available')).toHaveLength(2)
+    expect(
+      screen.getByText(
+        'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed',
+      ),
+    ).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-green')).toHaveLength(
-      1,
+      2,
     )
     expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
   })
@@ -213,7 +214,7 @@ describe('App', () => {
     expect(await screen.findByText('Provider failed.')).toBeVisible()
   })
 
-  it('prevents chat when selected model is unavailable', async () => {
+  it('prevents chat when selected chat model is unavailable', async () => {
     const user = userEvent.setup()
     server.use(
       http.get(apiUrl('/chat-models'), () =>
@@ -243,8 +244,64 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(
       screen.getByText(
-        'Selected model is unavailable and cannot be used for chat.',
+        'Selected chat model is unavailable and cannot be used.',
       ),
+    ).toBeVisible()
+  })
+
+  it('prevents chat when selected embedding model is not available', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Embedding Model'),
+      'local-bge-small',
+    )
+    await user.selectOptions(
+      await screen.findByLabelText('Chat Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
+
+    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
+    expect(
+      screen.getByText(
+        'Selected embedding model is configured and cannot be used.',
+      ),
+    ).toBeVisible()
+  })
+
+  it('prevents chat when selected chat and embedding models are not available', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.get(apiUrl('/chat-models'), () =>
+        HttpResponse.json<ChatModelsResponse>({
+          chatModels: [
+            {
+              ...availableOllamaModel,
+              availability: 'MISCONFIGURED',
+            },
+          ],
+        }),
+      ),
+    )
+
+    render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Embedding Model'),
+      'local-bge-small',
+    )
+    await user.selectOptions(
+      await screen.findByLabelText('Chat Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
+
+    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
+    expect(
+      screen.getByText('Selected chat and embedding models are not available.'),
     ).toBeVisible()
   })
 })

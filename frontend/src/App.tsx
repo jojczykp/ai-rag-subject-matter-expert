@@ -72,15 +72,24 @@ function App() {
     [enabledEmbeddingModels, selectedEmbeddingModelId],
   )
   const trimmedMessage = message.trim()
-  const modelCanChat =
-    selectedModel?.availability === 'AVAILABLE' ||
-    selectedModel?.availability === 'CONFIGURED'
+  const chatModelCanChat = selectedModel?.availability === 'AVAILABLE'
+  const embeddingModelCanChat =
+    selectedEmbeddingModel?.availability === 'AVAILABLE'
+  const modelCanChat = chatModelCanChat && embeddingModelCanChat
+  const modelBlockingMessage = modelAvailabilityBlockingMessage(
+    selectedModel,
+    selectedEmbeddingModel,
+  )
   const sendDisabled =
     sending ||
     !selectedModel ||
     !selectedEmbeddingModel ||
     !trimmedMessage ||
     !modelCanChat
+  const selectionSummary =
+    selectedModel && selectedEmbeddingModel
+      ? `Chat: ${selectedModel.displayName} · Embedding: ${selectedEmbeddingModel.displayName}`
+      : 'Choose models to start'
 
   async function submitChat() {
     if (sendDisabled || !selectedModel || !selectedEmbeddingModel) {
@@ -195,11 +204,7 @@ function App() {
             <p className="eyebrow">Single subject</p>
             <h2 id="chat-heading">Ask a question</h2>
           </div>
-          <p className="chat-summary">
-            {selectedModel
-              ? `Using ${selectedModel.displayName}`
-              : 'Choose models to start'}
-          </p>
+          <p className="chat-summary">{selectionSummary}</p>
         </div>
 
         <div className="messages" aria-live="polite">
@@ -223,11 +228,8 @@ function App() {
         </div>
 
         {chatError && <p className="status status-error">{chatError}</p>}
-        {selectedModel && !modelCanChat && (
-          <p className="status status-error">
-            Selected model is {selectedModel.availability.toLowerCase()} and
-            cannot be used for chat.
-          </p>
+        {modelBlockingMessage && (
+          <p className="status status-error">{modelBlockingMessage}</p>
         )}
 
         <form
@@ -408,6 +410,29 @@ function availabilityTone(
   }
 
   return 'red'
+}
+
+function modelAvailabilityBlockingMessage(
+  chatModel: ChatModel | undefined,
+  embeddingModel: EmbeddingModel | undefined,
+): string | null {
+  const chatBlocked = chatModel && chatModel.availability !== 'AVAILABLE'
+  const embeddingBlocked =
+    embeddingModel && embeddingModel.availability !== 'AVAILABLE'
+
+  if (chatBlocked && embeddingBlocked) {
+    return 'Selected chat and embedding models are not available.'
+  }
+
+  if (chatBlocked && chatModel) {
+    return `Selected chat model is ${formatModelAvailability(chatModel.availability).toLowerCase()} and cannot be used.`
+  }
+
+  if (embeddingBlocked && embeddingModel) {
+    return `Selected embedding model is ${formatModelAvailability(embeddingModel.availability).toLowerCase()} and cannot be used.`
+  }
+
+  return null
 }
 
 function errorMessage(error: unknown, fallback: string): string {

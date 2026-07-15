@@ -34,7 +34,7 @@ export const handlers = [
           displayName: 'Ollama Nomic Embed',
           runtime: 'OLLAMA',
           mode: 'LOCAL_SERVER',
-          availability: 'CONFIGURED',
+          availability: 'AVAILABLE',
           version: 'v1.5',
           dimensions: 768,
           availableOffline: false,

@@ -29,7 +29,7 @@ describe('API client', () => {
     expect(response.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
     expect(response.embeddingModels[1]?.runtime).toBe('OLLAMA')
     expect(response.embeddingModels[1]?.mode).toBe('LOCAL_SERVER')
-    expect(response.embeddingModels[1]?.availability).toBe('CONFIGURED')
+    expect(response.embeddingModels[1]?.availability).toBe('AVAILABLE')
     expect(response.embeddingModels[1]?.enabled).toBe(true)
   })
 
