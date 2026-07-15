@@ -506,6 +506,8 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.models.<model-id>.runtime.model-path` | ONNX only | ONNX model file path. |
 | `aisme.embedding.models.<model-id>.runtime.tokenizer-path` | ONNX only | tokenizer file path. |
 | `aisme.embedding.models.<model-id>.runtime.model-name` | Ollama only | Provider model name for Ollama embedding models. |
+| `aisme.embedding.model-availability.timeout` | `5s` | Timeout for embedding runtime availability checks. |
+| `aisme.embedding.model-availability.cache-ttl` | `5s` | Time to cache embedding availability check results. |
 | `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |

@@ -12,7 +12,7 @@ describe('App', () => {
   it('loads models and shows selected model details', async () => {
     const user = userEvent.setup()
 
-    render(<App />)
+    const { container } = render(<App />)
 
     expect(screen.getByText('Loading configured models...')).toBeVisible()
 
@@ -32,10 +32,43 @@ describe('App', () => {
       screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5)' }),
     ).toBeVisible()
     expect(screen.getByText('768')).toBeVisible()
+    expect(screen.getByText('Configured')).toBeVisible()
     expect(screen.getAllByText('Local server')).toHaveLength(2)
     expect(screen.getAllByText('Prompts stay local')).toHaveLength(2)
-    expect(screen.getByText('AVAILABLE')).toBeVisible()
+    expect(screen.getByText('Available')).toBeVisible()
+    expect(container.querySelectorAll('.availability-dot-amber')).toHaveLength(
+      1,
+    )
+    expect(container.querySelectorAll('.availability-dot-green')).toHaveLength(
+      1,
+    )
     expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
+  })
+
+  it('shows misconfigured availability with a gray status dot', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.get(apiUrl('/chat-models'), () =>
+        HttpResponse.json<ChatModelsResponse>({
+          chatModels: [
+            {
+              ...availableOllamaModel,
+              availability: 'MISCONFIGURED',
+            },
+          ],
+        }),
+      ),
+    )
+
+    const { container } = render(<App />)
+
+    await user.selectOptions(
+      await screen.findByLabelText('Chat Model'),
+      'local-ollama-llama',
+    )
+
+    expect(screen.getByText('Misconfigured')).toBeVisible()
+    expect(container.querySelectorAll('.availability-dot-gray')).toHaveLength(1)
   })
 
   it('requires a selected model and message before sending', async () => {

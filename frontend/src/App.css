@@ -140,6 +140,35 @@ button:focus-visible {
   text-align: right;
 }
 
+.availability-value {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.availability-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 9px;
+}
+
+.availability-dot-green {
+  background: #16803c;
+}
+
+.availability-dot-amber {
+  background: #b77900;
+}
+
+.availability-dot-red {
+  background: #c73535;
+}
+
+.availability-dot-gray {
+  background: #7d8791;
+}
+
 .model-details p,
 .model-details-empty {
   color: var(--text);

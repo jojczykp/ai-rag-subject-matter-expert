@@ -108,5 +108,8 @@ class OllamaEmbeddingClientTest {
             requests += request
             return response
         }
+
+        override fun modelNames(): Set<String> =
+            emptySet()
     }
 }

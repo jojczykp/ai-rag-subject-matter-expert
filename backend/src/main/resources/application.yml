@@ -9,6 +9,9 @@ aisme:
     chunk-size: 700
     chunk-overlap: 100
   embedding:
+    model-availability:
+      timeout: 5s
+      cache-ttl: 5s
     runtimes:
       local-onnx:
         type: ONNX

@@ -40,12 +40,16 @@ export type EmbeddingModelRuntime = 'ONNX' | 'OLLAMA'
 
 export type EmbeddingModelMode = 'ONLINE' | 'LOCAL_SERVER' | 'EMBEDDED_OFFLINE'
 
+export type EmbeddingModelAvailability =
+  'CONFIGURED' | 'AVAILABLE' | 'UNAVAILABLE' | 'MISCONFIGURED'
+
 export type EmbeddingModel = {
   id: string
   enabled: boolean
   displayName: string
   runtime: EmbeddingModelRuntime
   mode: EmbeddingModelMode
+  availability: EmbeddingModelAvailability
   version: string | null
   dimensions: number | null
   availableOffline: boolean

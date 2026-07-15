@@ -1,5 +1,6 @@
 package org.alterbit.aisme.embedding
 
+import java.time.Duration
 import org.slf4j.LoggerFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.stereotype.Component
@@ -46,6 +47,8 @@ class OllamaEmbeddingClient(
 
 interface OllamaEmbeddingApi {
     fun embed(request: OllamaEmbeddingRequest): OllamaEmbeddingResponse
+
+    fun modelNames(): Set<String>
 }
 
 data class OllamaEmbeddingRequest(
@@ -57,14 +60,26 @@ data class OllamaEmbeddingResponse(
     val embeddings: List<List<Double>> = emptyList(),
 )
 
+data class OllamaTagsResponse(
+    val models: List<OllamaModelResponse> = emptyList(),
+)
+
+data class OllamaModelResponse(
+    val name: String? = null,
+    val model: String? = null,
+)
+
 interface OllamaEmbeddingApiFactory {
-    fun create(baseUrl: String): OllamaEmbeddingApi
+    fun create(baseUrl: String, apiTimeout: Duration = Duration.ofSeconds(60)): OllamaEmbeddingApi
 }
 
 @Component
 class RestClientOllamaEmbeddingApiFactory : OllamaEmbeddingApiFactory {
-    override fun create(baseUrl: String): OllamaEmbeddingApi {
-        val requestFactory = SimpleClientHttpRequestFactory()
+    override fun create(baseUrl: String, apiTimeout: Duration): OllamaEmbeddingApi {
+        val requestFactory = SimpleClientHttpRequestFactory().apply {
+            setConnectTimeout(apiTimeout)
+            setReadTimeout(apiTimeout)
+        }
         val restClient = RestClient.builder()
             .baseUrl(baseUrl)
             .requestFactory(requestFactory)
@@ -84,6 +99,16 @@ private class RestClientOllamaEmbeddingApi(
             .retrieve()
             .body(OllamaEmbeddingResponse::class.java)
             ?: throw EmbeddingException("Ollama embedding response body was empty")
+
+    override fun modelNames(): Set<String> =
+        restClient.get()
+            .uri("/api/tags")
+            .retrieve()
+            .body(OllamaTagsResponse::class.java)
+            ?.models
+            ?.flatMap { model -> listOfNotNull(model.name, model.model) }
+            ?.toSet()
+            ?: throw EmbeddingException("Ollama tags response body was empty")
 }
 
 @Component

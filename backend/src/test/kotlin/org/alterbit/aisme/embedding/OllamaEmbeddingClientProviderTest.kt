@@ -1,6 +1,7 @@
 package org.alterbit.aisme.embedding
 
 import io.kotest.matchers.collections.shouldContainExactly
+import java.time.Duration
 import org.junit.jupiter.api.Test
 
 class OllamaEmbeddingClientProviderTest {
@@ -59,11 +60,14 @@ class OllamaEmbeddingClientProviderTest {
     private class FakeOllamaEmbeddingApiFactory : OllamaEmbeddingApiFactory {
         val createdBaseUrls = mutableListOf<String>()
 
-        override fun create(baseUrl: String): OllamaEmbeddingApi {
+        override fun create(baseUrl: String, apiTimeout: Duration): OllamaEmbeddingApi {
             createdBaseUrls += baseUrl
             return object : OllamaEmbeddingApi {
                 override fun embed(request: OllamaEmbeddingRequest): OllamaEmbeddingResponse =
                     OllamaEmbeddingResponse(embeddings = listOf(listOf(1.0)))
+
+                override fun modelNames(): Set<String> =
+                    emptySet()
             }
         }
     }

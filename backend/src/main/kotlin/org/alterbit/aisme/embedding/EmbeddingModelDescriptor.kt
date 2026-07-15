@@ -7,6 +7,11 @@ data class EmbeddingModelDescriptor(
     val displayName: String,
     val runtime: EmbeddingModelRuntime,
     val mode: EmbeddingModelMode,
+    val availability: EmbeddingModelAvailability,
     val version: String?,
     val dimensions: Int?,
+    val baseUrl: String?,
+    val modelName: String?,
+    val modelPath: String?,
+    val tokenizerPath: String?,
 )

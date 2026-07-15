@@ -289,14 +289,18 @@ function EmbeddingModelDetails({
   if (!model) {
     return (
       <div className="model-details embedding-model-details model-details-empty">
-        Embedding model runtime, dimensions, version, and offline availability
-        appear here after selection.
+        Embedding model availability, dimensions, mode, and privacy appear here
+        after selection.
       </div>
     )
   }
 
   return (
     <div className="model-details embedding-model-details">
+      <div>
+        <span>Availability</span>
+        <AvailabilityValue availability={model.availability} />
+      </div>
       <div>
         <span>Dimensions</span>
         <strong>{model.dimensions ?? 'Unknown'}</strong>
@@ -329,6 +333,18 @@ function embeddingQueryMayLeaveLocalMachine(model: EmbeddingModel): boolean {
   return model.mode === 'ONLINE'
 }
 
+function AvailabilityValue({ availability }: { availability: string }) {
+  return (
+    <strong className="availability-value">
+      <span
+        aria-hidden="true"
+        className={`availability-dot availability-dot-${availabilityTone(availability)}`}
+      />
+      {formatModelAvailability(availability)}
+    </strong>
+  )
+}
+
 function ModelDetails({ model }: { model: ChatModel | undefined }) {
   if (!model) {
     return (
@@ -343,7 +359,7 @@ function ModelDetails({ model }: { model: ChatModel | undefined }) {
     <div className="model-details">
       <div>
         <span>Availability</span>
-        <strong>{model.availability}</strong>
+        <AvailabilityValue availability={model.availability} />
       </div>
       <div>
         <span>Mode</span>
@@ -369,6 +385,29 @@ function formatModelMode(mode: string): string {
 
   const label = mode.toLowerCase().replaceAll('_', ' ')
   return `${label.charAt(0).toUpperCase()}${label.slice(1)}`
+}
+
+function formatModelAvailability(availability: string): string {
+  const label = availability.toLowerCase().replaceAll('_', ' ')
+  return `${label.charAt(0).toUpperCase()}${label.slice(1)}`
+}
+
+function availabilityTone(
+  availability: string,
+): 'green' | 'amber' | 'red' | 'gray' {
+  if (availability === 'AVAILABLE') {
+    return 'green'
+  }
+
+  if (availability === 'CONFIGURED') {
+    return 'amber'
+  }
+
+  if (availability === 'MISCONFIGURED') {
+    return 'gray'
+  }
+
+  return 'red'
 }
 
 function errorMessage(error: unknown, fallback: string): string {

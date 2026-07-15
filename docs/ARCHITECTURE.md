@@ -126,6 +126,14 @@ retrieval. When more than one embedding model is enabled, callers must provide
 `embeddingModelId`; otherwise the single enabled embedding model is used as the
 default.
 
+Embedding model availability follows the same status semantics as chat model
+availability. `EmbeddingModelAvailabilityService` keeps configured metadata in
+the registry and delegates runtime checks to provider-specific checkers. ONNX
+embedding availability checks readable local model and tokenizer assets; Ollama
+embedding availability checks that the configured model is present in the local
+Ollama model list. Results are cached briefly because local server reachability
+and local asset state can change while the application is running.
+
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static
 local assets. Updating those files requires restarting the application to
@@ -294,6 +302,9 @@ aisme:
     location: classpath:/subject-documents/
 
   embedding:
+    model-availability:
+      timeout: 5s
+      cache-ttl: 5s
     runtimes:
       local-onnx:
         type: ONNX

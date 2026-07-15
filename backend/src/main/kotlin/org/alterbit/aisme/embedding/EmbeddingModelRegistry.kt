@@ -25,8 +25,13 @@ class EmbeddingModelRegistry(
                 displayName = model.displayName ?: modelId,
                 runtime = runtime.type,
                 mode = runtime.type.mode,
+                availability = model.availability,
                 version = model.version,
                 dimensions = model.dimensions,
+                baseUrl = runtime.baseUrl,
+                modelName = model.runtime.modelName,
+                modelPath = model.runtime.modelPath,
+                tokenizerPath = model.runtime.tokenizerPath,
             )
         }
         .sortedWith(compareBy<EmbeddingModelDescriptor> { it.displayOrder ?: Int.MAX_VALUE }.thenBy { it.id })
@@ -46,3 +51,11 @@ private val EmbeddingModelRuntime.mode: EmbeddingModelMode
         EmbeddingModelRuntime.ONNX -> EmbeddingModelMode.EMBEDDED_OFFLINE
         EmbeddingModelRuntime.OLLAMA -> EmbeddingModelMode.LOCAL_SERVER
     }
+
+private val EmbeddingModelConfigProperties.availability: EmbeddingModelAvailability
+    get() =
+        if (enabled) {
+            EmbeddingModelAvailability.CONFIGURED
+        } else {
+            EmbeddingModelAvailability.UNAVAILABLE
+        }

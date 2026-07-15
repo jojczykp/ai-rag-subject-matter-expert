@@ -54,13 +54,19 @@ class EmbeddingModelRegistryTest {
         embeddingModels[0].displayOrder shouldBe 10
         embeddingModels[0].runtime shouldBe EmbeddingModelRuntime.OLLAMA
         embeddingModels[0].mode shouldBe EmbeddingModelMode.LOCAL_SERVER
+        embeddingModels[0].availability shouldBe EmbeddingModelAvailability.UNAVAILABLE
+        embeddingModels[0].baseUrl shouldBe "http://localhost:11434"
+        embeddingModels[0].modelName shouldBe "nomic-embed-text:v1.5"
         embeddingModels[1].id shouldBe "local-bge-small"
         embeddingModels[1].enabled shouldBe true
         embeddingModels[1].displayOrder shouldBe 20
         embeddingModels[1].displayName shouldBe "Local BGE Small"
         embeddingModels[1].runtime shouldBe EmbeddingModelRuntime.ONNX
         embeddingModels[1].mode shouldBe EmbeddingModelMode.EMBEDDED_OFFLINE
+        embeddingModels[1].availability shouldBe EmbeddingModelAvailability.CONFIGURED
         embeddingModels[1].version shouldBe "1.5"
         embeddingModels[1].dimensions shouldBe 384
+        embeddingModels[1].modelPath shouldBe "./models/model.onnx"
+        embeddingModels[1].tokenizerPath shouldBe "./models/tokenizer.json"
     }
 }

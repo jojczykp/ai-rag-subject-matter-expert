@@ -4,6 +4,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
+import org.alterbit.aisme.embedding.EmbeddingModelAvailabilityProperties
 import org.alterbit.aisme.embedding.EmbeddingProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
@@ -65,6 +66,15 @@ class ConfigurationPropertiesValidationTest {
     }
 
     @Test
+    fun `fails binding invalid embedding model availability configuration`() {
+        propertyContext(EmbeddingModelAvailabilityPropertiesConfiguration::class.java)
+            .withPropertyValues("aisme.embedding.model-availability.cache-ttl=0s")
+            .run { context ->
+                context.failureMessage() shouldContain "aisme.embedding.model-availability.cache-ttl"
+            }
+    }
+
+    @Test
     fun `fails creating model catalog when model references unknown runtime`() {
         propertyContext(ChatModelCatalogConfiguration::class.java)
             .withPropertyValues(
@@ -104,6 +114,10 @@ class ConfigurationPropertiesValidationTest {
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties(ChatModelAvailabilityProperties::class)
     private class ChatModelAvailabilityPropertiesConfiguration
+
+    @Configuration(proxyBeanMethods = false)
+    @EnableConfigurationProperties(EmbeddingModelAvailabilityProperties::class)
+    private class EmbeddingModelAvailabilityPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties(ChatModelsProperties::class)
