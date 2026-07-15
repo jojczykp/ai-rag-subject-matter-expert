@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { KeyboardEvent, ReactNode } from 'react'
 import './App.css'
-import { ApiError, getChatModels, postChat } from './api/client'
-import type { ChatModel } from './api/types'
+import {
+  ApiError,
+  getChatModels,
+  getEmbeddingModels,
+  postChat,
+} from './api/client'
+import type { ChatModel, EmbeddingModel } from './api/types'
 
 type ChatMessage = {
   id: number
@@ -12,9 +17,11 @@ type ChatMessage = {
 
 function App() {
   const [models, setModels] = useState<ChatModel[]>([])
+  const [embeddingModels, setEmbeddingModels] = useState<EmbeddingModel[]>([])
   const [modelsLoading, setModelsLoading] = useState(true)
   const [modelsError, setModelsError] = useState<string | null>(null)
   const [selectedModelId, setSelectedModelId] = useState('')
+  const [selectedEmbeddingModelId, setSelectedEmbeddingModelId] = useState('')
   const [message, setMessage] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatError, setChatError] = useState<string | null>(null)
@@ -23,12 +30,13 @@ function App() {
   useEffect(() => {
     let active = true
 
-    getChatModels()
-      .then((response) => {
+    Promise.all([getChatModels(), getEmbeddingModels()])
+      .then(([chatModelsResponse, embeddingModelsResponse]) => {
         if (!active) {
           return
         }
-        setModels(response.chatModels)
+        setModels(chatModelsResponse.chatModels)
+        setEmbeddingModels(embeddingModelsResponse.embeddingModels)
         setModelsError(null)
       })
       .catch((error: unknown) => {
@@ -52,15 +60,30 @@ function App() {
     () => models.find((model) => model.id === selectedModelId),
     [models, selectedModelId],
   )
+  const enabledEmbeddingModels = useMemo(
+    () => embeddingModels.filter((model) => model.enabled),
+    [embeddingModels],
+  )
+  const selectedEmbeddingModel = useMemo(
+    () =>
+      enabledEmbeddingModels.find(
+        (model) => model.id === selectedEmbeddingModelId,
+      ),
+    [enabledEmbeddingModels, selectedEmbeddingModelId],
+  )
   const trimmedMessage = message.trim()
   const modelCanChat =
     selectedModel?.availability === 'AVAILABLE' ||
     selectedModel?.availability === 'CONFIGURED'
   const sendDisabled =
-    sending || !selectedModel || !trimmedMessage || !modelCanChat
+    sending ||
+    !selectedModel ||
+    !selectedEmbeddingModel ||
+    !trimmedMessage ||
+    !modelCanChat
 
   async function submitChat() {
-    if (sendDisabled || !selectedModel) {
+    if (sendDisabled || !selectedModel || !selectedEmbeddingModel) {
       return
     }
 
@@ -77,6 +100,7 @@ function App() {
     try {
       const response = await postChat({
         modelId: selectedModel.id,
+        embeddingModelId: selectedEmbeddingModel.id,
         message: trimmedMessage,
       })
       setChatMessages((current) => [
@@ -109,15 +133,34 @@ function App() {
           <h1 id="model-panel-heading">Chat workspace</h1>
         </div>
 
-        <label className="field" htmlFor="model">
-          <span>Model</span>
+        <label className="field" htmlFor="embedding-model">
+          <span>Embedding Model</span>
           <select
-            id="model"
+            id="embedding-model"
+            value={selectedEmbeddingModelId}
+            onChange={(event) =>
+              setSelectedEmbeddingModelId(event.target.value)
+            }
+            disabled={modelsLoading || enabledEmbeddingModels.length === 0}
+          >
+            <option value="">Select an embedding model</option>
+            {enabledEmbeddingModels.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.displayName}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field" htmlFor="chat-model">
+          <span>Chat Model</span>
+          <select
+            id="chat-model"
             value={selectedModelId}
             onChange={(event) => setSelectedModelId(event.target.value)}
             disabled={modelsLoading || models.length === 0}
           >
-            <option value="">Select a model</option>
+            <option value="">Select a chat model</option>
             {models.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.displayName}
@@ -133,6 +176,13 @@ function App() {
         {!modelsLoading && !modelsError && models.length === 0 && (
           <p className="status status-error">No chat models are configured.</p>
         )}
+        {!modelsLoading &&
+          !modelsError &&
+          enabledEmbeddingModels.length === 0 && (
+            <p className="status status-error">
+              No enabled embedding models are configured.
+            </p>
+          )}
 
         <ModelDetails model={selectedModel} />
       </section>
@@ -146,15 +196,15 @@ function App() {
           <p className="chat-summary">
             {selectedModel
               ? `Using ${selectedModel.displayName}`
-              : 'Choose a model to start'}
+              : 'Choose models to start'}
           </p>
         </div>
 
         <div className="messages" aria-live="polite">
           {chatMessages.length === 0 ? (
             <div className="empty-state">
-              Select a model, ask a question, and the answer will use the
-              indexed bundled documents as context.
+              Select embedding and chat models, ask a question, and the answer
+              will use the indexed bundled documents as context.
             </div>
           ) : (
             chatMessages.map((chatMessage) => (

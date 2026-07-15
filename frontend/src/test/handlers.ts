@@ -28,7 +28,7 @@ export const handlers = [
         },
         {
           id: 'ollama-nomic-embed',
-          enabled: false,
+          enabled: true,
           displayName: 'Ollama Nomic Embed',
           runtime: 'OLLAMA',
           version: 'latest',

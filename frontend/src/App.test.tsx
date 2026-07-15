@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import type { ChatModelsResponse } from './api/types'
+import type { ChatModelsResponse, ChatRequest } from './api/types'
 import { apiUrl } from './config'
 import { availableOllamaModel } from './test/fixtures'
 import { server } from './test/server'
@@ -17,10 +17,17 @@ describe('App', () => {
     expect(screen.getByText('Loading configured models...')).toBeVisible()
 
     await user.selectOptions(
-      await screen.findByLabelText('Model'),
+      await screen.findByLabelText('Embedding Model'),
+      'ollama-nomic-embed',
+    )
+    await user.selectOptions(
+      await screen.findByLabelText('Chat Model'),
       'local-ollama-llama',
     )
 
+    expect(screen.getByLabelText('Embedding Model')).toHaveValue(
+      'ollama-nomic-embed',
+    )
     expect(screen.getByText('AVAILABLE')).toBeVisible()
     expect(screen.getByText('LOCAL SERVER')).toBeVisible()
     expect(screen.getByText('Prompts stay local')).toBeVisible()
@@ -41,8 +48,15 @@ describe('App', () => {
     expect(sendButton).toBeDisabled()
 
     await user.selectOptions(
-      await screen.findByLabelText('Model'),
+      await screen.findByLabelText('Chat Model'),
       'local-ollama-llama',
+    )
+
+    expect(sendButton).toBeDisabled()
+
+    await user.selectOptions(
+      await screen.findByLabelText('Embedding Model'),
+      'ollama-nomic-embed',
     )
 
     expect(sendButton).toBeEnabled()
@@ -50,13 +64,22 @@ describe('App', () => {
 
   it('sends chat messages with the selected model', async () => {
     const user = userEvent.setup()
+    const chatRequests: ChatRequest[] = []
+    server.use(
+      http.post(apiUrl('/chat'), async ({ request }) => {
+        const body = (await request.json()) as ChatRequest
+        chatRequests.push(body)
+
+        return HttpResponse.json({
+          modelId: body.modelId,
+          answer: `Mock answer for: ${body.message}`,
+        })
+      }),
+    )
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Model'),
-      'local-ollama-llama',
-    )
+    await selectDefaultModels(user)
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -64,6 +87,13 @@ describe('App', () => {
     expect(
       await screen.findByText('Mock answer for: How should I cook rice?'),
     ).toBeVisible()
+    expect(chatRequests).toEqual([
+      {
+        modelId: 'local-ollama-llama',
+        embeddingModelId: 'ollama-nomic-embed',
+        message: 'How should I cook rice?',
+      },
+    ])
   })
 
   it('renders double star phrases in chat messages as bold text', async () => {
@@ -79,10 +109,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Model'),
-      'local-ollama-llama',
-    )
+    await selectDefaultModels(user)
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -99,10 +126,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Model'),
-      'local-ollama-llama',
-    )
+    await selectDefaultModels(user)
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.keyboard('{Enter}')
 
@@ -117,10 +141,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Model'),
-      'local-ollama-llama',
-    )
+    await selectDefaultModels(user)
 
     const messageField = screen.getByLabelText('Message')
     await user.type(messageField, 'Line one')
@@ -148,10 +169,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Model'),
-      'local-ollama-llama',
-    )
+    await selectDefaultModels(user)
     await user.type(screen.getByLabelText('Message'), 'Will this fail?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -176,7 +194,11 @@ describe('App', () => {
     render(<App />)
 
     await user.selectOptions(
-      await screen.findByLabelText('Model'),
+      await screen.findByLabelText('Embedding Model'),
+      'ollama-nomic-embed',
+    )
+    await user.selectOptions(
+      await screen.findByLabelText('Chat Model'),
       'local-ollama-llama',
     )
     await user.type(screen.getByLabelText('Message'), 'Can I use it?')
@@ -189,3 +211,14 @@ describe('App', () => {
     ).toBeVisible()
   })
 })
+
+async function selectDefaultModels(user: ReturnType<typeof userEvent.setup>) {
+  await user.selectOptions(
+    await screen.findByLabelText('Embedding Model'),
+    'ollama-nomic-embed',
+  )
+  await user.selectOptions(
+    await screen.findByLabelText('Chat Model'),
+    'local-ollama-llama',
+  )
+}

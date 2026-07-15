@@ -57,6 +57,10 @@
   font-weight: 650;
 }
 
+.model-panel .field + .field {
+  margin-top: 16px;
+}
+
 select,
 textarea,
 button {

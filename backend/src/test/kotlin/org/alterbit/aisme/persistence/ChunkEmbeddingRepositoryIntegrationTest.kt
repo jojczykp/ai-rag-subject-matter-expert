@@ -91,6 +91,59 @@ class ChunkEmbeddingRepositoryIntegrationTest(
         metadata.storedDimensions shouldBe EMBEDDING_DIMENSIONS
     }
 
+    @Test
+    fun `stores embeddings with different dimensions`() {
+        val sourceDocument = sourceDocumentRepository.save(
+            SourceDocumentRecord(
+                resourcePath = "culinary_expert/variable-dimensions.txt",
+                contentHash = "variable-dimensions-hash",
+                indexedAt = Instant.parse("2026-01-01T00:00:00Z"),
+            ),
+        )
+        val chunk = documentChunkRepository.save(
+            DocumentChunkRecord(
+                sourceDocumentId = requireNotNull(sourceDocument.id),
+                chunkIndex = 0,
+                content = "Variable dimension chunk",
+                startOffset = 0,
+                endOffset = 24,
+                chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
+            ),
+        )
+
+        chunkEmbeddingRepository.save(
+            SaveChunkEmbeddingRequest(
+                documentChunkId = requireNotNull(chunk.id),
+                embedding = EmbeddingVector(
+                    values = List(NOMIC_EMBEDDING_DIMENSIONS) { index ->
+                        if (index == 0) 1.0 else 0.0
+                    },
+                    model = EmbeddingModelMetadata(
+                        id = "ollama-nomic-embed",
+                        version = "latest",
+                        dimensions = NOMIC_EMBEDDING_DIMENSIONS,
+                    ),
+                ),
+                chunkingStrategyVersion = CHUNKING_STRATEGY_VERSION,
+                embeddedAt = Instant.parse("2026-01-01T00:00:00Z"),
+            ),
+        )
+
+        val dimensions = jdbcClient
+            .sql(
+                """
+                SELECT vector_dims(embedding)
+                FROM chunk_embedding
+                WHERE document_chunk_id = :documentChunkId
+                """,
+            )
+            .param("documentChunkId", chunk.id)
+            .query(Int::class.java)
+            .single()
+
+        dimensions shouldBe NOMIC_EMBEDDING_DIMENSIONS
+    }
+
     private fun embedding(firstDimension: Double): List<Double> =
         List(EMBEDDING_DIMENSIONS) { index ->
             if (index == 0) firstDimension else 0.0
@@ -106,6 +159,7 @@ class ChunkEmbeddingRepositoryIntegrationTest(
 
     companion object {
         private const val EMBEDDING_DIMENSIONS = 384
+        private const val NOMIC_EMBEDDING_DIMENSIONS = 768
         private const val EMBEDDING_MODEL_ID = "local-bge-small"
         private const val EMBEDDING_MODEL_VERSION = "1.5"
         private const val CHUNKING_STRATEGY_VERSION = "character-count-v1:size=700:overlap=100"

@@ -26,7 +26,7 @@ describe('API client', () => {
     expect(response.embeddingModels[0]?.enabled).toBe(true)
     expect(response.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
     expect(response.embeddingModels[1]?.runtime).toBe('OLLAMA')
-    expect(response.embeddingModels[1]?.enabled).toBe(false)
+    expect(response.embeddingModels[1]?.enabled).toBe(true)
   })
 
   it('posts chat requests', async () => {
