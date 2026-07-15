@@ -29,6 +29,9 @@ class EmbeddingModelsControllerTest(
                 jsonPath("$.defaultEmbeddingModelId") {
                     value("ollama-nomic-embed")
                 }
+                jsonPath("$.embeddingApiTimeoutSeconds") {
+                    value(60)
+                }
                 jsonPath("$.embeddingModels.length()") {
                     value(2)
                 }

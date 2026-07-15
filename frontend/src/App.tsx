@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { KeyboardEvent, ReactNode } from 'react'
 import './App.css'
 import {
@@ -15,17 +15,24 @@ type ChatMessage = {
   content: string
 }
 
+const defaultMessage = 'How should I cook rice?'
+
 function App() {
   const [models, setModels] = useState<ChatModel[]>([])
   const [embeddingModels, setEmbeddingModels] = useState<EmbeddingModel[]>([])
   const [modelsLoading, setModelsLoading] = useState(true)
   const [modelsError, setModelsError] = useState<string | null>(null)
+  const [chatApiTimeoutSeconds, setChatApiTimeoutSeconds] = useState(60)
+  const [embeddingApiTimeoutSeconds, setEmbeddingApiTimeoutSeconds] =
+    useState(60)
   const [selectedModelId, setSelectedModelId] = useState('')
   const [selectedEmbeddingModelId, setSelectedEmbeddingModelId] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(defaultMessage)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatError, setChatError] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
+  const [requestElapsedSeconds, setRequestElapsedSeconds] = useState(0)
+  const messageInputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     let active = true
@@ -43,6 +50,10 @@ function App() {
 
         setModels(chatModels)
         setEmbeddingModels(embeddingModels)
+        setChatApiTimeoutSeconds(chatModelsResponse.chatApiTimeoutSeconds)
+        setEmbeddingApiTimeoutSeconds(
+          embeddingModelsResponse.embeddingApiTimeoutSeconds,
+        )
         setSelectedModelId(
           defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
         )
@@ -70,6 +81,24 @@ function App() {
       active = false
     }
   }, [])
+
+  useEffect(() => {
+    const messageInput = messageInputRef.current
+    messageInput?.focus()
+    messageInput?.setSelectionRange(messageInput.value.length, messageInput.value.length)
+  }, [])
+
+  useEffect(() => {
+    if (!sending) {
+      return undefined
+    }
+
+    const intervalId = window.setInterval(() => {
+      setRequestElapsedSeconds((current) => current + 1)
+    }, 1000)
+
+    return () => window.clearInterval(intervalId)
+  }, [sending])
 
   const selectedModel = useMemo(
     () => models.find((model) => model.id === selectedModelId),
@@ -119,6 +148,7 @@ function App() {
     setChatMessages((current) => [...current, userMessage])
     setMessage('')
     setChatError(null)
+    setRequestElapsedSeconds(0)
     setSending(true)
 
     try {
@@ -239,7 +269,13 @@ function App() {
               </article>
             ))
           )}
-          {sending && <p className="status">Waiting for model response...</p>}
+          {sending && (
+            <RequestProgress
+              elapsedSeconds={requestElapsedSeconds}
+              embeddingApiTimeoutSeconds={embeddingApiTimeoutSeconds}
+              chatApiTimeoutSeconds={chatApiTimeoutSeconds}
+            />
+          )}
         </div>
 
         {chatError && <p className="status status-error">{chatError}</p>}
@@ -258,6 +294,7 @@ function App() {
             <span>Message</span>
             <textarea
               id="message"
+              ref={messageInputRef}
               value={message}
               onChange={(event) => setMessage(event.target.value)}
               onKeyDown={handleMessageKeyDown}
@@ -358,6 +395,36 @@ function embeddingModelOptionLabel(model: EmbeddingModel): string {
 
 function embeddingQueryMayLeaveLocalMachine(model: EmbeddingModel): boolean {
   return model.mode === 'ONLINE'
+}
+
+function RequestProgress({
+  elapsedSeconds,
+  embeddingApiTimeoutSeconds,
+  chatApiTimeoutSeconds,
+}: {
+  elapsedSeconds: number
+  embeddingApiTimeoutSeconds: number
+  chatApiTimeoutSeconds: number
+}) {
+  const requestTimeoutSeconds = Math.max(
+    embeddingApiTimeoutSeconds,
+    chatApiTimeoutSeconds,
+  )
+  const requestRemainingSeconds = remainingSeconds(
+    requestTimeoutSeconds,
+    elapsedSeconds,
+  )
+
+  return (
+    <div className="status request-progress" role="status">
+      <p>{`Processing request: ${requestRemainingSeconds}s remaining`}</p>
+      <p>This includes embedding-based retrieval and chat model generation.</p>
+    </div>
+  )
+}
+
+function remainingSeconds(timeoutSeconds: number, elapsedSeconds: number) {
+  return Math.max(timeoutSeconds - elapsedSeconds, 0)
 }
 
 function AvailabilityValue({ availability }: { availability: string }) {

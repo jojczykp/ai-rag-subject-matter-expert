@@ -12,12 +12,14 @@ export const handlers = [
   http.get(apiUrl('/chat-models'), () =>
     HttpResponse.json<ChatModelsResponse>({
       defaultChatModelId: 'local-ollama-llama',
+      chatApiTimeoutSeconds: 60,
       chatModels: [availableOllamaModel],
     }),
   ),
   http.get(apiUrl('/embedding-models'), () =>
     HttpResponse.json<EmbeddingModelsResponse>({
       defaultEmbeddingModelId: 'ollama-nomic-embed',
+      embeddingApiTimeoutSeconds: 60,
       embeddingModels: [
         {
           id: 'local-bge-small',

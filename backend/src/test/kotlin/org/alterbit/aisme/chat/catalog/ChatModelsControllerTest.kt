@@ -2,6 +2,7 @@ package org.alterbit.aisme.chat.catalog
 
 import java.time.Clock
 import java.time.Duration
+import org.alterbit.aisme.chat.ChatProperties
 import org.junit.jupiter.api.Test
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -50,6 +51,9 @@ class ChatModelsControllerTest(
                 status { isOk() }
                 jsonPath("$.defaultChatModelId") {
                     value("local-ollama-llama")
+                }
+                jsonPath("$.chatApiTimeoutSeconds") {
+                    value(60)
                 }
                 jsonPath("$.chatModels.length()") {
                     value(2)
@@ -119,6 +123,7 @@ class ChatModelsControllerTest(
 @EnableConfigurationProperties(
     ChatModelAvailabilityProperties::class,
     ChatModelsProperties::class,
+    ChatProperties::class,
 )
 @Import(
     ChatModelAvailabilityService::class,

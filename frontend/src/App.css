@@ -249,6 +249,15 @@ button:focus-visible {
   font-size: 14px;
 }
 
+.request-progress {
+  display: grid;
+  gap: 4px;
+}
+
+.request-progress p {
+  margin: 0;
+}
+
 .status-error {
   color: var(--error);
 }

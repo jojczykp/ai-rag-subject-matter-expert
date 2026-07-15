@@ -50,6 +50,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'local-ollama-llama',
+          chatApiTimeoutSeconds: 60,
           chatModels: [
             {
               ...availableOllamaModel,
@@ -68,7 +69,23 @@ describe('App', () => {
     expect(container.querySelectorAll('.availability-dot-gray')).toHaveLength(1)
   })
 
-  it('requires a message before sending with default models', async () => {
+  it('focuses the message field on load', async () => {
+    render(<App />)
+
+    const messageField = screen.getByLabelText('Message')
+
+    expect(messageField).toHaveFocus()
+    expect(messageField).toHaveValue('How should I cook rice?')
+    expect(messageField).toHaveProperty('selectionStart', 23)
+    expect(messageField).toHaveProperty('selectionEnd', 23)
+
+    await screen.findByLabelText('Chat Model')
+
+    expect(messageField).toHaveFocus()
+    expect(messageField).toHaveValue('How should I cook rice?')
+  })
+
+  it('prefills a message and still requires non-blank content', async () => {
     const user = userEvent.setup()
 
     render(<App />)
@@ -81,11 +98,11 @@ describe('App', () => {
       'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
     )
 
-    expect(sendButton).toBeDisabled()
-
-    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
-
     expect(sendButton).toBeEnabled()
+
+    await user.clear(screen.getByLabelText('Message'))
+
+    expect(sendButton).toBeDisabled()
   })
 
   it('sends chat messages with the selected model', async () => {
@@ -108,7 +125,6 @@ describe('App', () => {
     await screen.findByText(
       'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
     )
-    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     expect(screen.getByText('How should I cook rice?')).toBeVisible()
@@ -122,6 +138,45 @@ describe('App', () => {
         message: 'How should I cook rice?',
       },
     ])
+  })
+
+  it('shows request countdown while waiting for a response', async () => {
+    server.use(
+      http.post(
+        apiUrl('/chat'),
+        () =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(
+                HttpResponse.json({
+                  modelId: 'local-ollama-llama',
+                  answer: 'Done',
+                }),
+              )
+            }, 1500)
+          }),
+      ),
+    )
+
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(screen.getByText('Processing request: 60s remaining')).toBeVisible()
+    expect(
+      screen.getByText(
+        'This includes embedding-based retrieval and chat model generation.',
+      ),
+    ).toBeVisible()
+
+    expect(
+      await screen.findByText('Processing request: 59s remaining'),
+    ).toBeVisible()
   })
 
   it('renders double star phrases in chat messages as bold text', async () => {
@@ -140,7 +195,6 @@ describe('App', () => {
     await screen.findByText(
       'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
     )
-    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     const boldText = await screen.findByText('one cup')
@@ -159,7 +213,6 @@ describe('App', () => {
     await screen.findByText(
       'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
     )
-    await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.keyboard('{Enter}')
 
     expect(screen.getByText('How should I cook rice?')).toBeVisible()
@@ -178,6 +231,7 @@ describe('App', () => {
     )
 
     const messageField = screen.getByLabelText('Message')
+    await user.clear(messageField)
     await user.type(messageField, 'Line one')
     await user.keyboard('{Shift>}{Enter}{/Shift}')
     await user.type(messageField, 'Line two')
@@ -206,6 +260,7 @@ describe('App', () => {
     await screen.findByText(
       'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
     )
+    await user.clear(screen.getByLabelText('Message'))
     await user.type(screen.getByLabelText('Message'), 'Will this fail?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -218,6 +273,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'local-ollama-llama',
+          chatApiTimeoutSeconds: 60,
           chatModels: [
             {
               ...availableOllamaModel,
@@ -231,7 +287,6 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByLabelText('Embedding Model')
-    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(
@@ -254,7 +309,6 @@ describe('App', () => {
       await screen.findByLabelText('Chat Model'),
       'local-ollama-llama',
     )
-    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(
@@ -270,6 +324,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'local-ollama-llama',
+          chatApiTimeoutSeconds: 60,
           chatModels: [
             {
               ...availableOllamaModel,
@@ -287,7 +342,6 @@ describe('App', () => {
       'local-bge-small',
     )
     await screen.findByLabelText('Chat Model')
-    await user.type(screen.getByLabelText('Message'), 'Can I use it?')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(

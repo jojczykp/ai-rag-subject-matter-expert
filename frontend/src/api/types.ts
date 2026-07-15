@@ -34,6 +34,7 @@ export type ChatModel = {
 
 export type ChatModelsResponse = {
   defaultChatModelId: string | null
+  chatApiTimeoutSeconds: number
   chatModels: ChatModel[]
 }
 
@@ -58,6 +59,7 @@ export type EmbeddingModel = {
 
 export type EmbeddingModelsResponse = {
   defaultEmbeddingModelId: string | null
+  embeddingApiTimeoutSeconds: number
   embeddingModels: EmbeddingModel[]
 }
 
