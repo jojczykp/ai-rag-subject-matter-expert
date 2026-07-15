@@ -2,8 +2,8 @@ export type ChatModelRuntime =
   | 'SPRING_AI'
   | 'OPENAI_COMPATIBLE'
   | 'OLLAMA'
-  | 'HUGGING_FACE_ENDPOINT'
-  | 'EMBEDDED_OFFLINE'
+  | 'HUGGING_FACE_TGI'
+  | 'EMBEDDED_LLAMA'
 
 export type ChatModelMode = 'ONLINE' | 'LOCAL_SERVER' | 'EMBEDDED_OFFLINE'
 
@@ -15,9 +15,9 @@ export type ChatModelCapability = 'CHAT'
 export type ChatModelRuntimeRequirement =
   | 'REQUIRES_NETWORK'
   | 'REQUIRES_API_KEY'
-  | 'REQUIRES_LOCAL_OLLAMA'
+  | 'REQUIRES_OLLAMA_SERVER'
   | 'REQUIRES_LOCAL_GGUF_MODEL'
-  | 'REQUIRES_MANAGED_LLAMA_SERVER'
+  | 'REQUIRES_LLAMA_SERVER_EXECUTABLE'
 
 export type ChatModel = {
   id: string
@@ -32,8 +32,8 @@ export type ChatModel = {
   runtimeRequirements: ChatModelRuntimeRequirement[]
 }
 
-export type ModelsResponse = {
-  models: ChatModel[]
+export type ChatModelsResponse = {
+  chatModels: ChatModel[]
 }
 
 export type ChatRequest = {

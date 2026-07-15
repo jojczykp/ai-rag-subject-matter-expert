@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import { getModels, postChat } from './client'
+import { getChatModels, postChat } from './client'
 import { apiUrl, backendApiBaseUrl } from '../config'
 import { server } from '../test/server'
 
@@ -10,11 +10,11 @@ describe('API client', () => {
   })
 
   it('loads configured models', async () => {
-    const response = await getModels()
+    const response = await getChatModels()
 
-    expect(response.models).toHaveLength(1)
-    expect(response.models[0]?.id).toBe('local-ollama-llama')
-    expect(response.models[0]?.availability).toBe('AVAILABLE')
+    expect(response.chatModels).toHaveLength(1)
+    expect(response.chatModels[0]?.id).toBe('local-ollama-llama')
+    expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
   })
 
   it('posts chat requests', async () => {

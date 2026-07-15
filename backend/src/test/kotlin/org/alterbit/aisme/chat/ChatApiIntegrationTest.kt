@@ -8,7 +8,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.modelcatalog.ChatModelAvailabilityService
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ModelsController
+import org.alterbit.aisme.modelcatalog.ChatModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringBootConfiguration
@@ -56,28 +56,28 @@ class ChatApiIntegrationTest(
 ) {
     @Test
     fun `lists configured models`() {
-        mockMvc.get("/models")
+        mockMvc.get("/chat-models")
             .andExpect {
                 status { isOk() }
-                jsonPath("$.models.length()") {
+                jsonPath("$.chatModels.length()") {
                     value(2)
                 }
-                jsonPath("$.models[0].id") {
+                jsonPath("$.chatModels[0].id") {
                     value("local-ollama-llama")
                 }
-                jsonPath("$.models[0].availability") {
+                jsonPath("$.chatModels[0].availability") {
                     value("CONFIGURED")
                 }
-                jsonPath("$.models[0].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[0].promptsMayLeaveLocalMachine") {
                     value(false)
                 }
-                jsonPath("$.models[1].id") {
+                jsonPath("$.chatModels[1].id") {
                     value("cloud-gpt")
                 }
-                jsonPath("$.models[1].availability") {
+                jsonPath("$.chatModels[1].availability") {
                     value("CONFIGURED")
                 }
-                jsonPath("$.models[1].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[1].promptsMayLeaveLocalMachine") {
                     value(true)
                 }
             }
@@ -134,7 +134,7 @@ class ChatApiIntegrationTest(
     ChatController::class,
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
-    ModelsController::class,
+    ChatModelsController::class,
     ChatApiIntegrationTestConfiguration::class,
 )
 class ChatApiIntegrationTestContext

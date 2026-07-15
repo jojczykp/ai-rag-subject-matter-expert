@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import type { ModelsResponse } from './api/types'
+import type { ChatModelsResponse } from './api/types'
 import { apiUrl } from './config'
 import { availableOllamaModel } from './test/fixtures'
 import { server } from './test/server'
@@ -24,7 +24,7 @@ describe('App', () => {
     expect(screen.getByText('AVAILABLE')).toBeVisible()
     expect(screen.getByText('LOCAL SERVER')).toBeVisible()
     expect(screen.getByText('Prompts stay local')).toBeVisible()
-    expect(screen.getByText('requires local ollama')).toBeVisible()
+    expect(screen.getByText('requires ollama server')).toBeVisible()
   })
 
   it('requires a selected model and message before sending', async () => {
@@ -161,9 +161,9 @@ describe('App', () => {
   it('prevents chat when selected model is unavailable', async () => {
     const user = userEvent.setup()
     server.use(
-      http.get(apiUrl('/models'), () =>
-        HttpResponse.json<ModelsResponse>({
-          models: [
+      http.get(apiUrl('/chat-models'), () =>
+        HttpResponse.json<ChatModelsResponse>({
+          chatModels: [
             {
               ...availableOllamaModel,
               availability: 'UNAVAILABLE',

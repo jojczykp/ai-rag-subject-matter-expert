@@ -25,7 +25,7 @@ Initial scope:
       `backend/src/main/resources/subject-documents/`.
 - [ ] Support plain text `.txt` documents as the first input format.
 - [x] Provide `POST /chat` for asking questions.
-- [x] Provide `GET /models` for listing configured models.
+- [x] Provide `GET /chat-models` for listing configured models.
 - [ ] Do not provide `/subjects` endpoints.
 - [ ] Do not provide `/documents` endpoints.
 - [ ] Do not expose original bundled files for download.

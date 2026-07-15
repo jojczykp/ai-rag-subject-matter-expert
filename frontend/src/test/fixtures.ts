@@ -10,5 +10,5 @@ export const availableOllamaModel: ChatModel = {
   availableOffline: false,
   promptsMayLeaveLocalMachine: false,
   capabilities: ['CHAT'],
-  runtimeRequirements: ['REQUIRES_LOCAL_OLLAMA'],
+  runtimeRequirements: ['REQUIRES_OLLAMA_SERVER'],
 }

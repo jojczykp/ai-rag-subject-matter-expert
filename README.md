@@ -238,7 +238,7 @@ Expected response:
 View the configured models:
 
 ```bash
-curl -s http://localhost:8080/models | jq .
+curl -s http://localhost:8080/chat-models | jq .
 ```
 
 The response includes each model's availability, capabilities, runtime

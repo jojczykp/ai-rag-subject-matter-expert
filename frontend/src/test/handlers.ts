@@ -1,12 +1,16 @@
 import { http, HttpResponse } from 'msw'
-import type { ChatRequest, ChatResponse, ModelsResponse } from '../api/types'
+import type {
+  ChatModelsResponse,
+  ChatRequest,
+  ChatResponse,
+} from '../api/types'
 import { apiUrl } from '../config'
 import { availableOllamaModel } from './fixtures'
 
 export const handlers = [
-  http.get(apiUrl('/models'), () =>
-    HttpResponse.json<ModelsResponse>({
-      models: [availableOllamaModel],
+  http.get(apiUrl('/chat-models'), () =>
+    HttpResponse.json<ChatModelsResponse>({
+      chatModels: [availableOllamaModel],
     }),
   ),
   http.post(apiUrl('/chat'), async ({ request }) => {

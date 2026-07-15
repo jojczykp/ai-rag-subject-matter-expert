@@ -12,7 +12,7 @@ import org.alterbit.aisme.modelcatalog.ChatModelDescriptor
 import org.alterbit.aisme.modelcatalog.ChatModelRegistry
 import org.alterbit.aisme.modelcatalog.ChatModelRuntime
 import org.alterbit.aisme.modelcatalog.ChatModelsProperties
-import org.alterbit.aisme.modelcatalog.ModelsController
+import org.alterbit.aisme.modelcatalog.ChatModelsController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringBootConfiguration
@@ -64,40 +64,40 @@ class EmbeddedOfflineChatApiIntegrationTest(
 ) {
     @Test
     fun `lists embedded models with runtime availability`() {
-        mockMvc.get("/models")
+        mockMvc.get("/chat-models")
             .andExpect {
                 status { isOk() }
-                jsonPath("$.models.length()") {
+                jsonPath("$.chatModels.length()") {
                     value(2)
                 }
-                jsonPath("$.models[0].id") {
+                jsonPath("$.chatModels[0].id") {
                     value("embedded-ready")
                 }
-                jsonPath("$.models[0].runtime") {
+                jsonPath("$.chatModels[0].runtime") {
                     value("EMBEDDED_LLAMA")
                 }
-                jsonPath("$.models[0].mode") {
+                jsonPath("$.chatModels[0].mode") {
                     value("EMBEDDED_OFFLINE")
                 }
-                jsonPath("$.models[0].availability") {
+                jsonPath("$.chatModels[0].availability") {
                     value("AVAILABLE")
                 }
-                jsonPath("$.models[0].availableOffline") {
+                jsonPath("$.chatModels[0].availableOffline") {
                     value(true)
                 }
-                jsonPath("$.models[0].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[0].promptsMayLeaveLocalMachine") {
                     value(false)
                 }
-                jsonPath("$.models[1].id") {
+                jsonPath("$.chatModels[1].id") {
                     value("embedded-down")
                 }
-                jsonPath("$.models[1].availability") {
+                jsonPath("$.chatModels[1].availability") {
                     value("UNAVAILABLE")
                 }
-                jsonPath("$.models[1].availableOffline") {
+                jsonPath("$.chatModels[1].availableOffline") {
                     value(true)
                 }
-                jsonPath("$.models[1].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[1].promptsMayLeaveLocalMachine") {
                     value(false)
                 }
             }
@@ -180,7 +180,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
     ChatController::class,
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
-    ModelsController::class,
+    ChatModelsController::class,
     EmbeddedOfflineChatApiIntegrationTestConfiguration::class,
 )
 class EmbeddedOfflineChatApiIntegrationTestContext

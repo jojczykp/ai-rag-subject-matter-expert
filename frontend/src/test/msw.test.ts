@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import type { ChatResponse, ModelsResponse } from '../api/types'
+import type { ChatResponse, ChatModelsResponse } from '../api/types'
 import { apiUrl } from '../config'
 
 describe('MSW backend API mocks', () => {
   it('returns configured models', async () => {
-    const response = await fetch(apiUrl('/models'))
-    const body = (await response.json()) as ModelsResponse
+    const response = await fetch(apiUrl('/chat-models'))
+    const body = (await response.json()) as ChatModelsResponse
 
     expect(response.ok).toBe(true)
-    expect(body.models).toHaveLength(1)
-    expect(body.models[0]?.id).toBe('local-ollama-llama')
-    expect(body.models[0]?.availability).toBe('AVAILABLE')
+    expect(body.chatModels).toHaveLength(1)
+    expect(body.chatModels[0]?.id).toBe('local-ollama-llama')
+    expect(body.chatModels[0]?.availability).toBe('AVAILABLE')
   })
 
   it('returns a deterministic chat response', async () => {

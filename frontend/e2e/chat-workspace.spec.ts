@@ -3,11 +3,11 @@ import { expect, test } from '@playwright/test'
 test('user can select a model and receive a chat response', async ({
   page,
 }) => {
-  await page.route('**/models', async (route) => {
+  await page.route('**/chat-models', async (route) => {
     await route.fulfill({
       contentType: 'application/json',
       body: JSON.stringify({
-        models: [
+        chatModels: [
           {
             id: 'local-ollama-llama',
             displayName: 'Local Ollama Llama',
@@ -18,7 +18,7 @@ test('user can select a model and receive a chat response', async ({
             availableOffline: false,
             promptsMayLeaveLocalMachine: false,
             capabilities: ['CHAT'],
-            runtimeRequirements: ['REQUIRES_LOCAL_OLLAMA'],
+            runtimeRequirements: ['REQUIRES_OLLAMA_SERVER'],
           },
         ],
       }),

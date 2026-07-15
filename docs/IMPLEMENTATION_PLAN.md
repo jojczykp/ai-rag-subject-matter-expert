@@ -53,7 +53,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add fake model client for deterministic application-flow tests.
 - [x] Add `ChatModelRegistry` backed by static `aisme.chat.models` configuration.
 - [x] Require `modelId` on chat requests.
-- [x] Add `GET /models`.
+- [x] Add `GET /chat-models`.
 - [x] Add `POST /chat`.
 - [x] Add `AiChatService`.
 - [x] Add model availability status and privacy labels to model responses.
@@ -64,11 +64,11 @@ All implementation items are TODO until delivered and verified.
 - [x] Add configurable chat API timeout with `60s` default.
 - [x] Add configurable model availability timeout with `5s` default.
 - [x] Add `ChatModelAvailabilityService`.
-- [x] Use `ChatModelAvailabilityService` in `GET /models`.
+- [x] Use `ChatModelAvailabilityService` in `GET /chat-models`.
 - [x] Use `ChatModelAvailabilityService` in `POST /chat`.
 - [x] Add short-lived availability caching if checks are slow or noisy.
 - [x] Do not retry chat generation automatically.
-- [x] Add integration tests for `/models`, `/chat`, static document indexing,
+- [x] Add integration tests for `/chat-models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
 - [x] Keep Kover coverage at or above 80% in default verification.
 
@@ -118,7 +118,7 @@ All implementation items are TODO until delivered and verified.
       collect managed `llama-server` stdout and stderr.
 - [x] Extend embedded offline availability checks to verify runtime loadability
       once the embedded adapter exists.
-- [x] Add embedded offline availability tests for `GET /models`.
+- [x] Add embedded offline availability tests for `GET /chat-models`.
 - [x] Add embedded offline availability tests for `POST /chat`.
 - [x] Document that embedded offline availability requires static asset
       validation and managed `llama-server` readiness.
@@ -139,7 +139,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add React Testing Library for behavior-focused UI tests.
 - [x] Add MSW for frontend API mocking.
 - [x] Add Vitest V8 coverage reporting with an initial 70% coverage threshold.
-- [x] Add an API client for `GET /models`.
+- [x] Add an API client for `GET /chat-models`.
 - [x] Add an API client for `POST /chat`.
 - [x] Build the first application screen around model selection and chat.
 - [x] Show model display name, availability, runtime mode, runtime

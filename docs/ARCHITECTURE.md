@@ -104,14 +104,14 @@ Runtime availability checks should be delegated to a separate
 `ChatModelAvailabilityService`, not implemented directly in the registry or
 controller. `ChatModelRegistry` should keep owning configured model metadata,
 while availability checkers enrich descriptors with current runtime state for
-`GET /models` and chat validation. Provider-specific checkers should stay behind
+`GET /chat-models` and chat validation. Provider-specific checkers should stay behind
 that service, for example Ollama, cloud, and embedded-runtime checkers.
-`GET /models` should use availability checks to inform callers; `POST /chat`
+`GET /chat-models` should use availability checks to inform callers; `POST /chat`
 should enforce that the selected model is usable before calling it. Short-lived
 availability caching can be added inside `ChatModelAvailabilityService` if
 checks become slow or noisy.
 
-`GET /models` exposes model capabilities and runtime requirements derived from
+`GET /chat-models` exposes model capabilities and runtime requirements derived from
 the configured runtime. The first implementation reports `CHAT` capability for
 all selectable models and requirements such as network access, API keys,
 Ollama, GGUF assets, or a managed llama-server executable. Cloud-provider

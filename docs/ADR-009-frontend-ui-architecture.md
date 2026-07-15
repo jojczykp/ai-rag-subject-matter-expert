@@ -8,7 +8,7 @@ Accepted.
 
 The application currently exposes REST APIs for model discovery and chat:
 
-- `GET /models`
+- `GET /chat-models`
 - `POST /chat`
 
 The first user interface should make those backend capabilities usable without
@@ -32,7 +32,7 @@ a configurable backend base URL, defaulting to `http://localhost:8080`.
 
 The initial UI scope is:
 
-- [ ] Load configured models from `GET /models`.
+- [ ] Load configured models from `GET /chat-models`.
 - [ ] Show model display name, availability, runtime mode, runtime
       requirements, and whether prompts may leave the local machine.
 - [ ] Require the user to select a model before sending a message.

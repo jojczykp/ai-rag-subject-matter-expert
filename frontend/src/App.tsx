@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { KeyboardEvent, ReactNode } from 'react'
 import './App.css'
-import { ApiError, getModels, postChat } from './api/client'
+import { ApiError, getChatModels, postChat } from './api/client'
 import type { ChatModel } from './api/types'
 
 type ChatMessage = {
@@ -23,12 +23,12 @@ function App() {
   useEffect(() => {
     let active = true
 
-    getModels()
+    getChatModels()
       .then((response) => {
         if (!active) {
           return
         }
-        setModels(response.models)
+        setModels(response.chatModels)
         setModelsError(null)
       })
       .catch((error: unknown) => {

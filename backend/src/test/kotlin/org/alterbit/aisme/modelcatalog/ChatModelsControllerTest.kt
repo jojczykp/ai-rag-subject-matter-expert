@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 
 @SpringBootTest(
-    classes = [ModelsControllerTestContext::class],
+    classes = [ChatModelsControllerTestContext::class],
     properties = [
         "aisme.chat.models.local-ollama-llama.enabled=true",
         "aisme.chat.models.local-ollama-llama.display-order=10",
@@ -39,66 +39,66 @@ import org.springframework.test.web.servlet.get
     ],
 )
 @AutoConfigureMockMvc
-class ModelsControllerTest(
+class ChatModelsControllerTest(
     private val mockMvc: MockMvc,
 ) {
     @Test
     fun `lists chat models`() {
-        mockMvc.get("/models")
+        mockMvc.get("/chat-models")
             .andExpect {
                 status { isOk() }
-                jsonPath("$.models.length()") {
+                jsonPath("$.chatModels.length()") {
                     value(2)
                 }
-                jsonPath("$.models[0].id") {
+                jsonPath("$.chatModels[0].id") {
                     value("local-ollama-llama")
                 }
-                jsonPath("$.models[0].displayName") {
+                jsonPath("$.chatModels[0].displayName") {
                     value("Local Ollama Llama")
                 }
-                jsonPath("$.models[0].description") {
+                jsonPath("$.chatModels[0].description") {
                     value("Local Ollama model for chat requests.")
                 }
-                jsonPath("$.models[0].runtime") {
+                jsonPath("$.chatModels[0].runtime") {
                     value("OLLAMA")
                 }
-                jsonPath("$.models[0].mode") {
+                jsonPath("$.chatModels[0].mode") {
                     value("LOCAL_SERVER")
                 }
-                jsonPath("$.models[0].availability") {
+                jsonPath("$.chatModels[0].availability") {
                     value("AVAILABLE")
                 }
-                jsonPath("$.models[0].availableOffline") {
+                jsonPath("$.chatModels[0].availableOffline") {
                     value(false)
                 }
-                jsonPath("$.models[0].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[0].promptsMayLeaveLocalMachine") {
                     value(false)
                 }
-                jsonPath("$.models[0].capabilities[0]") {
+                jsonPath("$.chatModels[0].capabilities[0]") {
                     value("CHAT")
                 }
-                jsonPath("$.models[0].runtimeRequirements[0]") {
+                jsonPath("$.chatModels[0].runtimeRequirements[0]") {
                     value("REQUIRES_OLLAMA_SERVER")
                 }
-                jsonPath("$.models[0].baseUrl") {
+                jsonPath("$.chatModels[0].baseUrl") {
                     doesNotExist()
                 }
-                jsonPath("$.models[1].id") {
+                jsonPath("$.chatModels[1].id") {
                     value("cloud-gpt")
                 }
-                jsonPath("$.models[1].description") {
+                jsonPath("$.chatModels[1].description") {
                     value("Cloud model for online chat requests.")
                 }
-                jsonPath("$.models[1].availability") {
+                jsonPath("$.chatModels[1].availability") {
                     value("CONFIGURED")
                 }
-                jsonPath("$.models[1].promptsMayLeaveLocalMachine") {
+                jsonPath("$.chatModels[1].promptsMayLeaveLocalMachine") {
                     value(true)
                 }
-                jsonPath("$.models[1].capabilities[0]") {
+                jsonPath("$.chatModels[1].capabilities[0]") {
                     value("CHAT")
                 }
-                jsonPath("$.models[1].runtimeRequirements[0]") {
+                jsonPath("$.chatModels[1].runtimeRequirements[0]") {
                     value("REQUIRES_NETWORK")
                 }
             }
@@ -119,13 +119,13 @@ class ModelsControllerTest(
 @Import(
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
-    ModelsController::class,
-    ModelsControllerTestConfiguration::class,
+    ChatModelsController::class,
+    ChatModelsControllerTestConfiguration::class,
 )
-class ModelsControllerTestContext
+class ChatModelsControllerTestContext
 
 @TestConfiguration
-class ModelsControllerTestConfiguration {
+class ChatModelsControllerTestConfiguration {
     @Bean
     fun clock(): Clock =
         Clock.systemUTC()
