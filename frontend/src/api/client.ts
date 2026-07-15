@@ -3,6 +3,7 @@ import type {
   ChatRequest,
   ChatResponse,
   ChatModelsResponse,
+  EmbeddingModelsResponse,
 } from './types'
 import { apiUrl } from '../config'
 
@@ -20,6 +21,10 @@ export class ApiError extends Error {
 
 export async function getChatModels(): Promise<ChatModelsResponse> {
   return requestJson<ChatModelsResponse>(apiUrl('/chat-models'))
+}
+
+export async function getEmbeddingModels(): Promise<EmbeddingModelsResponse> {
+  return requestJson<EmbeddingModelsResponse>(apiUrl('/embedding-models'))
 }
 
 export async function postChat(request: ChatRequest): Promise<ChatResponse> {

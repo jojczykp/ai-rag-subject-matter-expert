@@ -19,6 +19,20 @@ class ChatRequestDtoTest {
         )
 
         request.modelId shouldBe "local-llama"
+        request.embeddingModelId shouldBe null
+        request.message shouldBe "How should I cook rice?"
+    }
+
+    @Test
+    fun `creates chat request with selected embedding model`() {
+        val request = ChatRequestDto(
+            modelId = "local-llama",
+            embeddingModelId = "local-bge-small",
+            message = "How should I cook rice?",
+        )
+
+        request.modelId shouldBe "local-llama"
+        request.embeddingModelId shouldBe "local-bge-small"
         request.message shouldBe "How should I cook rice?"
     }
 
@@ -32,6 +46,19 @@ class ChatRequestDtoTest {
         }
 
         exception.message shouldContain "modelId"
+    }
+
+    @Test
+    fun `rejects blank embedding model id`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatRequestDto(
+                modelId = "local-llama",
+                embeddingModelId = " ",
+                message = "How should I cook rice?",
+            )
+        }
+
+        exception.message shouldContain "embeddingModelId"
     }
 
     @Test

@@ -36,8 +36,25 @@ export type ChatModelsResponse = {
   chatModels: ChatModel[]
 }
 
+export type EmbeddingModelRuntime = 'ONNX' | 'OLLAMA'
+
+export type EmbeddingModel = {
+  id: string
+  enabled: boolean
+  displayName: string
+  runtime: EmbeddingModelRuntime
+  version: string | null
+  dimensions: number | null
+  availableOffline: boolean
+}
+
+export type EmbeddingModelsResponse = {
+  embeddingModels: EmbeddingModel[]
+}
+
 export type ChatRequest = {
   modelId: string
+  embeddingModelId?: string
   message: string
 }
 

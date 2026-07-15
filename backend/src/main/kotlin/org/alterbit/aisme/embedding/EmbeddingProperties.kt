@@ -9,17 +9,34 @@ data class EmbeddingProperties(
     val runtimesById: Map<String, EmbeddingRuntimeConfigProperties> = mapOf(
         "local-onnx" to EmbeddingRuntimeConfigProperties(
             type = EmbeddingModelRuntime.ONNX,
-            modelPath = "./models/bge-small-en-v1.5/model.onnx",
-            tokenizerPath = "./models/bge-small-en-v1.5/tokenizer.json",
+        ),
+        "local-ollama" to EmbeddingRuntimeConfigProperties(
+            type = EmbeddingModelRuntime.OLLAMA,
+            baseUrl = "http://localhost:11434",
         ),
     ),
     @param:Name("models")
     val modelsById: Map<String, EmbeddingModelConfigProperties> = mapOf(
         "local-bge-small" to EmbeddingModelConfigProperties(
             enabled = true,
+            displayName = "Local BGE Small",
             version = "1.5",
             dimensions = 384,
-            runtime = EmbeddingModelRuntimeProperties(id = "local-onnx"),
+            runtime = EmbeddingModelRuntimeProperties(
+                id = "local-onnx",
+                modelPath = "./models/bge-small-en-v1.5/model.onnx",
+                tokenizerPath = "./models/bge-small-en-v1.5/tokenizer.json",
+            ),
+        ),
+        "ollama-nomic-embed" to EmbeddingModelConfigProperties(
+            enabled = false,
+            displayName = "Ollama Nomic Embed",
+            version = "latest",
+            dimensions = 768,
+            runtime = EmbeddingModelRuntimeProperties(
+                id = "local-ollama",
+                modelName = "nomic-embed-text",
+            ),
         ),
     ),
 ) {
@@ -59,20 +76,22 @@ data class EmbeddingProperties(
                 "aisme.embedding.models.$modelId.$propertyName is required for ${runtime.type} embedding models"
             }
 
-        fun requireRuntimeConfigured(value: String?, propertyName: String): String =
-            requireNotNull(value) {
-                "aisme.embedding.runtimes.$runtimeId.$propertyName is required for ${runtime.type} embedding runtimes"
-            }
+        val version = requireModelConfigured(model.version, "version")
+        val dimensions = requireNotNull(model.dimensions) {
+            "aisme.embedding.models.$modelId.dimensions is required for ${runtime.type} embedding models"
+        }
 
-        return EmbeddingModelProperties(
-            id = modelId,
-            version = requireModelConfigured(model.version, "version"),
-            dimensions = requireNotNull(model.dimensions) {
-                "aisme.embedding.models.$modelId.dimensions is required for ${runtime.type} embedding models"
-            },
-            runtime = runtime.type,
-            modelPath = requireRuntimeConfigured(runtime.modelPath, "model-path"),
-            tokenizerPath = requireRuntimeConfigured(runtime.tokenizerPath, "tokenizer-path"),
-        )
+        return when (runtime.type) {
+            EmbeddingModelRuntime.ONNX -> EmbeddingModelProperties(
+                id = modelId,
+                version = version,
+                dimensions = dimensions,
+                runtime = runtime.type,
+                modelPath = requireModelConfigured(model.runtime.modelPath, "runtime.model-path"),
+                tokenizerPath = requireModelConfigured(model.runtime.tokenizerPath, "runtime.tokenizer-path"),
+            )
+
+            EmbeddingModelRuntime.OLLAMA -> error("OLLAMA embedding models are configurable but not supported for indexing yet")
+        }
     }
 }

@@ -147,8 +147,6 @@ aisme:
     runtimes:
       local-onnx:
         type: ONNX
-        model-path: ./models/bge-small-en-v1.5/model.onnx
-        tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
     models:
       local-bge-small:
         enabled: true
@@ -156,6 +154,8 @@ aisme:
         dimensions: 384
         runtime:
           id: local-onnx
+          model-path: ./models/bge-small-en-v1.5/model.onnx
+          tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 ```
 
 Rationale:

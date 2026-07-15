@@ -12,12 +12,12 @@ class EmbeddingPropertiesOverrideTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
             "aisme.embedding.runtimes.custom-onnx.type=ONNX",
-            "aisme.embedding.runtimes.custom-onnx.model-path=/models/custom/model.onnx",
-            "aisme.embedding.runtimes.custom-onnx.tokenizer-path=/models/custom/tokenizer.json",
             "aisme.embedding.models.custom-embedding.enabled=true",
             "aisme.embedding.models.custom-embedding.version=2026-01",
             "aisme.embedding.models.custom-embedding.dimensions=768",
             "aisme.embedding.models.custom-embedding.runtime.id=custom-onnx",
+            "aisme.embedding.models.custom-embedding.runtime.model-path=/models/custom/model.onnx",
+            "aisme.embedding.models.custom-embedding.runtime.tokenizer-path=/models/custom/tokenizer.json",
         )
 
     @Test

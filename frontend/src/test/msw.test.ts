@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { ChatResponse, ChatModelsResponse } from '../api/types'
+import type {
+  ChatResponse,
+  ChatModelsResponse,
+  EmbeddingModelsResponse,
+} from '../api/types'
 import { apiUrl } from '../config'
 
 describe('MSW backend API mocks', () => {
@@ -11,6 +15,16 @@ describe('MSW backend API mocks', () => {
     expect(body.chatModels).toHaveLength(1)
     expect(body.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(body.chatModels[0]?.availability).toBe('AVAILABLE')
+  })
+
+  it('returns configured embedding models', async () => {
+    const response = await fetch(apiUrl('/embedding-models'))
+    const body = (await response.json()) as EmbeddingModelsResponse
+
+    expect(response.ok).toBe(true)
+    expect(body.embeddingModels).toHaveLength(2)
+    expect(body.embeddingModels[0]?.id).toBe('local-bge-small')
+    expect(body.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
   })
 
   it('returns a deterministic chat response', async () => {

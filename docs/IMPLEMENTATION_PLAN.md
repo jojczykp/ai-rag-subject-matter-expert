@@ -54,6 +54,8 @@ All implementation items are TODO until delivered and verified.
 - [x] Add `ChatModelRegistry` backed by static `aisme.chat.models` configuration.
 - [x] Require `modelId` on chat requests.
 - [x] Add `GET /chat-models`.
+- [x] Add `GET /embedding-models`.
+- [x] Allow `embeddingModelId` on chat requests without wiring it into retrieval yet.
 - [x] Add `POST /chat`.
 - [x] Add `AiChatService`.
 - [x] Add model availability status and privacy labels to model responses.
@@ -71,6 +73,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add integration tests for `/chat-models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
 - [x] Keep Kover coverage at or above 80% in default verification.
+- [ ] Use selected `embeddingModelId` in retrieval after multi-embedding indexing exists.
 
 ## Milestone 4: Local Ollama Runtime
 

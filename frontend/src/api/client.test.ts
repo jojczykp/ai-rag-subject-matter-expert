@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import { getChatModels, postChat } from './client'
+import { getChatModels, getEmbeddingModels, postChat } from './client'
 import { apiUrl, backendApiBaseUrl } from '../config'
 import { server } from '../test/server'
 
@@ -15,6 +15,18 @@ describe('API client', () => {
     expect(response.chatModels).toHaveLength(1)
     expect(response.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
+  })
+
+  it('loads configured embedding models', async () => {
+    const response = await getEmbeddingModels()
+
+    expect(response.embeddingModels).toHaveLength(2)
+    expect(response.embeddingModels[0]?.id).toBe('local-bge-small')
+    expect(response.embeddingModels[0]?.runtime).toBe('ONNX')
+    expect(response.embeddingModels[0]?.enabled).toBe(true)
+    expect(response.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
+    expect(response.embeddingModels[1]?.runtime).toBe('OLLAMA')
+    expect(response.embeddingModels[1]?.enabled).toBe(false)
   })
 
   it('posts chat requests', async () => {

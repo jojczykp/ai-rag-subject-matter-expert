@@ -244,6 +244,15 @@ curl -s http://localhost:8080/chat-models | jq .
 The response includes each model's availability, capabilities, runtime
 requirements, and whether prompts may leave the local machine.
 
+View the configured embedding models:
+
+```bash
+curl -s http://localhost:8080/embedding-models | jq .
+```
+
+The response includes configured embedding model ids, runtime type, dimensions,
+and whether the model is currently enabled for indexing.
+
 Send a sample chat request:
 
 ```bash
@@ -478,13 +487,16 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
 | `aisme.documents.chunk-size` | `700` | Maximum character count per indexed document chunk. |
 | `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
-| `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter. Currently `ONNX`. |
-| `aisme.embedding.runtimes.<runtime-id>.model-path` | ONNX only | ONNX model file path. |
-| `aisme.embedding.runtimes.<runtime-id>.tokenizer-path` | ONNX only | tokenizer file path. |
+| `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
+| `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
 | `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is active. Exactly one model must be enabled. |
+| `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
 | `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
 | `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |
 | `aisme.embedding.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.embedding.runtimes`. |
+| `aisme.embedding.models.<model-id>.runtime.model-path` | ONNX only | ONNX model file path. |
+| `aisme.embedding.models.<model-id>.runtime.tokenizer-path` | ONNX only | tokenizer file path. |
+| `aisme.embedding.models.<model-id>.runtime.model-name` | Ollama only | Provider model name for Ollama embedding models. |
 | `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
@@ -521,8 +533,6 @@ aisme:
     runtimes:
       local-onnx:
         type: ONNX
-        model-path: ./models/bge-small-en-v1.5/model.onnx
-        tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
     models:
       local-bge-small:
         enabled: true
@@ -530,6 +540,8 @@ aisme:
         dimensions: 384
         runtime:
           id: local-onnx
+          model-path: ./models/bge-small-en-v1.5/model.onnx
+          tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 ```
 
 The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).

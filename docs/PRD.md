@@ -135,6 +135,7 @@ Endpoint names are proposed and may be refined during technical design.
 - [x] `POST /chat` asks a question against the configured subject.
 - [x] Request body includes `message`.
 - [x] Request body includes `modelId`.
+- [x] Request body can include `embeddingModelId` for future retrieval model selection.
 - [x] Response body includes `answer`.
 - [x] Response body includes `modelId`.
 - [x] Response is returned as a single non-streaming JSON response.
@@ -143,6 +144,7 @@ Endpoint names are proposed and may be refined during technical design.
 ### Model API
 
 - [x] `GET /chat-models` lists available models.
+- [x] `GET /embedding-models` lists configured embedding models.
 - [x] Model list indicates online, local server, or embedded offline mode.
 - [x] Model list indicates availability status.
 - [x] Model availability status is one of `CONFIGURED`, `AVAILABLE`,

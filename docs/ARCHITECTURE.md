@@ -119,6 +119,12 @@ runtimes are online-only in the initial scope; local OpenAI-compatible and
 local TGI-compatible servers can be added later as explicit future runtimes if
 needed.
 
+`GET /embedding-models` exposes the configured embedding model catalog. The
+initial implementation keeps indexing on the single enabled embedding model,
+but accepts `embeddingModelId` in chat requests so API clients can start sending
+the intended retrieval model before retrieval and indexing are wired for
+multiple embedding models.
+
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static
 local assets. Updating those files requires restarting the application to
@@ -290,8 +296,6 @@ aisme:
     runtimes:
       local-onnx:
         type: ONNX
-        model-path: ./models/bge-small-en-v1.5/model.onnx
-        tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
     models:
       local-bge-small:
         enabled: true
@@ -299,6 +303,8 @@ aisme:
         dimensions: 384
         runtime:
           id: local-onnx
+          model-path: ./models/bge-small-en-v1.5/model.onnx
+          tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 
   chat:
     api-timeout: 60s
