@@ -112,8 +112,10 @@ In another terminal:
 
 ```bash
 ollama pull llama3.2
-ollama pull nomic-embed-text
+./gradlew :backend:embeddingModelPullOllamaNomicEmbed
 ```
+
+The Gradle task pulls `nomic-embed-text:v1.5`.
 
 ```bash
 ollama list

@@ -31,7 +31,7 @@ export const handlers = [
           enabled: true,
           displayName: 'Ollama Nomic Embed',
           runtime: 'OLLAMA',
-          version: 'latest',
+          version: 'v1.5',
           dimensions: 768,
           availableOffline: false,
         },

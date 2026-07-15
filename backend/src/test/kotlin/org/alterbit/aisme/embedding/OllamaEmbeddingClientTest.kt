@@ -24,12 +24,12 @@ class OllamaEmbeddingClientTest {
         embedding.values shouldBe listOf(0.1, 0.2, 0.3)
         embedding.model shouldBe EmbeddingModelMetadata(
             id = "ollama-nomic-embed",
-            version = "latest",
+            version = "v1.5",
             dimensions = 3,
         )
         api.requests shouldContainExactly listOf(
             OllamaEmbeddingRequest(
-                model = "nomic-embed-text",
+                model = "nomic-embed-text:v1.5",
                 input = "how to cook rice",
             ),
         )
@@ -90,11 +90,11 @@ class OllamaEmbeddingClientTest {
     ): EmbeddingModelProperties =
         EmbeddingModelProperties(
             id = "ollama-nomic-embed",
-            version = "latest",
+            version = "v1.5",
             dimensions = dimensions,
             runtime = EmbeddingModelRuntime.OLLAMA,
             baseUrl = "http://localhost:11434",
-            modelName = "nomic-embed-text",
+            modelName = "nomic-embed-text:v1.5",
         )
 
     private class FakeOllamaEmbeddingApi(

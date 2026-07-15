@@ -28,11 +28,11 @@ aisme:
       ollama-nomic-embed:
         enabled: true
         display-name: Ollama Nomic Embed
-        version: latest
+        version: "v1.5"
         dimensions: 768
         runtime:
           id: local-ollama
-          model-name: nomic-embed-text
+          model-name: nomic-embed-text:v1.5
   chat:
     api-timeout: 60s
     relevant-chunk-limit: 5

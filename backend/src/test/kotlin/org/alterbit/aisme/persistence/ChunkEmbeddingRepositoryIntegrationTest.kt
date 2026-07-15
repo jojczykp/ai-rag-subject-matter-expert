@@ -120,7 +120,7 @@ class ChunkEmbeddingRepositoryIntegrationTest(
                     },
                     model = EmbeddingModelMetadata(
                         id = "ollama-nomic-embed",
-                        version = "latest",
+                        version = "v1.5",
                         dimensions = NOMIC_EMBEDDING_DIMENSIONS,
                     ),
                 ),

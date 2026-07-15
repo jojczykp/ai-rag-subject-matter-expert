@@ -48,11 +48,11 @@ class OllamaEmbeddingClientProviderTest {
         EmbeddingModelConfigProperties(
             enabled = enabled,
             displayName = "Ollama Nomic Embed",
-            version = "latest",
+            version = "v1.5",
             dimensions = 768,
             runtime = EmbeddingModelRuntimeProperties(
                 id = "local-ollama",
-                modelName = "nomic-embed-text",
+                modelName = "nomic-embed-text:v1.5",
             ),
         )
 

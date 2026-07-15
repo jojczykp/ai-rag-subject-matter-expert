@@ -26,10 +26,10 @@ class EmbeddingPropertiesDefaultTest {
             enabledModels[0].tokenizerPath shouldBe "./models/bge-small-en-v1.5/tokenizer.json"
             enabledModels[0].dimensions shouldBe 384
             enabledModels[1].id shouldBe "ollama-nomic-embed"
-            enabledModels[1].version shouldBe "latest"
+            enabledModels[1].version shouldBe "v1.5"
             enabledModels[1].runtime shouldBe EmbeddingModelRuntime.OLLAMA
             enabledModels[1].baseUrl shouldBe "http://localhost:11434"
-            enabledModels[1].modelName shouldBe "nomic-embed-text"
+            enabledModels[1].modelName shouldBe "nomic-embed-text:v1.5"
             enabledModels[1].dimensions shouldBe 768
         }
     }

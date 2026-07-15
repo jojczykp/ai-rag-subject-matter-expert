@@ -76,7 +76,7 @@ This is the selected option.
 Benefits:
 
 - [ ] Simple operational path when Ollama is already running.
-- [x] Can use embedding models such as `nomic-embed-text`.
+- [x] Can use embedding models such as `nomic-embed-text:v1.5`.
 
 Tradeoffs:
 
@@ -112,8 +112,8 @@ This is not the default embedding runtime.
 
 ## Future Considerations
 
-- [ ] Evaluate `nomic-ai/nomic-embed-text-v1.5` as a stronger local model when
-      JVM/ONNX integration is practical.
+- [ ] Evaluate `nomic-ai/nomic-embed-text-v1.5` through local ONNX when
+      JVM integration is practical.
 - [ ] Evaluate ONNX Runtime performance and memory usage with production-sized
       document sets.
 - [ ] Add optional tests with real ONNX model files when a small stable fixture
