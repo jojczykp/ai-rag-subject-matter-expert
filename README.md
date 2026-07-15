@@ -497,6 +497,8 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
 | `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
+| `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |
+| `aisme.embedding.default-model-id` | `ollama-nomic-embed` | Embedding model preselected by API clients and the UI. |
 | `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is indexed and selectable for retrieval. |
 | `aisme.embedding.models.<model-id>.display-order` | optional | Sort order for embedding model selectors and catalog responses. |
 | `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
@@ -510,6 +512,7 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.model-availability.cache-ttl` | `5s` | Time to cache embedding availability check results. |
 | `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
+| `aisme.chat.default-model-id` | `embedded-mistral-7b` | Chat model preselected by API clients and the UI. |
 | `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
 | `aisme.chat.model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
 | `aisme.chat.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |

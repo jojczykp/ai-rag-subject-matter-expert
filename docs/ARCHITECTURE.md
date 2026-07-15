@@ -302,6 +302,8 @@ aisme:
     location: classpath:/subject-documents/
 
   embedding:
+    api-timeout: 60s
+    default-model-id: ollama-nomic-embed
     model-availability:
       timeout: 5s
       cache-ttl: 5s
@@ -319,6 +321,7 @@ aisme:
           tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
 
   chat:
+    default-model-id: embedded-mistral-7b
     api-timeout: 60s
     relevant-chunk-limit: 5
     model-availability:

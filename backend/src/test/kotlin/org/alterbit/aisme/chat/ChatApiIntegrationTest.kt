@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.post
 @SpringBootTest(
     classes = [ChatApiIntegrationTestContext::class],
     properties = [
+        "aisme.chat.default-model-id=local-ollama-llama",
         "aisme.chat.models.local-ollama-llama.enabled=true",
         "aisme.chat.models.local-ollama-llama.display-order=10",
         "aisme.chat.models.local-ollama-llama.display-name=Local Ollama Llama",

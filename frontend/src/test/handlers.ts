@@ -11,16 +11,18 @@ import { availableOllamaModel } from './fixtures'
 export const handlers = [
   http.get(apiUrl('/chat-models'), () =>
     HttpResponse.json<ChatModelsResponse>({
+      defaultChatModelId: 'local-ollama-llama',
       chatModels: [availableOllamaModel],
     }),
   ),
   http.get(apiUrl('/embedding-models'), () =>
     HttpResponse.json<EmbeddingModelsResponse>({
+      defaultEmbeddingModelId: 'ollama-nomic-embed',
       embeddingModels: [
         {
           id: 'local-bge-small',
           enabled: true,
-          displayName: 'Local BGE Small',
+          displayName: 'Local BGE Small (1.5, 384d)',
           runtime: 'ONNX',
           mode: 'EMBEDDED_OFFLINE',
           availability: 'CONFIGURED',
@@ -31,7 +33,7 @@ export const handlers = [
         {
           id: 'ollama-nomic-embed',
           enabled: true,
-          displayName: 'Ollama Nomic Embed',
+          displayName: 'Ollama Nomic Embed (v1.5, 768d)',
           runtime: 'OLLAMA',
           mode: 'LOCAL_SERVER',
           availability: 'AVAILABLE',

@@ -48,6 +48,15 @@ class ConfigurationPropertiesValidationTest {
     }
 
     @Test
+    fun `fails binding invalid embedding api timeout`() {
+        propertyContext(EmbeddingModelPropertiesConfiguration::class.java)
+            .withPropertyValues("aisme.embedding.api-timeout=0s")
+            .run { context ->
+                context.failureMessage() shouldContain "aisme.embedding.api-timeout"
+            }
+    }
+
+    @Test
     fun `fails binding invalid chat configuration`() {
         propertyContext(ChatPropertiesConfiguration::class.java)
             .withPropertyValues("aisme.chat.relevant-chunk-limit=0")

@@ -26,6 +26,9 @@ class EmbeddingModelsControllerTest(
         mockMvc.get("/embedding-models")
             .andExpect {
                 status { isOk() }
+                jsonPath("$.defaultEmbeddingModelId") {
+                    value("ollama-nomic-embed")
+                }
                 jsonPath("$.embeddingModels.length()") {
                     value(2)
                 }
@@ -36,7 +39,7 @@ class EmbeddingModelsControllerTest(
                     value(true)
                 }
                 jsonPath("$.embeddingModels[0].displayName") {
-                    value("Local BGE Small")
+                    value("Local BGE Small (1.5, 384d)")
                 }
                 jsonPath("$.embeddingModels[0].runtime") {
                     value("ONNX")

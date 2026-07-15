@@ -11,6 +11,7 @@ class EmbeddingModelsController(
     @GetMapping("/embedding-models")
     fun embeddingModels(): EmbeddingModelsResponseDto =
         EmbeddingModelsResponseDto(
+            defaultEmbeddingModelId = embeddingModelRegistry.defaultModelId(),
             embeddingModels = embeddingModelAvailabilityService
                 .withAvailability(embeddingModelRegistry.embeddingModels())
                 .map { it.toDto() },

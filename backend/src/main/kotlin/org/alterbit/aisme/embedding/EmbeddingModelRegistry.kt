@@ -39,8 +39,14 @@ class EmbeddingModelRegistry(
             logger.info("Configured {} embedding model(s)", models.size)
         }
 
+    private val defaultModelId: String? = properties.defaultModelId
+        ?: embeddingModels.firstOrNull { it.enabled }?.id
+
     fun embeddingModels(): List<EmbeddingModelDescriptor> =
         embeddingModels
+
+    fun defaultModelId(): String? =
+        defaultModelId
 
     fun enabledEmbeddingModelProperties(): List<EmbeddingModelProperties> =
         properties.enabledModels()

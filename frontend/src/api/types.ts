@@ -33,6 +33,7 @@ export type ChatModel = {
 }
 
 export type ChatModelsResponse = {
+  defaultChatModelId: string | null
   chatModels: ChatModel[]
 }
 
@@ -56,6 +57,7 @@ export type EmbeddingModel = {
 }
 
 export type EmbeddingModelsResponse = {
+  defaultEmbeddingModelId: string | null
   embeddingModels: EmbeddingModel[]
 }
 

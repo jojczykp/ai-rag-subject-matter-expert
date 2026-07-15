@@ -12,6 +12,7 @@ describe('MSW backend API mocks', () => {
     const body = (await response.json()) as ChatModelsResponse
 
     expect(response.ok).toBe(true)
+    expect(body.defaultChatModelId).toBe('local-ollama-llama')
     expect(body.chatModels).toHaveLength(1)
     expect(body.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(body.chatModels[0]?.availability).toBe('AVAILABLE')
@@ -22,6 +23,7 @@ describe('MSW backend API mocks', () => {
     const body = (await response.json()) as EmbeddingModelsResponse
 
     expect(response.ok).toBe(true)
+    expect(body.defaultEmbeddingModelId).toBe('ollama-nomic-embed')
     expect(body.embeddingModels).toHaveLength(2)
     expect(body.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(body.embeddingModels[0]?.availability).toBe('CONFIGURED')

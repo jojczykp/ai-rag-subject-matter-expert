@@ -9,6 +9,8 @@ aisme:
     chunk-size: 700
     chunk-overlap: 100
   embedding:
+    api-timeout: 60s
+    default-model-id: ollama-nomic-embed
     model-availability:
       timeout: 5s
       cache-ttl: 5s
@@ -22,7 +24,7 @@ aisme:
       local-bge-small:
         enabled: true
         display-order: 10
-        display-name: Local BGE Small
+        display-name: Local BGE Small (1.5, 384d)
         version: "1.5"
         dimensions: 384
         runtime:
@@ -32,13 +34,14 @@ aisme:
       ollama-nomic-embed:
         enabled: true
         display-order: 20
-        display-name: Ollama Nomic Embed
+        display-name: Ollama Nomic Embed (v1.5, 768d)
         version: "v1.5"
         dimensions: 768
         runtime:
           id: local-ollama
           model-name: nomic-embed-text:v1.5
   chat:
+    default-model-id: embedded-mistral-7b
     api-timeout: 60s
     relevant-chunk-limit: 5
     model-availability:

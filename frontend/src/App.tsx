@@ -35,8 +35,23 @@ function App() {
         if (!active) {
           return
         }
-        setModels(chatModelsResponse.chatModels)
-        setEmbeddingModels(embeddingModelsResponse.embeddingModels)
+        const chatModels = chatModelsResponse.chatModels
+        const embeddingModels = embeddingModelsResponse.embeddingModels
+        const enabledEmbeddingModels = embeddingModels.filter(
+          (model) => model.enabled,
+        )
+
+        setModels(chatModels)
+        setEmbeddingModels(embeddingModels)
+        setSelectedModelId(
+          defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
+        )
+        setSelectedEmbeddingModelId(
+          defaultModelId(
+            enabledEmbeddingModels,
+            embeddingModelsResponse.defaultEmbeddingModelId,
+          ),
+        )
         setModelsError(null)
       })
       .catch((error: unknown) => {
@@ -89,7 +104,7 @@ function App() {
   const selectionSummary =
     selectedModel && selectedEmbeddingModel
       ? `Chat: ${selectedModel.displayName} · Embedding: ${selectedEmbeddingModel.displayName}`
-      : 'Choose models to start'
+      : null
 
   async function submitChat() {
     if (sendDisabled || !selectedModel || !selectedEmbeddingModel) {
@@ -152,7 +167,6 @@ function App() {
             }
             disabled={modelsLoading || enabledEmbeddingModels.length === 0}
           >
-            <option value="">Select an embedding model</option>
             {enabledEmbeddingModels.map((model) => (
               <option key={model.id} value={model.id}>
                 {embeddingModelOptionLabel(model)}
@@ -171,7 +185,6 @@ function App() {
             onChange={(event) => setSelectedModelId(event.target.value)}
             disabled={modelsLoading || models.length === 0}
           >
-            <option value="">Select a chat model</option>
             {models.map((model) => (
               <option key={model.id} value={model.id}>
                 {model.displayName}
@@ -204,14 +217,16 @@ function App() {
             <p className="eyebrow">Single subject</p>
             <h2 id="chat-heading">Ask a question</h2>
           </div>
-          <p className="chat-summary">{selectionSummary}</p>
+          {selectionSummary && (
+            <p className="chat-summary">{selectionSummary}</p>
+          )}
         </div>
 
         <div className="messages" aria-live="polite">
           {chatMessages.length === 0 ? (
             <div className="empty-state">
-              Select embedding and chat models, ask a question, and the answer
-              will use the indexed bundled documents as context.
+              Ask a question and the answer will use the indexed bundled
+              documents as context.
             </div>
           ) : (
             chatMessages.map((chatMessage) => (
@@ -283,6 +298,20 @@ function renderMessageContent(content: string): ReactNode[] {
   return nodes
 }
 
+function defaultModelId<T extends { id: string }>(
+  models: T[],
+  configuredDefaultModelId: string | null,
+): string {
+  if (
+    configuredDefaultModelId &&
+    models.some((model) => model.id === configuredDefaultModelId)
+  ) {
+    return configuredDefaultModelId
+  }
+
+  return models[0]?.id ?? ''
+}
+
 function EmbeddingModelDetails({
   model,
 }: {
@@ -324,11 +353,7 @@ function EmbeddingModelDetails({
 }
 
 function embeddingModelOptionLabel(model: EmbeddingModel): string {
-  if (!model.version) {
-    return model.displayName
-  }
-
-  return `${model.displayName} (${model.version})`
+  return model.displayName
 }
 
 function embeddingQueryMayLeaveLocalMachine(model: EmbeddingModel): boolean {

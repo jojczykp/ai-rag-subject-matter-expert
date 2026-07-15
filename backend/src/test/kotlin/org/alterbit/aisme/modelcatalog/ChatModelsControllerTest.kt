@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.get
 @SpringBootTest(
     classes = [ChatModelsControllerTestContext::class],
     properties = [
+        "aisme.chat.default-model-id=local-ollama-llama",
         "aisme.chat.models.local-ollama-llama.enabled=true",
         "aisme.chat.models.local-ollama-llama.display-order=10",
         "aisme.chat.models.local-ollama-llama.display-name=Local Ollama Llama",
@@ -47,6 +48,9 @@ class ChatModelsControllerTest(
         mockMvc.get("/chat-models")
             .andExpect {
                 status { isOk() }
+                jsonPath("$.defaultChatModelId") {
+                    value("local-ollama-llama")
+                }
                 jsonPath("$.chatModels.length()") {
                     value(2)
                 }

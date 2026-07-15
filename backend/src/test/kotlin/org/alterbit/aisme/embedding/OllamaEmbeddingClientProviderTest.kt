@@ -26,6 +26,7 @@ class OllamaEmbeddingClientProviderTest {
                 ),
             ),
             embeddingApiFactory = factory,
+            embeddingProperties = EmbeddingProperties(),
         )
 
         provider.clients().map(EmbeddingClient::modelId) shouldContainExactly listOf("ollama-nomic-embed")

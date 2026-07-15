@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ChatModelRegistry(
-    properties: ChatModelsProperties,
+    private val properties: ChatModelsProperties,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -48,8 +48,19 @@ class ChatModelRegistry(
             }
         }
 
+    private val defaultModelId: String? = properties.defaultModelId
+        ?.also { configuredDefaultModelId ->
+            require(modelsById.containsKey(configuredDefaultModelId)) {
+                "aisme.chat.default-model-id references unknown or disabled model '$configuredDefaultModelId'"
+            }
+        }
+        ?: modelsById.keys.firstOrNull()
+
     fun chatModels(): List<ChatModelDescriptor> =
         modelsById.values.toList()
+
+    fun defaultModelId(): String? =
+        defaultModelId
 
     fun findById(modelId: String): ChatModelDescriptor? =
         modelsById[modelId]

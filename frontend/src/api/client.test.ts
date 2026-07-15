@@ -12,6 +12,7 @@ describe('API client', () => {
   it('loads configured models', async () => {
     const response = await getChatModels()
 
+    expect(response.defaultChatModelId).toBe('local-ollama-llama')
     expect(response.chatModels).toHaveLength(1)
     expect(response.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
@@ -20,6 +21,7 @@ describe('API client', () => {
   it('loads configured embedding models', async () => {
     const response = await getEmbeddingModels()
 
+    expect(response.defaultEmbeddingModelId).toBe('ollama-nomic-embed')
     expect(response.embeddingModels).toHaveLength(2)
     expect(response.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(response.embeddingModels[0]?.runtime).toBe('ONNX')

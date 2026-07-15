@@ -1,10 +1,14 @@
 package org.alterbit.aisme.embedding
 
+import java.time.Duration
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.Name
 
 @ConfigurationProperties(prefix = "aisme.embedding")
 data class EmbeddingProperties(
+    val apiTimeout: Duration = Duration.ofSeconds(60),
+    @param:Name("default-model-id")
+    val defaultModelId: String? = null,
     @param:Name("runtimes")
     val runtimesById: Map<String, EmbeddingRuntimeConfigProperties> = mapOf(
         "local-onnx" to EmbeddingRuntimeConfigProperties(
@@ -43,6 +47,12 @@ data class EmbeddingProperties(
     ),
 ) {
     init {
+        require(apiTimeout.isPositive) {
+            "aisme.embedding.api-timeout must be greater than zero"
+        }
+        require(defaultModelId == null || defaultModelId.isNotBlank()) {
+            "aisme.embedding.default-model-id must not be blank when configured"
+        }
         require(runtimesById.isNotEmpty()) {
             "aisme.embedding.runtimes must contain at least one runtime"
         }
@@ -54,6 +64,9 @@ data class EmbeddingProperties(
         }
         require(modelsById.keys.none { it.isBlank() }) {
             "aisme.embedding.models must not contain blank ids"
+        }
+        require(defaultModelId == null || modelsById[defaultModelId]?.enabled == true) {
+            "aisme.embedding.default-model-id references unknown or disabled model '$defaultModelId'"
         }
     }
 

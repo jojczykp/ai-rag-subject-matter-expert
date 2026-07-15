@@ -10,26 +10,18 @@ import { server } from './test/server'
 
 describe('App', () => {
   it('loads models and shows selected model details', async () => {
-    const user = userEvent.setup()
-
     const { container } = render(<App />)
 
     expect(screen.getByText('Loading configured models...')).toBeVisible()
 
-    await user.selectOptions(
-      await screen.findByLabelText('Embedding Model'),
+    expect(await screen.findByLabelText('Embedding Model')).toHaveValue(
       'ollama-nomic-embed',
     )
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
+    expect(screen.getByLabelText('Chat Model')).toHaveValue(
       'local-ollama-llama',
     )
-
-    expect(screen.getByLabelText('Embedding Model')).toHaveValue(
-      'ollama-nomic-embed',
-    )
     expect(
-      screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5)' }),
+      screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5, 768d)' }),
     ).toBeVisible()
     expect(screen.getByText('768')).toBeVisible()
     expect(screen.getAllByText('Local server')).toHaveLength(2)
@@ -37,20 +29,27 @@ describe('App', () => {
     expect(screen.getAllByText('Available')).toHaveLength(2)
     expect(
       screen.getByText(
-        'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed',
+        'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
       ),
     ).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-green')).toHaveLength(
       2,
     )
+    expect(screen.queryByText('Choose models to start')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('option', { name: 'Select an embedding model' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('option', { name: 'Select a chat model' }),
+    ).not.toBeInTheDocument()
     expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
   })
 
   it('shows misconfigured availability with a gray status dot', async () => {
-    const user = userEvent.setup()
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
+          defaultChatModelId: 'local-ollama-llama',
           chatModels: [
             {
               ...availableOllamaModel,
@@ -63,16 +62,13 @@ describe('App', () => {
 
     const { container } = render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
-      'local-ollama-llama',
-    )
+    await screen.findByLabelText('Chat Model')
 
     expect(screen.getByText('Misconfigured')).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-gray')).toHaveLength(1)
   })
 
-  it('requires a selected model and message before sending', async () => {
+  it('requires a message before sending with default models', async () => {
     const user = userEvent.setup()
 
     render(<App />)
@@ -81,21 +77,13 @@ describe('App', () => {
 
     expect(sendButton).toBeDisabled()
 
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
+
+    expect(sendButton).toBeDisabled()
+
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
-
-    expect(sendButton).toBeDisabled()
-
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
-      'local-ollama-llama',
-    )
-
-    expect(sendButton).toBeDisabled()
-
-    await user.selectOptions(
-      await screen.findByLabelText('Embedding Model'),
-      'ollama-nomic-embed',
-    )
 
     expect(sendButton).toBeEnabled()
   })
@@ -117,7 +105,9 @@ describe('App', () => {
 
     render(<App />)
 
-    await selectDefaultModels(user)
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -147,7 +137,9 @@ describe('App', () => {
 
     render(<App />)
 
-    await selectDefaultModels(user)
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -164,7 +156,9 @@ describe('App', () => {
 
     render(<App />)
 
-    await selectDefaultModels(user)
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
     await user.type(screen.getByLabelText('Message'), 'How should I cook rice?')
     await user.keyboard('{Enter}')
 
@@ -179,7 +173,9 @@ describe('App', () => {
 
     render(<App />)
 
-    await selectDefaultModels(user)
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
 
     const messageField = screen.getByLabelText('Message')
     await user.type(messageField, 'Line one')
@@ -207,7 +203,9 @@ describe('App', () => {
 
     render(<App />)
 
-    await selectDefaultModels(user)
+    await screen.findByText(
+      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+    )
     await user.type(screen.getByLabelText('Message'), 'Will this fail?')
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -219,6 +217,7 @@ describe('App', () => {
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
+          defaultChatModelId: 'local-ollama-llama',
           chatModels: [
             {
               ...availableOllamaModel,
@@ -231,14 +230,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Embedding Model'),
-      'ollama-nomic-embed',
-    )
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
-      'local-ollama-llama',
-    )
+    await screen.findByLabelText('Embedding Model')
     await user.type(screen.getByLabelText('Message'), 'Can I use it?')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
@@ -277,6 +269,7 @@ describe('App', () => {
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
+          defaultChatModelId: 'local-ollama-llama',
           chatModels: [
             {
               ...availableOllamaModel,
@@ -293,10 +286,7 @@ describe('App', () => {
       await screen.findByLabelText('Embedding Model'),
       'local-bge-small',
     )
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
-      'local-ollama-llama',
-    )
+    await screen.findByLabelText('Chat Model')
     await user.type(screen.getByLabelText('Message'), 'Can I use it?')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
@@ -305,14 +295,3 @@ describe('App', () => {
     ).toBeVisible()
   })
 })
-
-async function selectDefaultModels(user: ReturnType<typeof userEvent.setup>) {
-  await user.selectOptions(
-    await screen.findByLabelText('Embedding Model'),
-    'ollama-nomic-embed',
-  )
-  await user.selectOptions(
-    await screen.findByLabelText('Chat Model'),
-    'local-ollama-llama',
-  )
-}

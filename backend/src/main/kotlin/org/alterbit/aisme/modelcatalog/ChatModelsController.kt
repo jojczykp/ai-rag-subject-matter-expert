@@ -11,6 +11,7 @@ class ChatModelsController(
     @GetMapping("/chat-models")
     fun chatModels(): ChatModelsResponseDto =
         ChatModelsResponseDto(
+            defaultChatModelId = chatModelRegistry.defaultModelId(),
             chatModels = chatModelAvailabilityService
                 .withAvailability(chatModelRegistry.chatModels())
                 .map { it.toDto() },

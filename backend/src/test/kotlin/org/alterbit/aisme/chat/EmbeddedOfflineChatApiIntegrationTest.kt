@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.post
 @SpringBootTest(
     classes = [EmbeddedOfflineChatApiIntegrationTestContext::class],
     properties = [
+        "aisme.chat.default-model-id=embedded-ready",
         "aisme.chat.models.embedded-ready.enabled=true",
         "aisme.chat.models.embedded-ready.display-order=10",
         "aisme.chat.models.embedded-ready.display-name=Embedded Ready",

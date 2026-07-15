@@ -115,6 +115,7 @@ private class RestClientOllamaEmbeddingApi(
 class OllamaEmbeddingClientProvider(
     embeddingModelRegistry: EmbeddingModelRegistry,
     embeddingApiFactory: OllamaEmbeddingApiFactory,
+    embeddingProperties: EmbeddingProperties,
 ) : EmbeddingClientProvider {
     private val clients: List<OllamaEmbeddingClient> = embeddingModelRegistry
         .enabledEmbeddingModelProperties()
@@ -122,7 +123,10 @@ class OllamaEmbeddingClientProvider(
         .map { properties ->
             OllamaEmbeddingClient(
                 properties = properties,
-                embeddingApi = embeddingApiFactory.create(properties.requireBaseUrl()),
+                embeddingApi = embeddingApiFactory.create(
+                    baseUrl = properties.requireBaseUrl(),
+                    apiTimeout = embeddingProperties.apiTimeout,
+                ),
             )
         }
 
