@@ -3,6 +3,8 @@ package org.alterbit.aisme.chat
 import io.kotest.matchers.collections.shouldContainExactly
 import java.time.Clock
 import java.time.Duration
+import org.alterbit.aisme.chat.api.ChatExceptionHandler
+import org.alterbit.aisme.embedding.api.EmbeddingExceptionHandler
 import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.api.ChatController
 import org.alterbit.aisme.chat.api.ChatModelsController
@@ -133,6 +135,8 @@ class ChatApiIntegrationTest(
     AiChatService::class,
     AiModelClients::class,
     ApiExceptionHandler::class,
+    ChatExceptionHandler::class,
+    EmbeddingExceptionHandler::class,
     ChatController::class,
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,

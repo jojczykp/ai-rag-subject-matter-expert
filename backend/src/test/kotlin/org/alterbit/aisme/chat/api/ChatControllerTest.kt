@@ -7,6 +7,8 @@ import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.ChatProperties
 import org.alterbit.aisme.chat.FakeAiModelClient
+import org.alterbit.aisme.chat.api.ChatExceptionHandler
+import org.alterbit.aisme.embedding.api.EmbeddingExceptionHandler
 import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
@@ -149,6 +151,8 @@ class ChatControllerTest(
     AiChatService::class,
     AiModelClients::class,
     ApiExceptionHandler::class,
+    ChatExceptionHandler::class,
+    EmbeddingExceptionHandler::class,
     ChatController::class,
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
