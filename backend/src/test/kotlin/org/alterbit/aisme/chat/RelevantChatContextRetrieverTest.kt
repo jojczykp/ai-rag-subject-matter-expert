@@ -43,7 +43,7 @@ class RelevantChatContextRetrieverTest {
             ),
         )
         val retriever = RelevantChatContextRetriever(
-            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            chatProperties = ChatProperties(retrievedChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(chunkSize = 700, chunkOverlap = 100),
             embeddingClients = EmbeddingClients(listOf(EmbeddingClientProvider { listOf(embeddingClient) })),
             relevantChunkRetriever = relevantChunkRetriever,
@@ -75,7 +75,7 @@ class RelevantChatContextRetrieverTest {
     @Test
     fun `returns empty context when no relevant chunks are found`() {
         val retriever = RelevantChatContextRetriever(
-            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            chatProperties = ChatProperties(retrievedChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
@@ -130,7 +130,7 @@ class RelevantChatContextRetrieverTest {
         )
         val relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList())
         val retriever = RelevantChatContextRetriever(
-            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            chatProperties = ChatProperties(retrievedChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
@@ -157,7 +157,7 @@ class RelevantChatContextRetrieverTest {
     @Test
     fun `requires selected embedding model when multiple embedding clients are enabled`() {
         val retriever = RelevantChatContextRetriever(
-            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            chatProperties = ChatProperties(retrievedChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
@@ -203,7 +203,7 @@ class RelevantChatContextRetrieverTest {
     @Test
     fun `rejects unknown selected embedding model`() {
         val retriever = RelevantChatContextRetriever(
-            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            chatProperties = ChatProperties(retrievedChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(

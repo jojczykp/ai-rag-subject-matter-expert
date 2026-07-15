@@ -27,9 +27,9 @@ class ChatPropertiesTest {
     @Test
     fun `rejects non-positive relevant chunk limit`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            ChatProperties(relevantChunkLimit = 0)
+            ChatProperties(retrievedChunkLimit = 0)
         }
 
-        exception.message shouldContain "aisme.chat.relevant-chunk-limit"
+        exception.message shouldContain "aisme.chat.retrieved-chunk-limit"
     }
 }

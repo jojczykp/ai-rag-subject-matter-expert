@@ -59,9 +59,9 @@ class ConfigurationPropertiesValidationTest {
     @Test
     fun `fails binding invalid chat configuration`() {
         propertyContext(ChatPropertiesConfiguration::class.java)
-            .withPropertyValues("aisme.chat.relevant-chunk-limit=0")
+            .withPropertyValues("aisme.chat.retrieved-chunk-limit=0")
             .run { context ->
-                context.failureMessage() shouldContain "aisme.chat.relevant-chunk-limit"
+                context.failureMessage() shouldContain "aisme.chat.retrieved-chunk-limit"
             }
     }
 

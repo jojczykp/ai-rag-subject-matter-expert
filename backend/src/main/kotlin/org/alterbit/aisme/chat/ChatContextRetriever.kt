@@ -25,7 +25,7 @@ class RelevantChatContextRetriever(
         logger.info(
             "Retrieving chat context with embedding model '{}' and chunk limit {}",
             embeddingModelId ?: "<default>",
-            chatProperties.relevantChunkLimit,
+            chatProperties.retrievedChunkLimit,
         )
         val embeddingClient = embeddingClients.getByModelIdOrDefaultOrThrow(embeddingModelId)
         val embedding = embeddingClient.embed(message)
@@ -35,7 +35,7 @@ class RelevantChatContextRetriever(
                     embedding = embedding.values,
                     embeddingModel = embedding.model,
                     chunkingStrategyVersion = documentsProperties.chunkingStrategyVersion(),
-                    limit = chatProperties.relevantChunkLimit,
+                    limit = chatProperties.retrievedChunkLimit,
                 ),
             )
             .map { it.toContextChunk() }

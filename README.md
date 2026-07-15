@@ -511,7 +511,7 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.model-availability.timeout` | `5s` | Timeout for embedding runtime availability checks. |
 | `aisme.embedding.model-availability.cache-ttl` | `5s` | Time to cache embedding availability check results. |
 | `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
-| `aisme.chat.relevant-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
+| `aisme.chat.retrieved-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
 | `aisme.chat.default-model-id` | `embedded-mistral-7b` | Chat model preselected by API clients and the UI. |
 | `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
 | `aisme.chat.model-availability.cache-ttl` | `5s` | Time to cache availability check results. |

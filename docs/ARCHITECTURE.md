@@ -323,7 +323,7 @@ aisme:
   chat:
     default-model-id: embedded-mistral-7b
     api-timeout: 60s
-    relevant-chunk-limit: 5
+    retrieved-chunk-limit: 5
     model-availability:
       timeout: 5s
       cache-ttl: 5s

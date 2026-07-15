@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "aisme.chat")
 data class ChatProperties(
     val apiTimeout: Duration = Duration.ofSeconds(60),
-    val relevantChunkLimit: Int = 5,
+    val retrievedChunkLimit: Int = 5,
 ) {
     init {
         require(apiTimeout.isPositive) { "aisme.chat.api-timeout must be greater than zero" }
-        require(relevantChunkLimit > 0) { "aisme.chat.relevant-chunk-limit must be greater than zero" }
+        require(retrievedChunkLimit > 0) { "aisme.chat.retrieved-chunk-limit must be greater than zero" }
     }
 }
