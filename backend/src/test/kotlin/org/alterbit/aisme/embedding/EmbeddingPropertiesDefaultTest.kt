@@ -1,5 +1,6 @@
 package org.alterbit.aisme.embedding
 
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
@@ -14,22 +15,26 @@ class EmbeddingPropertiesDefaultTest {
     @Test
     fun `uses configured default embedding model catalog`() {
         contextRunner.run { context ->
-            val properties = context.getBean<EmbeddingModelProperties>()
+            val properties = context.getBean<EmbeddingProperties>()
+            val enabledModels = properties.enabledModels()
 
-            properties.id shouldBe "local-bge-small"
-            properties.version shouldBe "1.5"
-            properties.runtime shouldBe EmbeddingModelRuntime.ONNX
-            properties.modelPath shouldBe "./models/bge-small-en-v1.5/model.onnx"
-            properties.tokenizerPath shouldBe "./models/bge-small-en-v1.5/tokenizer.json"
-            properties.dimensions shouldBe 384
+            enabledModels shouldHaveSize 2
+            enabledModels[0].id shouldBe "local-bge-small"
+            enabledModels[0].version shouldBe "1.5"
+            enabledModels[0].runtime shouldBe EmbeddingModelRuntime.ONNX
+            enabledModels[0].modelPath shouldBe "./models/bge-small-en-v1.5/model.onnx"
+            enabledModels[0].tokenizerPath shouldBe "./models/bge-small-en-v1.5/tokenizer.json"
+            enabledModels[0].dimensions shouldBe 384
+            enabledModels[1].id shouldBe "ollama-nomic-embed"
+            enabledModels[1].version shouldBe "latest"
+            enabledModels[1].runtime shouldBe EmbeddingModelRuntime.OLLAMA
+            enabledModels[1].baseUrl shouldBe "http://localhost:11434"
+            enabledModels[1].modelName shouldBe "nomic-embed-text"
+            enabledModels[1].dimensions shouldBe 768
         }
     }
 
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties(EmbeddingProperties::class)
-    private class PropertiesConfiguration {
-        @org.springframework.context.annotation.Bean
-        fun embeddingModelProperties(properties: EmbeddingProperties): EmbeddingModelProperties =
-            properties.activeModel()
-    }
+    private class PropertiesConfiguration
 }

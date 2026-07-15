@@ -7,6 +7,8 @@ data class EmbeddingModelProperties(
     val runtime: EmbeddingModelRuntime = EmbeddingModelRuntime.ONNX,
     val modelPath: String = "./models/bge-small-en-v1.5/model.onnx",
     val tokenizerPath: String = "./models/bge-small-en-v1.5/tokenizer.json",
+    val baseUrl: String? = null,
+    val modelName: String? = null,
 ) {
     val metadata: EmbeddingModelMetadata
         get() = EmbeddingModelMetadata(
@@ -19,7 +21,16 @@ data class EmbeddingModelProperties(
         require(id.isNotBlank()) { "embedding model id must not be blank" }
         require(version.isNotBlank()) { "embedding model version must not be blank" }
         require(dimensions > 0) { "embedding model dimensions must be greater than 0" }
-        require(modelPath.isNotBlank()) { "embedding model model-path must not be blank" }
-        require(tokenizerPath.isNotBlank()) { "embedding model tokenizer-path must not be blank" }
+        when (runtime) {
+            EmbeddingModelRuntime.ONNX -> {
+                require(modelPath.isNotBlank()) { "embedding model model-path must not be blank" }
+                require(tokenizerPath.isNotBlank()) { "embedding model tokenizer-path must not be blank" }
+            }
+
+            EmbeddingModelRuntime.OLLAMA -> {
+                require(!baseUrl.isNullOrBlank()) { "embedding model base-url must not be blank" }
+                require(!modelName.isNullOrBlank()) { "embedding model model-name must not be blank" }
+            }
+        }
     }
 }

@@ -6,10 +6,10 @@ Accepted.
 
 ## Context
 
-ADR-001 selects one statically configured embedding model for document chunk
-and query embeddings. That model should preferably run locally so document
-indexing and query embedding generation do not require a network call and can
-support offline operation.
+ADR-001 selects a dedicated embedding model catalog for document chunk and
+query embeddings. Those models should preferably be able to run locally so
+document indexing and query embedding generation do not require a network call
+and can support offline operation.
 
 Using Ollama for embeddings is possible, but it requires a running local Ollama
 server. The application should also support calculating embeddings internally
@@ -30,7 +30,7 @@ Initial recommended model direction:
 - [x] Use `384` embedding dimensions for the initial local ONNX model.
 - [x] Store model files outside the application JAR.
 - [x] Configure model and tokenizer paths through application configuration.
-- [ ] Keep Ollama embeddings as an alternative runtime, not the default
+- [x] Keep Ollama embeddings as an alternative runtime, not the default
       embedded embedding path.
 
 Example configuration:
@@ -76,7 +76,7 @@ This is the selected option.
 Benefits:
 
 - [ ] Simple operational path when Ollama is already running.
-- [ ] Can use embedding models such as `nomic-embed-text`.
+- [x] Can use embedding models such as `nomic-embed-text`.
 
 Tradeoffs:
 

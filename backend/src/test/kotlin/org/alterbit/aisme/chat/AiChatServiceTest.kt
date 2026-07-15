@@ -56,7 +56,32 @@ class AiChatServiceTest {
             ),
         )
         chatContextRetriever.messages shouldContainExactly listOf("How should I cook rice?")
+        chatContextRetriever.embeddingModelIds shouldContainExactly listOf(null)
         cloudModelClient.requests shouldContainExactly emptyList()
+    }
+
+    @Test
+    fun `passes selected embedding model id to context retrieval`() {
+        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val chatContextRetriever = FakeChatContextRetriever(contextChunks())
+        val service = AiChatService(
+            chatModelRegistry = chatModelRegistry(),
+            chatModelAvailabilityService = chatModelAvailabilityService(),
+            chatProperties = ChatProperties(),
+            chatContextRetriever = chatContextRetriever,
+            aiModelClients = aiModelClients(modelClient),
+        )
+
+        service.chat(
+            ChatRequestDto(
+                modelId = "local-ollama-llama",
+                embeddingModelId = "local-bge-small",
+                message = "How should I cook rice?",
+            ),
+        )
+
+        chatContextRetriever.messages shouldContainExactly listOf("How should I cook rice?")
+        chatContextRetriever.embeddingModelIds shouldContainExactly listOf("local-bge-small")
     }
 
     @Test
@@ -344,9 +369,11 @@ class AiChatServiceTest {
         private val chunks: List<AiModelContextChunk> = emptyList(),
     ) : ChatContextRetriever {
         val messages = mutableListOf<String>()
+        val embeddingModelIds = mutableListOf<String?>()
 
-        override fun retrieve(message: String): List<AiModelContextChunk> {
+        override fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk> {
             messages += message
+            embeddingModelIds += embeddingModelId
             return chunks
         }
     }

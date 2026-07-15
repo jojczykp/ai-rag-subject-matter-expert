@@ -13,30 +13,32 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import org.springframework.stereotype.Component
 
-@Component
 class OnnxEmbeddingClient(
     private val properties: EmbeddingModelProperties,
     loader: OnnxEmbeddingModelLoader,
 ) : EmbeddingClient {
-    private val model: LoadedEmbeddingModel = loader.load(properties)
+    override val modelId: String = properties.id
+    override val model: EmbeddingModelMetadata = properties.metadata
+
+    private val loadedModel: LoadedEmbeddingModel = loader.load(properties)
 
     override fun embed(text: String): EmbeddingVector {
         require(text.isNotBlank()) { "text must not be blank" }
 
-        val values = model.embed(text)
-        require(values.size == properties.metadata.dimensions) {
-            "ONNX embedding dimensions ${values.size} did not match configured dimensions ${properties.metadata.dimensions}"
+        val values = loadedModel.embed(text)
+        require(values.size == model.dimensions) {
+            "ONNX embedding dimensions ${values.size} did not match configured dimensions ${model.dimensions}"
         }
 
         return EmbeddingVector(
             values = values,
-            model = properties.metadata,
+            model = model,
         )
     }
 
     @PreDestroy
     fun close() {
-        model.close()
+        loadedModel.close()
     }
 }
 
@@ -86,6 +88,30 @@ class DefaultOnnxEmbeddingModelLoader : OnnxEmbeddingModelLoader {
             throw EmbeddingException("Configured ONNX embedding $label file is not readable: $path")
         }
         return path
+    }
+}
+
+@Component
+class OnnxEmbeddingClientProvider(
+    embeddingModelRegistry: EmbeddingModelRegistry,
+    loader: OnnxEmbeddingModelLoader,
+) : EmbeddingClientProvider {
+    private val clients: List<OnnxEmbeddingClient> = embeddingModelRegistry
+        .enabledEmbeddingModelProperties()
+        .filter { it.runtime == EmbeddingModelRuntime.ONNX }
+        .map { properties ->
+            OnnxEmbeddingClient(
+                properties = properties,
+                loader = loader,
+            )
+        }
+
+    override fun clients(): List<EmbeddingClient> =
+        clients
+
+    @PreDestroy
+    fun close() {
+        clients.forEach(OnnxEmbeddingClient::close)
     }
 }
 

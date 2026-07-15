@@ -3,6 +3,7 @@ package org.alterbit.aisme.api
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
+import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
 import org.springframework.http.HttpStatus
@@ -40,6 +41,15 @@ class ApiExceptionHandler {
             code = ApiErrorCode.MODEL_NOT_FOUND,
             message = "Configured chat model was not found.",
             details = mapOf("modelId" to exception.modelId),
+        )
+
+    @ExceptionHandler(EmbeddingModelNotFoundException::class)
+    fun handleEmbeddingModelNotFound(exception: EmbeddingModelNotFoundException): ResponseEntity<ApiErrorResponse> =
+        error(
+            status = HttpStatus.NOT_FOUND,
+            code = ApiErrorCode.MODEL_NOT_FOUND,
+            message = "Configured embedding model was not found.",
+            details = mapOf("embeddingModelId" to exception.modelId),
         )
 
     @ExceptionHandler(ChatModelUnavailableException::class)

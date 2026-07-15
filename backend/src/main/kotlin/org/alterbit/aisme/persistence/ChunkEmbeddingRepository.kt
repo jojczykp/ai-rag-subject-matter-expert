@@ -70,10 +70,9 @@ class ChunkEmbeddingRepository(
                 :chunkingStrategyVersion,
                 :embeddedAt
             )
-            ON CONFLICT (document_chunk_id)
+            ON CONFLICT (document_chunk_id, embedding_model_id)
             DO UPDATE SET
                 embedding = EXCLUDED.embedding,
-                embedding_model_id = EXCLUDED.embedding_model_id,
                 embedding_model_version = EXCLUDED.embedding_model_version,
                 embedding_dimensions = EXCLUDED.embedding_dimensions,
                 chunking_strategy_version = EXCLUDED.chunking_strategy_version,

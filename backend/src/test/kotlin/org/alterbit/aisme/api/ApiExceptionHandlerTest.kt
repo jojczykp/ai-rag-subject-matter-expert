@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import org.alterbit.aisme.chat.AiModelClientNotFoundException
 import org.alterbit.aisme.chat.AiModelProviderException
 import org.alterbit.aisme.chat.AiModelProviderTimeoutException
+import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelAvailability
 import org.alterbit.aisme.modelcatalog.ChatModelNotFoundException
 import org.alterbit.aisme.modelcatalog.ChatModelUnavailableException
@@ -54,6 +55,17 @@ class ApiExceptionHandlerTest {
         body.code shouldBe ApiErrorCode.MODEL_NOT_FOUND
         body.message shouldBe "Configured chat model was not found."
         body.details shouldContain ("modelId" to "unknown-model")
+    }
+
+    @Test
+    fun `handles embedding model not found`() {
+        val response = handler.handleEmbeddingModelNotFound(EmbeddingModelNotFoundException("unknown-embedding"))
+        val body = response.body.shouldNotBeNull()
+
+        response.statusCode shouldBe HttpStatus.NOT_FOUND
+        body.code shouldBe ApiErrorCode.MODEL_NOT_FOUND
+        body.message shouldBe "Configured embedding model was not found."
+        body.details shouldContain ("embeddingModelId" to "unknown-embedding")
     }
 
     @Test

@@ -166,5 +166,5 @@ class ChatApiIntegrationTestConfiguration {
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { emptyList() }
+        ChatContextRetriever { _, _ -> emptyList() }
 }

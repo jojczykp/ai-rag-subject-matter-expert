@@ -139,7 +139,7 @@ aisme:
           model-name: llama3.2
 ```
 
-Use one statically configured embedding model:
+Use a dedicated embedding model catalog:
 
 ```yaml
 aisme:

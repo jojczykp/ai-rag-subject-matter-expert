@@ -1,7 +1,7 @@
 package org.alterbit.aisme.chat
 
 import org.alterbit.aisme.document.SubjectDocumentsProperties
-import org.alterbit.aisme.embedding.EmbeddingClient
+import org.alterbit.aisme.embedding.EmbeddingClients
 import org.alterbit.aisme.retrieval.RelevantChunk
 import org.alterbit.aisme.retrieval.RelevantChunkRequest
 import org.alterbit.aisme.retrieval.RelevantChunkRetriever
@@ -9,20 +9,25 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 fun interface ChatContextRetriever {
-    fun retrieve(message: String): List<AiModelContextChunk>
+    fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk>
 }
 
 @Component
 class RelevantChatContextRetriever(
     private val chatProperties: ChatProperties,
     private val documentsProperties: SubjectDocumentsProperties,
-    private val embeddingClient: EmbeddingClient,
+    private val embeddingClients: EmbeddingClients,
     private val relevantChunkRetriever: RelevantChunkRetriever,
 ) : ChatContextRetriever {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun retrieve(message: String): List<AiModelContextChunk> {
-        logger.info("Retrieving chat context with chunk limit {}", chatProperties.relevantChunkLimit)
+    override fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk> {
+        logger.info(
+            "Retrieving chat context with embedding model '{}' and chunk limit {}",
+            embeddingModelId ?: "<default>",
+            chatProperties.relevantChunkLimit,
+        )
+        val embeddingClient = embeddingClients.getByModelIdOrDefaultOrThrow(embeddingModelId)
         val embedding = embeddingClient.embed(message)
         val chunks = relevantChunkRetriever
             .retrieve(
@@ -35,9 +40,9 @@ class RelevantChatContextRetriever(
             )
             .map { it.toContextChunk() }
         if (chunks.isEmpty()) {
-            logger.warn("Retrieved no relevant chat context chunks")
+            logger.warn("Retrieved no relevant chat context chunks using embedding model '{}'", embedding.model.id)
         } else {
-            logger.info("Retrieved {} relevant chat context chunk(s)", chunks.size)
+            logger.info("Retrieved {} relevant chat context chunk(s) using embedding model '{}'", chunks.size, embedding.model.id)
         }
         return chunks
     }

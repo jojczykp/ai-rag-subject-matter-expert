@@ -120,10 +120,11 @@ local TGI-compatible servers can be added later as explicit future runtimes if
 needed.
 
 `GET /embedding-models` exposes the configured embedding model catalog. The
-initial implementation keeps indexing on the single enabled embedding model,
-but accepts `embeddingModelId` in chat requests so API clients can start sending
-the intended retrieval model before retrieval and indexing are wired for
-multiple embedding models.
+indexer stores embeddings for every enabled embedding model client. `POST /chat`
+uses the optional `embeddingModelId` for query embedding and relevant chunk
+retrieval. When more than one embedding model is enabled, callers must provide
+`embeddingModelId`; otherwise the single enabled embedding model is used as the
+default.
 
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static
@@ -252,7 +253,7 @@ integration details are owned by
 
 Use retrieval-augmented generation as the initial grounding strategy. See
 [ADR-001: Embedding Generation Strategy](ADR-001-embedding-generation-strategy.md)
-for the accepted statically configured embedding model decision and
+for the accepted dedicated embedding model catalog decision and
 [ADR-006: Local Embedding Runtime](ADR-006-local-embedding-runtime.md) for the
 local embedding runtime decision.
 
@@ -265,10 +266,10 @@ for the accepted database access and vector search decision.
 
 ## Data Model Overview
 
-The initial database model stores bundled source document metadata, deterministic
-chunks, and one embedding per chunk for the statically configured embedding
-model. Startup indexing refreshes missing or stale embeddings when the configured
-embedding model metadata or chunking strategy changes. The schema diagram is maintained in
+The database model stores bundled source document metadata, deterministic
+chunks, and one embedding per chunk per embedding model id. Startup indexing
+refreshes missing or stale embeddings when enabled embedding model metadata or
+chunking strategy changes. The schema diagram is maintained in
 [Database Schema](DATABASE_SCHEMA.md).
 
 ## Configuration

@@ -5,7 +5,7 @@ import java.security.MessageDigest
 import java.time.Instant
 import java.util.UUID
 import org.alterbit.aisme.embedding.EmbeddingClient
-import org.alterbit.aisme.embedding.EmbeddingModelProperties
+import org.alterbit.aisme.embedding.EmbeddingClients
 import org.alterbit.aisme.persistence.ChunkEmbeddingRepository
 import org.alterbit.aisme.persistence.DocumentChunkRecord
 import org.alterbit.aisme.persistence.DocumentChunkRepository
@@ -19,11 +19,10 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class SubjectDocumentIndexer(
     private val documentsProperties: SubjectDocumentsProperties,
-    private val embeddingModelProperties: EmbeddingModelProperties,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
     private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
-    private val embeddingClient: EmbeddingClient,
+    private val embeddingClients: EmbeddingClients,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -91,16 +90,21 @@ class SubjectDocumentIndexer(
                 chunkingStrategyVersion = chunkingStrategyVersion,
             )
 
-        val createdEmbeddingCount = indexedChunks.count { chunk ->
-            indexEmbeddingIfNeeded(
-                chunk = chunk,
-                chunkingStrategyVersion = chunkingStrategyVersion,
-            )
+        val clients = embeddingClients.all()
+        val createdEmbeddingCount = indexedChunks.sumOf { chunk ->
+            clients.count { embeddingClient ->
+                indexEmbeddingIfNeeded(
+                    chunk = chunk,
+                    chunkingStrategyVersion = chunkingStrategyVersion,
+                    embeddingClient = embeddingClient,
+                )
+            }
         }
         logger.info(
-            "Indexed source document '{}' with {} chunk(s); created {} embedding(s)",
+            "Indexed source document '{}' with {} chunk(s) using {} embedding model(s); created {} embedding(s)",
             documentPath,
             indexedChunks.size,
+            clients.size,
             createdEmbeddingCount,
         )
     }
@@ -129,11 +133,17 @@ class SubjectDocumentIndexer(
     private fun indexEmbeddingIfNeeded(
         chunk: DocumentChunkRecord,
         chunkingStrategyVersion: String,
+        embeddingClient: EmbeddingClient,
     ): Boolean {
         val chunkId = requireNotNull(chunk.id)
-        val embeddingModel = embeddingModelProperties.metadata
+        val embeddingModel = embeddingClient.model
         if (chunkEmbeddingRepository.hasCurrentEmbedding(chunkId, embeddingModel, chunkingStrategyVersion)) {
-            logger.debug("Current embedding already exists for document chunk '{}'", chunkId)
+            logger.debug(
+                "Current embedding already exists for document chunk '{}' using model '{}:{}'",
+                chunkId,
+                embeddingModel.id,
+                embeddingModel.version,
+            )
             return false
         }
 
@@ -145,7 +155,7 @@ class SubjectDocumentIndexer(
         )
         val embedding = embeddingClient.embed(chunk.content)
         require(embedding.model == embeddingModel) {
-            "embedding model metadata must match configured embedding model"
+            "embedding model metadata must match selected embedding model"
         }
 
         chunkEmbeddingRepository.save(

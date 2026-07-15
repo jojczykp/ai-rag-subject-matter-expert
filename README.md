@@ -98,10 +98,11 @@ explicit task:
 ./gradlew :backend:embeddedLlamaDownloadServerWindowsX64
 ```
 
-### Ollama (optional)
+### Ollama
 
-If you want to use the local Ollama model, start Ollama and pull the configured
-chat model if it is not already available:
+The default configuration enables the local Ollama chat model and the
+`ollama-nomic-embed` embedding model. Start Ollama and pull the configured
+models if they are not already available:
 
 ```bash
 ollama serve
@@ -111,11 +112,15 @@ In another terminal:
 
 ```bash
 ollama pull llama3.2
+ollama pull nomic-embed-text
 ```
 
 ```bash
 ollama list
 ```
+
+To run without Ollama, disable the `local-ollama-llama` chat model and
+`ollama-nomic-embed` embedding model in `backend/src/main/resources/application.yml`.
 
 ### Database
 
@@ -260,6 +265,7 @@ curl -s http://localhost:8080/chat \
   -H 'Content-Type: application/json' \
   -d '{
     "modelId": "local-ollama-llama",
+    "embeddingModelId": "local-bge-small",
     "message": "How should I cook rice?"
   }' | jq .
 ```
@@ -489,7 +495,7 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
 | `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
-| `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is active. Exactly one model must be enabled. |
+| `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is indexed and selectable for retrieval. |
 | `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
 | `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
 | `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |

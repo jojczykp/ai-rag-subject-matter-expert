@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class EmbeddingModelRegistry(
-    properties: EmbeddingProperties,
+    private val properties: EmbeddingProperties,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -34,4 +34,7 @@ class EmbeddingModelRegistry(
 
     fun embeddingModels(): List<EmbeddingModelDescriptor> =
         embeddingModels
+
+    fun enabledEmbeddingModelProperties(): List<EmbeddingModelProperties> =
+        properties.enabledModels()
 }

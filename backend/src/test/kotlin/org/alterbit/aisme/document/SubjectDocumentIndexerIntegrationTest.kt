@@ -2,6 +2,8 @@ package org.alterbit.aisme.document
 
 import io.kotest.matchers.shouldBe
 import org.alterbit.aisme.embedding.EmbeddingClient
+import org.alterbit.aisme.embedding.EmbeddingClientProvider
+import org.alterbit.aisme.embedding.EmbeddingClients
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
 import org.alterbit.aisme.embedding.EmbeddingModelProperties
 import org.alterbit.aisme.embedding.EmbeddingVector
@@ -61,13 +63,11 @@ class SubjectDocumentIndexerIntegrationTest(
             chunk(documentPath = "culinary_expert/indexer-stale.txt", index = 0, content = "Versioned chunk"),
         )
         indexer(
-            embeddingModelProperties = EmbeddingModelProperties(version = "old-version"),
             embeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(version = "old-version").metadata),
         ).index(chunks)
 
         val replacementEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(version = "new-version").metadata)
         indexer(
-            embeddingModelProperties = EmbeddingModelProperties(version = "new-version"),
             embeddingClient = replacementEmbeddingClient,
         ).index(chunks)
 
@@ -75,17 +75,35 @@ class SubjectDocumentIndexerIntegrationTest(
         storedEmbeddingVersions("culinary_expert/indexer-stale.txt") shouldBe listOf("new-version")
     }
 
+    @Test
+    fun `indexes embeddings for every enabled embedding client`() {
+        val firstEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(id = "first-model").metadata)
+        val secondEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(id = "second-model").metadata)
+        val chunks = listOf(
+            chunk(documentPath = "culinary_expert/indexer-multiple.txt", index = 0, content = "Shared chunk"),
+        )
+
+        indexer(embeddingClients = listOf(firstEmbeddingClient, secondEmbeddingClient)).index(chunks)
+
+        firstEmbeddingClient.embeddedTexts shouldBe listOf("Shared chunk")
+        secondEmbeddingClient.embeddedTexts shouldBe listOf("Shared chunk")
+        storedEmbeddingModelIds("culinary_expert/indexer-multiple.txt") shouldBe listOf("first-model", "second-model")
+    }
+
     private fun indexer(
-        embeddingModelProperties: EmbeddingModelProperties = EmbeddingModelProperties(),
-        embeddingClient: FakeEmbeddingClient,
+        embeddingClient: FakeEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties().metadata),
+        embeddingClients: List<FakeEmbeddingClient> = listOf(embeddingClient),
     ): SubjectDocumentIndexer =
         SubjectDocumentIndexer(
             documentsProperties = SubjectDocumentsProperties(),
-            embeddingModelProperties = embeddingModelProperties,
             sourceDocumentRepository = sourceDocumentRepository,
             documentChunkRepository = documentChunkRepository,
             chunkEmbeddingRepository = chunkEmbeddingRepository,
-            embeddingClient = embeddingClient,
+            embeddingClients = EmbeddingClients(
+                providers = listOf(
+                    EmbeddingClientProvider { embeddingClients },
+                ),
+            ),
         )
 
     private fun chunk(
@@ -127,16 +145,35 @@ class SubjectDocumentIndexerIntegrationTest(
             .list()
             .map(::requireNotNull)
 
+    private fun storedEmbeddingModelIds(resourcePath: String): List<String> =
+        jdbcClient
+            .sql(
+                """
+                SELECT ce.embedding_model_id
+                FROM chunk_embedding ce
+                JOIN document_chunk dc ON dc.id = ce.document_chunk_id
+                JOIN source_document sd ON sd.id = dc.source_document_id
+                WHERE sd.resource_path = :resourcePath
+                ORDER BY ce.embedding_model_id
+                """,
+            )
+            .param("resourcePath", resourcePath)
+            .query(String::class.java)
+            .list()
+            .map(::requireNotNull)
+
     private class FakeEmbeddingClient(
-        private val metadata: EmbeddingModelMetadata,
+        override val model: EmbeddingModelMetadata,
     ) : EmbeddingClient {
+        override val modelId: String = model.id
+
         val embeddedTexts = mutableListOf<String>()
 
         override fun embed(text: String): EmbeddingVector {
             embeddedTexts += text
             return EmbeddingVector(
                 values = List(384) { index -> if (index == 0) 1.0 else 0.0 },
-                model = metadata,
+                model = model,
             )
         }
     }

@@ -135,7 +135,7 @@ Endpoint names are proposed and may be refined during technical design.
 - [x] `POST /chat` asks a question against the configured subject.
 - [x] Request body includes `message`.
 - [x] Request body includes `modelId`.
-- [x] Request body can include `embeddingModelId` for future retrieval model selection.
+- [x] Request body can include `embeddingModelId` for retrieval model selection.
 - [x] Response body includes `answer`.
 - [x] Response body includes `modelId`.
 - [x] Response is returned as a single non-streaming JSON response.

@@ -55,13 +55,12 @@ Initial table responsibilities:
 
 - [ ] `source_document` stores bundled resource identity and document metadata.
 - [ ] `document_chunk` stores extracted chunk text and chunk metadata.
-- [ ] `chunk_embedding` stores one vector per chunk for the statically
-      configured embedding model.
+- [x] `chunk_embedding` stores one vector per chunk per embedding model id.
 - [x] `chunk_embedding` stores embedding model id, embedding model version,
       embedding dimensions, and chunking strategy version.
 
-Because ADR-001 selects one statically configured embedding model, the initial
-schema should use one embedding table rather than provider-specific embedding
+Because ADR-001 selects dedicated embedding models, the schema uses one
+embedding table keyed by model metadata rather than provider-specific embedding
 tables. The current schema diagram is maintained in
 [Database Schema](DATABASE_SCHEMA.md).
 
@@ -85,6 +84,8 @@ to verify before introducing approximate-search tuning.
 - [x] Create or update `source_document` and `document_chunk` rows during
       indexing.
 - [x] Create embeddings when they are missing or stale.
+- [x] Create embeddings for every enabled embedding model client during
+      startup indexing.
 - [x] Treat embeddings as stale when embedding model id, embedding model
       version, embedding dimensions, or chunking strategy version changes.
 - [x] Write document metadata and chunks transactionally.

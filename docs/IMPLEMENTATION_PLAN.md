@@ -39,6 +39,7 @@ All implementation items are TODO until delivered and verified.
       `aisme.embedding.models` configuration.
 - [x] Add local ONNX embedding model integration.
 - [x] Configure local model and tokenizer paths for `BAAI/bge-small-en-v1.5`.
+- [x] Add local Ollama embedding model integration for `nomic-embed-text`.
 - [x] Store embedding model id, version, dimensions, and chunking strategy
       version with indexed embeddings.
 - [x] Add re-indexing behavior for stale or missing embeddings.
@@ -55,7 +56,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Require `modelId` on chat requests.
 - [x] Add `GET /chat-models`.
 - [x] Add `GET /embedding-models`.
-- [x] Allow `embeddingModelId` on chat requests without wiring it into retrieval yet.
+- [x] Use selected `embeddingModelId` for chat query embedding and retrieval.
 - [x] Add `POST /chat`.
 - [x] Add `AiChatService`.
 - [x] Add model availability status and privacy labels to model responses.
@@ -73,7 +74,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add integration tests for `/chat-models`, `/chat`, static document indexing,
       retrieval, and fake model routing.
 - [x] Keep Kover coverage at or above 80% in default verification.
-- [ ] Use selected `embeddingModelId` in retrieval after multi-embedding indexing exists.
+- [x] Store and query indexed chunks per selected embedding model.
 
 ## Milestone 4: Local Ollama Runtime
 

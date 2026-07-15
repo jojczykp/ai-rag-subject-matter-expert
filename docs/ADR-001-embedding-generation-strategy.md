@@ -21,20 +21,20 @@ the same embedding space. Otherwise vector similarity results are unreliable.
 
 ## Decision
 
-Use one statically configured dedicated embedding model for retrieval. This
-embedding model is selected through application configuration, not by the user
-per request, and is independent from the user-selected chat model.
+Use a dedicated embedding model catalog for retrieval. Embedding models are
+configured separately from chat models, and retrieval uses the embedding model
+selected in the chat request when provided.
 
-The selected chat model remains user-controlled per request. The embedding model
-is configured separately and is responsible for:
+The selected chat model remains user-controlled per request. The selected
+embedding model is responsible for:
 
 - [ ] generating embeddings for bundled document chunks during indexing
 - [ ] generating embeddings for user queries during retrieval
 - [x] exposing embedding model metadata needed to validate stored vectors
 
-Document chunk embeddings and query embeddings must use the same statically
-configured embedding model. Chat models receive retrieved text chunks and do
-not need to share the embedding model or embedding vector space.
+Document chunk embeddings and query embeddings must use the same embedding
+model metadata. Chat models receive retrieved text chunks and do not need to
+share the embedding model or embedding vector space.
 
 Prefer a local embedding model when available, because it keeps document
 indexing and query embedding generation independent from cloud providers. Use
@@ -46,14 +46,14 @@ is not implemented yet. The preferred local runtime is documented in
 
 ### Option 1: Dedicated Embedding Model Configured Separately
 
-Use one statically configured embedding model for indexing documents and
-embedding user questions, independent from the selected chat model.
+Use dedicated embedding models for indexing documents and embedding user
+questions, independent from the selected chat model.
 
 Example:
 
 ```text
 chat model: user chooses per request
-embedding model: statically configured by application
+embedding model: user can select from the configured embedding catalog
 ```
 
 Benefits:
@@ -61,14 +61,14 @@ Benefits:
 - [ ] Document embeddings and query embeddings use the same embedding space.
 - [ ] Users can switch chat models without re-indexing documents.
 - [ ] pgvector storage and lookup stay straightforward.
-- [ ] Tests can use one predictable embedding model.
+- [x] Tests can use predictable embedding model metadata.
 - [ ] Cloud, local server, and embedded chat models can share retrieval logic.
 
 Tradeoffs:
 
-- [ ] The application needs one embedding model in addition to chat models.
+- [x] The application needs configured embedding models in addition to chat models.
 - [ ] Startup/indexing must validate that stored embeddings match the configured
-      embedding model.
+      embedding model metadata.
 
 This is the selected option.
 
@@ -143,10 +143,10 @@ This is acceptable only as a temporary implementation step.
 - [x] Store the embedding model id or version with indexed chunk embeddings.
 - [x] Store embedding dimensions with indexed chunk embeddings.
 - [x] Store the chunking strategy version used to create indexed chunks.
-- [x] Re-index documents when the configured embedding model changes.
+- [x] Re-index documents when configured embedding model metadata changes.
 - [x] Re-index documents when embedding dimensions or chunking strategy changes.
-- [ ] Keep embedding generation separate from chat model selection.
-- [ ] Allow users to switch chat models without re-indexing documents.
+- [x] Keep embedding generation separate from chat model selection.
+- [x] Allow users to switch chat models without re-indexing documents.
 - [ ] Keep `RelevantChunkRetriever` responsible for query embedding generation
       and vector lookup.
 - [x] Use PostgreSQL + pgvector for vector storage and similarity search.

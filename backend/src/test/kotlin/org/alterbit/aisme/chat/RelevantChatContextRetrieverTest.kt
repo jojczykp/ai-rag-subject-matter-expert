@@ -5,7 +5,10 @@ import io.kotest.matchers.shouldBe
 import java.util.UUID
 import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingClient
+import org.alterbit.aisme.embedding.EmbeddingClientProvider
+import org.alterbit.aisme.embedding.EmbeddingClients
 import org.alterbit.aisme.embedding.EmbeddingModelMetadata
+import org.alterbit.aisme.embedding.EmbeddingModelNotFoundException
 import org.alterbit.aisme.embedding.EmbeddingVector
 import org.alterbit.aisme.retrieval.RelevantChunk
 import org.alterbit.aisme.retrieval.RelevantChunkRequest
@@ -42,11 +45,14 @@ class RelevantChatContextRetrieverTest {
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(relevantChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(chunkSize = 700, chunkOverlap = 100),
-            embeddingClient = embeddingClient,
+            embeddingClients = EmbeddingClients(listOf(EmbeddingClientProvider { listOf(embeddingClient) })),
             relevantChunkRetriever = relevantChunkRetriever,
         )
 
-        val contextChunks = retriever.retrieve("How should I cook rice?")
+        val contextChunks = retriever.retrieve(
+            message = "How should I cook rice?",
+            embeddingModelId = "local-bge-small",
+        )
 
         embeddingClient.texts shouldContainExactly listOf("How should I cook rice?")
         relevantChunkRetriever.requests.single().embedding shouldBe listOf(0.1, 0.2, 0.3)
@@ -71,27 +77,171 @@ class RelevantChatContextRetrieverTest {
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(relevantChunkLimit = 3),
             documentsProperties = SubjectDocumentsProperties(),
-            embeddingClient = FakeEmbeddingClient(
-                embedding = EmbeddingVector(
-                    values = listOf(0.1),
-                    model = EmbeddingModelMetadata(
-                        id = "local-bge-small",
-                        version = "1.5",
-                        dimensions = 1,
-                    ),
+            embeddingClients = EmbeddingClients(
+                listOf(
+                    EmbeddingClientProvider {
+                        listOf(
+                            FakeEmbeddingClient(
+                                embedding = EmbeddingVector(
+                                    values = listOf(0.1),
+                                    model = EmbeddingModelMetadata(
+                                        id = "local-bge-small",
+                                        version = "1.5",
+                                        dimensions = 1,
+                                    ),
+                                ),
+                            ),
+                        )
+                    },
                 ),
             ),
             relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList()),
         )
 
-        val contextChunks = retriever.retrieve("Question without matching chunks")
+        val contextChunks = retriever.retrieve(
+            message = "Question without matching chunks",
+            embeddingModelId = null,
+        )
 
         contextChunks shouldContainExactly emptyList()
+    }
+
+    @Test
+    fun `uses selected embedding model for retrieval`() {
+        val firstEmbeddingClient = FakeEmbeddingClient(
+            embedding = EmbeddingVector(
+                values = listOf(0.1),
+                model = EmbeddingModelMetadata(
+                    id = "first-model",
+                    version = "1.0",
+                    dimensions = 1,
+                ),
+            ),
+        )
+        val secondEmbeddingClient = FakeEmbeddingClient(
+            embedding = EmbeddingVector(
+                values = listOf(0.9),
+                model = EmbeddingModelMetadata(
+                    id = "second-model",
+                    version = "1.0",
+                    dimensions = 1,
+                ),
+            ),
+        )
+        val relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList())
+        val retriever = RelevantChatContextRetriever(
+            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            documentsProperties = SubjectDocumentsProperties(),
+            embeddingClients = EmbeddingClients(
+                listOf(
+                    EmbeddingClientProvider { listOf(firstEmbeddingClient, secondEmbeddingClient) },
+                ),
+            ),
+            relevantChunkRetriever = relevantChunkRetriever,
+        )
+
+        retriever.retrieve(
+            message = "Question",
+            embeddingModelId = "second-model",
+        )
+
+        firstEmbeddingClient.texts shouldContainExactly emptyList()
+        secondEmbeddingClient.texts shouldContainExactly listOf("Question")
+        relevantChunkRetriever.requests.single().embeddingModel shouldBe EmbeddingModelMetadata(
+            id = "second-model",
+            version = "1.0",
+            dimensions = 1,
+        )
+    }
+
+    @Test
+    fun `requires selected embedding model when multiple embedding clients are enabled`() {
+        val retriever = RelevantChatContextRetriever(
+            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            documentsProperties = SubjectDocumentsProperties(),
+            embeddingClients = EmbeddingClients(
+                listOf(
+                    EmbeddingClientProvider {
+                        listOf(
+                            FakeEmbeddingClient(
+                                embedding = EmbeddingVector(
+                                    values = listOf(0.1),
+                                    model = EmbeddingModelMetadata(
+                                        id = "first-model",
+                                        version = "1.0",
+                                        dimensions = 1,
+                                    ),
+                                ),
+                            ),
+                            FakeEmbeddingClient(
+                                embedding = EmbeddingVector(
+                                    values = listOf(0.2),
+                                    model = EmbeddingModelMetadata(
+                                        id = "second-model",
+                                        version = "1.0",
+                                        dimensions = 1,
+                                    ),
+                                ),
+                            ),
+                        )
+                    },
+                ),
+            ),
+            relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList()),
+        )
+
+        val exception = io.kotest.assertions.throwables.shouldThrow<IllegalArgumentException> {
+            retriever.retrieve(
+                message = "Question",
+                embeddingModelId = null,
+            )
+        }
+
+        exception.message shouldBe "embeddingModelId is required when multiple embedding models are enabled"
+    }
+
+    @Test
+    fun `rejects unknown selected embedding model`() {
+        val retriever = RelevantChatContextRetriever(
+            chatProperties = ChatProperties(relevantChunkLimit = 3),
+            documentsProperties = SubjectDocumentsProperties(),
+            embeddingClients = EmbeddingClients(
+                listOf(
+                    EmbeddingClientProvider {
+                        listOf(
+                            FakeEmbeddingClient(
+                                embedding = EmbeddingVector(
+                                    values = listOf(0.1),
+                                    model = EmbeddingModelMetadata(
+                                        id = "local-bge-small",
+                                        version = "1.5",
+                                        dimensions = 1,
+                                    ),
+                                ),
+                            ),
+                        )
+                    },
+                ),
+            ),
+            relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList()),
+        )
+
+        val exception = io.kotest.assertions.throwables.shouldThrow<EmbeddingModelNotFoundException> {
+            retriever.retrieve(
+                message = "Question",
+                embeddingModelId = "missing-embedding",
+            )
+        }
+
+        exception.modelId shouldBe "missing-embedding"
     }
 
     private class FakeEmbeddingClient(
         private val embedding: EmbeddingVector,
     ) : EmbeddingClient {
+        override val modelId: String = embedding.model.id
+        override val model: EmbeddingModelMetadata = embedding.model
+
         val texts = mutableListOf<String>()
 
         override fun embed(text: String): EmbeddingVector {

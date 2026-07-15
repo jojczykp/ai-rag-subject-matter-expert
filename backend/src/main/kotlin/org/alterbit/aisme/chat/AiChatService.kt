@@ -33,7 +33,10 @@ class AiChatService(
             chatModel.availability,
         )
 
-        val contextChunks = chatContextRetriever.retrieve(request.message)
+        val contextChunks = chatContextRetriever.retrieve(
+            message = request.message,
+            embeddingModelId = request.embeddingModelId,
+        )
         logger.info("Sending chat request to model '{}' with {} context chunk(s)", chatModel.id, contextChunks.size)
 
         val modelRequest = AiModelChatRequest(

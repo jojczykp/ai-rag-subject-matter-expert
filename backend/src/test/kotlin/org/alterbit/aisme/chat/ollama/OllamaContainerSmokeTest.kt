@@ -153,5 +153,5 @@ class OllamaContainerTestContext {
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { emptyList() }
+        ChatContextRetriever { _, _ -> emptyList() }
 }

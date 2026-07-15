@@ -29,7 +29,7 @@ data class EmbeddingProperties(
             ),
         ),
         "ollama-nomic-embed" to EmbeddingModelConfigProperties(
-            enabled = false,
+            enabled = true,
             displayName = "Ollama Nomic Embed",
             version = "latest",
             dimensions = 768,
@@ -63,6 +63,18 @@ data class EmbeddingProperties(
         }
 
         val (modelId, model) = enabledModels.entries.single()
+        return modelProperties(modelId, model)
+    }
+
+    fun enabledModels(): List<EmbeddingModelProperties> =
+        modelsById
+            .filterValues(EmbeddingModelConfigProperties::enabled)
+            .map { (modelId, model) -> modelProperties(modelId, model) }
+
+    private fun modelProperties(
+        modelId: String,
+        model: EmbeddingModelConfigProperties,
+    ): EmbeddingModelProperties {
         val runtimeId = requireNotNull(model.runtime.id) {
             "aisme.embedding.models.$modelId.runtime.id is required when aisme.embedding.models.$modelId.enabled is true"
         }
@@ -74,6 +86,11 @@ data class EmbeddingProperties(
         fun requireModelConfigured(value: String?, propertyName: String): String =
             requireNotNull(value) {
                 "aisme.embedding.models.$modelId.$propertyName is required for ${runtime.type} embedding models"
+            }
+
+        fun requireRuntimeConfigured(value: String?, propertyName: String): String =
+            requireNotNull(value) {
+                "aisme.embedding.runtimes.$runtimeId.$propertyName is required for ${runtime.type} embedding models"
             }
 
         val version = requireModelConfigured(model.version, "version")
@@ -91,7 +108,14 @@ data class EmbeddingProperties(
                 tokenizerPath = requireModelConfigured(model.runtime.tokenizerPath, "runtime.tokenizer-path"),
             )
 
-            EmbeddingModelRuntime.OLLAMA -> error("OLLAMA embedding models are configurable but not supported for indexing yet")
+            EmbeddingModelRuntime.OLLAMA -> EmbeddingModelProperties(
+                id = modelId,
+                version = version,
+                dimensions = dimensions,
+                runtime = runtime.type,
+                baseUrl = requireRuntimeConfigured(runtime.baseUrl, "base-url"),
+                modelName = requireModelConfigured(model.runtime.modelName, "runtime.model-name"),
+            )
         }
     }
 }

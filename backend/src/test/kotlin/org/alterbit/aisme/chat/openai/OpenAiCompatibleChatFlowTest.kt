@@ -147,7 +147,7 @@ class OpenAiCompatibleChatFlowTestContext {
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { emptyList() }
+        ChatContextRetriever { _, _ -> emptyList() }
 }
 
 private fun HttpExchange.respondJson(body: String) {

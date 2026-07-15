@@ -52,7 +52,7 @@ class EmbeddingModelsControllerTest(
                     value("ollama-nomic-embed")
                 }
                 jsonPath("$.embeddingModels[1].enabled") {
-                    value(false)
+                    value(true)
                 }
                 jsonPath("$.embeddingModels[1].runtime") {
                     value("OLLAMA")
