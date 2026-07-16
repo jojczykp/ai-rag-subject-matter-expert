@@ -2,7 +2,7 @@ package org.alterbit.aisme.chat.runtime.ollama
 
 import org.alterbit.aisme.chat.AiModelClient
 import org.alterbit.aisme.chat.AiModelClientProvider
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelRuntime
 import org.slf4j.LoggerFactory

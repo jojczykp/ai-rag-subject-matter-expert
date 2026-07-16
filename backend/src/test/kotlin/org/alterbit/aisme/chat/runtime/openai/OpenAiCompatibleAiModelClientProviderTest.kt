@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelRuntime
 import org.alterbit.aisme.chat.catalog.ChatModelProperties

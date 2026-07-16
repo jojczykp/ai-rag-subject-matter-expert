@@ -3,6 +3,7 @@ package org.alterbit.aisme.chat
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.junit.jupiter.api.Test
 
 class ChatPropertiesTest {

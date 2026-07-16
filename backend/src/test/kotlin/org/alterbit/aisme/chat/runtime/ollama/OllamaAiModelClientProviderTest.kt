@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.time.Duration
 import java.time.Instant
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelRuntime
 import org.alterbit.aisme.chat.catalog.ChatModelRuntimeConfigProperties

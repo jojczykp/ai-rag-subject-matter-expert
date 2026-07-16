@@ -13,7 +13,7 @@ import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.api.ChatController
 import org.alterbit.aisme.chat.ChatContextRetriever
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry

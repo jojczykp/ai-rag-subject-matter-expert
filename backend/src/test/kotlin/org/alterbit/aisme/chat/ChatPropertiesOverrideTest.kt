@@ -2,6 +2,7 @@ package org.alterbit.aisme.chat
 
 import io.kotest.matchers.shouldBe
 import java.time.Duration
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties

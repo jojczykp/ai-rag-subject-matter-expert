@@ -5,7 +5,7 @@ import org.alterbit.aisme.chat.AiChatService
 import org.alterbit.aisme.chat.AiModelClientProvider
 import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatContextRetriever
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.FakeAiModelClient
 import org.alterbit.aisme.chat.api.ChatExceptionHandler
 import org.alterbit.aisme.embedding.api.EmbeddingExceptionHandler

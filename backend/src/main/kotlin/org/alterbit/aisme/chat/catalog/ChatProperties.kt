@@ -1,4 +1,4 @@
-package org.alterbit.aisme.chat
+package org.alterbit.aisme.chat.catalog
 
 import java.time.Duration
 import org.springframework.boot.context.properties.ConfigurationProperties

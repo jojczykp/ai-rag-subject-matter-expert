@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chat
 
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingClients
 import org.alterbit.aisme.retrieval.RelevantChunk

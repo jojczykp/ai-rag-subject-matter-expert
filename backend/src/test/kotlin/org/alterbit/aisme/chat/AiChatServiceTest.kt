@@ -21,6 +21,7 @@ import org.alterbit.aisme.chat.catalog.ChatModelProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.chat.catalog.ChatModelsProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRuntimeConfigProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 

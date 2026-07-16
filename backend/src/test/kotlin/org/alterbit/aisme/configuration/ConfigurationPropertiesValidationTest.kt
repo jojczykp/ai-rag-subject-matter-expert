@@ -2,7 +2,7 @@ package org.alterbit.aisme.configuration
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityProperties
 import org.alterbit.aisme.embedding.catalog.EmbeddingProperties

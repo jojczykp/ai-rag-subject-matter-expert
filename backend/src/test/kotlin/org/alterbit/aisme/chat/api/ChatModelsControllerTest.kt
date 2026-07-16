@@ -2,7 +2,7 @@ package org.alterbit.aisme.chat.api
 
 import java.time.Clock
 import java.time.Duration
-import org.alterbit.aisme.chat.ChatProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailability
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityChecker
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties

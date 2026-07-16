@@ -8,6 +8,7 @@ import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityService
 import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

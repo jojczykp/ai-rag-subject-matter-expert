@@ -16,6 +16,7 @@ import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelRuntime
 import org.alterbit.aisme.chat.catalog.ChatModelsProperties
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.SpringBootConfiguration

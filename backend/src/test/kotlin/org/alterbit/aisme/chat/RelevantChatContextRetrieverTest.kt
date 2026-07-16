@@ -3,6 +3,7 @@ package org.alterbit.aisme.chat
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import java.util.UUID
+import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
 import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingClientProvider
