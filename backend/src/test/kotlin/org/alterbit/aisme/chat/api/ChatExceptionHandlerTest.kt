@@ -3,9 +3,9 @@ package org.alterbit.aisme.chat.api
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.alterbit.aisme.chat.AiModelClientNotFoundException
-import org.alterbit.aisme.chat.AiModelProviderException
-import org.alterbit.aisme.chat.AiModelProviderTimeoutException
+import org.alterbit.aisme.chat.ChatModelClientNotFoundException
+import org.alterbit.aisme.chat.ChatModelProviderException
+import org.alterbit.aisme.chat.ChatModelProviderTimeoutException
 import org.alterbit.aisme.chat.catalog.ChatModelAvailability
 import org.alterbit.aisme.chat.catalog.ChatModelNotFoundException
 import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
@@ -46,8 +46,8 @@ class ChatExceptionHandlerTest {
 
     @Test
     fun `handles missing ai model client`() {
-        val response = handler.handleAiModelClientNotFound(
-            AiModelClientNotFoundException("local-ollama-llama"),
+        val response = handler.handleChatModelClientNotFound(
+            ChatModelClientNotFoundException("local-ollama-llama"),
         )
         val body = response.body.shouldNotBeNull()
 
@@ -59,8 +59,8 @@ class ChatExceptionHandlerTest {
 
     @Test
     fun `handles provider apiTimeout`() {
-        val response = handler.handleAiModelProviderTimeout(
-            AiModelProviderTimeoutException(
+        val response = handler.handleChatModelProviderTimeout(
+            ChatModelProviderTimeoutException(
                 modelId = "cloud-gpt",
                 provider = "OpenAI-compatible",
                 cause = RuntimeException("apiTimeout details"),
@@ -77,8 +77,8 @@ class ChatExceptionHandlerTest {
 
     @Test
     fun `handles provider error`() {
-        val response = handler.handleAiModelProviderError(
-            AiModelProviderException(
+        val response = handler.handleChatModelProviderError(
+            ChatModelProviderException(
                 modelId = "cloud-gpt",
                 provider = "OpenAI-compatible",
                 message = "provider details",

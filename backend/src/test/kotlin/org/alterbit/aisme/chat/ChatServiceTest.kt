@@ -28,8 +28,8 @@ import org.springframework.web.client.ResourceAccessException
 class ChatServiceTest {
     @Test
     fun `delegates chat request to matching configured model client`() {
-        val localModelClient = FakeAiModelClient(modelId = "local-ollama-llama")
-        val cloudModelClient = FakeAiModelClient(modelId = "cloud-gpt")
+        val localModelClient = FakeChatModelClient(modelId = "local-ollama-llama")
+        val cloudModelClient = FakeChatModelClient(modelId = "cloud-gpt")
         val contextChunks = contextChunks()
         val chatContextRetriever = FakeChatContextRetriever(contextChunks)
         val service = ChatService(
@@ -37,7 +37,7 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(45)),
             chatContextRetriever = chatContextRetriever,
-            aiModelClients = aiModelClients(localModelClient, cloudModelClient),
+            chatModelClients = chatModelClients(localModelClient, cloudModelClient),
         )
 
         val response = service.chat(
@@ -50,7 +50,7 @@ class ChatServiceTest {
         response.modelId shouldBe "local-ollama-llama"
         response.answer shouldBe "Fake answer for: How should I cook rice?"
         localModelClient.requests shouldContainExactly listOf(
-            AiModelChatRequest(
+            ChatModelRequest(
                 modelId = "local-ollama-llama",
                 message = "How should I cook rice?",
                 contextChunks = contextChunks,
@@ -64,14 +64,14 @@ class ChatServiceTest {
 
     @Test
     fun `passes selected embedding model id to context retrieval`() {
-        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val modelClient = FakeChatModelClient(modelId = "local-ollama-llama")
         val chatContextRetriever = FakeChatContextRetriever(contextChunks())
         val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = chatContextRetriever,
-            aiModelClients = aiModelClients(modelClient),
+            chatModelClients = chatModelClients(modelClient),
         )
 
         service.chat(
@@ -93,7 +93,7 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(FakeAiModelClient(modelId = "local-ollama-llama")),
+            chatModelClients = chatModelClients(FakeChatModelClient(modelId = "local-ollama-llama")),
         )
 
         val exception = shouldThrow<ChatModelNotFoundException> {
@@ -115,10 +115,10 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(FakeAiModelClient(modelId = "other-model")),
+            chatModelClients = chatModelClients(FakeChatModelClient(modelId = "other-model")),
         )
 
-        val exception = shouldThrow<AiModelClientNotFoundException> {
+        val exception = shouldThrow<ChatModelClientNotFoundException> {
             service.chat(
                 ChatRequestDto(
                     modelId = "local-ollama-llama",
@@ -138,9 +138,9 @@ class ChatServiceTest {
                 chatModelAvailabilityService = chatModelAvailabilityService(),
                 chatProperties = ChatProperties(),
                 chatContextRetriever = FakeChatContextRetriever(),
-                aiModelClients = aiModelClients(
-                    FakeAiModelClient(modelId = "local-ollama-llama"),
-                    FakeAiModelClient(modelId = "local-ollama-llama"),
+                chatModelClients = chatModelClients(
+                    FakeChatModelClient(modelId = "local-ollama-llama"),
+                    FakeChatModelClient(modelId = "local-ollama-llama"),
                 ),
             )
         }
@@ -150,13 +150,13 @@ class ChatServiceTest {
 
     @Test
     fun `rejects unavailable model before calling model client`() {
-        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val modelClient = FakeChatModelClient(modelId = "local-ollama-llama")
         val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.UNAVAILABLE),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(modelClient),
+            chatModelClients = chatModelClients(modelClient),
         )
 
         val exception = shouldThrow<ChatModelUnavailableException> {
@@ -175,13 +175,13 @@ class ChatServiceTest {
 
     @Test
     fun `rejects misconfigured model before calling model client`() {
-        val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
+        val modelClient = FakeChatModelClient(modelId = "local-ollama-llama")
         val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.MISCONFIGURED),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(modelClient),
+            chatModelClients = chatModelClients(modelClient),
         )
 
         val exception = shouldThrow<ChatModelUnavailableException> {
@@ -200,16 +200,16 @@ class ChatServiceTest {
 
     @Test
     fun `maps model client failure to provider error`() {
-        val modelClient = FailingAiModelClient(modelId = "local-ollama-llama")
+        val modelClient = FailingChatModelClient(modelId = "local-ollama-llama")
         val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(modelClient),
+            chatModelClients = chatModelClients(modelClient),
         )
 
-        val exception = shouldThrow<AiModelProviderException> {
+        val exception = shouldThrow<ChatModelProviderException> {
             service.chat(
                 ChatRequestDto(
                     modelId = "local-ollama-llama",
@@ -230,15 +230,15 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(
-                FailingAiModelClient(
+            chatModelClients = chatModelClients(
+                FailingChatModelClient(
                     modelId = "local-ollama-llama",
                     failure = ResourceAccessException("Read timed out", SocketTimeoutException("Read timed out")),
                 ),
             ),
         )
 
-        val exception = shouldThrow<AiModelProviderTimeoutException> {
+        val exception = shouldThrow<ChatModelProviderTimeoutException> {
             service.chat(
                 ChatRequestDto(
                     modelId = "local-ollama-llama",
@@ -253,7 +253,7 @@ class ChatServiceTest {
 
     @Test
     fun `does not remap provider exception from model client`() {
-        val providerException = AiModelProviderException(
+        val providerException = ChatModelProviderException(
             modelId = "local-ollama-llama",
             provider = "Custom provider",
             message = "custom provider failure",
@@ -263,15 +263,15 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(
-                FailingAiModelClient(
+            chatModelClients = chatModelClients(
+                FailingChatModelClient(
                     modelId = "local-ollama-llama",
                     failure = providerException,
                 ),
             ),
         )
 
-        val exception = shouldThrow<AiModelProviderException> {
+        val exception = shouldThrow<ChatModelProviderException> {
             service.chat(
                 ChatRequestDto(
                     modelId = "local-ollama-llama",
@@ -290,8 +290,8 @@ class ChatServiceTest {
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
-            aiModelClients = aiModelClients(
-                FailingAiModelClient(
+            chatModelClients = chatModelClients(
+                FailingChatModelClient(
                     modelId = "local-ollama-llama",
                     failure = CancellationException("request cancelled"),
                 ),
@@ -355,12 +355,12 @@ class ChatServiceTest {
             clock = java.time.Clock.systemUTC(),
         )
 
-    private fun aiModelClients(vararg clients: AiModelClient): AiModelClients =
-        AiModelClients(listOf(AiModelClientProvider { clients.toList() }))
+    private fun chatModelClients(vararg clients: ChatModelClient): ChatModelClients =
+        ChatModelClients(listOf(ChatModelClientProvider { clients.toList() }))
 
-    private fun contextChunks(): List<AiModelContextChunk> =
+    private fun contextChunks(): List<ChatModelContextChunk> =
         listOf(
-            AiModelContextChunk(
+            ChatModelContextChunk(
                 content = "Use two parts water for one part rice.",
                 resourcePath = "culinary_expert/rice.txt",
                 chunkIndex = 0,
@@ -368,25 +368,25 @@ class ChatServiceTest {
         )
 
     private class FakeChatContextRetriever(
-        private val chunks: List<AiModelContextChunk> = emptyList(),
+        private val chunks: List<ChatModelContextChunk> = emptyList(),
     ) : ChatContextRetriever {
         val messages = mutableListOf<String>()
         val embeddingModelIds = mutableListOf<String?>()
 
-        override fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk> {
+        override fun retrieve(message: String, embeddingModelId: String?): List<ChatModelContextChunk> {
             messages += message
             embeddingModelIds += embeddingModelId
             return chunks
         }
     }
 
-    private class FailingAiModelClient(
+    private class FailingChatModelClient(
         override val modelId: String,
         private val failure: RuntimeException = IllegalStateException("model call failed"),
-    ) : AiModelClient {
+    ) : ChatModelClient {
         var callCount = 0
 
-        override fun chat(request: AiModelChatRequest): AiModelChatResponse {
+        override fun chat(request: ChatModelRequest): ChatModelResponse {
             callCount += 1
             throw failure
         }

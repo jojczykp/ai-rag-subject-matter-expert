@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 fun interface ChatContextRetriever {
-    fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk>
+    fun retrieve(message: String, embeddingModelId: String?): List<ChatModelContextChunk>
 }
 
 @Component
@@ -22,7 +22,7 @@ class RelevantChatContextRetriever(
 ) : ChatContextRetriever {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun retrieve(message: String, embeddingModelId: String?): List<AiModelContextChunk> {
+    override fun retrieve(message: String, embeddingModelId: String?): List<ChatModelContextChunk> {
         logger.info(
             "Retrieving chat context with embedding model '{}' and chunk limit {}",
             embeddingModelId ?: "<default>",
@@ -48,8 +48,8 @@ class RelevantChatContextRetriever(
         return chunks
     }
 
-    private fun RelevantChunk.toContextChunk(): AiModelContextChunk =
-        AiModelContextChunk(
+    private fun RelevantChunk.toContextChunk(): ChatModelContextChunk =
+        ChatModelContextChunk(
             content = content,
             resourcePath = resourcePath,
             chunkIndex = chunkIndex,

@@ -64,8 +64,8 @@ import org.springframework.test.web.servlet.post
 @AutoConfigureMockMvc
 class EmbeddedOfflineChatApiIntegrationTest(
     private val mockMvc: MockMvc,
-    @Qualifier("embeddedReadyAiModelClient")
-    private val embeddedReadyAiModelClient: FakeAiModelClient,
+    @Qualifier("embeddedReadyChatModelClient")
+    private val embeddedReadyChatModelClient: FakeChatModelClient,
 ) {
     @Test
     fun `lists embedded models with runtime availability`() {
@@ -128,8 +128,8 @@ class EmbeddedOfflineChatApiIntegrationTest(
             }
         }
 
-        embeddedReadyAiModelClient.requests shouldContainExactly listOf(
-            AiModelChatRequest(
+        embeddedReadyChatModelClient.requests shouldContainExactly listOf(
+            ChatModelRequest(
                 modelId = "embedded-ready",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
@@ -180,7 +180,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
 )
 @Import(
     ChatService::class,
-    AiModelClients::class,
+    ChatModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,
     EmbeddingExceptionHandler::class,
@@ -199,17 +199,17 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
         Clock.systemUTC()
 
     @Bean
-    fun aiModelClientProvider(
-        @Qualifier("embeddedReadyAiModelClient")
-        embeddedReadyAiModelClient: FakeAiModelClient,
-    ): AiModelClientProvider =
-        AiModelClientProvider {
-            listOf(embeddedReadyAiModelClient)
+    fun chatModelClientProvider(
+        @Qualifier("embeddedReadyChatModelClient")
+        embeddedReadyChatModelClient: FakeChatModelClient,
+    ): ChatModelClientProvider =
+        ChatModelClientProvider {
+            listOf(embeddedReadyChatModelClient)
         }
 
     @Bean
-    fun embeddedReadyAiModelClient(): FakeAiModelClient =
-        FakeAiModelClient(modelId = "embedded-ready")
+    fun embeddedReadyChatModelClient(): FakeChatModelClient =
+        FakeChatModelClient(modelId = "embedded-ready")
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =

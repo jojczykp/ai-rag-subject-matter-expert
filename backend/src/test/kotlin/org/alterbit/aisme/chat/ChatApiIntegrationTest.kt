@@ -54,10 +54,10 @@ import org.springframework.test.web.servlet.post
 @AutoConfigureMockMvc
 class ChatApiIntegrationTest(
     private val mockMvc: MockMvc,
-    @Qualifier("localAiModelClient")
-    private val localAiModelClient: FakeAiModelClient,
-    @Qualifier("cloudAiModelClient")
-    private val cloudAiModelClient: FakeAiModelClient,
+    @Qualifier("localChatModelClient")
+    private val localChatModelClient: FakeChatModelClient,
+    @Qualifier("cloudChatModelClient")
+    private val cloudChatModelClient: FakeChatModelClient,
 ) {
     @Test
     fun `lists configured models`() {
@@ -108,9 +108,9 @@ class ChatApiIntegrationTest(
             }
         }
 
-        localAiModelClient.requests shouldContainExactly emptyList()
-        cloudAiModelClient.requests shouldContainExactly listOf(
-            AiModelChatRequest(
+        localChatModelClient.requests shouldContainExactly emptyList()
+        cloudChatModelClient.requests shouldContainExactly listOf(
+            ChatModelRequest(
                 modelId = "cloud-gpt",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
@@ -134,7 +134,7 @@ class ChatApiIntegrationTest(
 )
 @Import(
     ChatService::class,
-    AiModelClients::class,
+    ChatModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,
     EmbeddingExceptionHandler::class,
@@ -153,23 +153,23 @@ class ChatApiIntegrationTestConfiguration {
         Clock.systemUTC()
 
     @Bean
-    fun aiModelClientProvider(
-        @Qualifier("localAiModelClient")
-        localAiModelClient: FakeAiModelClient,
-        @Qualifier("cloudAiModelClient")
-        cloudAiModelClient: FakeAiModelClient,
-    ): AiModelClientProvider =
-        AiModelClientProvider {
-            listOf(localAiModelClient, cloudAiModelClient)
+    fun chatModelClientProvider(
+        @Qualifier("localChatModelClient")
+        localChatModelClient: FakeChatModelClient,
+        @Qualifier("cloudChatModelClient")
+        cloudChatModelClient: FakeChatModelClient,
+    ): ChatModelClientProvider =
+        ChatModelClientProvider {
+            listOf(localChatModelClient, cloudChatModelClient)
         }
 
     @Bean
-    fun localAiModelClient(): FakeAiModelClient =
-        FakeAiModelClient(modelId = "local-ollama-llama")
+    fun localChatModelClient(): FakeChatModelClient =
+        FakeChatModelClient(modelId = "local-ollama-llama")
 
     @Bean
-    fun cloudAiModelClient(): FakeAiModelClient =
-        FakeAiModelClient(modelId = "cloud-gpt")
+    fun cloudChatModelClient(): FakeChatModelClient =
+        FakeChatModelClient(modelId = "cloud-gpt")
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =

@@ -2,11 +2,11 @@ package org.alterbit.aisme.chat.api
 
 import java.time.Clock
 import org.alterbit.aisme.chat.ChatService
-import org.alterbit.aisme.chat.AiModelClientProvider
-import org.alterbit.aisme.chat.AiModelClients
+import org.alterbit.aisme.chat.ChatModelClientProvider
+import org.alterbit.aisme.chat.ChatModelClients
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.catalog.ChatProperties
-import org.alterbit.aisme.chat.FakeAiModelClient
+import org.alterbit.aisme.chat.FakeChatModelClient
 import org.alterbit.aisme.chat.api.ChatExceptionHandler
 import org.alterbit.aisme.embedding.api.EmbeddingExceptionHandler
 import org.alterbit.aisme.web.ApiExceptionHandler
@@ -149,7 +149,7 @@ class ChatControllerTest(
 )
 @Import(
     ChatService::class,
-    AiModelClients::class,
+    ChatModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,
     EmbeddingExceptionHandler::class,
@@ -167,9 +167,9 @@ class ChatControllerTestConfiguration {
         Clock.systemUTC()
 
     @Bean
-    fun aiModelClientProvider(): AiModelClientProvider =
-        AiModelClientProvider {
-            listOf(FakeAiModelClient(modelId = "local-ollama-llama"))
+    fun chatModelClientProvider(): ChatModelClientProvider =
+        ChatModelClientProvider {
+            listOf(FakeChatModelClient(modelId = "local-ollama-llama"))
         }
 
     @Bean

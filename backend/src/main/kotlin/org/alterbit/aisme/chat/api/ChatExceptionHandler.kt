@@ -1,8 +1,8 @@
 package org.alterbit.aisme.chat.api
 
-import org.alterbit.aisme.chat.AiModelClientNotFoundException
-import org.alterbit.aisme.chat.AiModelProviderException
-import org.alterbit.aisme.chat.AiModelProviderTimeoutException
+import org.alterbit.aisme.chat.ChatModelClientNotFoundException
+import org.alterbit.aisme.chat.ChatModelProviderException
+import org.alterbit.aisme.chat.ChatModelProviderTimeoutException
 import org.alterbit.aisme.chat.catalog.ChatModelNotFoundException
 import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
 import org.alterbit.aisme.web.ApiErrorCode
@@ -39,8 +39,8 @@ class ChatExceptionHandler {
             ),
         )
 
-    @ExceptionHandler(AiModelClientNotFoundException::class)
-    fun handleAiModelClientNotFound(exception: AiModelClientNotFoundException): ResponseEntity<ApiErrorResponse> =
+    @ExceptionHandler(ChatModelClientNotFoundException::class)
+    fun handleChatModelClientNotFound(exception: ChatModelClientNotFoundException): ResponseEntity<ApiErrorResponse> =
         apiError(
             status = HttpStatus.SERVICE_UNAVAILABLE,
             code = ApiErrorCode.MODEL_CLIENT_NOT_FOUND,
@@ -48,8 +48,8 @@ class ChatExceptionHandler {
             details = mapOf("modelId" to exception.modelId),
         )
 
-    @ExceptionHandler(AiModelProviderTimeoutException::class)
-    fun handleAiModelProviderTimeout(exception: AiModelProviderTimeoutException): ResponseEntity<ApiErrorResponse> =
+    @ExceptionHandler(ChatModelProviderTimeoutException::class)
+    fun handleChatModelProviderTimeout(exception: ChatModelProviderTimeoutException): ResponseEntity<ApiErrorResponse> =
         apiError(
             status = HttpStatus.GATEWAY_TIMEOUT,
             code = ApiErrorCode.PROVIDER_TIMEOUT,
@@ -57,8 +57,8 @@ class ChatExceptionHandler {
             details = exception.providerDetails(),
         )
 
-    @ExceptionHandler(AiModelProviderException::class)
-    fun handleAiModelProviderError(exception: AiModelProviderException): ResponseEntity<ApiErrorResponse> =
+    @ExceptionHandler(ChatModelProviderException::class)
+    fun handleChatModelProviderError(exception: ChatModelProviderException): ResponseEntity<ApiErrorResponse> =
         apiError(
             status = HttpStatus.BAD_GATEWAY,
             code = ApiErrorCode.PROVIDER_ERROR,
@@ -66,7 +66,7 @@ class ChatExceptionHandler {
             details = exception.providerDetails(),
         )
 
-    private fun AiModelProviderException.providerDetails(): Map<String, String> =
+    private fun ChatModelProviderException.providerDetails(): Map<String, String> =
         mapOf(
             "modelId" to modelId,
             "provider" to provider,

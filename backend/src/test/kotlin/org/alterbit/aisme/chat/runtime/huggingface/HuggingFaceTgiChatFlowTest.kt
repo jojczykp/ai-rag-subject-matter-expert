@@ -10,7 +10,7 @@ import org.alterbit.aisme.chat.api.ChatExceptionHandler
 import org.alterbit.aisme.embedding.api.EmbeddingExceptionHandler
 import org.alterbit.aisme.web.ApiExceptionHandler
 import org.alterbit.aisme.chat.ChatService
-import org.alterbit.aisme.chat.AiModelClients
+import org.alterbit.aisme.chat.ChatModelClients
 import org.alterbit.aisme.chat.api.ChatController
 import org.alterbit.aisme.chat.ChatContextRetriever
 import org.alterbit.aisme.chat.catalog.ChatProperties
@@ -118,14 +118,14 @@ class HuggingFaceTgiChatFlowTest(
 )
 @Import(
     ChatService::class,
-    AiModelClients::class,
+    ChatModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,
     EmbeddingExceptionHandler::class,
     ChatController::class,
     ChatModelAvailabilityService::class,
     ChatModelRegistry::class,
-    HuggingFaceTgiAiModelClientProvider::class,
+    HuggingFaceTgiChatModelClientProvider::class,
     RestClientHuggingFaceTgiChatApiFactory::class,
 )
 class HuggingFaceTgiChatFlowTestContext {

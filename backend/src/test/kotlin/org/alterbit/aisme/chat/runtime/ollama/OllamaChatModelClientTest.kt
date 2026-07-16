@@ -1,0 +1,154 @@
+package org.alterbit.aisme.chat.runtime.ollama
+
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import java.time.Duration
+import java.time.Instant
+import org.alterbit.aisme.chat.ChatModelRequest
+import org.alterbit.aisme.chat.ChatModelContextChunk
+import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
+import org.alterbit.aisme.chat.catalog.ChatModelMode
+import org.alterbit.aisme.chat.catalog.ChatModelRuntime
+import org.alterbit.aisme.chat.catalog.chatModel
+import org.junit.jupiter.api.Test
+import org.springframework.ai.ollama.api.OllamaApi
+
+class OllamaChatModelClientTest {
+    @Test
+    fun `exposes configured model id`() {
+        val client = OllamaChatModelClient(
+            model = ollamaModel(id = "local-llama"),
+            chatApi = FakeOllamaChatApi(),
+        )
+
+        client.modelId shouldBe "local-llama"
+    }
+
+    @Test
+    fun `sends chat request to configured ollama model`() {
+        val chatApi = FakeOllamaChatApi(answer = " Use two parts water. ")
+        val client = OllamaChatModelClient(
+            model = ollamaModel(id = "local-llama", modelName = "llama3.2"),
+            chatApi = chatApi,
+        )
+
+        val response = client.chat(
+            ChatModelRequest(
+                modelId = "local-llama",
+                message = "How should I cook rice?",
+                contextChunks = listOf(
+                    ChatModelContextChunk(
+                        content = "Use two parts water for one part rice.",
+                        resourcePath = "subject-documents/culinary_expert/rice.txt",
+                        chunkIndex = 0,
+                    ),
+                ),
+                apiTimeout = Duration.ofSeconds(45),
+            ),
+        )
+
+        response.modelId shouldBe "local-llama"
+        response.answer shouldBe "Use two parts water."
+        chatApi.requests.single().model() shouldBe "llama3.2"
+        chatApi.requests.single().stream() shouldBe false
+        chatApi.requests.single().messages().single().role() shouldBe OllamaApi.Message.Role.USER
+        chatApi.requests.single().messages().single().content() shouldBe """
+            Context:
+            Use two parts water for one part rice.
+
+            Question:
+            How should I cook rice?
+        """.trimIndent()
+    }
+
+    @Test
+    fun `rejects request for another model id`() {
+        val client = OllamaChatModelClient(
+            model = ollamaModel(id = "local-llama"),
+            chatApi = FakeOllamaChatApi(),
+        )
+
+        val exception = shouldThrow<IllegalArgumentException> {
+            client.chat(request(modelId = "local-qwen"))
+        }
+
+        exception.message shouldContain "cannot handle"
+    }
+
+    @Test
+    fun `rejects ollama model without model name`() {
+        val exception = shouldThrow<IllegalStateException> {
+            OllamaChatModelClient(
+                model = ollamaModel(modelName = null),
+                chatApi = FakeOllamaChatApi(),
+            )
+        }
+
+        exception.message shouldContain "requires modelName"
+    }
+
+    @Test
+    fun `rejects blank provider response`() {
+        val client = OllamaChatModelClient(
+            model = ollamaModel(),
+            chatApi = FakeOllamaChatApi(answer = " "),
+        )
+
+        val exception = shouldThrow<IllegalStateException> {
+            client.chat(request())
+        }
+
+        exception.message shouldContain "blank answer"
+    }
+
+    private fun request(modelId: String = "local-llama"): ChatModelRequest =
+        ChatModelRequest(
+            modelId = modelId,
+            message = "How should I cook rice?",
+            contextChunks = emptyList(),
+            apiTimeout = Duration.ofSeconds(60),
+        )
+
+    private fun ollamaModel(
+        id: String = "local-llama",
+        modelName: String? = "llama3.2",
+    ): ChatModelDescriptor =
+        chatModel(
+            id = id,
+            runtime = ChatModelRuntime.OLLAMA,
+            mode = ChatModelMode.LOCAL_SERVER,
+            availableOffline = false,
+            baseUrl = "http://localhost:11434",
+            modelName = modelName,
+        )
+
+    private class FakeOllamaChatApi(
+        private val answer: String = "Fake Ollama answer",
+    ) : OllamaChatApi {
+        val requests = mutableListOf<OllamaApi.ChatRequest>()
+
+        override fun chat(request: OllamaApi.ChatRequest): OllamaApi.ChatResponse {
+            requests += request
+            return OllamaApi.ChatResponse(
+                request.model(),
+                Instant.EPOCH,
+                OllamaApi.Message.builder(OllamaApi.Message.Role.ASSISTANT)
+                    .content(answer)
+                    .build(),
+                "stop",
+                true,
+                0L,
+                0L,
+                0,
+                0L,
+                0,
+                0L,
+            )
+        }
+
+        override fun modelNames(): Set<String> =
+            emptySet()
+    }
+}

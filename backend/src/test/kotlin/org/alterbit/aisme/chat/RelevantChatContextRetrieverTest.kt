@@ -65,7 +65,7 @@ class RelevantChatContextRetrieverTest {
         relevantChunkRetriever.requests.single().chunkingStrategyVersion shouldBe "character-count-v1:size=700:overlap=100"
         relevantChunkRetriever.requests.single().limit shouldBe 3
         contextChunks shouldContainExactly listOf(
-            AiModelContextChunk(
+            ChatModelContextChunk(
                 content = "Use two parts water for one part rice.",
                 resourcePath = "culinary_expert/rice.txt",
                 chunkIndex = 2,

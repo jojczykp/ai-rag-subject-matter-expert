@@ -18,7 +18,7 @@ class ChatService(
     private val chatModelAvailabilityService: ChatModelAvailabilityService,
     private val chatProperties: ChatProperties,
     private val chatContextRetriever: ChatContextRetriever,
-    private val aiModelClients: AiModelClients,
+    private val chatModelClients: ChatModelClients,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -42,7 +42,7 @@ class ChatService(
         )
         logger.info("Sending chat request to model '{}' with {} context chunk(s)", chatModel.id, contextChunks.size)
 
-        val modelRequest = AiModelChatRequest(
+        val modelRequest = ChatModelRequest(
             modelId = chatModel.id,
             message = request.message,
             contextChunks = contextChunks,
@@ -50,11 +50,11 @@ class ChatService(
         )
 
         val modelResponse = try {
-            aiModelClients.getByModelIdOrThrow(chatModel.id).chat(modelRequest)
+            chatModelClients.getByModelIdOrThrow(chatModel.id).chat(modelRequest)
         } catch (ex: CancellationException) {
             logger.warn("Chat request for model '{}' was cancelled", chatModel.id)
             throw ex
-        } catch (ex: AiModelProviderException) {
+        } catch (ex: ChatModelProviderException) {
             logger.warn(
                 "Chat provider reported failure for model '{}' and provider '{}'",
                 ex.modelId,
@@ -62,12 +62,12 @@ class ChatService(
                 ex,
             )
             throw ex
-        } catch (ex: AiModelClientNotFoundException) {
+        } catch (ex: ChatModelClientNotFoundException) {
             logger.warn("No AI model client found for configured model '{}'", ex.modelId)
             throw ex
         } catch (ex: RuntimeException) {
             logger.warn("Chat provider call failed for model '{}'", chatModel.id, ex)
-            throw ex.toAiModelProviderException(
+            throw ex.toChatModelProviderException(
                 modelId = chatModel.id,
                 provider = chatModel.runtime.providerLabel,
             )
