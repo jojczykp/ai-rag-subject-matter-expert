@@ -1,7 +1,7 @@
 package org.alterbit.aisme.chat.api
 
 import java.time.Clock
-import org.alterbit.aisme.chat.AiChatService
+import org.alterbit.aisme.chat.ChatService
 import org.alterbit.aisme.chat.AiModelClientProvider
 import org.alterbit.aisme.chat.AiModelClients
 import org.alterbit.aisme.chat.ChatContextRetriever
@@ -148,7 +148,7 @@ class ChatControllerTest(
     ChatModelsProperties::class,
 )
 @Import(
-    AiChatService::class,
+    ChatService::class,
     AiModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,

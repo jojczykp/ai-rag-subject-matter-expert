@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class AiChatService(
+class ChatService(
     private val chatModelRegistry: ChatModelRegistry,
     private val chatModelAvailabilityService: ChatModelAvailabilityService,
     private val chatProperties: ChatProperties,

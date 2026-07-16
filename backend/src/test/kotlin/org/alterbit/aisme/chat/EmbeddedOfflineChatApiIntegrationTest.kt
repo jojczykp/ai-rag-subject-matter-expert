@@ -179,7 +179,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
     ChatModelsProperties::class,
 )
 @Import(
-    AiChatService::class,
+    ChatService::class,
     AiModelClients::class,
     ApiExceptionHandler::class,
     ChatExceptionHandler::class,

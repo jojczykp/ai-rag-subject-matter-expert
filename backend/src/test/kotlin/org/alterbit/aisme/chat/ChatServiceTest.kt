@@ -25,14 +25,14 @@ import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
-class AiChatServiceTest {
+class ChatServiceTest {
     @Test
     fun `delegates chat request to matching configured model client`() {
         val localModelClient = FakeAiModelClient(modelId = "local-ollama-llama")
         val cloudModelClient = FakeAiModelClient(modelId = "cloud-gpt")
         val contextChunks = contextChunks()
         val chatContextRetriever = FakeChatContextRetriever(contextChunks)
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(45)),
@@ -66,7 +66,7 @@ class AiChatServiceTest {
     fun `passes selected embedding model id to context retrieval`() {
         val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
         val chatContextRetriever = FakeChatContextRetriever(contextChunks())
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -88,7 +88,7 @@ class AiChatServiceTest {
 
     @Test
     fun `rejects unknown chat model id`() {
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -110,7 +110,7 @@ class AiChatServiceTest {
 
     @Test
     fun `rejects configured chat model without matching model client`() {
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -133,7 +133,7 @@ class AiChatServiceTest {
     @Test
     fun `rejects duplicate model clients`() {
         val exception = shouldThrow<IllegalArgumentException> {
-            AiChatService(
+            ChatService(
                 chatModelRegistry = chatModelRegistry(),
                 chatModelAvailabilityService = chatModelAvailabilityService(),
                 chatProperties = ChatProperties(),
@@ -151,7 +151,7 @@ class AiChatServiceTest {
     @Test
     fun `rejects unavailable model before calling model client`() {
         val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.UNAVAILABLE),
             chatProperties = ChatProperties(),
@@ -176,7 +176,7 @@ class AiChatServiceTest {
     @Test
     fun `rejects misconfigured model before calling model client`() {
         val modelClient = FakeAiModelClient(modelId = "local-ollama-llama")
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(ChatModelAvailability.MISCONFIGURED),
             chatProperties = ChatProperties(),
@@ -201,7 +201,7 @@ class AiChatServiceTest {
     @Test
     fun `maps model client failure to provider error`() {
         val modelClient = FailingAiModelClient(modelId = "local-ollama-llama")
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -225,7 +225,7 @@ class AiChatServiceTest {
 
     @Test
     fun `maps model client apiTimeout to provider apiTimeout`() {
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -258,7 +258,7 @@ class AiChatServiceTest {
             provider = "Custom provider",
             message = "custom provider failure",
         )
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
@@ -285,7 +285,7 @@ class AiChatServiceTest {
 
     @Test
     fun `does not map request cancellation`() {
-        val service = AiChatService(
+        val service = ChatService(
             chatModelRegistry = chatModelRegistry(),
             chatModelAvailabilityService = chatModelAvailabilityService(),
             chatProperties = ChatProperties(),
