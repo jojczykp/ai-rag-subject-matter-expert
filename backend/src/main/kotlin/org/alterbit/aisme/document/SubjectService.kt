@@ -9,6 +9,9 @@ class SubjectService(
     override fun subjects(): List<SubjectDescriptor> =
         subjectsProperties.enabledSubjects()
 
+    override fun defaultSubjectId(): String? =
+        subjectsProperties.defaultSubjectId()
+
     override fun getByIdOrThrow(subjectId: String): SubjectDescriptor =
         subjectsProperties.getByIdOrThrow(subjectId)
 }

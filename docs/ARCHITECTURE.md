@@ -301,14 +301,16 @@ Example model catalog configuration:
 ```yaml
 aisme:
   subjects:
-    culinary-expert:
-      enabled: true
-      display-order: 10
-      display-name: Culinary Expert
-      documents:
-        location: classpath:/subject_documents/culinary_expert/
-        chunk-size: 700
-        chunk-overlap: 100
+    default-subject-id: culinary-expert
+    definitions:
+      culinary-expert:
+        enabled: true
+        display-order: 10
+        display-name: Culinary Expert
+        documents:
+          location: classpath:/subject_documents/culinary_expert/
+          chunk-size: 700
+          chunk-overlap: 100
 
   embedding:
     api-timeout: 60s

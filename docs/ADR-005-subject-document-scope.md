@@ -21,9 +21,10 @@ Initial scope:
 - [x] Support multiple predefined static subjects.
 - [x] Require a subject id in chat requests.
 - [ ] Load all reasoning documents from static application resources.
-- [x] Configure each subject under `aisme.subjects.<subject-id>`.
+- [x] Configure the default subject under `aisme.subjects.default-subject-id`.
+- [x] Configure each subject under `aisme.subjects.definitions.<subject-id>`.
 - [x] Configure each subject's document location under
-      `aisme.subjects.<subject-id>.documents.location`.
+      `aisme.subjects.definitions.<subject-id>.documents.location`.
 - [x] Support subject `enabled`, `display-order`, and `display-name`
       configuration.
 - [ ] Support plain text `.txt` documents as the first input format.

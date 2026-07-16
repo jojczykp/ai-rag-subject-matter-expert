@@ -15,8 +15,9 @@ class SubjectDocumentsPropertiesDefaultTest {
     fun `uses default subject document configuration`() {
         contextRunner.run { context ->
             val properties = context.getBean<SubjectsProperties>()
-            val subject = properties.subjects.getValue("culinary-expert")
+            val subject = properties.definitions.getValue("culinary-expert")
 
+            properties.defaultSubjectId shouldBe "culinary-expert"
             subject.enabled shouldBe true
             subject.displayOrder shouldBe 10
             subject.displayName shouldBe "Culinary Expert"

@@ -12,7 +12,7 @@ class SubjectsController(
     fun subjects(): SubjectsResponseDto {
         val subjects = subjectService.subjects().map { subject -> subject.toDto() }
         return SubjectsResponseDto(
-            defaultSubjectId = subjects.firstOrNull()?.id,
+            defaultSubjectId = subjectService.defaultSubjectId(),
             subjects = subjects,
         )
     }

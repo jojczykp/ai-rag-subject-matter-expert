@@ -11,21 +11,23 @@ class SubjectDocumentsPropertiesOverrideTest {
     private val contextRunner = ApplicationContextRunner()
         .withUserConfiguration(PropertiesConfiguration::class.java)
         .withPropertyValues(
-            "aisme.subjects.finance.enabled=false",
-            "aisme.subjects.finance.display-order=20",
-            "aisme.subjects.finance.display-name=Finance",
-            "aisme.subjects.finance.documents.location=classpath:/custom-documents/",
-            "aisme.subjects.finance.documents.chunk-size=2000",
-            "aisme.subjects.finance.documents.chunk-overlap=250",
+            "aisme.subjects.default-subject-id=finance",
+            "aisme.subjects.definitions.finance.enabled=true",
+            "aisme.subjects.definitions.finance.display-order=20",
+            "aisme.subjects.definitions.finance.display-name=Finance",
+            "aisme.subjects.definitions.finance.documents.location=classpath:/custom-documents/",
+            "aisme.subjects.definitions.finance.documents.chunk-size=2000",
+            "aisme.subjects.definitions.finance.documents.chunk-overlap=250",
         )
 
     @Test
     fun `uses configured subject document properties`() {
         contextRunner.run { context ->
             val properties = context.getBean<SubjectsProperties>()
-            val subject = properties.subjects.getValue("finance")
+            val subject = properties.definitions.getValue("finance")
 
-            subject.enabled shouldBe false
+            properties.defaultSubjectId shouldBe "finance"
+            subject.enabled shouldBe true
             subject.displayOrder shouldBe 20
             subject.displayName shouldBe "Finance"
             subject.documents.location shouldBe "classpath:/custom-documents/"

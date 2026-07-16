@@ -25,7 +25,8 @@ fun subjectsProperties(
     documentsProperties: SubjectDocumentsProperties = SubjectDocumentsProperties(),
 ): SubjectsProperties =
     SubjectsProperties(
-        subjects = mapOf(
+        defaultSubjectId = subjectId,
+        definitions = mapOf(
             subjectId to SubjectProperties(
                 enabled = true,
                 displayOrder = 10,

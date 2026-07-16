@@ -2,10 +2,11 @@ package org.alterbit.aisme.document
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "aisme")
+@ConfigurationProperties(prefix = "aisme.subjects")
 data class SubjectsProperties(
-    val subjects: Map<String, SubjectProperties> = mapOf(
-            "culinary-expert" to SubjectProperties(
+    val defaultSubjectId: String? = "culinary-expert",
+    val definitions: Map<String, SubjectProperties> = mapOf(
+        "culinary-expert" to SubjectProperties(
             displayOrder = 10,
             displayName = "Culinary Expert",
             documents = SubjectDocumentsProperties(
@@ -15,17 +16,23 @@ data class SubjectsProperties(
     ),
 ) {
     init {
-        require(subjects.isNotEmpty()) { "aisme.subjects must contain at least one subject" }
-        subjects.forEach { (subjectId, subject) ->
-            require(subjectId.isNotBlank()) { "aisme.subjects keys must not be blank" }
+        require(definitions.isNotEmpty()) { "aisme.subjects.definitions must contain at least one subject" }
+        require(defaultSubjectId == null || defaultSubjectId.isNotBlank()) {
+            "aisme.subjects.default-subject-id must not be blank"
+        }
+        definitions.forEach { (subjectId, subject) ->
+            require(subjectId.isNotBlank()) { "aisme.subjects.definitions keys must not be blank" }
             require(subject.displayName == null || subject.displayName.isNotBlank()) {
-                "aisme.subjects.$subjectId.display-name must not be blank"
+                "aisme.subjects.definitions.$subjectId.display-name must not be blank"
             }
+        }
+        require(defaultSubjectId == null || defaultSubjectId in enabledSubjectIds()) {
+            "aisme.subjects.default-subject-id must reference an enabled subject"
         }
     }
 
     fun allSubjects(): List<SubjectDescriptor> =
-        subjects
+        definitions
             .map { (subjectId, subject) -> subject.toDescriptor(subjectId) }
             .sortedWith(compareBy(SubjectDescriptor::displayOrder, SubjectDescriptor::id))
 
@@ -36,9 +43,17 @@ data class SubjectsProperties(
         enabledSubjects().firstOrNull { subject -> subject.id == subjectId }
             ?: throw SubjectNotFoundException(subjectId)
 
+    fun defaultSubjectId(): String? =
+        defaultSubjectId
+
     fun documentsForSubjectOrThrow(subjectId: String): SubjectDocumentsProperties =
-        subjects[subjectId]?.takeIf(SubjectProperties::enabled)?.documents
+        definitions[subjectId]?.takeIf(SubjectProperties::enabled)?.documents
             ?: throw SubjectNotFoundException(subjectId)
+
+    private fun enabledSubjectIds(): Set<String> =
+        definitions
+            .filterValues(SubjectProperties::enabled)
+            .keys
 
     private fun SubjectProperties.toDescriptor(subjectId: String): SubjectDescriptor =
         SubjectDescriptor(

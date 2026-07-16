@@ -20,11 +20,11 @@ class ConfigurationPropertiesValidationTest {
     fun `fails binding invalid document chunking configuration`() {
         propertyContext(DocumentsPropertiesConfiguration::class.java)
             .withPropertyValues(
-                "aisme.subjects.culinary-expert.documents.chunk-size=100",
-                "aisme.subjects.culinary-expert.documents.chunk-overlap=100",
+                "aisme.subjects.definitions.culinary-expert.documents.chunk-size=100",
+                "aisme.subjects.definitions.culinary-expert.documents.chunk-overlap=100",
             )
             .run { context ->
-                context.failureMessage() shouldContain "aisme.subjects.culinary-expert.documents"
+                context.failureMessage() shouldContain "aisme.subjects.definitions.culinary-expert.documents"
                 context.failureMessage() shouldContain "smaller than chunk-size"
             }
     }

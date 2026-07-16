@@ -502,12 +502,13 @@ Application properties are configured under the `aisme` prefix.
 | Property | Default | Description |
 | --- | --- | --- |
 | `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
-| `aisme.subjects.<subject-id>.enabled` | `true` in example config | Whether this subject is indexed and selectable. |
-| `aisme.subjects.<subject-id>.display-order` | optional | Sort order for subject selectors and catalog responses. |
-| `aisme.subjects.<subject-id>.display-name` | derived from id when omitted | Human-readable subject name for API clients and the UI. |
-| `aisme.subjects.<subject-id>.documents.location` | required | Bundled document resource folder for this subject. |
-| `aisme.subjects.<subject-id>.documents.chunk-size` | `700` | Maximum character count per indexed document chunk for this subject. |
-| `aisme.subjects.<subject-id>.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks for this subject. Must be smaller than `chunk-size`. |
+| `aisme.subjects.default-subject-id` | `culinary-expert` | Subject preselected by API clients and the UI. |
+| `aisme.subjects.definitions.<subject-id>.enabled` | `true` in example config | Whether this subject is indexed and selectable. |
+| `aisme.subjects.definitions.<subject-id>.display-order` | optional | Sort order for subject selectors and catalog responses. |
+| `aisme.subjects.definitions.<subject-id>.display-name` | derived from id when omitted | Human-readable subject name for API clients and the UI. |
+| `aisme.subjects.definitions.<subject-id>.documents.location` | required | Bundled document resource folder for this subject. |
+| `aisme.subjects.definitions.<subject-id>.documents.chunk-size` | `700` | Maximum character count per indexed document chunk for this subject. |
+| `aisme.subjects.definitions.<subject-id>.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks for this subject. Must be smaller than `chunk-size`. |
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
 | `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
 | `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |
