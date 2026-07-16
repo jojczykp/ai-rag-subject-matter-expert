@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 @Component
 class EmbeddedLlamaProcessManager(
     chatModelRegistry: ChatModelRegistry,
-    portAllocator: EphemeralEmbeddedLlamaPortAllocator,
+    portAllocator: LlamaServerPortAllocator,
     private val processLauncher: EmbeddedLlamaProcessLauncher,
     private val readinessProbe: LlamaServerReadinessProbe,
     private val processOutputLogger: EmbeddedLlamaProcessOutputLogger,
@@ -92,7 +92,7 @@ class EmbeddedLlamaProcessManager(
 
     private fun buildManagedModels(
         chatModelRegistry: ChatModelRegistry,
-        portAllocator: EphemeralEmbeddedLlamaPortAllocator,
+        portAllocator: LlamaServerPortAllocator,
     ): List<ManagedEmbeddedLlamaModel> {
         return chatModelRegistry.chatModels()
             .filter { it.runtime == ChatModelRuntime.EMBEDDED_LLAMA }

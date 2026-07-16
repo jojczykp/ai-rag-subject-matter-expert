@@ -9,7 +9,7 @@ import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
-import org.alterbit.aisme.chat.runtime.embedded.EphemeralEmbeddedLlamaPortAllocator
+import org.alterbit.aisme.chat.runtime.embedded.LlamaServerPortAllocator
 import org.alterbit.aisme.chat.runtime.embedded.EmbeddedLlamaProcessLauncher
 import org.alterbit.aisme.chat.runtime.embedded.EmbeddedLlamaProcessManager
 import org.alterbit.aisme.chat.runtime.embedded.EmbeddedLlamaProcessOutputLogger
@@ -224,7 +224,7 @@ class EmbeddedOfflineModelAvailabilityCheckerTest {
                     ),
                 ),
             ),
-            portAllocator = EphemeralEmbeddedLlamaPortAllocator { 19001 },
+            portAllocator = LlamaServerPortAllocator { 19001 },
             processLauncher = FakeEmbeddedLlamaProcessLauncher(),
             readinessProbe = LlamaServerReadinessProbe { _, _ -> runtimeReady },
             processOutputLogger = EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> }),

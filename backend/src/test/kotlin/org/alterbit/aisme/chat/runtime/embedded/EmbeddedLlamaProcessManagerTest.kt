@@ -204,9 +204,9 @@ class EmbeddedLlamaProcessManagerTest {
             ),
         )
 
-    private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {
+    private fun fixedPortAllocator(vararg ports: Int): LlamaServerPortAllocator {
         val remainingPorts = ports.toMutableList()
-        return EphemeralEmbeddedLlamaPortAllocator { remainingPorts.removeFirst() }
+        return LlamaServerPortAllocator { remainingPorts.removeFirst() }
     }
 
     private fun noOpOutputLogger(): EmbeddedLlamaProcessOutputLogger =

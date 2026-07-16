@@ -141,9 +141,9 @@ class EmbeddedLlamaChatModelClientProviderTest {
             processOutputLogger = EmbeddedLlamaProcessOutputLogger(lineConsumer = { _, _, _ -> }),
         )
 
-    private fun fixedPortAllocator(vararg ports: Int): EphemeralEmbeddedLlamaPortAllocator {
+    private fun fixedPortAllocator(vararg ports: Int): LlamaServerPortAllocator {
         val remainingPorts = ports.toMutableList()
-        return EphemeralEmbeddedLlamaPortAllocator { remainingPorts.removeFirst() }
+        return LlamaServerPortAllocator { remainingPorts.removeFirst() }
     }
 
     private class FakeLlamaServerChatApiFactory : LlamaServerChatApiFactory {
