@@ -5,9 +5,10 @@ import {
   ApiError,
   getChatModels,
   getEmbeddingModels,
+  getSubjects,
   postChat,
 } from './api/client'
-import type { ChatModel, EmbeddingModel } from './api/types'
+import type { ChatModel, EmbeddingModel, Subject } from './api/types'
 
 type ChatMessage = {
   id: number
@@ -20,6 +21,7 @@ const defaultMessage = 'How should I cook rice?'
 function App() {
   const [models, setModels] = useState<ChatModel[]>([])
   const [embeddingModels, setEmbeddingModels] = useState<EmbeddingModel[]>([])
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [modelsLoading, setModelsLoading] = useState(true)
   const [modelsError, setModelsError] = useState<string | null>(null)
   const [chatApiTimeoutSeconds, setChatApiTimeoutSeconds] = useState(60)
@@ -27,6 +29,7 @@ function App() {
     useState(60)
   const [selectedModelId, setSelectedModelId] = useState('')
   const [selectedEmbeddingModelId, setSelectedEmbeddingModelId] = useState('')
+  const [selectedSubjectId, setSelectedSubjectId] = useState('')
   const [message, setMessage] = useState(defaultMessage)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatError, setChatError] = useState<string | null>(null)
@@ -37,39 +40,49 @@ function App() {
   useEffect(() => {
     let active = true
 
-    Promise.all([getChatModels(), getEmbeddingModels()])
-      .then(([chatModelsResponse, embeddingModelsResponse]) => {
-        if (!active) {
-          return
-        }
-        const chatModels = chatModelsResponse.chatModels
-        const embeddingModels = embeddingModelsResponse.embeddingModels
-        const enabledEmbeddingModels = embeddingModels.filter(
-          (model) => model.enabled,
-        )
+    Promise.all([getSubjects(), getEmbeddingModels(), getChatModels()])
+      .then(
+        ([subjectsResponse, embeddingModelsResponse, chatModelsResponse]) => {
+          if (!active) {
+            return
+          }
+          const subjects = subjectsResponse.subjects
+          const enabledSubjects = subjects.filter((subject) => subject.enabled)
+          const chatModels = chatModelsResponse.chatModels
+          const embeddingModels = embeddingModelsResponse.embeddingModels
+          const enabledEmbeddingModels = embeddingModels.filter(
+            (model) => model.enabled,
+          )
 
-        setModels(chatModels)
-        setEmbeddingModels(embeddingModels)
-        setChatApiTimeoutSeconds(chatModelsResponse.chatApiTimeoutSeconds)
-        setEmbeddingApiTimeoutSeconds(
-          embeddingModelsResponse.embeddingApiTimeoutSeconds,
-        )
-        setSelectedModelId(
-          defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
-        )
-        setSelectedEmbeddingModelId(
-          defaultModelId(
-            enabledEmbeddingModels,
-            embeddingModelsResponse.defaultEmbeddingModelId,
-          ),
-        )
-        setModelsError(null)
-      })
+          setSubjects(subjects)
+          setModels(chatModels)
+          setEmbeddingModels(embeddingModels)
+          setChatApiTimeoutSeconds(chatModelsResponse.chatApiTimeoutSeconds)
+          setEmbeddingApiTimeoutSeconds(
+            embeddingModelsResponse.embeddingApiTimeoutSeconds,
+          )
+          setSelectedSubjectId(
+            defaultModelId(enabledSubjects, subjectsResponse.defaultSubjectId),
+          )
+          setSelectedModelId(
+            defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
+          )
+          setSelectedEmbeddingModelId(
+            defaultModelId(
+              enabledEmbeddingModels,
+              embeddingModelsResponse.defaultEmbeddingModelId,
+            ),
+          )
+          setModelsError(null)
+        },
+      )
       .catch((error: unknown) => {
         if (!active) {
           return
         }
-        setModelsError(errorMessage(error, 'Could not load configured models.'))
+        setModelsError(
+          errorMessage(error, 'Could not load configured subjects and models.'),
+        )
       })
       .finally(() => {
         if (active) {
@@ -85,7 +98,10 @@ function App() {
   useEffect(() => {
     const messageInput = messageInputRef.current
     messageInput?.focus()
-    messageInput?.setSelectionRange(messageInput.value.length, messageInput.value.length)
+    messageInput?.setSelectionRange(
+      messageInput.value.length,
+      messageInput.value.length,
+    )
   }, [])
 
   useEffect(() => {
@@ -103,6 +119,14 @@ function App() {
   const selectedModel = useMemo(
     () => models.find((model) => model.id === selectedModelId),
     [models, selectedModelId],
+  )
+  const enabledSubjects = useMemo(
+    () => subjects.filter((subject) => subject.enabled),
+    [subjects],
+  )
+  const selectedSubject = useMemo(
+    () => enabledSubjects.find((subject) => subject.id === selectedSubjectId),
+    [enabledSubjects, selectedSubjectId],
   )
   const enabledEmbeddingModels = useMemo(
     () => embeddingModels.filter((model) => model.enabled),
@@ -126,17 +150,23 @@ function App() {
   )
   const sendDisabled =
     sending ||
+    !selectedSubject ||
     !selectedModel ||
     !selectedEmbeddingModel ||
     !trimmedMessage ||
     !modelCanChat
   const selectionSummary =
-    selectedModel && selectedEmbeddingModel
-      ? `Chat: ${selectedModel.displayName} · Embedding: ${selectedEmbeddingModel.displayName}`
+    selectedSubject && selectedModel && selectedEmbeddingModel
+      ? `Subject: ${selectedSubject.displayName} · Embedding: ${selectedEmbeddingModel.displayName} · Chat: ${selectedModel.displayName}`
       : null
 
   async function submitChat() {
-    if (sendDisabled || !selectedModel || !selectedEmbeddingModel) {
+    if (
+      sendDisabled ||
+      !selectedSubject ||
+      !selectedModel ||
+      !selectedEmbeddingModel
+    ) {
       return
     }
 
@@ -153,6 +183,7 @@ function App() {
 
     try {
       const response = await postChat({
+        subjectId: selectedSubject.id,
         modelId: selectedModel.id,
         embeddingModelId: selectedEmbeddingModel.id,
         message: trimmedMessage,
@@ -186,6 +217,22 @@ function App() {
           <p className="eyebrow">AI Subject Matter Expert</p>
           <h1 id="model-panel-heading">Chat workspace</h1>
         </div>
+
+        <label className="field" htmlFor="subject">
+          <span>Subject</span>
+          <select
+            id="subject"
+            value={selectedSubjectId}
+            onChange={(event) => setSelectedSubjectId(event.target.value)}
+            disabled={modelsLoading || enabledSubjects.length === 0}
+          >
+            {enabledSubjects.map((subject) => (
+              <option key={subject.id} value={subject.id}>
+                {subject.displayName}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <label className="field" htmlFor="embedding-model">
           <span>Embedding Model</span>
@@ -230,6 +277,11 @@ function App() {
         {!modelsLoading && !modelsError && models.length === 0 && (
           <p className="status status-error">No chat models are configured.</p>
         )}
+        {!modelsLoading && !modelsError && enabledSubjects.length === 0 && (
+          <p className="status status-error">
+            No enabled subjects are configured.
+          </p>
+        )}
         {!modelsLoading &&
           !modelsError &&
           enabledEmbeddingModels.length === 0 && (
@@ -244,7 +296,9 @@ function App() {
       <section className="chat-panel" aria-labelledby="chat-heading">
         <div className="chat-header">
           <div>
-            <p className="eyebrow">Single subject</p>
+            <p className="eyebrow">
+              {selectedSubject?.displayName ?? 'Subject'}
+            </p>
             <h2 id="chat-heading">Ask a question</h2>
           </div>
           {selectionSummary && (

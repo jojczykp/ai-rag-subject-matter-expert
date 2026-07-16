@@ -12,17 +12,21 @@ class SubjectDocumentsPropertiesDefaultTest {
         .withUserConfiguration(PropertiesConfiguration::class.java)
 
     @Test
-    fun `uses default document configuration`() {
+    fun `uses default subject document configuration`() {
         contextRunner.run { context ->
-            val properties = context.getBean<SubjectDocumentsProperties>()
+            val properties = context.getBean<SubjectsProperties>()
+            val subject = properties.subjects.getValue("culinary-expert")
 
-            properties.location shouldBe "classpath:/subject-documents/"
-            properties.chunkSize shouldBe 700
-            properties.chunkOverlap shouldBe 100
+            subject.enabled shouldBe true
+            subject.displayOrder shouldBe 10
+            subject.displayName shouldBe "Culinary Expert"
+            subject.documents.location shouldBe "classpath:/subject_documents/culinary_expert/"
+            subject.documents.chunkSize shouldBe 700
+            subject.documents.chunkOverlap shouldBe 100
         }
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(SubjectDocumentsProperties::class)
+    @EnableConfigurationProperties(SubjectsProperties::class)
     private class PropertiesConfiguration
 }

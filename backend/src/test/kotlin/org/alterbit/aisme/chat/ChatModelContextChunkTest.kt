@@ -10,12 +10,12 @@ class ChatModelContextChunkTest {
     fun `creates model context chunk`() {
         val chunk = ChatModelContextChunk(
             content = "Use two parts water for one part rice.",
-            resourcePath = "subject-documents/culinary_expert/rice.txt",
+            resourcePath = "subject_documents/culinary_expert/rice.txt",
             chunkIndex = 0,
         )
 
         chunk.content shouldBe "Use two parts water for one part rice."
-        chunk.resourcePath shouldBe "subject-documents/culinary_expert/rice.txt"
+        chunk.resourcePath shouldBe "subject_documents/culinary_expert/rice.txt"
         chunk.chunkIndex shouldBe 0
     }
 
@@ -24,7 +24,7 @@ class ChatModelContextChunkTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelContextChunk(
                 content = " ",
-                resourcePath = "subject-documents/culinary_expert/rice.txt",
+                resourcePath = "subject_documents/culinary_expert/rice.txt",
                 chunkIndex = 0,
             )
         }
@@ -50,7 +50,7 @@ class ChatModelContextChunkTest {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatModelContextChunk(
                 content = "Use two parts water for one part rice.",
-                resourcePath = "subject-documents/culinary_expert/rice.txt",
+                resourcePath = "subject_documents/culinary_expert/rice.txt",
                 chunkIndex = -1,
             )
         }

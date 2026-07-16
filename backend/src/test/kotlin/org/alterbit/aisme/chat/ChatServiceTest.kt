@@ -22,6 +22,9 @@ import org.alterbit.aisme.chat.catalog.ChatModelRuntimeProperties
 import org.alterbit.aisme.chat.catalog.ChatModelsProperties
 import org.alterbit.aisme.chat.catalog.ChatModelRuntimeConfigProperties
 import org.alterbit.aisme.chat.catalog.ChatProperties
+import org.alterbit.aisme.document.SubjectDescriptor
+import org.alterbit.aisme.document.SubjectRegistry
+import org.alterbit.aisme.testsupport.culinarySubject
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.ResourceAccessException
 
@@ -38,10 +41,12 @@ class ChatServiceTest {
             chatProperties = ChatProperties(apiTimeout = Duration.ofSeconds(45)),
             chatContextRetriever = chatContextRetriever,
             chatModelClients = chatModelClients(localModelClient, cloudModelClient),
+            subjectRegistry = subjectRegistry(),
         )
 
         val response = service.chat(
             ChatRequestDto(
+                subjectId = "culinary-expert",
                 modelId = "local-ollama-llama",
                 message = "How should I cook rice?",
             ),
@@ -58,6 +63,7 @@ class ChatServiceTest {
             ),
         )
         chatContextRetriever.messages shouldContainExactly listOf("How should I cook rice?")
+        chatContextRetriever.subjectIds shouldContainExactly listOf("culinary-expert")
         chatContextRetriever.embeddingModelIds shouldContainExactly listOf(null)
         cloudModelClient.requests shouldContainExactly emptyList()
     }
@@ -72,10 +78,12 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = chatContextRetriever,
             chatModelClients = chatModelClients(modelClient),
+            subjectRegistry = subjectRegistry(),
         )
 
         service.chat(
             ChatRequestDto(
+                subjectId = "culinary-expert",
                 modelId = "local-ollama-llama",
                 embeddingModelId = "local-bge-small",
                 message = "How should I cook rice?",
@@ -94,11 +102,13 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
             chatModelClients = chatModelClients(FakeChatModelClient(modelId = "local-ollama-llama")),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelNotFoundException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "missing-model",
                     message = "How should I cook rice?",
                 ),
@@ -116,11 +126,13 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
             chatModelClients = chatModelClients(FakeChatModelClient(modelId = "other-model")),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelClientNotFoundException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -142,6 +154,7 @@ class ChatServiceTest {
                     FakeChatModelClient(modelId = "local-ollama-llama"),
                     FakeChatModelClient(modelId = "local-ollama-llama"),
                 ),
+                subjectRegistry = subjectRegistry(),
             )
         }
 
@@ -157,11 +170,13 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
             chatModelClients = chatModelClients(modelClient),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelUnavailableException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -182,11 +197,13 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
             chatModelClients = chatModelClients(modelClient),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelUnavailableException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -207,11 +224,13 @@ class ChatServiceTest {
             chatProperties = ChatProperties(),
             chatContextRetriever = FakeChatContextRetriever(),
             chatModelClients = chatModelClients(modelClient),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelProviderException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -236,11 +255,13 @@ class ChatServiceTest {
                     failure = ResourceAccessException("Read timed out", SocketTimeoutException("Read timed out")),
                 ),
             ),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelProviderTimeoutException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -269,11 +290,13 @@ class ChatServiceTest {
                     failure = providerException,
                 ),
             ),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<ChatModelProviderException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -296,11 +319,13 @@ class ChatServiceTest {
                     failure = CancellationException("request cancelled"),
                 ),
             ),
+            subjectRegistry = subjectRegistry(),
         )
 
         val exception = shouldThrow<CancellationException> {
             service.chat(
                 ChatRequestDto(
+                    subjectId = "culinary-expert",
                     modelId = "local-ollama-llama",
                     message = "How should I cook rice?",
                 ),
@@ -358,6 +383,15 @@ class ChatServiceTest {
     private fun chatModelClients(vararg clients: ChatModelClient): ChatModelClients =
         ChatModelClients(listOf(ChatModelClientProvider { clients.toList() }))
 
+    private fun subjectRegistry(): SubjectRegistry =
+        object : SubjectRegistry {
+            override fun subjects(): List<SubjectDescriptor> =
+                listOf(culinarySubject())
+
+            override fun getByIdOrThrow(subjectId: String): SubjectDescriptor =
+                subjects().first { subject -> subject.id == subjectId }
+        }
+
     private fun contextChunks(): List<ChatModelContextChunk> =
         listOf(
             ChatModelContextChunk(
@@ -370,10 +404,16 @@ class ChatServiceTest {
     private class FakeChatContextRetriever(
         private val chunks: List<ChatModelContextChunk> = emptyList(),
     ) : ChatContextRetriever {
+        val subjectIds = mutableListOf<String>()
         val messages = mutableListOf<String>()
         val embeddingModelIds = mutableListOf<String?>()
 
-        override fun retrieve(message: String, embeddingModelId: String?): List<ChatModelContextChunk> {
+        override fun retrieve(
+            subjectId: String,
+            message: String,
+            embeddingModelId: String?,
+        ): List<ChatModelContextChunk> {
+            subjectIds += subjectId
             messages += message
             embeddingModelIds += embeddingModelId
             return chunks

@@ -18,6 +18,7 @@ class JdbcRelevantChunkRetriever(
 
         return jdbcClient
             .sql(RETRIEVE_RELEVANT_CHUNKS_SQL)
+            .param("subjectId", request.subjectId)
             .param("embedding", request.embedding.toPgVector())
             .param("embeddingModelId", request.embeddingModel.id)
             .param("embeddingModelVersion", request.embeddingModel.version)
@@ -32,6 +33,7 @@ class JdbcRelevantChunkRetriever(
         RelevantChunk(
             chunkId = resultSet.getObject("chunk_id", UUID::class.java),
             sourceDocumentId = resultSet.getObject("source_document_id", UUID::class.java),
+            subjectId = resultSet.getString("subject_id"),
             resourcePath = resultSet.getString("resource_path"),
             chunkIndex = resultSet.getInt("chunk_index"),
             content = resultSet.getString("content"),
@@ -48,6 +50,7 @@ class JdbcRelevantChunkRetriever(
             SELECT
                 dc.id AS chunk_id,
                 dc.source_document_id,
+                sd.subject_id,
                 sd.resource_path,
                 dc.chunk_index,
                 dc.content,
@@ -61,6 +64,7 @@ class JdbcRelevantChunkRetriever(
               AND ce.embedding_model_version = :embeddingModelVersion
               AND ce.embedding_dimensions = :embeddingDimensions
               AND ce.chunking_strategy_version = :chunkingStrategyVersion
+              AND sd.subject_id = :subjectId
             ORDER BY cosine_distance ASC, dc.id ASC
             LIMIT :limit
         """

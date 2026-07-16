@@ -9,6 +9,7 @@ import org.alterbit.aisme.chat.catalog.ChatModelDescriptor
 import org.alterbit.aisme.chat.catalog.ChatModelRegistry
 import org.alterbit.aisme.chat.catalog.ChatModelUnavailableException
 import org.alterbit.aisme.chat.catalog.ChatProperties
+import org.alterbit.aisme.document.SubjectRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -19,12 +20,15 @@ class ChatService(
     private val chatProperties: ChatProperties,
     private val chatContextRetriever: ChatContextRetriever,
     private val chatModelClients: ChatModelClients,
+    private val subjectRegistry: SubjectRegistry,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     fun chat(request: ChatRequestDto): ChatResponseDto {
         val startedAt = System.nanoTime()
-        logger.info("Processing chat request for model '{}'", request.modelId)
+        logger.info("Processing chat request for subject '{}' and model '{}'", request.subjectId, request.modelId)
+        val subject = subjectRegistry.getByIdOrThrow(request.subjectId)
+        logger.info("Selected subject '{}'", subject.id)
         val chatModel = chatModelAvailabilityService
             .withAvailability(chatModelRegistry.getByIdOrThrow(request.modelId))
             .also(::requireCallableModel)
@@ -37,6 +41,7 @@ class ChatService(
         )
 
         val contextChunks = chatContextRetriever.retrieve(
+            subjectId = subject.id,
             message = request.message,
             embeddingModelId = request.embeddingModelId,
         )

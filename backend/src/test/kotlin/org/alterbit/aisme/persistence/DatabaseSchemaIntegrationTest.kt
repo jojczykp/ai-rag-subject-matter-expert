@@ -37,7 +37,8 @@ class DatabaseSchemaIntegrationTest(
     fun `persists source documents and chunks with Spring Data JDBC`() {
         val sourceDocument = sourceDocumentRepository.save(
             SourceDocumentRecord(
-                resourcePath = "culinary_expert/example.txt",
+                subjectId = "culinary-expert",
+                resourcePath = "example.txt",
                 contentHash = "hash",
                 indexedAt = Instant.parse("2026-01-01T00:00:00Z"),
             ),
@@ -55,7 +56,7 @@ class DatabaseSchemaIntegrationTest(
             ),
         )
 
-        sourceDocumentRepository.findByResourcePath("culinary_expert/example.txt")?.id shouldBe sourceDocumentId
+        sourceDocumentRepository.findBySubjectIdAndResourcePath("culinary-expert", "example.txt")?.id shouldBe sourceDocumentId
         documentChunkRepository.findBySourceDocumentIdOrderByChunkIndex(sourceDocumentId) shouldBe listOf(chunk)
     }
 

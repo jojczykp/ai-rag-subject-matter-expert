@@ -4,6 +4,7 @@ import type {
   ChatResponse,
   ChatModelsResponse,
   EmbeddingModelsResponse,
+  SubjectsResponse,
 } from './types'
 import { apiUrl } from '../config'
 
@@ -21,6 +22,10 @@ export class ApiError extends Error {
 
 export async function getChatModels(): Promise<ChatModelsResponse> {
   return requestJson<ChatModelsResponse>(apiUrl('/chat-models'))
+}
+
+export async function getSubjects(): Promise<SubjectsResponse> {
+  return requestJson<SubjectsResponse>(apiUrl('/subjects'))
 }
 
 export async function getEmbeddingModels(): Promise<EmbeddingModelsResponse> {

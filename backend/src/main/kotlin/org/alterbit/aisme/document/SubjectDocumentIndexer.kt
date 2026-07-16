@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SubjectDocumentIndexer(
-    private val documentsProperties: SubjectDocumentsProperties,
     private val sourceDocumentRepository: SourceDocumentRepository,
     private val documentChunkRepository: DocumentChunkRepository,
     private val chunkEmbeddingRepository: ChunkEmbeddingRepository,
@@ -28,33 +27,46 @@ class SubjectDocumentIndexer(
 
     @Transactional
     fun index(chunks: List<SubjectDocumentChunk>) {
-        val chunksByDocument = chunks.groupBy(SubjectDocumentChunk::documentPath)
+        val chunksByDocument = chunks.groupBy { chunk -> chunk.subjectId to chunk.documentPath }
         logger.info(
-            "Indexing {} static subject document(s) with {} chunk(s)",
+            "Indexing {} static subject document(s) across {} subject(s) with {} chunk(s)",
             chunksByDocument.size,
+            chunks.map(SubjectDocumentChunk::subjectId).distinct().size,
             chunks.size,
         )
 
         chunksByDocument
-            .forEach { (documentPath, documentChunks) ->
-                indexDocument(documentPath, documentChunks.sortedBy(SubjectDocumentChunk::index))
+            .forEach { (documentKey, documentChunks) ->
+                val (subjectId, documentPath) = documentKey
+                indexDocument(
+                    subjectId = subjectId,
+                    documentPath = documentPath,
+                    chunks = documentChunks.sortedBy(SubjectDocumentChunk::index),
+                )
             }
         logger.info("Finished indexing static subject documents")
     }
 
     private fun indexDocument(
+        subjectId: String,
         documentPath: String,
         chunks: List<SubjectDocumentChunk>,
     ) {
-        val chunkingStrategyVersion = documentsProperties.chunkingStrategyVersion()
+        val chunkingStrategyVersion = chunks.chunkingStrategyVersion()
         val contentHash = chunks.contentHash(chunkingStrategyVersion)
-        val existingSourceDocument = sourceDocumentRepository.findByResourcePath(documentPath)
+        val existingSourceDocument = sourceDocumentRepository.findBySubjectIdAndResourcePath(subjectId, documentPath)
 
         val sourceDocument = when {
             existingSourceDocument == null -> {
-                logger.info("Indexing new source document '{}' with {} chunk(s)", documentPath, chunks.size)
+                logger.info(
+                    "Indexing new source document '{}' for subject '{}' with {} chunk(s)",
+                    documentPath,
+                    subjectId,
+                    chunks.size,
+                )
                 sourceDocumentRepository.save(
                     SourceDocumentRecord(
+                        subjectId = subjectId,
                         resourcePath = documentPath,
                         contentHash = contentHash,
                         indexedAt = Instant.now(),
@@ -63,7 +75,12 @@ class SubjectDocumentIndexer(
             }
 
             existingSourceDocument.contentHash != contentHash -> {
-                logger.info("Re-indexing changed source document '{}' with {} chunk(s)", documentPath, chunks.size)
+                logger.info(
+                    "Re-indexing changed source document '{}' for subject '{}' with {} chunk(s)",
+                    documentPath,
+                    subjectId,
+                    chunks.size,
+                )
                 sourceDocumentRepository.save(
                     existingSourceDocument.copy(
                         contentHash = contentHash,
@@ -75,7 +92,7 @@ class SubjectDocumentIndexer(
             }
 
             else -> {
-                logger.info("Source document '{}' is unchanged", documentPath)
+                logger.info("Source document '{}' for subject '{}' is unchanged", documentPath, subjectId)
                 existingSourceDocument
             }
         }
@@ -101,8 +118,9 @@ class SubjectDocumentIndexer(
             }
         }
         logger.info(
-            "Indexed source document '{}' with {} chunk(s) using {} embedding model(s); created {} embedding(s)",
+            "Indexed source document '{}' for subject '{}' with {} chunk(s) using {} embedding model(s); created {} embedding(s)",
             documentPath,
+            subjectId,
             indexedChunks.size,
             clients.size,
             createdEmbeddingCount,
@@ -199,5 +217,12 @@ class SubjectDocumentIndexer(
         }
 
         return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
+    private fun List<SubjectDocumentChunk>.chunkingStrategyVersion(): String {
+        require(isNotEmpty()) { "chunks must not be empty" }
+        val versions = map(SubjectDocumentChunk::chunkingStrategyVersion).distinct()
+        require(versions.size == 1) { "chunks for one document must use one chunking strategy version" }
+        return versions.single()
     }
 }

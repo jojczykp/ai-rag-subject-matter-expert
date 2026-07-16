@@ -27,7 +27,8 @@ class ChunkEmbeddingRepositoryIntegrationTest(
     fun `stores embedding model metadata and chunking strategy version`() {
         val sourceDocument = sourceDocumentRepository.save(
             SourceDocumentRecord(
-                resourcePath = "culinary_expert/embedding-store.txt",
+                subjectId = "culinary-expert",
+                resourcePath = "embedding-store.txt",
                 contentHash = "embedding-store-hash",
                 indexedAt = Instant.parse("2026-01-01T00:00:00Z"),
             ),
@@ -95,7 +96,8 @@ class ChunkEmbeddingRepositoryIntegrationTest(
     fun `stores embeddings with different dimensions`() {
         val sourceDocument = sourceDocumentRepository.save(
             SourceDocumentRecord(
-                resourcePath = "culinary_expert/variable-dimensions.txt",
+                subjectId = "culinary-expert",
+                resourcePath = "variable-dimensions.txt",
                 contentHash = "variable-dimensions-hash",
                 indexedAt = Instant.parse("2026-01-01T00:00:00Z"),
             ),

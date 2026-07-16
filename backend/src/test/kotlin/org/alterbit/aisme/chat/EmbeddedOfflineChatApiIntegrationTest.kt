@@ -114,6 +114,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "embedded-ready",
                   "message": "How should I cook rice?"
                 }
@@ -144,6 +145,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "embedded-down",
                   "message": "How should I cook rice?"
                 }
@@ -199,6 +201,16 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
         Clock.systemUTC()
 
     @Bean
+    fun subjectRegistry(): org.alterbit.aisme.document.SubjectRegistry =
+        object : org.alterbit.aisme.document.SubjectRegistry {
+            override fun subjects(): List<org.alterbit.aisme.document.SubjectDescriptor> =
+                listOf(org.alterbit.aisme.testsupport.culinarySubject())
+
+            override fun getByIdOrThrow(subjectId: String): org.alterbit.aisme.document.SubjectDescriptor =
+                subjects().first { subject -> subject.id == subjectId }
+        }
+
+    @Bean
     fun chatModelClientProvider(
         @Qualifier("embeddedReadyChatModelClient")
         embeddedReadyChatModelClient: FakeChatModelClient,
@@ -213,7 +225,7 @@ class EmbeddedOfflineChatApiIntegrationTestConfiguration {
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { _, _ -> emptyList() }
+        ChatContextRetriever { _, _, _ -> emptyList() }
 
     @Bean
     fun embeddedAvailabilityChecker(): ChatModelAvailabilityChecker =

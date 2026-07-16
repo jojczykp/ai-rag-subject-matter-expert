@@ -12,7 +12,7 @@ class ChatModelRequestTest {
     fun `creates provider-neutral model request`() {
         val contextChunk = ChatModelContextChunk(
             content = "Use two parts water for one part rice.",
-            resourcePath = "subject-documents/culinary_expert/rice.txt",
+            resourcePath = "subject_documents/culinary_expert/rice.txt",
             chunkIndex = 0,
         )
 

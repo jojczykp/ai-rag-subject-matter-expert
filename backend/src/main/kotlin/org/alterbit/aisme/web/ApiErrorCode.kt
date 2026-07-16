@@ -2,6 +2,7 @@ package org.alterbit.aisme.web
 
 enum class ApiErrorCode {
     INVALID_REQUEST,
+    SUBJECT_NOT_FOUND,
     MODEL_NOT_FOUND,
     MODEL_UNAVAILABLE,
     MODEL_CLIENT_NOT_FOUND,

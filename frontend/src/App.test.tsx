@@ -29,7 +29,7 @@ describe('App', () => {
     expect(screen.getAllByText('Available')).toHaveLength(2)
     expect(
       screen.getByText(
-        'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+        'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
       ),
     ).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-green')).toHaveLength(
@@ -95,7 +95,7 @@ describe('App', () => {
     expect(sendButton).toBeDisabled()
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
 
     expect(sendButton).toBeEnabled()
@@ -123,7 +123,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -133,6 +133,7 @@ describe('App', () => {
     ).toBeVisible()
     expect(chatRequests).toEqual([
       {
+        subjectId: 'culinary-expert',
         modelId: 'local-ollama-llama',
         embeddingModelId: 'ollama-nomic-embed',
         message: 'How should I cook rice?',
@@ -163,7 +164,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -193,7 +194,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
@@ -211,7 +212,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
     await user.keyboard('{Enter}')
 
@@ -227,7 +228,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
 
     const messageField = screen.getByLabelText('Message')
@@ -258,7 +259,7 @@ describe('App', () => {
     render(<App />)
 
     await screen.findByText(
-      'Chat: Local Ollama Llama · Embedding: Ollama Nomic Embed (v1.5, 768d)',
+      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
     )
     await user.clear(screen.getByLabelText('Message'))
     await user.type(screen.getByLabelText('Message'), 'Will this fail?')
@@ -268,7 +269,6 @@ describe('App', () => {
   })
 
   it('prevents chat when selected chat model is unavailable', async () => {
-    const user = userEvent.setup()
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({

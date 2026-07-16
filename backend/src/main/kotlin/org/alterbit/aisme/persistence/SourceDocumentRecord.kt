@@ -9,7 +9,12 @@ import org.springframework.data.relational.core.mapping.Table
 data class SourceDocumentRecord(
     @Id
     val id: UUID? = null,
+    val subjectId: String,
     val resourcePath: String,
     val contentHash: String,
     val indexedAt: Instant,
-)
+) {
+    init {
+        require(subjectId.isNotBlank()) { "subjectId must not be blank" }
+    }
+}

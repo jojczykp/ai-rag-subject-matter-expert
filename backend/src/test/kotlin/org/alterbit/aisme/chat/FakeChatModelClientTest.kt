@@ -52,7 +52,7 @@ class FakeChatModelClientTest {
                 contextChunks = listOf(
                     ChatModelContextChunk(
                         content = "Use two parts water for one part rice.",
-                        resourcePath = "subject-documents/culinary_expert/rice.txt",
+                        resourcePath = "subject_documents/culinary_expert/rice.txt",
                         chunkIndex = 0,
                     ),
                 ),

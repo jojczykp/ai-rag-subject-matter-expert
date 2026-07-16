@@ -13,7 +13,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add bundled document location configuration.
 - [x] Use Spring Boot Actuator health and info endpoints for service
       availability checks.
-- [x] Add recursive `.txt` discovery under `subject-documents/`.
+- [x] Add recursive `.txt` discovery under `subject_documents/`.
 - [x] Use relative classpath resource paths as stable document identities.
 - [x] Sort discovered resource paths lexicographically before indexing.
 - [x] Add fail-fast startup behavior for missing folder, no supported
@@ -50,15 +50,17 @@ All implementation items are TODO until delivered and verified.
 ## Milestone 3: Provider-Neutral Chat API
 
 - [x] Add provider-neutral chat request and response DTOs.
-- [x] Add `AiModelClient` interface.
+- [x] Add `ChatModelClient` interface.
 - [x] Add fake model client for deterministic application-flow tests.
 - [x] Add `ChatModelRegistry` backed by static `aisme.chat.models` configuration.
+- [x] Add `GET /subjects`.
+- [x] Require `subjectId` on chat requests.
 - [x] Require `modelId` on chat requests.
 - [x] Add `GET /chat-models`.
 - [x] Add `GET /embedding-models`.
 - [x] Use selected `embeddingModelId` for chat query embedding and retrieval.
 - [x] Add `POST /chat`.
-- [x] Add `AiChatService`.
+- [x] Add `ChatService`.
 - [x] Add model availability status and privacy labels to model responses.
 - [x] Support `CONFIGURED`, `AVAILABLE`, `UNAVAILABLE`, and `MISCONFIGURED`
       model availability states.
@@ -81,7 +83,7 @@ All implementation items are TODO until delivered and verified.
 - [x] Add Spring AI Ollama dependency or adapter dependency selected during
       implementation.
 - [x] Add local Ollama model configuration under `aisme.chat.models`.
-- [x] Add Ollama adapter behind `AiModelClient`.
+- [x] Add Ollama adapter behind `ChatModelClient`.
 - [x] Support Ollama running at `http://localhost:11434`.
 - [x] Support user-configured Ollama base URLs.
 - [x] Add Ollama model availability checker behind
@@ -115,7 +117,7 @@ All implementation items are TODO until delivered and verified.
       asset existence.
 - [x] Extend embedded offline availability checks to verify model metadata
       validity.
-- [x] Add embedded adapter behind `AiModelClient`.
+- [x] Add embedded adapter behind `ChatModelClient`.
 - [x] Start managed `llama-server` processes for enabled embedded offline
       models using ephemeral loopback ports.
 - [x] Introduce structured logging for embedded runtime lifecycle events and
@@ -169,8 +171,8 @@ All implementation items are TODO until delivered and verified.
 
 - [ ] Add first-class structured CSV document support.
 - [ ] Parse structured CSV rows into deterministic searchable chunks.
-- [ ] Add multiple subject support.
+- [x] Add multiple static bundled subject support.
 - [ ] Add subject creation, update, and deletion.
 - [ ] Add runtime document upload.
 - [ ] Add runtime document deletion.
-- [ ] Add tests for subject isolation.
+- [x] Add tests for subject isolation.

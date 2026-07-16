@@ -8,12 +8,22 @@ class SubjectDocumentsDiscoveryTest {
     @Test
     fun `discovers text documents recursively`() {
         val discovery = SubjectDocumentsDiscovery(
-            properties = SubjectDocumentsProperties(location = "classpath:/subject-documents/"),
             resourcePatternResolver = PathMatchingResourcePatternResolver(),
         )
 
-        val documents = discovery.discover()
+        val documents = discovery.discover(
+            subject = SubjectDescriptor(
+                id = "culinary-expert",
+                enabled = true,
+                displayOrder = 10,
+                displayName = "Culinary Expert",
+            ),
+            documentsProperties = SubjectDocumentsProperties(
+                location = "classpath:/subject_documents/culinary_expert/",
+            ),
+        )
 
+        documents.map { it.subjectId }.distinct() shouldBe listOf("culinary-expert")
         documents.map { it.relativePath } shouldBe listOf(
             "getting-started.txt",
             "nested/reference.txt",

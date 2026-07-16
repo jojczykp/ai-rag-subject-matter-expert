@@ -33,7 +33,8 @@ class RelevantChunkRetrieverIntegrationTest(
     fun `retrieves relevant chunks by pgvector cosine distance`() {
         val sourceDocument = sourceDocumentRepository.save(
             SourceDocumentRecord(
-                resourcePath = "culinary_expert/retrieval.txt",
+                subjectId = "culinary-expert",
+                resourcePath = "retrieval.txt",
                 contentHash = "retrieval-hash",
                 indexedAt = Instant.parse("2026-01-01T00:00:00Z"),
             ),
@@ -74,6 +75,7 @@ class RelevantChunkRetrieverIntegrationTest(
 
         val chunks = relevantChunkRetriever.retrieve(
             RelevantChunkRequest(
+                    subjectId = "culinary-expert",
                 embedding = embedding(firstDimension = 1.0),
                 embeddingModel = EmbeddingModelMetadata(
                     id = EMBEDDING_MODEL_ID,
@@ -86,7 +88,7 @@ class RelevantChunkRetrieverIntegrationTest(
         )
 
         chunks.map { it.content } shouldBe listOf("Closest chunk", "Distant chunk")
-        chunks.map { it.resourcePath }.distinct() shouldBe listOf("culinary_expert/retrieval.txt")
+        chunks.map { it.resourcePath }.distinct() shouldBe listOf("retrieval.txt")
     }
 
     private fun saveChunk(

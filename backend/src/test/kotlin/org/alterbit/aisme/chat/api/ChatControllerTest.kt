@@ -48,6 +48,7 @@ class ChatControllerTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "local-ollama-llama",
                   "message": "How should I cook rice?"
                 }
@@ -69,6 +70,7 @@ class ChatControllerTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "message": "How should I cook rice?"
                 }
             """.trimIndent()
@@ -92,6 +94,7 @@ class ChatControllerTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "local-ollama-llama",
                   "message": " "
                 }
@@ -116,6 +119,7 @@ class ChatControllerTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "missing-model",
                   "message": "How should I cook rice?"
                 }
@@ -167,6 +171,16 @@ class ChatControllerTestConfiguration {
         Clock.systemUTC()
 
     @Bean
+    fun subjectRegistry(): org.alterbit.aisme.document.SubjectRegistry =
+        object : org.alterbit.aisme.document.SubjectRegistry {
+            override fun subjects(): List<org.alterbit.aisme.document.SubjectDescriptor> =
+                listOf(org.alterbit.aisme.testsupport.culinarySubject())
+
+            override fun getByIdOrThrow(subjectId: String): org.alterbit.aisme.document.SubjectDescriptor =
+                subjects().first { subject -> subject.id == subjectId }
+        }
+
+    @Bean
     fun chatModelClientProvider(): ChatModelClientProvider =
         ChatModelClientProvider {
             listOf(FakeChatModelClient(modelId = "local-ollama-llama"))
@@ -174,5 +188,5 @@ class ChatControllerTestConfiguration {
 
     @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { _, _ -> emptyList() }
+        ChatContextRetriever { _, _, _ -> emptyList() }
 }

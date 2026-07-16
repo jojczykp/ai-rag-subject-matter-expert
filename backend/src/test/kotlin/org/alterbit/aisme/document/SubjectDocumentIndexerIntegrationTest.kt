@@ -34,18 +34,18 @@ class SubjectDocumentIndexerIntegrationTest(
         val embeddingClient = FakeEmbeddingClient(EmbeddingModelProperties().metadata)
         val indexer = indexer(embeddingClient = embeddingClient)
         val chunks = listOf(
-            chunk(documentPath = "culinary_expert/indexer-missing.txt", index = 0, content = "First chunk"),
-            chunk(documentPath = "culinary_expert/indexer-missing.txt", index = 1, content = "Second chunk"),
+            chunk(documentPath = "indexer-missing.txt", index = 0, content = "First chunk"),
+            chunk(documentPath = "indexer-missing.txt", index = 1, content = "Second chunk"),
         )
 
         indexer.index(chunks)
         indexer.index(chunks)
 
         embeddingClient.embeddedTexts shouldBe listOf("First chunk", "Second chunk")
-        rowCount("source_document", "resource_path = 'culinary_expert/indexer-missing.txt'") shouldBe 1
+        rowCount("source_document", "resource_path = 'indexer-missing.txt'") shouldBe 1
         rowCount(
             table = "document_chunk dc JOIN source_document sd ON sd.id = dc.source_document_id",
-            where = "sd.resource_path = 'culinary_expert/indexer-missing.txt'",
+            where = "sd.resource_path = 'indexer-missing.txt'",
         ) shouldBe 2
         rowCount(
             table = """
@@ -53,14 +53,14 @@ class SubjectDocumentIndexerIntegrationTest(
                 JOIN document_chunk dc ON dc.id = ce.document_chunk_id
                 JOIN source_document sd ON sd.id = dc.source_document_id
             """,
-            where = "sd.resource_path = 'culinary_expert/indexer-missing.txt'",
+            where = "sd.resource_path = 'indexer-missing.txt'",
         ) shouldBe 2
     }
 
     @Test
     fun `re-indexes stale embeddings when embedding model version changes`() {
         val chunks = listOf(
-            chunk(documentPath = "culinary_expert/indexer-stale.txt", index = 0, content = "Versioned chunk"),
+            chunk(documentPath = "indexer-stale.txt", index = 0, content = "Versioned chunk"),
         )
         indexer(
             embeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(version = "old-version").metadata),
@@ -72,7 +72,7 @@ class SubjectDocumentIndexerIntegrationTest(
         ).index(chunks)
 
         replacementEmbeddingClient.embeddedTexts shouldBe listOf("Versioned chunk")
-        storedEmbeddingVersions("culinary_expert/indexer-stale.txt") shouldBe listOf("new-version")
+        storedEmbeddingVersions("indexer-stale.txt") shouldBe listOf("new-version")
     }
 
     @Test
@@ -80,14 +80,14 @@ class SubjectDocumentIndexerIntegrationTest(
         val firstEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(id = "first-model").metadata)
         val secondEmbeddingClient = FakeEmbeddingClient(EmbeddingModelProperties(id = "second-model").metadata)
         val chunks = listOf(
-            chunk(documentPath = "culinary_expert/indexer-multiple.txt", index = 0, content = "Shared chunk"),
+            chunk(documentPath = "indexer-multiple.txt", index = 0, content = "Shared chunk"),
         )
 
         indexer(embeddingClients = listOf(firstEmbeddingClient, secondEmbeddingClient)).index(chunks)
 
         firstEmbeddingClient.embeddedTexts shouldBe listOf("Shared chunk")
         secondEmbeddingClient.embeddedTexts shouldBe listOf("Shared chunk")
-        storedEmbeddingModelIds("culinary_expert/indexer-multiple.txt") shouldBe listOf("first-model", "second-model")
+        storedEmbeddingModelIds("indexer-multiple.txt") shouldBe listOf("first-model", "second-model")
     }
 
     private fun indexer(
@@ -95,7 +95,6 @@ class SubjectDocumentIndexerIntegrationTest(
         embeddingClients: List<FakeEmbeddingClient> = listOf(embeddingClient),
     ): SubjectDocumentIndexer =
         SubjectDocumentIndexer(
-            documentsProperties = SubjectDocumentsProperties(),
             sourceDocumentRepository = sourceDocumentRepository,
             documentChunkRepository = documentChunkRepository,
             chunkEmbeddingRepository = chunkEmbeddingRepository,
@@ -112,7 +111,9 @@ class SubjectDocumentIndexerIntegrationTest(
         content: String,
     ): SubjectDocumentChunk =
         SubjectDocumentChunk(
+            subjectId = "culinary-expert",
             documentPath = documentPath,
+            chunkingStrategyVersion = "character-count-v1:size=700:overlap=100",
             index = index,
             content = content,
             startOffset = index * 100,

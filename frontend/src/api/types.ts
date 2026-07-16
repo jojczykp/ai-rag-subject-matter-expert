@@ -63,7 +63,20 @@ export type EmbeddingModelsResponse = {
   embeddingModels: EmbeddingModel[]
 }
 
+export type Subject = {
+  id: string
+  enabled: boolean
+  displayOrder: number
+  displayName: string
+}
+
+export type SubjectsResponse = {
+  defaultSubjectId: string | null
+  subjects: Subject[]
+}
+
 export type ChatRequest = {
+  subjectId: string
   modelId: string
   embeddingModelId?: string
   message: string
@@ -76,6 +89,7 @@ export type ChatResponse = {
 
 export type ApiErrorCode =
   | 'INVALID_REQUEST'
+  | 'SUBJECT_NOT_FOUND'
   | 'MODEL_NOT_FOUND'
   | 'MODEL_UNAVAILABLE'
   | 'MODEL_CLIENT_NOT_FOUND'

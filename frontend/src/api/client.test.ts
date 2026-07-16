@@ -1,6 +1,11 @@
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import { getChatModels, getEmbeddingModels, postChat } from './client'
+import {
+  getChatModels,
+  getEmbeddingModels,
+  getSubjects,
+  postChat,
+} from './client'
 import { apiUrl, backendApiBaseUrl } from '../config'
 import { server } from '../test/server'
 
@@ -17,6 +22,20 @@ describe('API client', () => {
     expect(response.chatModels).toHaveLength(1)
     expect(response.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
+  })
+
+  it('loads indexed subjects', async () => {
+    const response = await getSubjects()
+
+    expect(response.defaultSubjectId).toBe('culinary-expert')
+    expect(response.subjects).toEqual([
+      {
+        id: 'culinary-expert',
+        enabled: true,
+        displayOrder: 10,
+        displayName: 'Culinary Expert',
+      },
+    ])
   })
 
   it('loads configured embedding models', async () => {
@@ -39,6 +58,7 @@ describe('API client', () => {
 
   it('posts chat requests', async () => {
     const response = await postChat({
+      subjectId: 'culinary-expert',
       modelId: 'local-ollama-llama',
       message: 'How should I cook rice?',
     })
@@ -65,6 +85,7 @@ describe('API client', () => {
 
     await expect(
       postChat({
+        subjectId: 'culinary-expert',
         modelId: 'local-ollama-llama',
         message: 'How should I cook rice?',
       }),

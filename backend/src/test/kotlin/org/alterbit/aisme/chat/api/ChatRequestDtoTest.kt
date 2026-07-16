@@ -14,10 +14,12 @@ class ChatRequestDtoTest {
     @Test
     fun `creates provider-neutral chat request`() {
         val request = ChatRequestDto(
+            subjectId = "culinary-expert",
             modelId = "local-llama",
             message = "How should I cook rice?",
         )
 
+        request.subjectId shouldBe "culinary-expert"
         request.modelId shouldBe "local-llama"
         request.embeddingModelId shouldBe null
         request.message shouldBe "How should I cook rice?"
@@ -26,6 +28,7 @@ class ChatRequestDtoTest {
     @Test
     fun `creates chat request with selected embedding model`() {
         val request = ChatRequestDto(
+            subjectId = "culinary-expert",
             modelId = "local-llama",
             embeddingModelId = "local-bge-small",
             message = "How should I cook rice?",
@@ -37,9 +40,23 @@ class ChatRequestDtoTest {
     }
 
     @Test
+    fun `rejects blank subject id`() {
+        val exception = shouldThrow<IllegalArgumentException> {
+            ChatRequestDto(
+                subjectId = " ",
+                modelId = "local-llama",
+                message = "How should I cook rice?",
+            )
+        }
+
+        exception.message shouldContain "subjectId"
+    }
+
+    @Test
     fun `rejects blank model id`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatRequestDto(
+                subjectId = "culinary-expert",
                 modelId = " ",
                 message = "How should I cook rice?",
             )
@@ -52,6 +69,7 @@ class ChatRequestDtoTest {
     fun `rejects blank embedding model id`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatRequestDto(
+                subjectId = "culinary-expert",
                 modelId = "local-llama",
                 embeddingModelId = " ",
                 message = "How should I cook rice?",
@@ -67,6 +85,7 @@ class ChatRequestDtoTest {
             objectMapper.readValue<ChatRequestDto>(
                 """
                 {
+                  "subjectId": "culinary-expert",
                   "message": "How should I cook rice?"
                 }
                 """.trimIndent(),
@@ -80,6 +99,7 @@ class ChatRequestDtoTest {
     fun `rejects blank message`() {
         val exception = shouldThrow<IllegalArgumentException> {
             ChatRequestDto(
+                subjectId = "culinary-expert",
                 modelId = "local-llama",
                 message = " ",
             )
@@ -94,6 +114,7 @@ class ChatRequestDtoTest {
             objectMapper.readValue<ChatRequestDto>(
                 """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "local-llama"
                 }
                 """.trimIndent(),

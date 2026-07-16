@@ -251,6 +251,15 @@ curl -s http://localhost:8080/chat-models | jq .
 The response includes each model's availability, capabilities, runtime
 requirements, and whether prompts may leave the local machine.
 
+View indexed bundled subjects:
+
+```bash
+curl -s http://localhost:8080/subjects | jq .
+```
+
+Subjects are defined in `aisme.subjects`. Each enabled subject points to its
+own bundled document resource folder and is indexed during startup.
+
 View the configured embedding models:
 
 ```bash
@@ -266,6 +275,7 @@ Send a sample chat request:
 curl -s http://localhost:8080/chat \
   -H 'Content-Type: application/json' \
   -d '{
+    "subjectId": "culinary-expert",
     "modelId": "local-ollama-llama",
     "embeddingModelId": "local-bge-small",
     "message": "How should I cook rice?"
@@ -491,10 +501,13 @@ Application properties are configured under the `aisme` prefix.
 
 | Property | Default | Description |
 | --- | --- | --- |
-| `aisme.documents.location` | `classpath:/subject-documents/` | Bundled document resource folder. |
 | `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
-| `aisme.documents.chunk-size` | `700` | Maximum character count per indexed document chunk. |
-| `aisme.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
+| `aisme.subjects.<subject-id>.enabled` | `true` in example config | Whether this subject is indexed and selectable. |
+| `aisme.subjects.<subject-id>.display-order` | optional | Sort order for subject selectors and catalog responses. |
+| `aisme.subjects.<subject-id>.display-name` | derived from id when omitted | Human-readable subject name for API clients and the UI. |
+| `aisme.subjects.<subject-id>.documents.location` | required | Bundled document resource folder for this subject. |
+| `aisme.subjects.<subject-id>.documents.chunk-size` | `700` | Maximum character count per indexed document chunk for this subject. |
+| `aisme.subjects.<subject-id>.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks for this subject. Must be smaller than `chunk-size`. |
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
 | `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
 | `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |

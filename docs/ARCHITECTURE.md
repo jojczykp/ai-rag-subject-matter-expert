@@ -29,8 +29,9 @@ vision. See
 [ADR-005: Subject Document Scope](ADR-005-subject-document-scope.md)
 for the accepted static subject and bundled document scope decision.
 
-The first implementation is a single-subject backend using static bundled
-documents as the knowledge base.
+The first implementation uses static bundled documents as the knowledge base.
+Each predefined subject is configured under `aisme.subjects` and points to its
+own bundled document resource folder.
 
 ## Goals
 
@@ -61,18 +62,18 @@ the accepted runtime integration decision.
 ```text
 User model selection
   -> ChatModelRegistry
-  -> AiChatService
+  -> ChatService
   -> RelevantChunkRetriever
-  -> AiModelClient
-       -> OllamaAiModelClient
+  -> ChatModelClient
+       -> OllamaChatModelClient
             -> Ollama local server runtime
-       -> OpenAiCompatibleAiModelClient
+       -> OpenAiCompatibleChatModelClient
             -> OpenAI-compatible chat-completion providers
-       -> HuggingFaceTgiAiModelClient
+       -> HuggingFaceTgiChatModelClient
             -> Hugging Face Inference Endpoint / TGI-compatible runtime
-       -> SpringAiModelClient
+       -> SpringAiChatModelClient
             -> cloud provider-backed model runtime
-       -> EmbeddedModelClient
+       -> EmbeddedLlamaChatModelClient
             -> application-managed llama-server child process
 ```
 
@@ -88,8 +89,7 @@ model runtimes. Runtime-specific decisions are documented in
 
 The model registry is the source of truth for available models. It should know
 which models are configured, which are currently available, and what each model
-can do. The initial subject is implicit and represented by the bundled resource
-documents.
+can do. Subjects are represented by configured `aisme.subjects` entries.
 
 - [x] Add `ChatModelRegistry`.
 - [x] Add static configuration for known models.
@@ -181,20 +181,21 @@ enum class ChatModelAvailability {
 }
 ```
 
-### AiChatService
+### ChatService
 
-`AiChatService` should own use-case level chat behavior. Controllers and future
+`ChatService` should own use-case level chat behavior. Controllers and future
 UI endpoints should call this service instead of provider clients directly. For
-the initial product scope, it routes every chat request through the single
-configured subject and relevant chunks retrieved from bundled resource
-documents.
+the initial product scope, it routes every chat request through the selected
+predefined subject and relevant chunks retrieved from that subject's bundled
+resource documents.
 
-- [x] Add `AiChatService`.
+- [x] Add `ChatService`.
 - [x] Require a selected model id with each chat request.
-- [x] Retrieve relevant chunks from the single configured subject's bundled
+- [x] Require a selected subject id with each chat request.
+- [x] Retrieve relevant chunks from the selected static subject's bundled
       resource documents.
 - [x] Resolve the selected model through `ChatModelRegistry`.
-- [x] Route chat requests to the matching `AiModelClient`.
+- [x] Route chat requests to the matching `ChatModelClient`.
 - [x] Return provider-neutral responses.
 - [x] Add tests for model selection and routing.
 
@@ -205,6 +206,7 @@ documents bundled with the application.
 
 - [x] Add static subject document loading components.
 - [x] Discover configured documents in application resources.
+- [x] Treat `aisme.subjects` entries as predefined static subjects.
 - [x] Extract or load text from supported resource files.
 - [x] Split extracted text into searchable chunks.
 - [x] Index bundled documents once at startup or application initialization.
@@ -225,14 +227,14 @@ model for each request.
 - [x] Avoid sending all bundled document content to the model by default.
 - [x] Add tests for retrieval behavior and empty-result handling.
 
-### AiModelClient
+### ChatModelClient
 
-`AiModelClient` is the internal provider-neutral interface. Each runtime gets
+`ChatModelClient` is the internal provider-neutral interface. Each runtime gets
 an adapter that implements this interface. A client instance represents one
 configured application model. Provider components can create multiple client
 instances from `aisme.chat.models` when one runtime supports multiple models.
 
-- [x] Add `AiModelClient`.
+- [x] Add `ChatModelClient`.
 - [x] Add request and response DTOs.
 - [x] Add synchronous chat support.
 - [x] Add structured error handling.
@@ -242,10 +244,10 @@ instances from `aisme.chat.models` when one runtime supports multiple models.
 Draft interface:
 
 ```kotlin
-interface AiModelClient {
+interface ChatModelClient {
     val modelId: String
 
-    fun chat(request: AiModelChatRequest): AiModelChatResponse
+    fun chat(request: ChatModelRequest): ChatModelResponse
 }
 ```
 
@@ -298,8 +300,15 @@ Example model catalog configuration:
 
 ```yaml
 aisme:
-  documents:
-    location: classpath:/subject-documents/
+  subjects:
+    culinary-expert:
+      enabled: true
+      display-order: 10
+      display-name: Culinary Expert
+      documents:
+        location: classpath:/subject_documents/culinary_expert/
+        chunk-size: 700
+        chunk-overlap: 100
 
   embedding:
     api-timeout: 60s
@@ -387,7 +396,7 @@ for the accepted integration testing decision.
 
 - [x] Unit test static resource document discovery.
 - [x] Unit test `ChatModelRegistry`.
-- [x] Unit test `AiChatService` routing.
+- [x] Unit test `ChatService` routing.
 - [x] Add Spring Boot configuration binding and validation tests.
 - [x] Add integration tests for REST endpoints and the static document
       indexing/chat flow.
@@ -395,8 +404,8 @@ for the accepted integration testing decision.
 
 ## Documentation Tasks
 
-- [ ] Document the single-subject static-resource scope in README.md.
-- [ ] Document where bundled subject documents live.
+- [x] Document the static bundled subject resource scope in README.md.
+- [x] Document where bundled subject documents live.
 - [x] Document supported model runtimes in README.md.
 - [x] Document local Ollama setup in README.md.
 - [x] Document cloud provider environment variables in README.md.

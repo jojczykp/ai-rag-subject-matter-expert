@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import org.alterbit.aisme.testsupport.subjectsProperties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.core.io.AbstractResource
@@ -62,6 +63,7 @@ class StaticSubjectDocumentsLoaderTest {
     @Test
     fun `fails when a discovered document is unreadable`() {
         val unreadableDocument = SubjectDocumentResource(
+            subjectId = "culinary-expert",
             relativePath = "reference.txt",
             resource = UnreadableResource,
         )
@@ -77,15 +79,14 @@ class StaticSubjectDocumentsLoaderTest {
         documentsDirectory: Path,
     ): StaticSubjectDocumentsLoader =
         StaticSubjectDocumentsLoader(
-            properties = properties(documentsDirectory),
-            resourcePatternResolver = resourcePatternResolver,
-            discovery = SubjectDocumentsDiscovery(
-                properties = properties(documentsDirectory),
-                resourcePatternResolver = resourcePatternResolver,
+            subjectsProperties = subjectsProperties(
+                documentsProperties = properties(documentsDirectory),
             ),
+            resourcePatternResolver = resourcePatternResolver,
+            discovery = SubjectDocumentsDiscovery(resourcePatternResolver = resourcePatternResolver),
             documentReader = documentReader,
             documentValidator = documentValidator,
-            documentChunker = SubjectDocumentChunker(properties(documentsDirectory)),
+            documentChunker = SubjectDocumentChunker(),
         )
 
     private fun properties(documentsDirectory: Path): SubjectDocumentsProperties =

@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import java.util.UUID
 import org.alterbit.aisme.chat.catalog.ChatProperties
 import org.alterbit.aisme.document.SubjectDocumentsProperties
+import org.alterbit.aisme.testsupport.subjectsProperties
 import org.alterbit.aisme.embedding.EmbeddingClient
 import org.alterbit.aisme.embedding.EmbeddingClientProvider
 import org.alterbit.aisme.embedding.EmbeddingClients
@@ -32,6 +33,7 @@ class RelevantChatContextRetrieverTest {
         val relevantChunkRetriever = FakeRelevantChunkRetriever(
             chunks = listOf(
                 RelevantChunk(
+                    subjectId = "culinary-expert",
                     chunkId = UUID.fromString("00000000-0000-0000-0000-000000000001"),
                     sourceDocumentId = UUID.fromString("00000000-0000-0000-0000-000000000002"),
                     resourcePath = "culinary_expert/rice.txt",
@@ -45,12 +47,15 @@ class RelevantChatContextRetrieverTest {
         )
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(retrievedChunkLimit = 3),
-            documentsProperties = SubjectDocumentsProperties(chunkSize = 700, chunkOverlap = 100),
+            subjectsProperties = subjectsProperties(
+                documentsProperties = SubjectDocumentsProperties(chunkSize = 700, chunkOverlap = 100),
+            ),
             embeddingClients = EmbeddingClients(listOf(EmbeddingClientProvider { listOf(embeddingClient) })),
             relevantChunkRetriever = relevantChunkRetriever,
         )
 
         val contextChunks = retriever.retrieve(
+            subjectId = "culinary-expert",
             message = "How should I cook rice?",
             embeddingModelId = "local-bge-small",
         )
@@ -62,6 +67,7 @@ class RelevantChatContextRetrieverTest {
             version = "1.5",
             dimensions = 3,
         )
+        relevantChunkRetriever.requests.single().subjectId shouldBe "culinary-expert"
         relevantChunkRetriever.requests.single().chunkingStrategyVersion shouldBe "character-count-v1:size=700:overlap=100"
         relevantChunkRetriever.requests.single().limit shouldBe 3
         contextChunks shouldContainExactly listOf(
@@ -77,7 +83,7 @@ class RelevantChatContextRetrieverTest {
     fun `returns empty context when no relevant chunks are found`() {
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(retrievedChunkLimit = 3),
-            documentsProperties = SubjectDocumentsProperties(),
+            subjectsProperties = subjectsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
                     EmbeddingClientProvider {
@@ -100,6 +106,7 @@ class RelevantChatContextRetrieverTest {
         )
 
         val contextChunks = retriever.retrieve(
+            subjectId = "culinary-expert",
             message = "Question without matching chunks",
             embeddingModelId = null,
         )
@@ -132,7 +139,7 @@ class RelevantChatContextRetrieverTest {
         val relevantChunkRetriever = FakeRelevantChunkRetriever(chunks = emptyList())
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(retrievedChunkLimit = 3),
-            documentsProperties = SubjectDocumentsProperties(),
+            subjectsProperties = subjectsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
                     EmbeddingClientProvider { listOf(firstEmbeddingClient, secondEmbeddingClient) },
@@ -142,6 +149,7 @@ class RelevantChatContextRetrieverTest {
         )
 
         retriever.retrieve(
+            subjectId = "culinary-expert",
             message = "Question",
             embeddingModelId = "second-model",
         )
@@ -159,7 +167,7 @@ class RelevantChatContextRetrieverTest {
     fun `requires selected embedding model when multiple embedding clients are enabled`() {
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(retrievedChunkLimit = 3),
-            documentsProperties = SubjectDocumentsProperties(),
+            subjectsProperties = subjectsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
                     EmbeddingClientProvider {
@@ -193,6 +201,7 @@ class RelevantChatContextRetrieverTest {
 
         val exception = io.kotest.assertions.throwables.shouldThrow<IllegalArgumentException> {
             retriever.retrieve(
+                subjectId = "culinary-expert",
                 message = "Question",
                 embeddingModelId = null,
             )
@@ -205,7 +214,7 @@ class RelevantChatContextRetrieverTest {
     fun `rejects unknown selected embedding model`() {
         val retriever = RelevantChatContextRetriever(
             chatProperties = ChatProperties(retrievedChunkLimit = 3),
-            documentsProperties = SubjectDocumentsProperties(),
+            subjectsProperties = subjectsProperties(),
             embeddingClients = EmbeddingClients(
                 listOf(
                     EmbeddingClientProvider {
@@ -229,6 +238,7 @@ class RelevantChatContextRetrieverTest {
 
         val exception = io.kotest.assertions.throwables.shouldThrow<EmbeddingModelNotFoundException> {
             retriever.retrieve(
+                subjectId = "culinary-expert",
                 message = "Question",
                 embeddingModelId = "missing-embedding",
             )

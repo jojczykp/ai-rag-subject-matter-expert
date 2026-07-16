@@ -6,38 +6,41 @@ Accepted.
 
 ## Context
 
-The initial product should stay intentionally small. The application currently
-targets one predefined subject and uses documents maintained by the application
-owner. Users should be able to chat against that subject, but they should not
+The initial product should stay intentionally small. The application uses
+predefined subjects and static documents maintained by the application owner.
+Users should be able to chat against a selected subject, but they should not
 manage subjects or documents through the API in the first implementation.
 
 ## Decision
 
-Start with one implicit predefined subject backed by static documents bundled
+Start with configured predefined subjects backed by static documents bundled
 with the application.
 
 Initial scope:
 
-- [ ] Support exactly one predefined subject.
-- [ ] Do not require a subject id in API requests or responses.
+- [x] Support multiple predefined static subjects.
+- [x] Require a subject id in chat requests.
 - [ ] Load all reasoning documents from static application resources.
-- [ ] Store bundled documents under a resource folder such as
-      `backend/src/main/resources/subject-documents/`.
+- [x] Configure each subject under `aisme.subjects.<subject-id>`.
+- [x] Configure each subject's document location under
+      `aisme.subjects.<subject-id>.documents.location`.
+- [x] Support subject `enabled`, `display-order`, and `display-name`
+      configuration.
 - [ ] Support plain text `.txt` documents as the first input format.
 - [x] Provide `POST /chat` for asking questions.
 - [x] Provide `GET /chat-models` for listing configured models.
-- [ ] Do not provide `/subjects` endpoints.
+- [x] Provide `GET /subjects` for listing configured enabled subjects.
 - [ ] Do not provide `/documents` endpoints.
 - [ ] Do not expose original bundled files for download.
 - [ ] Do not persist chat prompts, responses, or conversation history in the
       initial scope.
-- [ ] Do not require subject display name or description metadata initially.
 
 ## Static Document Loading
 
-- [ ] Load `.txt` files recursively from `backend/src/main/resources/subject-documents/`.
-- [ ] Use the classpath resource path relative to `subject-documents/` as the
-      stable document identity.
+- [x] Load `.txt` files recursively from each configured subject document
+      location.
+- [x] Use the classpath resource path relative to the configured subject
+      document location as the stable document identity.
 - [ ] Sort resource paths lexicographically before indexing for deterministic
       behavior.
 - [ ] Fail application startup when the configured document folder is missing.
@@ -45,7 +48,7 @@ Initial scope:
 - [ ] Fail application startup when a bundled document cannot be read.
 - [ ] Fail application startup when a bundled document is empty.
 - [ ] Fail application startup when chunking or indexing fails.
-- [ ] Use statically configurable chunk size and chunk overlap.
+- [x] Use statically configurable chunk size and chunk overlap per subject.
 - [ ] Use character-count based chunking initially.
 - [ ] Use `700` characters as the initial default chunk size.
 - [ ] Use `100` characters as the initial default chunk overlap.
@@ -63,7 +66,6 @@ and retrieval foundation is still being built.
 
 ## Future Scope
 
-- [ ] Support multiple subjects.
 - [ ] Let users create, update, and delete subjects.
 - [ ] Let users upload content to subjects at runtime.
 - [ ] Support dynamic document ingestion pipelines.
@@ -84,11 +86,11 @@ and retrieval foundation is still being built.
 
 ## Consequences
 
-- [ ] API consumers do not need to know about subject ids.
-- [ ] The first API remains small and easier to test.
+- [x] API consumers must provide a configured subject id for chat.
+- [x] The API remains small because subject management is read-only.
 - [ ] Bundled document changes are deployed with the application.
 - [ ] Invalid bundled documents fail fast during startup.
 - [ ] Repeated indexing is deterministic for the same bundled resources and
       chunking configuration.
-- [ ] Future dynamic document ingestion can be added without changing the first
-      chat contract if the implicit subject remains the default.
+- [ ] Future dynamic document ingestion can be added under the existing subject
+      concept without exposing bundled source files.

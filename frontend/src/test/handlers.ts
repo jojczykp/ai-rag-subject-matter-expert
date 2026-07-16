@@ -4,11 +4,18 @@ import type {
   ChatRequest,
   ChatResponse,
   EmbeddingModelsResponse,
+  SubjectsResponse,
 } from '../api/types'
 import { apiUrl } from '../config'
-import { availableOllamaModel } from './fixtures'
+import { availableOllamaModel, culinarySubject } from './fixtures'
 
 export const handlers = [
+  http.get(apiUrl('/subjects'), () =>
+    HttpResponse.json<SubjectsResponse>({
+      defaultSubjectId: culinarySubject.id,
+      subjects: [culinarySubject],
+    }),
+  ),
   http.get(apiUrl('/chat-models'), () =>
     HttpResponse.json<ChatModelsResponse>({
       defaultChatModelId: 'local-ollama-llama',

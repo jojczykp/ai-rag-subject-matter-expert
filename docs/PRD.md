@@ -2,10 +2,10 @@
 
 ## Product Summary
 
-AI Subject Matter Expert is a backend service that answers questions about one
-predefined subject. The subject's knowledge base is built from static document
-resources bundled with the application. The first supported content format is
-plain text.
+AI Subject Matter Expert is a backend service that answers questions about
+predefined subjects. Each subject's knowledge base is built from static
+document resources bundled with the application. The first supported content
+format is plain text.
 
 The initial product provides REST APIs for chatting with an AI model using
 bundled documents as the reasoning base.
@@ -21,7 +21,7 @@ managed dynamically by API users.
 
 ## Initial Scope
 
-- [ ] Support exactly one predefined subject.
+- [x] Support multiple predefined static subjects.
 - [ ] Load subject source documents bundled with the application.
 - [ ] Support static bundled `.txt` documents.
 - [ ] Provide a REST endpoint for chatting with the predefined subject.
@@ -32,7 +32,6 @@ managed dynamically by API users.
 
 ## Future Scope
 
-- [ ] Support multiple subjects.
 - [ ] Let users create, update, and delete subjects.
 - [ ] Let users upload content to subjects at runtime.
 - [ ] Support user authentication and authorization.
@@ -72,21 +71,23 @@ future frontend, script, internal tool, or another backend service.
 
 Needs:
 
-- [ ] Ask questions against the predefined subject.
+- [x] Ask questions against a selected predefined subject.
 - [ ] Receive predictable JSON responses and errors.
 
 ## Core Concepts
 
 ### Subject
 
-The initial application has one predefined subject. The subject represents the
-knowledge area covered by the bundled documents.
+The initial application has predefined static subjects. Subjects are configured
+by application owners, and each enabled subject points to a bundled document
+resource folder.
 
 Requirements:
 
-- [ ] The subject is implicit and does not need to be identified by id.
-- [ ] The subject does not require display name or description metadata in the
-      initial scope.
+- [x] A subject has a configured id.
+- [x] A subject has a configured display name.
+- [x] A subject has a configured display order for API and UI selectors.
+- [x] A subject can be enabled or disabled in configuration.
 - [ ] The initial API does not create, update, or delete subjects.
 
 ### Static Source Documents
@@ -100,7 +101,7 @@ Supported initial document types:
 
 Requirements:
 
-- [ ] Each bundled document belongs to the predefined subject.
+- [x] Each bundled document belongs to one predefined subject.
 - [ ] Each bundled document has a stable id or resource path.
 - [ ] The service fails startup when configured documents cannot be loaded.
 - [ ] The service fails startup when no supported documents are found.
@@ -109,14 +110,15 @@ Requirements:
 
 ### Chat
 
-Chat lets a user ask a question against the predefined subject. The answer
-should be generated using relevant context retrieved from the bundled subject
-documents.
+Chat lets a user ask a question against a selected predefined subject. The
+answer should be generated using relevant context retrieved from that subject's
+bundled documents.
 
 Requirements:
 
-- [ ] A chat request includes a user message.
-- [ ] A chat request includes a selected model id.
+- [x] A chat request includes a selected subject id.
+- [x] A chat request includes a user message.
+- [x] A chat request includes a selected model id.
 - [x] The service retrieves only relevant indexed document chunks for the
       request.
 - [x] The service sends the user message and retrieved chunks to the selected
@@ -132,7 +134,9 @@ Endpoint names are proposed and may be refined during technical design.
 
 ### Chat API
 
-- [x] `POST /chat` asks a question against the configured subject.
+- [x] `GET /subjects` lists indexed predefined subjects.
+- [x] `POST /chat` asks a question against the selected subject.
+- [x] Request body includes `subjectId`.
 - [x] Request body includes `message`.
 - [x] Request body includes `modelId`.
 - [x] Request body can include `embeddingModelId` for retrieval model selection.

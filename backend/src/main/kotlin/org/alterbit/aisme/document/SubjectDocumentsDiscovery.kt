@@ -7,22 +7,31 @@ import org.springframework.stereotype.Component
 
 @Component
 class SubjectDocumentsDiscovery(
-    private val properties: SubjectDocumentsProperties,
     private val resourcePatternResolver: ResourcePatternResolver,
 ) {
-    fun discover(): List<SubjectDocumentResource> =
+    fun discover(
+        subject: SubjectDescriptor,
+        documentsProperties: SubjectDocumentsProperties,
+    ): List<SubjectDocumentResource> =
         resourcePatternResolver
-            .getResources("${properties.normalizedLocation()}**/*.txt")
+            .getResources("${documentsProperties.normalizedLocation()}**/*.txt")
             .map { resource ->
                 SubjectDocumentResource(
-                    relativePath = relativePath(resource.url.toString()),
+                    subjectId = subject.id,
+                    relativePath = relativePath(
+                        resourceUrl = resource.url.toString(),
+                        documentsProperties = documentsProperties,
+                    ),
                     resource = resource,
                 )
             }
-            .sortedBy { it.relativePath }
+            .sortedBy(SubjectDocumentResource::relativePath)
 
-    private fun relativePath(resourceUrl: String): String {
-        val normalizedLocation = properties.normalizedLocation()
+    private fun relativePath(
+        resourceUrl: String,
+        documentsProperties: SubjectDocumentsProperties,
+    ): String {
+        val normalizedLocation = documentsProperties.normalizedLocation()
         val rootPath = normalizedLocation.substringAfter("classpath:", normalizedLocation)
         val resourcePath = resourceUrl.substringAfter(rootPath)
         return URLDecoder.decode(resourcePath, StandardCharsets.UTF_8)

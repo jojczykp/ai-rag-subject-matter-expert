@@ -3,7 +3,7 @@ package org.alterbit.aisme.configuration
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.alterbit.aisme.chat.catalog.ChatProperties
-import org.alterbit.aisme.document.SubjectDocumentsProperties
+import org.alterbit.aisme.document.SubjectsProperties
 import org.alterbit.aisme.embedding.catalog.EmbeddingModelAvailabilityProperties
 import org.alterbit.aisme.embedding.catalog.EmbeddingProperties
 import org.alterbit.aisme.chat.catalog.ChatModelAvailabilityProperties
@@ -20,11 +20,11 @@ class ConfigurationPropertiesValidationTest {
     fun `fails binding invalid document chunking configuration`() {
         propertyContext(DocumentsPropertiesConfiguration::class.java)
             .withPropertyValues(
-                "aisme.documents.chunk-size=100",
-                "aisme.documents.chunk-overlap=100",
+                "aisme.subjects.culinary-expert.documents.chunk-size=100",
+                "aisme.subjects.culinary-expert.documents.chunk-overlap=100",
             )
             .run { context ->
-                context.failureMessage() shouldContain "aisme.documents.chunk-overlap"
+                context.failureMessage() shouldContain "aisme.subjects.culinary-expert.documents"
                 context.failureMessage() shouldContain "smaller than chunk-size"
             }
     }
@@ -109,7 +109,7 @@ class ConfigurationPropertiesValidationTest {
             .stackTraceToString()
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(SubjectDocumentsProperties::class)
+    @EnableConfigurationProperties(SubjectsProperties::class)
     private class DocumentsPropertiesConfiguration
 
     @Configuration(proxyBeanMethods = false)

@@ -1,4 +1,11 @@
-import type { ChatModel } from '../api/types'
+import type { ChatModel, Subject } from '../api/types'
+
+export const culinarySubject: Subject = {
+  id: 'culinary-expert',
+  enabled: true,
+  displayOrder: 10,
+  displayName: 'Culinary Expert',
+}
 
 export const availableOllamaModel: ChatModel = {
   id: 'local-ollama-llama',

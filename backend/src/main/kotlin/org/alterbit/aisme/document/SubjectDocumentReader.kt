@@ -15,6 +15,7 @@ class SubjectDocumentReader {
         }
 
         return SubjectDocumentContent(
+            subjectId = document.subjectId,
             relativePath = document.relativePath,
             content = content,
         )

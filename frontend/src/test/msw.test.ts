@@ -3,6 +3,7 @@ import type {
   ChatResponse,
   ChatModelsResponse,
   EmbeddingModelsResponse,
+  SubjectsResponse,
 } from '../api/types'
 import { apiUrl } from '../config'
 
@@ -17,6 +18,22 @@ describe('MSW backend API mocks', () => {
     expect(body.chatModels).toHaveLength(1)
     expect(body.chatModels[0]?.id).toBe('local-ollama-llama')
     expect(body.chatModels[0]?.availability).toBe('AVAILABLE')
+  })
+
+  it('returns indexed subjects', async () => {
+    const response = await fetch(apiUrl('/subjects'))
+    const body = (await response.json()) as SubjectsResponse
+
+    expect(response.ok).toBe(true)
+    expect(body.defaultSubjectId).toBe('culinary-expert')
+    expect(body.subjects).toEqual([
+      {
+        id: 'culinary-expert',
+        enabled: true,
+        displayOrder: 10,
+        displayName: 'Culinary Expert',
+      },
+    ])
   })
 
   it('returns configured embedding models', async () => {
@@ -38,6 +55,7 @@ describe('MSW backend API mocks', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        subjectId: 'culinary-expert',
         modelId: 'local-ollama-llama',
         message: 'How should I cook rice?',
       }),

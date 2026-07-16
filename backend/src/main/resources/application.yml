@@ -4,10 +4,15 @@ info:
     description: Backend RAG application for subject-matter chat.
 
 aisme:
-  documents:
-    location: classpath:/subject-documents/
-    chunk-size: 700
-    chunk-overlap: 100
+  subjects:
+    culinary-expert:
+      enabled: true
+      display-order: 10
+      display-name: Culinary Expert
+      documents:
+        location: classpath:/subject_documents/culinary_expert/
+        chunk-size: 700
+        chunk-overlap: 100
   embedding:
     api-timeout: 60s
     default-model-id: ollama-nomic-embed

@@ -50,6 +50,7 @@ class OpenAiCompatibleChatFlowTest(
             contentType = MediaType.APPLICATION_JSON
             content = """
                 {
+                  "subjectId": "culinary-expert",
                   "modelId": "mock-openai",
                   "message": "How should I cook rice?"
                 }
@@ -150,8 +151,18 @@ class OpenAiCompatibleChatFlowTestContext {
         Clock.systemUTC()
 
     @Bean
+    fun subjectRegistry(): org.alterbit.aisme.document.SubjectRegistry =
+        object : org.alterbit.aisme.document.SubjectRegistry {
+            override fun subjects(): List<org.alterbit.aisme.document.SubjectDescriptor> =
+                listOf(org.alterbit.aisme.testsupport.culinarySubject())
+
+            override fun getByIdOrThrow(subjectId: String): org.alterbit.aisme.document.SubjectDescriptor =
+                subjects().first { subject -> subject.id == subjectId }
+        }
+
+    @Bean
     fun chatContextRetriever(): ChatContextRetriever =
-        ChatContextRetriever { _, _ -> emptyList() }
+        ChatContextRetriever { _, _, _ -> emptyList() }
 }
 
 private fun HttpExchange.respondJson(body: String) {
