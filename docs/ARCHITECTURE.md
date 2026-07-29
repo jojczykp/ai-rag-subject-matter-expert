@@ -136,7 +136,9 @@ and local asset state can change while the application is running.
 
 Embedded offline asset availability is computed once when the checker is
 created because GGUF files and the managed `llama-server` executable are static
-local assets. Updating those files requires restarting the application to
+local assets. Startup asset handling can download missing GGUF files and install
+the platform-matching `llama-server` archive before the Spring context creates
+runtime beans. Updating those files requires restarting the application to
 refresh embedded offline availability. The startup check verifies that local
 asset paths exist and are readable, and that the configured `llama-server`
 executable can be used. Online and local-server providers remain eligible for
@@ -289,6 +291,8 @@ Configuration should make model availability and runtime mode explicit.
 - [x] Add bundled document resource folder configuration.
 - [x] Add optional per-model startup download for missing configured local model
       assets.
+- [x] Add optional per-runtime startup download for missing configured local
+      runtime assets.
 - [x] Keep model selection in a single `aisme.chat.models` catalog with keyed
       model ids, per-model `enabled` flags, and optional display order.
 - [x] Add configuration properties for `aisme.chat.models`.

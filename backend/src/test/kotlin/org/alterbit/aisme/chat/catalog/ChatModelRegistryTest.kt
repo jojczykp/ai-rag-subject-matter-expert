@@ -4,6 +4,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import org.alterbit.aisme.assets.ModelAssetArchitecture
+import org.alterbit.aisme.assets.ModelAssetOperatingSystem
+import org.alterbit.aisme.assets.ModelAssetProperties
 import org.junit.jupiter.api.Test
 
 class ChatModelRegistryTest {
@@ -71,6 +74,72 @@ class ChatModelRegistryTest {
 
         registry.chatModels().map { it.id } shouldBe listOf("enabled-model")
         registry.findById("disabled-model") shouldBe null
+    }
+
+    @Test
+    fun `lists runtime assets when startup download is enabled`() {
+        val registry = ChatModelRegistry(
+            configuredProperties(
+                chatRuntimesById = mapOf(
+                    "embedded-llama" to ChatModelRuntimeConfigProperties(
+                        type = ChatModelRuntime.EMBEDDED_LLAMA,
+                        assetDirectory = "./models/llama",
+                        serverExecutablePath = "./models/llama/bin/llama-server",
+                        downloadMissingAssetsOnStartup = true,
+                        assets = listOf(
+                            ModelAssetProperties(
+                                label = "llama-server Linux Ubuntu x64",
+                                path = "./models/llama/bin/llama-server",
+                                url = "https://example.com/llama-server.tar.gz",
+                                os = ModelAssetOperatingSystem.LINUX,
+                                arch = ModelAssetArchitecture.X86_64,
+                            ),
+                        ),
+                    ),
+                ),
+                chatModelsById = mapOf(
+                    configuredModel(runtimeId = "embedded-llama"),
+                ),
+            ),
+        )
+
+        val runtimeAssets = registry.runtimeAssets()
+
+        runtimeAssets.size shouldBe 1
+        runtimeAssets[0].modelId shouldBe "chat-runtime:embedded-llama"
+        runtimeAssets[0].label shouldBe "llama-server Linux Ubuntu x64"
+        runtimeAssets[0].path.toString() shouldBe "./models/llama/bin/llama-server"
+        runtimeAssets[0].url shouldBe "https://example.com/llama-server.tar.gz"
+        runtimeAssets[0].os shouldBe ModelAssetOperatingSystem.LINUX
+        runtimeAssets[0].arch shouldBe ModelAssetArchitecture.X86_64
+    }
+
+    @Test
+    fun `does not list runtime assets when startup download is disabled`() {
+        val registry = ChatModelRegistry(
+            configuredProperties(
+                chatRuntimesById = mapOf(
+                    "embedded-llama" to ChatModelRuntimeConfigProperties(
+                        type = ChatModelRuntime.EMBEDDED_LLAMA,
+                        assetDirectory = "./models/llama",
+                        serverExecutablePath = "./models/llama/bin/llama-server",
+                        downloadMissingAssetsOnStartup = false,
+                        assets = listOf(
+                            ModelAssetProperties(
+                                label = "llama-server Linux Ubuntu x64",
+                                path = "./models/llama/bin/llama-server",
+                                url = "https://example.com/llama-server.tar.gz",
+                            ),
+                        ),
+                    ),
+                ),
+                chatModelsById = mapOf(
+                    configuredModel(runtimeId = "embedded-llama"),
+                ),
+            ),
+        )
+
+        registry.runtimeAssets() shouldBe emptyList()
     }
 
     @Test

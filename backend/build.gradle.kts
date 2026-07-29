@@ -37,6 +37,7 @@ dependencyManagement {
 dependencies {
     runtimeOnly(libs.postgresql)
 
+    implementation(libs.commons.compress)
     implementation(libs.flyway.core)
     implementation(libs.flyway.database.postgresql)
     implementation(libs.hf.tokenizers)

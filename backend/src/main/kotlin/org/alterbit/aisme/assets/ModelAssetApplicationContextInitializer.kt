@@ -44,4 +44,5 @@ private fun downloadableAssets(
     chatModelRegistry: ChatModelRegistry,
 ): List<ModelAsset> =
     embeddingModelRegistry.embeddingModels().flatMap { model -> model.downloadableAssets() } +
+        chatModelRegistry.runtimeAssets().filter { asset -> asset.matches(ModelAssetPlatform.current()) } +
         chatModelRegistry.chatModels().flatMap { model -> model.downloadableAssets() }

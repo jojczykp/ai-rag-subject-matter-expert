@@ -33,10 +33,11 @@ Run commands from the repository root.
 
 ### Models
 
-By default, file-backed local models download their missing files during
-startup when their model-level `download-missing-assets-on-startup` flag is enabled.
-The example configuration enables it for the local ONNX embedding model and
-the embedded GGUF chat models.
+By default, file-backed local models and runtimes download their missing files
+during startup when their `download-missing-assets-on-startup` flag is enabled.
+The example configuration enables it for the local ONNX embedding model, the
+embedded GGUF chat models, and the platform-matching embedded `llama-server`
+runtime archive.
 
 To force these files to be downloaded again on the next startup, remove the
 local copies first:
@@ -44,6 +45,7 @@ local copies first:
 ```bash
 ./gradlew :backend:cleanEmbeddingModel
 ./gradlew :backend:cleanEmbeddedLlamaModel
+./gradlew :backend:cleanEmbeddedLlamaServer
 ```
 
 #### Embedded local models on llama-server
@@ -52,16 +54,10 @@ If you want to use the bundled `embedded-qwen-0-5b`,
 `embedded-qwen-1-5b`, `embedded-qwen-3b`, and `embedded-mistral-7b`
 chat models.
 
-Startup model downloads do not install `llama-server`; use the Gradle task
-below for that platform-specific runtime binary.
-
-Remove `llama-server` for the current platform first if exists:
-
-```bash
-./gradlew :backend:cleanEmbeddedLlamaServer
-```
-
-Download and verify the `llama-server` for the current platform:
+Startup downloads install the matching `llama-server` archive for macOS Apple
+Silicon, macOS Intel, Linux x64, or Windows x64. The Gradle task remains
+available when you want to install or verify the runtime explicitly before
+starting the application:
 
 ```bash
 ./gradlew :backend:embeddedLlamaDownloadServer
@@ -524,6 +520,14 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat.runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
 | `aisme.chat.runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
 | `aisme.chat.runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
+| `aisme.chat.runtimes.<runtime-id>.download-missing-assets-on-startup` | `true` in embedded example | Whether missing local runtime files are downloaded during application startup. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].label` | local runtime assets only | Human-readable runtime asset label used in startup download logs. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].path` | local runtime assets only | Local file path expected after download or archive installation. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].url` | local runtime assets only | Source URL used when startup download is enabled and the asset file is missing. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].os` | optional | Normalized OS selector: `macos`, `linux`, or `windows`. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].arch` | optional | Normalized CPU selector: `aarch64` or `x86_64`. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].archive.format` | archive assets only | Archive type: `TAR_GZ` or `ZIP`. |
+| `aisme.chat.runtimes.<runtime-id>.assets[].archive.executable-name` | archive assets only | Executable file name inside the downloaded archive. |
 | `aisme.chat.models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
 | `aisme.chat.models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
 | `aisme.chat.models.<model-id>.download-missing-assets-on-startup` | `true` in embedded examples | Whether missing local files for this chat model are downloaded during application startup. |
@@ -599,6 +603,40 @@ aisme:
         type: EMBEDDED_LLAMA
         asset-directory: ./models/llama
         server-executable-path: ./models/llama/bin/llama-server
+        download-missing-assets-on-startup: true
+        assets:
+          - label: llama-server macOS Apple Silicon
+            path: ./models/llama/bin/llama-server
+            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-arm64.tar.gz
+            os: macos
+            arch: aarch64
+            archive:
+              format: TAR_GZ
+              executable-name: llama-server
+          - label: llama-server macOS Intel
+            path: ./models/llama/bin/llama-server
+            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-x64.tar.gz
+            os: macos
+            arch: x86_64
+            archive:
+              format: TAR_GZ
+              executable-name: llama-server
+          - label: llama-server Linux Ubuntu x64
+            path: ./models/llama/bin/llama-server
+            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-ubuntu-x64.tar.gz
+            os: linux
+            arch: x86_64
+            archive:
+              format: TAR_GZ
+              executable-name: llama-server
+          - label: llama-server Windows x64
+            path: ./models/llama/bin/llama-server
+            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-win-cpu-x64.zip
+            os: windows
+            arch: x86_64
+            archive:
+              format: ZIP
+              executable-name: llama-server.exe
     models:
       embedded-qwen-0-5b:
         enabled: true

@@ -1,11 +1,15 @@
 package org.alterbit.aisme.chat.catalog
 
+import org.alterbit.aisme.assets.ModelAssetProperties
+
 data class ChatModelRuntimeConfigProperties(
     val type: ChatModelRuntime,
     val baseUrl: String? = null,
     val apiKey: String? = null,
     val assetDirectory: String? = null,
     val serverExecutablePath: String? = null,
+    val downloadMissingAssetsOnStartup: Boolean = true,
+    val assets: List<ModelAssetProperties> = emptyList(),
 ) {
     init {
         require(baseUrl == null || baseUrl.isNotBlank()) {

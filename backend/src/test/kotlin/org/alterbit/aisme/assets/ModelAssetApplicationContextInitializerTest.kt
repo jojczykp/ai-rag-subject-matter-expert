@@ -56,15 +56,18 @@ class ModelAssetApplicationContextInitializerTest {
         val onnxSource = sourceDirectory.resolve("model.onnx")
         val tokenizerSource = sourceDirectory.resolve("tokenizer.json")
         val ggufSource = sourceDirectory.resolve("chat.gguf")
+        val serverSource = sourceDirectory.resolve("llama-server")
         Files.writeString(onnxSource, "onnx")
         Files.writeString(tokenizerSource, "tokenizer")
         Files.writeString(ggufSource, "gguf")
+        Files.writeString(serverSource, "server")
 
         val onnxTarget = tempDirectory.resolve("models/bge/model.onnx")
         val tokenizerTarget = tempDirectory.resolve("models/bge/tokenizer.json")
         val skippedOnnxTarget = tempDirectory.resolve("models/skipped/model.onnx")
         val skippedGgufTarget = tempDirectory.resolve("llama/models/skipped.gguf")
         val chatTarget = tempDirectory.resolve("llama/models/chat.gguf")
+        val serverTarget = tempDirectory.resolve("llama/bin/llama-server")
 
         ApplicationContextRunner()
             .withInitializer(ModelAssetApplicationContextInitializer())
@@ -95,7 +98,11 @@ class ModelAssetApplicationContextInitializerTest {
                 "aisme.embedding.models.skipped-bge-small.runtime.tokenizer-path=${tempDirectory.resolve("models/skipped/tokenizer.json")}",
                 "aisme.chat.runtimes.embedded-llama.type=EMBEDDED_LLAMA",
                 "aisme.chat.runtimes.embedded-llama.asset-directory=${tempDirectory.resolve("llama")}",
-                "aisme.chat.runtimes.embedded-llama.server-executable-path=${tempDirectory.resolve("llama/bin/llama-server")}",
+                "aisme.chat.runtimes.embedded-llama.server-executable-path=$serverTarget",
+                "aisme.chat.runtimes.embedded-llama.download-missing-assets-on-startup=true",
+                "aisme.chat.runtimes.embedded-llama.assets[0].label=llama-server",
+                "aisme.chat.runtimes.embedded-llama.assets[0].path=$serverTarget",
+                "aisme.chat.runtimes.embedded-llama.assets[0].url=${serverSource.toUri()}",
                 "aisme.chat.models.embedded-chat.enabled=true",
                 "aisme.chat.models.embedded-chat.download-missing-assets-on-startup=true",
                 "aisme.chat.models.embedded-chat.display-name=Embedded Chat",
@@ -123,6 +130,7 @@ class ModelAssetApplicationContextInitializerTest {
         Files.readString(onnxTarget) shouldBe "onnx"
         Files.readString(tokenizerTarget) shouldBe "tokenizer"
         Files.readString(chatTarget) shouldBe "gguf"
+        Files.readString(serverTarget) shouldBe "server"
         Files.exists(skippedOnnxTarget) shouldBe false
         Files.exists(skippedGgufTarget) shouldBe false
     }

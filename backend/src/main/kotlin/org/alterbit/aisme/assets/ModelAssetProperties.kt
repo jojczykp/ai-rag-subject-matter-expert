@@ -6,6 +6,9 @@ data class ModelAssetProperties(
     val label: String,
     val path: String,
     val url: String? = null,
+    val os: ModelAssetOperatingSystem? = null,
+    val arch: ModelAssetArchitecture? = null,
+    val archive: ModelAssetArchiveProperties? = null,
 ) {
     init {
         require(label.isNotBlank()) { "model asset label must not be blank" }
@@ -19,5 +22,23 @@ data class ModelAssetProperties(
             label = label,
             path = Path.of(path),
             url = url,
+            os = os,
+            arch = arch,
+            archive = archive?.toModelAssetArchive(),
+        )
+}
+
+data class ModelAssetArchiveProperties(
+    val format: ModelAssetArchiveFormat,
+    val executableName: String,
+) {
+    init {
+        require(executableName.isNotBlank()) { "model asset archive executable-name must not be blank" }
+    }
+
+    fun toModelAssetArchive(): ModelAssetArchive =
+        ModelAssetArchive(
+            format = format,
+            executableName = executableName,
         )
 }

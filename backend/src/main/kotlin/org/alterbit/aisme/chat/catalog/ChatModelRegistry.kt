@@ -1,5 +1,6 @@
 package org.alterbit.aisme.chat.catalog
 
+import org.alterbit.aisme.assets.ModelAsset
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -58,6 +59,15 @@ class ChatModelRegistry(
 
     fun chatModels(): List<ChatModelDescriptor> =
         modelsById.values.toList()
+
+    fun runtimeAssets(): List<ModelAsset> =
+        properties.chatRuntimesById.flatMap { (runtimeId, runtime) ->
+            if (runtime.downloadMissingAssetsOnStartup) {
+                runtime.assets.map { asset -> asset.toModelAsset("chat-runtime:$runtimeId") }
+            } else {
+                emptyList()
+            }
+        }
 
     fun defaultModelId(): String? =
         defaultModelId

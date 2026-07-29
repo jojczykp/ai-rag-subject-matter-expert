@@ -1,4 +1,5 @@
 [versions]
+commons-compress = "1.28.0"
 dependency-management = "1.1.7"
 hf-tokenizers = "0.36.0"
 kotest = "6.2.1"
@@ -17,6 +18,7 @@ spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "dependency-management" }
 
 [libraries]
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
 flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql" }
 hf-tokenizers = { module = "ai.djl.huggingface:tokenizers", version.ref = "hf-tokenizers" }
