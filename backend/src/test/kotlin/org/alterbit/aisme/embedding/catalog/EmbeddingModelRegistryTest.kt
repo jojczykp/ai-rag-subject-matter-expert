@@ -21,6 +21,7 @@ class EmbeddingModelRegistryTest {
                 modelsById = mapOf(
                     "local-bge-small" to EmbeddingModelConfigProperties(
                         enabled = true,
+                        downloadMissingAssetsOnStartup = false,
                         displayOrder = 20,
                         displayName = "Local BGE Small",
                         version = "1.5",
@@ -59,6 +60,7 @@ class EmbeddingModelRegistryTest {
         embeddingModels[0].modelName shouldBe "nomic-embed-text:v1.5"
         embeddingModels[1].id shouldBe "local-bge-small"
         embeddingModels[1].enabled shouldBe true
+        embeddingModels[1].downloadMissingAssetsOnStartup shouldBe false
         embeddingModels[1].displayOrder shouldBe 20
         embeddingModels[1].displayName shouldBe "Local BGE Small"
         embeddingModels[1].runtime shouldBe EmbeddingModelRuntime.ONNX

@@ -1,7 +1,13 @@
 package org.alterbit.aisme.chat.catalog
 
+import org.alterbit.aisme.assets.ModelAsset
+import org.alterbit.aisme.assets.ModelAssetOwner
+
 data class ChatModelDescriptor(
     val id: String,
+    override val enabled: Boolean,
+    override val downloadMissingAssetsOnStartup: Boolean = true,
+    override val assets: List<ModelAsset> = emptyList(),
     val displayName: String,
     val description: String?,
     val runtime: ChatModelRuntime,
@@ -18,7 +24,7 @@ data class ChatModelDescriptor(
     val ggufFile: String? = null,
     val contextSize: Int? = null,
     val runtimeArguments: List<String> = emptyList(),
-) {
+) : ModelAssetOwner {
     init {
         require(id.isNotBlank()) { "model id must not be blank" }
         require(displayOrder == null || displayOrder >= 0) {

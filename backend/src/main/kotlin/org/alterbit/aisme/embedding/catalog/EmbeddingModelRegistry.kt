@@ -21,6 +21,8 @@ class EmbeddingModelRegistry(
             EmbeddingModelDescriptor(
                 id = modelId,
                 enabled = model.enabled,
+                downloadMissingAssetsOnStartup = model.downloadMissingAssetsOnStartup,
+                assets = model.assets.map { asset -> asset.toModelAsset(modelId) },
                 displayOrder = model.displayOrder,
                 displayName = model.displayName ?: modelId,
                 runtime = runtime.type,

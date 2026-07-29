@@ -64,7 +64,22 @@ tasks.withType<Test>().configureEach {
 
 tasks.test {
     useJUnitPlatform {
-        excludeTags("ollama", "openai-compatible", "hugging-face-tgi")
+        excludeTags("ollama", "openai-compatible", "hugging-face-tgi", "onnx-model")
+    }
+}
+
+tasks.register<Test>("onnxModelTest") {
+    group = "verification"
+    description = "Runs optional real ONNX embedding model tests."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    shouldRunAfter(tasks.test)
+    onlyIf {
+        gradle.startParameter.taskNames.any { it == "onnxModelTest" || it.endsWith(":onnxModelTest") }
+    }
+
+    useJUnitPlatform {
+        includeTags("onnx-model")
     }
 }
 

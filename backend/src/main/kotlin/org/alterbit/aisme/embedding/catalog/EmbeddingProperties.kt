@@ -1,6 +1,7 @@
 package org.alterbit.aisme.embedding.catalog
 
 import java.time.Duration
+import org.alterbit.aisme.assets.ModelAssetProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.Name
 
@@ -23,10 +24,23 @@ data class EmbeddingProperties(
     val modelsById: Map<String, EmbeddingModelConfigProperties> = mapOf(
         "local-bge-small" to EmbeddingModelConfigProperties(
             enabled = true,
+            downloadMissingAssetsOnStartup = true,
             displayOrder = 10,
             displayName = "Local BGE Small",
             version = "1.5",
             dimensions = 384,
+            assets = listOf(
+                ModelAssetProperties(
+                    label = "ONNX model",
+                    path = "./models/bge-small-en-v1.5/model.onnx",
+                    url = "https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx",
+                ),
+                ModelAssetProperties(
+                    label = "tokenizer",
+                    path = "./models/bge-small-en-v1.5/tokenizer.json",
+                    url = "https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json",
+                ),
+            ),
             runtime = EmbeddingModelRuntimeProperties(
                 id = "local-onnx",
                 modelPath = "./models/bge-small-en-v1.5/model.onnx",
@@ -116,6 +130,7 @@ data class EmbeddingProperties(
         return when (runtime.type) {
             EmbeddingModelRuntime.ONNX -> EmbeddingModelProperties(
                 id = modelId,
+                downloadMissingAssetsOnStartup = model.downloadMissingAssetsOnStartup,
                 version = version,
                 dimensions = dimensions,
                 runtime = runtime.type,
@@ -125,6 +140,7 @@ data class EmbeddingProperties(
 
             EmbeddingModelRuntime.OLLAMA -> EmbeddingModelProperties(
                 id = modelId,
+                downloadMissingAssetsOnStartup = model.downloadMissingAssetsOnStartup,
                 version = version,
                 dimensions = dimensions,
                 runtime = runtime.type,

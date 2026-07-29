@@ -1,11 +1,15 @@
 package org.alterbit.aisme.embedding.catalog
 
+import org.alterbit.aisme.assets.ModelAssetProperties
+
 data class EmbeddingModelConfigProperties(
     val enabled: Boolean = false,
+    val downloadMissingAssetsOnStartup: Boolean = true,
     val displayOrder: Int? = null,
     val displayName: String? = null,
     val version: String? = null,
     val dimensions: Int? = null,
+    val assets: List<ModelAssetProperties> = emptyList(),
     val runtime: EmbeddingModelRuntimeProperties = EmbeddingModelRuntimeProperties(),
 ) {
     init {

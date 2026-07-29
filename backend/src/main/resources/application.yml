@@ -38,6 +38,14 @@ aisme:
           id: local-onnx
           model-path: ./models/bge-small-en-v1.5/model.onnx
           tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+        download-missing-assets-on-startup: true
+        assets:
+          - label: ONNX model
+            path: ./models/bge-small-en-v1.5/model.onnx
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx
+          - label: tokenizer
+            path: ./models/bge-small-en-v1.5/tokenizer.json
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json
       ollama-nomic-embed:
         enabled: true
         display-order: 20
@@ -84,6 +92,11 @@ aisme:
           gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf
       embedded-qwen-1-5b:
         enabled: true
         display-order: 20
@@ -95,6 +108,11 @@ aisme:
           gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf
       embedded-qwen-3b:
         enabled: true
         display-order: 30
@@ -106,6 +124,11 @@ aisme:
           gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-3b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf
       embedded-mistral-7b:
         enabled: true
         display-order: 40
@@ -117,6 +140,11 @@ aisme:
           gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+            url: https://huggingface.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf
       local-ollama-llama:
         enabled: true
         display-order: 50

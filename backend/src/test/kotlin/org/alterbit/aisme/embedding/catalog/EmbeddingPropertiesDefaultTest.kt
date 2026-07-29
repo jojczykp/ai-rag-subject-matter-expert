@@ -20,6 +20,7 @@ class EmbeddingPropertiesDefaultTest {
 
             enabledModels shouldHaveSize 2
             enabledModels[0].id shouldBe "local-bge-small"
+            enabledModels[0].downloadMissingAssetsOnStartup shouldBe true
             enabledModels[0].version shouldBe "1.5"
             enabledModels[0].runtime shouldBe EmbeddingModelRuntime.ONNX
             enabledModels[0].modelPath shouldBe "./models/bge-small-en-v1.5/model.onnx"

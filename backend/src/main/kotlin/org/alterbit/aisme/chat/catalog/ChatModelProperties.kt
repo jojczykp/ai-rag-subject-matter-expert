@@ -1,10 +1,14 @@
 package org.alterbit.aisme.chat.catalog
 
+import org.alterbit.aisme.assets.ModelAssetProperties
+
 data class ChatModelProperties(
     val enabled: Boolean = false,
+    val downloadMissingAssetsOnStartup: Boolean = true,
     val displayOrder: Int? = null,
     val displayName: String? = null,
     val description: String? = null,
+    val assets: List<ModelAssetProperties> = emptyList(),
     val runtime: ChatModelRuntimeProperties = ChatModelRuntimeProperties(),
 ) {
     init {
@@ -38,6 +42,9 @@ data class ChatModelProperties(
     ): ChatModelDescriptor {
         return ChatModelDescriptor(
             id = id,
+            enabled = enabled,
+            downloadMissingAssetsOnStartup = downloadMissingAssetsOnStartup,
+            assets = assets.map { asset -> asset.toModelAsset(id) },
             displayOrder = displayOrder,
             displayName = requireDisplayName(),
             description = description.normalizedOptionalValue(),

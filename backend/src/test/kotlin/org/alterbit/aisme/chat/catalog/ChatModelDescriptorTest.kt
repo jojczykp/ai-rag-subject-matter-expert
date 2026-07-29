@@ -10,6 +10,7 @@ class ChatModelDescriptorTest {
     fun `creates model descriptor`() {
         val descriptor = ChatModelDescriptor(
             id = "local-ollama-llama",
+            enabled = true,
             displayName = "Local Ollama Llama",
             description = "Local Ollama model for chat requests.",
             runtime = ChatModelRuntime.OLLAMA,
@@ -22,6 +23,7 @@ class ChatModelDescriptorTest {
         )
 
         descriptor.id shouldBe "local-ollama-llama"
+        descriptor.enabled shouldBe true
         descriptor.displayName shouldBe "Local Ollama Llama"
         descriptor.description shouldBe "Local Ollama model for chat requests."
         descriptor.runtime shouldBe ChatModelRuntime.OLLAMA
@@ -97,6 +99,7 @@ class ChatModelDescriptorTest {
     ): ChatModelDescriptor =
         ChatModelDescriptor(
             id = id,
+            enabled = true,
             displayName = displayName,
             description = description,
             runtime = ChatModelRuntime.OLLAMA,

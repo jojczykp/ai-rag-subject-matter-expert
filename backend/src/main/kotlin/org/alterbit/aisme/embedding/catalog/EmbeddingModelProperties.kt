@@ -2,6 +2,7 @@ package org.alterbit.aisme.embedding.catalog
 
 data class EmbeddingModelProperties(
     val id: String = "local-bge-small",
+    val downloadMissingAssetsOnStartup: Boolean = true,
     val version: String = "1.5",
     val dimensions: Int = 384,
     val runtime: EmbeddingModelRuntime = EmbeddingModelRuntime.ONNX,

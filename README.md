@@ -33,20 +33,17 @@ Run commands from the repository root.
 
 ### Models
 
-May skip if not already present and correct.
+By default, file-backed local models download their missing files during
+startup when their model-level `download-missing-assets-on-startup` flag is enabled.
+The example configuration enables it for the local ONNX embedding model and
+the embedded GGUF chat models.
 
-#### Embedding model
-
-Remove locally downloaded embedding model files first:
+To force these files to be downloaded again on the next startup, remove the
+local copies first:
 
 ```bash
 ./gradlew :backend:cleanEmbeddingModel
-```
-
-Download:
-
-```bash
-./gradlew :backend:embeddingModelDownload
+./gradlew :backend:cleanEmbeddedLlamaModel
 ```
 
 #### Embedded local models on llama-server
@@ -55,26 +52,8 @@ If you want to use the bundled `embedded-qwen-0-5b`,
 `embedded-qwen-1-5b`, `embedded-qwen-3b`, and `embedded-mistral-7b`
 chat models.
 
-Remove downloaded model first if exists:
-
-```bash
-./gradlew :backend:cleanEmbeddedLlamaModel
-```
-
-Download models:
-
-```bash
-./gradlew :backend:embeddedLlamaDownloadModel
-```
-
-To download only one embedded model, use the specific task:
-
-```bash
-./gradlew :backend:embeddedLlamaDownloadQwen0p5BModel
-./gradlew :backend:embeddedLlamaDownloadQwen1p5BModel
-./gradlew :backend:embeddedLlamaDownloadQwen3BModel
-./gradlew :backend:embeddedLlamaDownloadMistral7BModel
-```
+Startup model downloads do not install `llama-server`; use the Gradle task
+below for that platform-specific runtime binary.
 
 Remove `llama-server` for the current platform first if exists:
 
@@ -399,6 +378,13 @@ a local mock HTTP server, not a real Hugging Face endpoint:
 ./gradlew :backend:huggingFaceTgiTest
 ```
 
+Optional real ONNX embedding model tests require local ONNX model assets. Run
+them explicitly after startup download has populated `backend/models`:
+
+```bash
+./gradlew :backend:onnxModelTest
+```
+
 The default test image is `ollama/ollama:latest`, and the default model-backed
 test model is `tinyllama:latest`. Override them when needed:
 
@@ -514,10 +500,14 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |
 | `aisme.embedding.default-model-id` | `ollama-nomic-embed` | Embedding model preselected by API clients and the UI. |
 | `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is indexed and selectable for retrieval. |
+| `aisme.embedding.models.<model-id>.download-missing-assets-on-startup` | `true` in example ONNX config | Whether missing local files for this embedding model are downloaded during application startup. |
 | `aisme.embedding.models.<model-id>.display-order` | optional | Sort order for embedding model selectors and catalog responses. |
 | `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
 | `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
 | `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |
+| `aisme.embedding.models.<model-id>.assets[].label` | local assets only | Human-readable asset label used in startup download logs. |
+| `aisme.embedding.models.<model-id>.assets[].path` | local assets only | Local file path for a downloadable model asset. |
+| `aisme.embedding.models.<model-id>.assets[].url` | local assets only | Source URL used when startup download is enabled and the asset file is missing. |
 | `aisme.embedding.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.embedding.runtimes`. |
 | `aisme.embedding.models.<model-id>.runtime.model-path` | ONNX only | ONNX model file path. |
 | `aisme.embedding.models.<model-id>.runtime.tokenizer-path` | ONNX only | tokenizer file path. |
@@ -536,9 +526,13 @@ Application properties are configured under the `aisme` prefix.
 | `aisme.chat.runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
 | `aisme.chat.models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
 | `aisme.chat.models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
+| `aisme.chat.models.<model-id>.download-missing-assets-on-startup` | `true` in embedded examples | Whether missing local files for this chat model are downloaded during application startup. |
 | `aisme.chat.models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
 | `aisme.chat.models.<model-id>.display-name` | required when enabled | Human-readable model name. |
 | `aisme.chat.models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
+| `aisme.chat.models.<model-id>.assets[].label` | local assets only | Human-readable asset label used in startup download logs. |
+| `aisme.chat.models.<model-id>.assets[].path` | local assets only | Local file path for a downloadable model asset. |
+| `aisme.chat.models.<model-id>.assets[].url` | local assets only | Source URL used when startup download is enabled and the asset file is missing. |
 | `aisme.chat.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.chat.runtimes`. |
 | `aisme.chat.models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
 | `aisme.chat.models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
@@ -570,17 +564,26 @@ aisme:
           id: local-onnx
           model-path: ./models/bge-small-en-v1.5/model.onnx
           tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+        download-missing-assets-on-startup: true
+        assets:
+          - label: ONNX model
+            path: ./models/bge-small-en-v1.5/model.onnx
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx
+          - label: tokenizer
+            path: ./models/bge-small-en-v1.5/tokenizer.json
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json
 ```
 
 The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
-See `Build` for the download commands.
+See `Models` for startup-download behavior.
 
 These files are local runtime assets. They are intentionally excluded from git
 because model binaries are large and can be replaced independently from
 application code.
 
-The ONNX client loads these files during startup, so the application fails fast
-when the configured model or tokenizer file is missing.
+The ONNX client loads these files during startup. When startup download is
+disabled, the application fails fast if the configured model or tokenizer file
+is missing.
 
 ### Embedded Llama Assets
 
@@ -608,6 +611,11 @@ aisme:
           gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf
       embedded-qwen-1-5b:
         enabled: true
         display-order: 20
@@ -619,6 +627,11 @@ aisme:
           gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf
       embedded-qwen-3b:
         enabled: true
         display-order: 30
@@ -630,6 +643,11 @@ aisme:
           gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/qwen2.5-3b-instruct-q4_k_m.gguf
+            url: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf
       embedded-mistral-7b:
         enabled: true
         display-order: 40
@@ -641,6 +659,11 @@ aisme:
           gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
           context-size: 2048
           runtime-arguments: []
+        download-missing-assets-on-startup: true
+        assets:
+          - label: GGUF model
+            path: ./models/llama/models/mistral-7b-instruct-v0.3-q4_k_m.gguf
+            url: https://huggingface.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf
 ```
 
 Embedded models are enabled by default. Each becomes selectable

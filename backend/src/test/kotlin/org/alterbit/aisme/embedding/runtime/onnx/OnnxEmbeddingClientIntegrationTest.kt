@@ -5,8 +5,10 @@ import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import kotlin.math.abs
 import org.alterbit.aisme.embedding.catalog.EmbeddingModelProperties
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
+@Tag("onnx-model")
 class OnnxEmbeddingClientIntegrationTest {
     @Test
     fun `generates embedding with configured local ONNX model`() {

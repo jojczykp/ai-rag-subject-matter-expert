@@ -100,6 +100,7 @@ class ChatModelDtoTest {
     ): ChatModelDescriptor =
         ChatModelDescriptor(
             id = "local-ollama-llama",
+            enabled = true,
             displayName = "Local Ollama Llama",
             description = "Local Ollama model for chat requests.",
             runtime = runtime,

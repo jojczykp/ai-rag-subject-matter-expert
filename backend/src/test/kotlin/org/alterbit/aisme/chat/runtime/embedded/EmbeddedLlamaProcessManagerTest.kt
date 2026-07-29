@@ -4,6 +4,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
@@ -152,6 +153,24 @@ class EmbeddedLlamaProcessManagerTest {
         launcher.processes.single().destroyed shouldBe true
     }
 
+    @Test
+    fun `marks model misconfigured when llama server process cannot start`() {
+        val launcher = FakeEmbeddedLlamaProcessLauncher(startFailure = IOException("missing executable"))
+        val manager = EmbeddedLlamaProcessManager(
+            chatModelRegistry = chatModelRegistry(embeddedModel(id = "embedded-qwen")),
+            portAllocator = fixedPortAllocator(19001),
+            processLauncher = launcher,
+            readinessProbe = FakeReadinessProbe(),
+            processOutputLogger = noOpOutputLogger(),
+        )
+
+        manager.run(DefaultApplicationArguments())
+
+        manager.availabilityForModelId("embedded-qwen") shouldBe ChatModelAvailability.MISCONFIGURED
+        launcher.commands.size shouldBe 1
+        launcher.processes shouldContainExactly emptyList()
+    }
+
     private fun chatModelRegistry(vararg models: Pair<String, ChatModelProperties>): ChatModelRegistry =
         ChatModelRegistry(
             ChatModelsProperties(
@@ -214,12 +233,14 @@ class EmbeddedLlamaProcessManagerTest {
 
     private class FakeEmbeddedLlamaProcessLauncher(
         private val processStopsGracefully: Boolean = true,
+        private val startFailure: Exception? = null,
     ) : EmbeddedLlamaProcessLauncher {
         val commands = mutableListOf<List<String>>()
         val processes = mutableListOf<FakeProcess>()
 
         override fun start(command: List<String>): Process {
             commands += command
+            startFailure?.let { throw it }
             return FakeProcess(processStopsGracefully = processStopsGracefully).also { processes += it }
         }
     }

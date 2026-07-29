@@ -287,6 +287,8 @@ chunking strategy changes. The schema diagram is maintained in
 Configuration should make model availability and runtime mode explicit.
 
 - [x] Add bundled document resource folder configuration.
+- [x] Add optional per-model startup download for missing configured local model
+      assets.
 - [x] Keep model selection in a single `aisme.chat.models` catalog with keyed
       model ids, per-model `enabled` flags, and optional display order.
 - [x] Add configuration properties for `aisme.chat.models`.
@@ -330,6 +332,14 @@ aisme:
           id: local-onnx
           model-path: ./models/bge-small-en-v1.5/model.onnx
           tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
+        download-missing-assets-on-startup: true
+        assets:
+          - label: ONNX model
+            path: ./models/bge-small-en-v1.5/model.onnx
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx
+          - label: tokenizer
+            path: ./models/bge-small-en-v1.5/tokenizer.json
+            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json
 
   chat:
     default-model-id: embedded-mistral-7b

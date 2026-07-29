@@ -40,6 +40,8 @@ class ChatModelRegistryTest {
         val model = registry.findById("local-ollama-llama")
 
         model?.id shouldBe "local-ollama-llama"
+        model?.enabled shouldBe true
+        model?.downloadMissingAssetsOnStartup shouldBe true
         model?.displayName shouldBe "Local Ollama Llama"
         model?.runtime shouldBe ChatModelRuntime.OLLAMA
         model?.mode shouldBe ChatModelMode.LOCAL_SERVER

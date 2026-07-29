@@ -2,6 +2,7 @@ package org.alterbit.aisme.chat.catalog
 
 fun chatModel(
     id: String = "local-ollama-llama",
+    enabled: Boolean = true,
     displayOrder: Int? = null,
     displayName: String = "Local Ollama Llama",
     description: String? = "Local Ollama model for chat requests.",
@@ -21,6 +22,7 @@ fun chatModel(
 ): ChatModelDescriptor =
     ChatModelDescriptor(
         id = id,
+        enabled = enabled,
         displayOrder = displayOrder,
         displayName = displayName,
         description = description,
