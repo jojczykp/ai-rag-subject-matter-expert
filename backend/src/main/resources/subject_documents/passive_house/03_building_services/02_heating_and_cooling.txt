@@ -1,0 +1,16 @@
+TITLE: Heating and Cooling in Very Low-Energy Buildings
+TAGS: heating, cooling, heat-pump, loads, sizing, distribution
+
+A high-performance envelope greatly reduces space-conditioning loads, but it does not eliminate the need to calculate them. Equipment should be sized from project-specific heating and cooling loads, not from conventional rules based only on floor area.
+
+Oversized equipment can cycle frequently, operate inefficiently, control humidity poorly and cost more. Undersized equipment may fail during design conditions. Load calculations should include transmission, ventilation, infiltration assumptions, solar gains, internal gains, thermal mass, schedules and climate extremes.
+
+Heat pumps are often well suited because they provide efficient heating and can provide cooling. Options include air-to-air, air-to-water and ground-source systems. Selection depends on load profile, climate, distribution system, domestic hot water, defrost behaviour, noise, refrigerant, maintenance and grid conditions.
+
+Distribution can use small radiators, low-temperature hydronic floors, fan coils, mini-splits or supply-air heating in suitable cases. Supply-air heating capacity is limited by acceptable airflow and supply temperature, so it must be verified rather than assumed.
+
+Cooling design should first reduce gains through shading, glazing selection, roof and wall performance, efficient lighting and equipment, and night ventilation where climate permits. Active cooling may still be prudent for resilience and comfort, especially with warming climates and urban heat.
+
+Humidity control deserves separate attention. Sensible cooling may not remove enough moisture in humid climates or low-load buildings. Dedicated dehumidification, appropriate heat-pump selection or energy-recovery ventilation may be needed. In cold climates, winter indoor humidity may become very low with high ventilation rates.
+
+Controls should be simple and coordinated. Avoid systems that simultaneously heat and cool. Place sensors away from direct sun, supply jets and local heat sources. Define setbacks carefully: very efficient buildings change temperature slowly, so deep intermittent setbacks may provide little benefit.

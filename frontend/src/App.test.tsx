@@ -8,6 +8,9 @@ import { apiUrl } from './config'
 import { availableOllamaModel } from './test/fixtures'
 import { server } from './test/server'
 
+const defaultMessage =
+  'I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks'
+
 describe('App', () => {
   it('loads models and shows selected model details', async () => {
     const { container } = render(<App />)
@@ -75,14 +78,14 @@ describe('App', () => {
     const messageField = screen.getByLabelText('Message')
 
     expect(messageField).toHaveFocus()
-    expect(messageField).toHaveValue('How should I cook rice?')
-    expect(messageField).toHaveProperty('selectionStart', 23)
-    expect(messageField).toHaveProperty('selectionEnd', 23)
+    expect(messageField).toHaveValue(defaultMessage)
+    expect(messageField).toHaveProperty('selectionStart', defaultMessage.length)
+    expect(messageField).toHaveProperty('selectionEnd', defaultMessage.length)
 
     await screen.findByLabelText('Chat Model')
 
     expect(messageField).toHaveFocus()
-    expect(messageField).toHaveValue('How should I cook rice?')
+    expect(messageField).toHaveValue(defaultMessage)
   })
 
   it('prefills a message and still requires non-blank content', async () => {
@@ -127,16 +130,16 @@ describe('App', () => {
     )
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
-    expect(screen.getByText('How should I cook rice?')).toBeVisible()
+    expect(screen.getByText(defaultMessage)).toBeVisible()
     expect(
-      await screen.findByText('Mock answer for: How should I cook rice?'),
+      await screen.findByText(`Mock answer for: ${defaultMessage}`),
     ).toBeVisible()
     expect(chatRequests).toEqual([
       {
         subjectId: 'culinary-expert',
         modelId: 'local-ollama-llama',
         embeddingModelId: 'ollama-nomic-embed',
-        message: 'How should I cook rice?',
+        message: defaultMessage,
       },
     ])
   })
@@ -199,11 +202,10 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     const boldText = await screen.findByText('one cup')
+    const assistantResponse = boldText.closest('p')
 
     expect(boldText.tagName).toBe('STRONG')
-    expect(screen.getByText('Use', { exact: false })).toHaveTextContent(
-      'Use one cup of rice.',
-    )
+    expect(assistantResponse).toHaveTextContent('Use one cup of rice.')
   })
 
   it('sends chat messages when pressing enter in the message field', async () => {
@@ -216,9 +218,9 @@ describe('App', () => {
     )
     await user.keyboard('{Enter}')
 
-    expect(screen.getByText('How should I cook rice?')).toBeVisible()
+    expect(screen.getByText(defaultMessage)).toBeVisible()
     expect(
-      await screen.findByText('Mock answer for: How should I cook rice?'),
+      await screen.findByText(`Mock answer for: ${defaultMessage}`),
     ).toBeVisible()
   })
 

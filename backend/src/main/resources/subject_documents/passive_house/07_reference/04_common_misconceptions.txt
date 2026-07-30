@@ -1,0 +1,35 @@
+TITLE: Common Misconceptions and Corrections
+TAGS: misconceptions, faq, troubleshooting
+
+MISCONCEPTION: Passive House means no heating system.
+CORRECTION: Loads are very low, but most climates still require controlled heating and sometimes cooling.
+
+MISCONCEPTION: Airtight buildings cannot breathe and are unhealthy.
+CORRECTION: Walls do not provide reliable fresh air. Airtightness controls unintended leakage; designed ventilation provides air quality.
+
+MISCONCEPTION: Occupants must never open windows.
+CORRECTION: Windows may be opened. Mechanical ventilation provides a reliable baseline and heat recovery when windows are closed.
+
+MISCONCEPTION: More south-facing glass is always better.
+CORRECTION: Solar gain can reduce winter heating but increase overheating, glare and cooling. Optimise by climate and orientation.
+
+MISCONCEPTION: Triple glazing alone makes a building Passive House.
+CORRECTION: Whole-building performance depends on envelope, bridges, airtightness, ventilation, services, geometry and quality assurance.
+
+MISCONCEPTION: Mechanical ventilation is the same as air conditioning.
+CORRECTION: Ventilation provides fresh air. Heating, cooling and humidity control are separate functions, though equipment may be integrated.
+
+MISCONCEPTION: Thermal mass always saves energy.
+CORRECTION: Mass helps when temperatures cycle and the building can discharge heat. In persistently hot conditions it may retain unwanted heat.
+
+MISCONCEPTION: Natural materials are automatically sustainable.
+CORRECTION: Durability, sourcing, transport, fire, moisture, health and end-of-life all matter.
+
+MISCONCEPTION: Net-zero energy means zero carbon.
+CORRECTION: Annual energy balance, operational emissions and whole-life carbon are different accounting concepts.
+
+MISCONCEPTION: A final blower-door test is enough.
+CORRECTION: Intermediate testing finds defects while they remain repairable.
+
+MISCONCEPTION: Certification criteria are universal building-code requirements.
+CORRECTION: Certification is voluntary in many jurisdictions and does not replace local code compliance.

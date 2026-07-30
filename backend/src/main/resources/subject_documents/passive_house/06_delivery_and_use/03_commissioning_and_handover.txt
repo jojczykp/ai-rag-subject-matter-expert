@@ -1,0 +1,18 @@
+TITLE: Commissioning and Handover
+TAGS: commissioning, handover, ventilation, controls, documentation
+
+Commissioning verifies that systems are installed, adjusted and operating according to design intent. It is especially important in low-load buildings because small control or balancing errors can represent a large share of total energy use.
+
+Review installation before startup: equipment access, filters, condensate drainage, duct cleanliness, insulation, dampers, sensors, valves, electrical protection and labels. Confirm that outdoor-air and exhaust paths are unobstructed.
+
+Balance ventilation room by room and record measured flows. Verify normal, reduced and boost modes. Check supply and extract totals, fan power, heat-recovery operation, summer bypass and frost protection.
+
+Test heating and cooling sequences, sensor calibration, setpoints and interlocks. Confirm that systems do not heat and cool simultaneously. Observe part-load operation, not only full output.
+
+Verify domestic hot-water temperatures, recirculation schedules, insulation and safety controls. Check renewable generation, monitoring and battery modes where present.
+
+Provide the owner with concise documents: system overview, setpoints, filter sizes, maintenance intervals, warranties, commissioning records, emergency instructions and contacts. Complex technical manuals should be accompanied by a short user guide.
+
+Train occupants or facilities staff in practical tasks. Demonstrate filter replacement, boost ventilation, shading, summer operation and alarm response. Avoid telling users never to open windows.
+
+Plan seasonal commissioning after the building has operated in different weather. Review trend data and complaints. Fine-tune schedules and setpoints while preserving indoor air quality.

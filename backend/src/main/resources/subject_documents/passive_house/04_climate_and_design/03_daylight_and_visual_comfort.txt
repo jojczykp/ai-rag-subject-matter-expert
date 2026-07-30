@@ -1,0 +1,16 @@
+TITLE: Daylight and Visual Comfort
+TAGS: daylight, glare, windows, lighting, visual-comfort
+
+Daylight can reduce electric-lighting demand and improve connection to outdoors, but excessive or poorly controlled daylight causes glare and overheating. Window design should balance quantity, distribution, view, solar control and façade performance.
+
+Useful daylight penetrates farther through high windows than low windows. Light-coloured ceilings and interior surfaces can improve distribution. Very deep plans may require courtyards, atria, rooflights or borrowed light, each with envelope and glare implications.
+
+Window-to-wall ratio is not a direct measure of daylight quality. Orientation, visible transmittance, frame fraction, external obstructions and room geometry matter. Increasing glass area beyond the useful range often adds energy and comfort penalties without proportional daylight benefit.
+
+Glare can arise from direct sun, bright sky or high contrast between windows and darker work surfaces. External shading, adjustable internal blinds, workstation layout and diffusing elements can help. Automated shading should preserve views where possible and allow local control.
+
+Rooflights can deliver effective daylight but may add summer gain and winter heat loss. Detail curbs for thermal continuity, airtightness and drainage. Use suitable shading and avoid uncontrolled direct sun on occupied zones.
+
+Electric lighting should use efficient luminaires, appropriate colour quality and daylight-responsive controls. Sensors require commissioning; poor zoning or placement can cause lights to remain on or switch distractingly.
+
+Evaluate daylight with climate-based metrics where possible rather than a single overcast snapshot. Consider annual availability, glare risk and the effect of shading operation.

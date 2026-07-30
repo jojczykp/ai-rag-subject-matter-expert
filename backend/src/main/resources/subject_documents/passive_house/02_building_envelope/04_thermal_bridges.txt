@@ -1,0 +1,16 @@
+TITLE: Thermal Bridges
+TAGS: thermal-bridge, psi-value, junctions, condensation, detailing
+
+A thermal bridge is a local area where heat flow is greater than through adjacent components. It can arise from geometry, conductive materials or discontinuity in insulation. Examples include slab edges, balconies, parapets, corners, foundations, window reveals, steel penetrations and fasteners.
+
+Thermal bridges have three main consequences: additional energy loss or gain; lower interior surface temperatures that may reduce comfort or increase mould risk; and temperature gradients that can affect durability. In cooling-dominated climates, thermal bridges can also create warm exterior-side or cool interior-side condensation risks depending on assembly and humidity.
+
+Linear thermal bridges are represented by psi-values in W/(m·K). Point bridges are represented by chi-values in W/K. Values are calculated relative to a chosen dimensional convention, so numbers from different conventions should not be mixed without checking boundaries.
+
+The best strategy is geometric continuity: keep the insulation layer unbroken and align components. Where structure must cross the insulation, use low-conductivity connections, thermal-break elements, reduced cross-sectional area or an altered structural concept. Avoid solving every bridge with extra local insulation after the main geometry is fixed.
+
+Balconies are a classic challenge. Options include independent balcony structures, thermally broken connectors or exterior access decks. Each option must be coordinated for structure, fire, waterproofing, acoustics and maintenance.
+
+Foundations require attention to wall-to-slab and wall-to-ground transitions. Insulation compressive strength, water exposure, radon control, termites, frost and drainage influence the detail. The thermal-envelope line should connect continuously around the base of the building.
+
+Use two-dimensional or three-dimensional heat-flow analysis for significant junctions. Review both heat-flow coefficients and minimum internal surface temperatures. A low psi-value does not alone prove moisture safety under all indoor and outdoor conditions.

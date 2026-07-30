@@ -1,0 +1,18 @@
+TITLE: Resilience and Climate Adaptation
+TAGS: resilience, climate-change, passive-survivability, hazards, backup
+
+A resilient building maintains safe conditions during heat waves, cold snaps, power outages, smoke events, flooding and other disruptions. Energy efficiency supports resilience because low loads slow temperature change and reduce backup requirements.
+
+Assess present and future hazards: extreme heat, intense rainfall, river or coastal flooding, drought, wildfire smoke, wind, snow, freeze-thaw, ground movement and infrastructure failure. Use local projections and emergency planning rather than historical averages alone.
+
+Passive survivability analysis estimates indoor conditions when power or mechanical systems are unavailable. Test summer and winter outage scenarios, vulnerable occupants and realistic window or shading operation.
+
+External shading, insulation, airtightness and thermal mass can extend safe periods during heat. However, highly insulated buildings can retain unwanted heat if solar gains and internal gains are not controlled. Resilience requires both heat retention and heat rejection strategies.
+
+Provide safe ventilation during smoke or pollution events. Good filters, a tight envelope and recirculation modes can help, but occupants need instructions. Combustion sources and attached garages require robust separation.
+
+Locate critical equipment above flood levels where relevant and design drainage and backflow protection. Protect insulation and finishes at flood-prone levels or use recoverable assemblies.
+
+Define critical electrical loads and backup duration. Passive House-level loads can make limited backup heating or cooling more feasible, but batteries alone may not cover long winter outages.
+
+Resilience measures should not create everyday inefficiency. Test emergency modes, label shutoffs, store spare filters and include procedures in the occupant manual.

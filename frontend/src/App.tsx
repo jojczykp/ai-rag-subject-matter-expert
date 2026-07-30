@@ -16,7 +16,8 @@ type ChatMessage = {
   content: string
 }
 
-const defaultMessage = 'How should I cook rice?'
+const defaultMessage =
+  'I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks'
 
 function App() {
   const [models, setModels] = useState<ChatModel[]>([])

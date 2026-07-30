@@ -1,0 +1,18 @@
+TITLE: Balanced Ventilation with Heat Recovery
+TAGS: mvhr, hrv, erv, ventilation, indoor-air-quality, balancing
+
+A balanced mechanical ventilation system supplies outdoor air to living rooms, bedrooms and other occupied spaces while extracting air from kitchens, bathrooms, toilets and utility rooms. Transfer paths allow air to move between supply and extract zones. A heat exchanger transfers heat between the outgoing and incoming air streams without intentionally mixing them.
+
+An HRV primarily transfers sensible heat. An ERV or enthalpy exchanger also transfers part of the moisture, which can be useful in some cold or humid climates. Selection depends on climate, occupancy, latent loads and control strategy.
+
+Ventilation rates should meet local code and the project method. Design should account for occupancy, room use, boost modes and pollutant sources. More airflow is not always better: excessive rates increase fan energy, noise and drying in winter. Too little airflow reduces indoor air quality and moisture control.
+
+Duct systems should be short, smooth, cleanable where required and located inside the thermal envelope when possible. Size ducts for low pressure drop and low noise. Avoid sharp bends, crushed flexible duct and unnecessary fittings. Seal joints and test leakage where specified.
+
+Outdoor-air and exhaust terminals need separation and should avoid contamination from traffic, chimneys, refuse areas, cooling towers or other exhausts. Intake placement should consider snow, rain, leaves and maintenance access.
+
+Filters protect occupants and equipment. Filter grade should respond to outdoor particles and system capability. Higher filtration creates more pressure drop, so fan selection and maintenance must be coordinated. Provide clear replacement access and a realistic schedule.
+
+Commissioning includes measuring and balancing each terminal, checking total supply and extract, verifying controls, confirming condensate drainage, testing frost protection and recording fan power where applicable. Noise should be checked in bedrooms at normal and boost operation.
+
+Windows may still be opened. The mechanical system provides reliable baseline air quality; window opening offers occupant control, purge ventilation and seasonal comfort when outdoor conditions are suitable.

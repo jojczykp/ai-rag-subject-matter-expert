@@ -1,0 +1,14 @@
+TITLE: Passive House Overview
+TAGS: passive-house, principles, energy, comfort, certification
+
+Passive House is a performance-based approach to creating buildings that use very little energy while providing stable indoor comfort and good air quality. It is not an architectural style. A Passive House may be traditional or contemporary, small or large, residential or non-residential, provided its design and construction achieve the required performance.
+
+The approach begins by reducing heating and cooling demand through the building fabric. The five widely cited principles are: high levels of continuous thermal insulation; highly efficient windows and doors; a continuous airtight layer; avoidance or careful control of thermal bridges; and balanced mechanical ventilation with heat recovery. Climate-responsive solar control and suitable building services complete the strategy.
+
+The fabric-first sequence matters. Reducing unwanted heat flow and air leakage allows heating and cooling systems to be smaller. Smaller loads can improve comfort and reduce operating energy, but only if the building is designed, constructed, commissioned, and operated as an integrated system.
+
+Passive House should not be confused with passive solar design. Passive solar design uses orientation, glazing, shading and thermal mass to benefit from local climate. These methods can support Passive House performance, but excessive solar gain can cause overheating. Nor does Passive House automatically mean net-zero energy or zero carbon. Net-zero energy normally concerns annual energy balance; operational carbon also depends on energy sources; whole-life carbon additionally includes construction, maintenance, replacement and end-of-life impacts.
+
+Official certification systems use calculation methods and quality-assurance requirements. A commonly referenced classic criterion is annual space-heating demand around 15 kWh per square metre of treated floor area, or an equivalent heating-load route, together with an airtightness result no greater than 0.6 air changes per hour at 50 pascals. Cooling, humidity and primary-energy limits also apply and depend on the applicable standard and climate. These values must be checked against the current official criteria for the project.
+
+The central design lesson is that performance is created at junctions and interfaces, not only by selecting efficient products. Insulation must be continuous, the airtight layer must be traceable, windows must be positioned and installed correctly, ventilation must be balanced, and controls must be understandable. A small defect repeated many times can dominate the final outcome.

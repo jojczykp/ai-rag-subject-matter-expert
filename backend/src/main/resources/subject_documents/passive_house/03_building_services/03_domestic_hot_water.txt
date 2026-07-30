@@ -1,0 +1,18 @@
+TITLE: Domestic Hot Water Efficiency
+TAGS: domestic-hot-water, dhw, distribution, heat-pump-water-heater, legionella
+
+As space-heating demand falls, domestic hot water can become a large share of total energy use. Efficiency therefore depends not only on the water heater but also on distribution, fixtures, storage and user behaviour.
+
+Place water-heating equipment near major points of use and cluster wet rooms. Short, small-diameter pipes reduce heat loss and waiting time. Insulate hot-water and recirculation pipes continuously, including valves where practical.
+
+Recirculation provides fast delivery but can create large continuous losses. Use demand-controlled or carefully scheduled circulation rather than uncontrolled operation. Balance loops and prevent thermosiphoning.
+
+Heat-pump water heaters can be efficient, but they extract heat from the surrounding space and produce cool, dry air. Location affects space-heating loads, noise and condensate management. Ducted arrangements may be appropriate. Performance depends on inlet air temperature and hot-water setpoint.
+
+Solar thermal can reduce delivered energy where solar resource, load profile, maintenance capability and economics are favourable. Photovoltaics combined with an efficient heat pump are often simpler, but project-specific comparison is necessary.
+
+Low-flow fixtures reduce both water and hot-water energy, provided they deliver acceptable service. Pipe sizing should reflect lower flow rates; oversized pipes increase wait times and waste.
+
+Water hygiene requirements vary. Storage temperature, periodic pasteurisation, distribution temperature and stagnation control must comply with local regulations and risk assessment. Energy savings must not compromise Legionella control or scald protection.
+
+Measure or estimate realistic hot-water demand. Default assumptions may poorly represent occupancy, showers, communal laundries, commercial kitchens or sports facilities. In multifamily projects, metering and fair billing can influence consumption.

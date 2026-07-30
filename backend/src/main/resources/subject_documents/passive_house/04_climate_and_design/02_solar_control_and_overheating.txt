@@ -1,0 +1,16 @@
+TITLE: Solar Control and Overheating Prevention
+TAGS: overheating, shading, solar-gain, glazing, cooling, summer-comfort
+
+Overheating is a system problem involving glazing area and orientation, solar-gain coefficient, shading, thermal mass, ventilation, internal gains, climate and occupant control. It should be assessed early, not after window sizes are fixed.
+
+External shading stops most solar energy before it passes through glazing and is usually more effective than internal blinds. Fixed overhangs can shade high summer sun while admitting lower winter sun on equator-facing façades. Vertical fins or adjustable screens can help with low-angle east and west sun.
+
+Model shading from reveals, balconies, neighbouring buildings, trees and terrain. Seasonal vegetation can be useful but should not be the only control strategy. Account for shading-device schedules, wind limits and occupant behaviour.
+
+Select glass by orientation and room use. A single glazing specification for all façades may be convenient but suboptimal. Lower solar-gain glass can reduce cooling but also reduce useful winter gain and daylight.
+
+Internal gains from people, appliances, servers and lighting can dominate in efficient buildings. Use realistic equipment schedules and efficient products. In offices and schools, occupancy diversity and plug loads require careful assumptions.
+
+Night ventilation can cool thermal mass when outdoor air becomes sufficiently cooler and safe. Its usefulness is limited by noise, security, pollution, insects, humidity and warm nights. Mechanical bypass ventilation may provide a controlled alternative, but fan capacity and duct design must support the intended purge rate.
+
+Overheating metrics differ. They may count hours above a threshold, degree-hours, adaptive comfort exceedance or peak operative temperature. Report the chosen metric and assumptions. Include vulnerable occupants and heat-wave scenarios, not only average years.

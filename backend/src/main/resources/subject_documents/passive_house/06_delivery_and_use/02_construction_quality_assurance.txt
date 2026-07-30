@@ -1,0 +1,20 @@
+TITLE: Construction Quality Assurance
+TAGS: construction, quality-assurance, inspections, mockup, sequencing
+
+High-performance details must be buildable, visible and verifiable. Quality assurance begins with clear drawings and responsibilities, then continues through procurement, sequencing, inspection and testing.
+
+Hold a preconstruction workshop focused on the thermal envelope, airtightness, waterproofing and ventilation. Use large-scale junction drawings and physical samples. Explain why each layer matters so trades can make informed decisions when conditions change.
+
+Construct a representative mock-up containing a window, wall, insulation, membranes, cladding support and service penetration. Test or dismantle it if useful. Resolve sequencing before repetitive work begins.
+
+Create inspection hold points before work is concealed. Typical checks include substrate preparation, membrane laps, taped sheathing, window perimeter seals, insulation fit, cavity closures, roof transitions and service penetrations.
+
+Photograph completed layers with location references and scale. Photos do not replace inspection, but they provide a record for certification, maintenance and future alterations.
+
+Protect finished work. Airtight membranes and taped boards can be damaged by storage, scaffolding, follow-on trades or weather. Mark no-fix zones and provide approved attachment routes.
+
+Perform intermediate blower-door tests while leaks are accessible. Use zone or guarded testing for complex buildings when appropriate. Repair root causes rather than covering symptoms with surface sealant.
+
+Coordinate substitutions. A new window, bracket, membrane or insulation product can alter thermal, fire, moisture and airtightness performance. Require technical review before purchase or installation.
+
+Close out defects systematically and update as-built drawings. Quality is achieved through repeated verification, not a final inspection alone.

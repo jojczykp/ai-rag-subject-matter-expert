@@ -1,0 +1,18 @@
+TITLE: Deep Energy Retrofit and Passive House Components
+TAGS: retrofit, enerphit, existing-buildings, phasing, heritage
+
+Existing buildings usually contain constraints absent from new construction: occupied spaces, unknown assemblies, moisture damage, irregular geometry, thermal bridges, limited roof overhangs, heritage façades and hazardous materials.
+
+Begin with investigation. Survey geometry, structure, materials, moisture, airtightness paths, services, drainage, radon and contaminants. Use opening-up inspections, thermography and blower-door testing where appropriate.
+
+Prioritise defects that threaten durability or health before energy upgrades. Repair rainwater entry, rising damp, unsafe combustion and structural problems.
+
+Exterior insulation often provides the most continuous thermal layer, but planning, boundaries or heritage may prevent it. Interior insulation can succeed with careful rain control, airtightness, capillary behaviour, thermal bridges and hygrothermal analysis. Do not apply generic vapour-barrier rules.
+
+Window replacement must coordinate reveals, sills, lintels and airtightness. Replacing windows without ventilation planning can increase humidity and mould risk because accidental leakage falls.
+
+Phased retrofit should avoid lock-in. Develop a whole-building plan even when work occurs over years. A roof replacement should prepare future wall-insulation continuity; new windows should be positioned for the eventual insulation layer; heating equipment should not be oversized for pre-retrofit loads if the envelope will soon improve.
+
+EnerPHit is a Passive House Institute approach for retrofits using Passive House components and project-specific criteria. Certification requirements and climate-dependent component routes must be checked in current official documents.
+
+Monitor moisture and indoor conditions after retrofit. Occupant guidance is essential because the building may behave differently from before.

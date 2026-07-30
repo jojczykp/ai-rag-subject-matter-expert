@@ -1,0 +1,16 @@
+TITLE: High-Performance Windows and Doors
+TAGS: windows, glazing, frames, installation, solar-gain, comfort
+
+Windows influence heat loss, solar gain, daylight, views, ventilation, condensation risk and comfort. Their performance cannot be represented by glazing alone. Whole-window U-value includes glass, frame, spacer and edge effects.
+
+Triple glazing is common in cold and mixed-climate Passive House projects, but climate-specific design matters. Relevant properties include whole-window U-value, solar heat-gain coefficient or g-value, visible transmittance, frame dimensions, airtightness, water resistance, operating hardware and installation psi-values.
+
+A lower U-value reduces winter heat loss and raises interior surface temperatures. This improves radiant comfort and reduces downdraught near glazing. A higher solar-gain value may provide useful winter gains but can increase summer overheating. Glass selection should vary by orientation where modelling justifies it.
+
+Window area should be purposeful. More glazing is not automatically better. Large windows can increase heat loss, cooling load, glare, cost and embodied carbon. Optimise size and placement for useful daylight, views, solar control and furniture layout.
+
+Install windows within or near the insulation layer where structurally feasible. Insulate frames and installation gaps without blocking drainage or hardware. The interior connection should normally be airtight; the exterior connection should resist wind and rain while permitting appropriate drainage and drying. Follow the tested installation concept for the wall system.
+
+External shading is generally more effective than internal blinds at preventing solar heat from entering. Overhangs can work well for predictable high-angle sun, while external blinds, shutters or screens provide adjustable control. Shading design must account for wind, snow, maintenance, daylight and user behaviour.
+
+Doors require similarly careful thresholds, seals and frames. Accessible thresholds can be difficult junctions because waterproofing, structure, insulation and airtightness converge. Test operation and latch pressure; a theoretically efficient door that occupants cannot close reliably will underperform.

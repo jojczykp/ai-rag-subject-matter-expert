@@ -1,0 +1,204 @@
+{
+  "version": "1.0",
+  "generated": "2026-07-30",
+  "files": [
+    {
+      "path": "00_README.txt",
+      "bytes": 2993,
+      "words": 364,
+      "chars": 2975
+    },
+    {
+      "path": "01_fundamentals/01_passive_house_overview.txt",
+      "bytes": 2659,
+      "words": 370,
+      "chars": 2659
+    },
+    {
+      "path": "01_fundamentals/02_performance_metrics.txt",
+      "bytes": 3028,
+      "words": 424,
+      "chars": 3020
+    },
+    {
+      "path": "01_fundamentals/03_integrated_design_process.txt",
+      "bytes": 2534,
+      "words": 316,
+      "chars": 2533
+    },
+    {
+      "path": "02_building_envelope/01_insulation_and_continuity.txt",
+      "bytes": 2531,
+      "words": 325,
+      "chars": 2531
+    },
+    {
+      "path": "02_building_envelope/02_airtightness.txt",
+      "bytes": 2306,
+      "words": 317,
+      "chars": 2306
+    },
+    {
+      "path": "02_building_envelope/03_windows_and_doors.txt",
+      "bytes": 2236,
+      "words": 293,
+      "chars": 2236
+    },
+    {
+      "path": "02_building_envelope/04_thermal_bridges.txt",
+      "bytes": 2166,
+      "words": 281,
+      "chars": 2165
+    },
+    {
+      "path": "02_building_envelope/05_moisture_and_durability.txt",
+      "bytes": 2191,
+      "words": 293,
+      "chars": 2191
+    },
+    {
+      "path": "03_building_services/01_ventilation_with_heat_recovery.txt",
+      "bytes": 2310,
+      "words": 325,
+      "chars": 2310
+    },
+    {
+      "path": "03_building_services/02_heating_and_cooling.txt",
+      "bytes": 2214,
+      "words": 292,
+      "chars": 2214
+    },
+    {
+      "path": "03_building_services/03_domestic_hot_water.txt",
+      "bytes": 2032,
+      "words": 262,
+      "chars": 2032
+    },
+    {
+      "path": "03_building_services/04_controls_monitoring_and_renewables.txt",
+      "bytes": 2259,
+      "words": 286,
+      "chars": 2259
+    },
+    {
+      "path": "04_climate_and_design/01_climate_responsive_design.txt",
+      "bytes": 1980,
+      "words": 263,
+      "chars": 1979
+    },
+    {
+      "path": "04_climate_and_design/02_solar_control_and_overheating.txt",
+      "bytes": 1958,
+      "words": 271,
+      "chars": 1956
+    },
+    {
+      "path": "04_climate_and_design/03_daylight_and_visual_comfort.txt",
+      "bytes": 1817,
+      "words": 241,
+      "chars": 1816
+    },
+    {
+      "path": "04_climate_and_design/04_thermal_comfort_and_indoor_environment.txt",
+      "bytes": 1950,
+      "words": 248,
+      "chars": 1950
+    },
+    {
+      "path": "05_sustainability/01_embodied_carbon_and_life_cycle.txt",
+      "bytes": 2018,
+      "words": 247,
+      "chars": 2018
+    },
+    {
+      "path": "05_sustainability/02_material_selection_and_health.txt",
+      "bytes": 2042,
+      "words": 249,
+      "chars": 2042
+    },
+    {
+      "path": "05_sustainability/03_circular_design_and_adaptability.txt",
+      "bytes": 1795,
+      "words": 226,
+      "chars": 1795
+    },
+    {
+      "path": "05_sustainability/04_water_site_and_biodiversity.txt",
+      "bytes": 1901,
+      "words": 241,
+      "chars": 1900
+    },
+    {
+      "path": "05_sustainability/05_resilience_and_climate_adaptation.txt",
+      "bytes": 1915,
+      "words": 250,
+      "chars": 1915
+    },
+    {
+      "path": "06_delivery_and_use/01_energy_modelling.txt",
+      "bytes": 1881,
+      "words": 242,
+      "chars": 1881
+    },
+    {
+      "path": "06_delivery_and_use/02_construction_quality_assurance.txt",
+      "bytes": 1944,
+      "words": 246,
+      "chars": 1944
+    },
+    {
+      "path": "06_delivery_and_use/03_commissioning_and_handover.txt",
+      "bytes": 1785,
+      "words": 228,
+      "chars": 1785
+    },
+    {
+      "path": "06_delivery_and_use/04_retrofit_and_enerphit.txt",
+      "bytes": 1961,
+      "words": 244,
+      "chars": 1960
+    },
+    {
+      "path": "06_delivery_and_use/05_operation_and_maintenance.txt",
+      "bytes": 1973,
+      "words": 261,
+      "chars": 1972
+    },
+    {
+      "path": "07_reference/01_glossary.txt",
+      "bytes": 2825,
+      "words": 380,
+      "chars": 2822
+    },
+    {
+      "path": "07_reference/02_design_checklists.txt",
+      "bytes": 1848,
+      "words": 255,
+      "chars": 1848
+    },
+    {
+      "path": "07_reference/03_simple_calculations.txt",
+      "bytes": 1710,
+      "words": 265,
+      "chars": 1675
+    },
+    {
+      "path": "07_reference/04_common_misconceptions.txt",
+      "bytes": 2082,
+      "words": 255,
+      "chars": 2082
+    },
+    {
+      "path": "07_reference/05_agent_reasoning_patterns.txt",
+      "bytes": 1763,
+      "words": 231,
+      "chars": 1755
+    },
+    {
+      "path": "07_reference/06_sources_and_further_reading.txt",
+      "bytes": 1447,
+      "words": 150,
+      "chars": 1437
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+TITLE: Embodied Carbon and Life-Cycle Thinking
+TAGS: embodied-carbon, life-cycle-assessment, whole-life-carbon, ecl
+
+Operational efficiency is only one part of environmental performance. Embodied impacts arise from extracting raw materials, manufacturing products, transport, construction, maintenance, replacement and end-of-life processes.
+
+A life-cycle assessment must define its functional unit, study period, system boundary, scenarios and data quality. Product-stage results alone should not be described as whole-life carbon. Comparisons should provide equivalent function, service life, structure, fire safety, thermal performance and maintenance.
+
+The largest embodied-carbon opportunities often occur before detailed specification: retain existing structures, reduce floor area, simplify geometry, use efficient structural grids, avoid unnecessary finishes and design for long life. Material substitution is important but comes after avoiding unnecessary material.
+
+Concrete impacts depend strongly on cement content, strength, curing, reinforcement and supply. Lower-carbon mixes may use supplementary cementitious materials or alternative binders, subject to performance, availability and standards. Timber can store biogenic carbon during use, but results depend on forestry, manufacturing, durability and end-of-life assumptions.
+
+High-performance envelopes add materials. The operational savings should be considered alongside insulation impact, service life and energy-system decarbonisation. Low-impact insulation and durable assemblies can improve the balance.
+
+Environmental product declarations provide standardised product information but are not automatically comparable. Check declared unit, product category rules, geography, date, scenarios and modules.
+
+Report uncertainty and avoid false precision. Early design may use ranges or benchmark data; later stages can use project quantities and verified product data. Carbon targets should be tracked like cost, with a budget and change control.

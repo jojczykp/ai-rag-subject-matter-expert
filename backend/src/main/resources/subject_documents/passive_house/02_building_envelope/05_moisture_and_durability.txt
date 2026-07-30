@@ -1,0 +1,16 @@
+TITLE: Moisture Control and Durability
+TAGS: moisture, condensation, vapour, rain, drying, mould
+
+Moisture control is based on managing bulk water, capillary water, air-transported moisture and vapour diffusion. Bulk rain leaks usually move far more water than vapour diffusion, while air leakage can transport much more moisture into assemblies than diffusion. Priorities are therefore: shed water, drain water, control airflow, manage vapour and allow drying.
+
+Roofs, walls and foundations should have clear drainage planes. Flashings need positive laps, end dams, drips and reliable transitions. Openings and penetrations should be detailed as part of the water-management system rather than sealed only at the face.
+
+The vapour profile of an assembly should suit climate and interior humidity. Vapour retarders are not universally placed on the same side. Some assemblies benefit from variable-permeance membranes that resist winter vapour drive while allowing inward drying in warmer conditions. Material properties can change with humidity.
+
+Condensation analysis using a simple steady-state method can be useful for screening but may miss rain storage, solar vapour drive, moisture-dependent properties and transient drying. Hygrothermal simulation is appropriate for sensitive or unconventional assemblies.
+
+Construction moisture matters. Concrete, masonry, screeds, plaster and timber may contain significant water at enclosure. Drying schedules, temporary heating, dehumidification and ventilation should be planned. Installing impermeable finishes too early can trap moisture.
+
+Interior surface mould risk is influenced by surface temperature, humidity, air movement, thermal bridges and time. Maintaining warm surfaces through insulation and reducing bridges helps, but indoor humidity must also be controlled. Bathrooms, kitchens and high-occupancy rooms need effective extract ventilation.
+
+Durability requires inspectable and maintainable details. Keep vulnerable materials away from standing water, protect membranes during construction, design replaceable seals and provide access to drains, filters and equipment. A low-energy assembly that fails early is not sustainable.

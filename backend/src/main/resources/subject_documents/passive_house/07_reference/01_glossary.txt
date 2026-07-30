@@ -1,0 +1,30 @@
+TITLE: Glossary
+TAGS: glossary, definitions, terminology
+
+Airtight layer: The continuous material or system that limits uncontrolled air leakage through the envelope.
+Blower-door test: A fan-based test that measures building leakage at a pressure difference, commonly 50 Pa.
+Conditioned space: Space intentionally maintained within defined temperature or humidity conditions.
+Embodied carbon: Greenhouse-gas emissions associated with materials and construction over specified life-cycle stages.
+ERV: Energy-recovery ventilator; transfers sensible heat and some moisture between air streams.
+Form factor: A measure relating envelope area to treated floor area or volume; definitions vary.
+g-value: Fraction of incident solar energy transmitted through glazing, including secondary heat transfer; broadly similar to SHGC but definitions can differ.
+Heat bridge / thermal bridge: Local region of elevated heat flow due to geometry, material or insulation discontinuity.
+Heat-recovery efficiency: Fraction of extract-air heat transferred to supply air under stated conditions.
+HRV: Heat-recovery ventilator; primarily transfers sensible heat.
+Hygrothermal: Relating to coupled heat and moisture behaviour.
+MVHR: Mechanical ventilation with heat recovery, usually balanced supply and extract.
+n50: Air changes per hour at a 50 Pa test pressure, based on test volume.
+Operative temperature: Comfort-related combination of air temperature and mean radiant temperature.
+Passive House: A performance-based building standard and design approach focused on very low energy demand and high comfort.
+Passive solar design: Use of building form, orientation, glazing, shading and mass to respond to solar energy without active collection equipment.
+PHPP: Passive House Planning Package, a calculation and design tool used for Passive House projects.
+Primary energy: Energy measure that accounts for upstream conversion and delivery according to defined factors.
+Psi-value: Linear thermal transmittance of a junction in W/(m·K).
+q50: Air leakage at 50 Pa divided by envelope area.
+R-value: Thermal resistance. Higher values indicate greater resistance to heat flow.
+SHGC: Solar heat-gain coefficient, the fraction of incident solar energy entering through a window.
+Treated floor area: Project floor-area convention used in Passive House calculations; it is not necessarily gross floor area.
+U-value: Thermal transmittance in W/(m²·K). Lower values indicate less heat flow.
+Vapour retarder: Layer that limits vapour diffusion to a defined degree; not necessarily a complete vapour barrier.
+Windtight layer: Exterior-side layer that prevents wind washing through insulation while allowing suitable drying.
+Whole-life carbon: Carbon impacts across construction, operation, maintenance, replacement and end-of-life within a stated boundary.

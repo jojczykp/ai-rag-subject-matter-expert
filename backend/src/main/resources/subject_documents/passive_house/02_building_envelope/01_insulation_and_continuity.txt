@@ -1,0 +1,16 @@
+TITLE: Insulation and Thermal Continuity
+TAGS: insulation, thermal-envelope, u-value, continuity, installation
+
+Insulation reduces conductive heat flow through the envelope. Performance depends on thermal conductivity, thickness, continuity, moisture condition, density and installation quality. Nominal product values do not guarantee whole-assembly performance.
+
+The thermal envelope should wrap the conditioned space continuously. It normally includes external walls, roofs or ceilings, ground floors or basement boundaries, windows, doors and transitions between them. Designers should define whether garages, plant rooms, stair enclosures, basements and service voids are inside or outside the conditioned envelope.
+
+Common insulation materials include mineral wool, cellulose, wood fibre, expanded or extruded polystyrene, polyurethane or polyisocyanurate foams, cellular glass, cork, hemp and other bio-based products. Selection should consider thermal performance, fire behaviour, vapour properties, moisture tolerance, acoustic performance, dimensional stability, embodied impacts, installation method, pests, availability and end-of-life pathways.
+
+Gaps, compression and wind washing reduce performance. Soft insulation should fit without voids but should not be excessively compressed. Loose-fill products require controlled density. External layers exposed to moving air need a windtight but appropriately vapour-open layer. Cavity barriers and fire stops must not be compromised.
+
+Continuous exterior insulation is often effective because it covers structural studs, slab edges and many junctions. In framed walls, repeating structural members create thermal bridges that reduce the assembly R-value. Effective U-value calculations should include the framing fraction and any clips or fasteners.
+
+Very thick insulation can have diminishing energy returns while increasing cost, embodied carbon or detailing difficulty. The optimum depends on climate, energy price, carbon intensity, geometry, material impacts, durability and project goals. The correct question is not simply how much insulation is possible, but which assembly gives robust whole-life performance.
+
+Insulation must be coordinated with moisture control. An assembly that is safe in one climate may be risky in another. Avoid trapping construction moisture between low-permeance layers without a drying path. Use hygrothermal analysis for unusual assemblies, interior insulation, high humidity, mass masonry, cold storage or other high-risk conditions.

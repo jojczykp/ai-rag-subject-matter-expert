@@ -1,0 +1,18 @@
+TITLE: Energy Modelling and Design Iteration
+TAGS: energy-model, phpp, assumptions, sensitivity, calibration
+
+Energy modelling is a decision tool, not a prediction machine. Its value depends on transparent assumptions, appropriate methods and iterative use throughout design.
+
+Inputs include climate, geometry, areas, U-values, thermal bridges, airtightness, ventilation, heat recovery, shading, internal gains, occupancy, schedules, setpoints and system efficiencies. Small errors in geometry or boundaries can produce systematic errors.
+
+Passive House projects commonly use a verified balance method such as PHPP or an approved equivalent for certification. Dynamic simulation may be added for complex shading, humidity, intermittent use, natural ventilation or detailed overheating analysis. The methods should be reconciled rather than mixed casually.
+
+Build a baseline early and run sensitivity tests. Vary airtightness, glazing, shading, insulation, heat-recovery efficiency and internal gains. This shows which measures deserve design attention and contingency.
+
+Use conservative but realistic assumptions. Inflated internal gains can make heating demand appear lower while hiding overheating risk. Unrealistically perfect shading or window opening can understate cooling needs.
+
+Track model changes and sources. Each input should be traceable to a drawing, calculation, product certificate or stated assumption. Update the model when substitutions occur.
+
+At completion, replace design assumptions with as-built values where required: tested airtightness, installed products, final geometry, commissioning results and verified thermal bridges.
+
+Measured consumption should be normalised for weather, occupancy, floor area and end-use boundaries before comparison. Differences can reveal faults or assumption gaps, but a simple utility-bill comparison is rarely conclusive.

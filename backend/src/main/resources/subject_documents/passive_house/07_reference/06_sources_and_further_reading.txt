@@ -1,0 +1,28 @@
+TITLE: Sources and Further Reading
+TAGS: sources, standards, official, references
+
+Primary organisations and standards to verify for current project requirements:
+
+Passive House Institute — official principles, certification criteria, component certification, PHPP and research:
+https://passivehouse.com/
+
+Passipedia — Passive House technical knowledge resource:
+https://passipedia.org/
+
+International Passive House Association:
+https://passivehouse-international.org/
+
+ISO 52000 series — framework and calculation methods for energy performance of buildings:
+https://www.iso.org/standard/65601.html
+https://www.iso.org/standard/65696.html
+
+United States Department of Energy — building energy efficiency, zero-energy and passive design resources:
+https://www.energy.gov/cmei/buildings
+
+European Commission — energy performance of buildings and EU policy context:
+https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings_en
+
+Local requirements remain authoritative for building code, fire safety, structure, accessibility, ventilation, energy, moisture, radon and environmental regulation.
+
+SOURCE NOTE
+The corpus is an original educational synthesis. It paraphrases widely accepted building-science principles and uses official organisations as reference points. It does not reproduce proprietary standards or certification manuals. Criteria can change; confirm the current edition before relying on a threshold.

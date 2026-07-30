@@ -1,0 +1,18 @@
+TITLE: Integrated Design Process
+TAGS: workflow, coordination, targets, design-team, risk
+
+High-performance buildings require early coordination. Decisions about site, massing, orientation, window area, structure and floor-to-floor height determine opportunities and constraints long before detailed mechanical design begins.
+
+At project start, define measurable targets: energy demand, airtightness, overheating frequency, indoor air quality, embodied carbon, water use, acoustic performance, resilience, budget and certification ambition. Record assumptions such as occupancy, schedules, plug loads, setpoints and climate data. Targets that are not measurable tend to become aspirations rather than requirements.
+
+Develop a simple energy and carbon model early, while geometry can still change. Test compactness, glazing ratios, orientation, shading and envelope options. Use sensitivity analysis to identify which assumptions strongly affect outcomes. It is usually more valuable to compare several plausible scenarios than to produce one falsely precise forecast.
+
+Create two continuous-line drawings: the thermal-envelope line and the airtightness line. Trace each around plans and sections without lifting the pencil. Every interruption requires a defined junction detail. Coordinate these lines with fire compartments, structure, waterproofing, acoustic layers and service penetrations.
+
+Assign responsibility for each interface. A window installation may involve the architect, façade designer, structural engineer, window supplier, membrane installer and general contractor. The drawings must state who supplies, connects, seals, protects and tests each part.
+
+Use performance specifications where suitable. Instead of naming only a product, define required U-value, airtightness class, thermal-bridge performance, durability, emissions, installation method and verification evidence. Product substitutions must be reviewed as system changes, not merely purchasing changes.
+
+Plan verification before construction. Identify mock-ups, blower-door test stages, duct-leakage tests, insulation inspections, photographic records and commissioning measurements. Intermediate tests are more useful than a single final test because defects remain accessible.
+
+At handover, provide simple controls, labelled equipment, balancing records, filter information, maintenance intervals and an occupant guide. Compare measured operation with design assumptions. The feedback loop is part of the design process, not an optional afterthought.

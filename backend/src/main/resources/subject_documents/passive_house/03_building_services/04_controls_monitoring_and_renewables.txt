@@ -1,0 +1,18 @@
+TITLE: Controls, Monitoring and Renewable Energy
+TAGS: controls, monitoring, photovoltaics, batteries, energy-use, commissioning
+
+Efficient equipment cannot compensate for confusing controls. Occupants and facility staff should understand temperature setpoints, ventilation modes, boost controls, summer bypass, shading and filter alerts.
+
+Use a clear control hierarchy. Passive measures such as external shading should act before mechanical cooling when appropriate. Windows, ventilation and heating controls should not create contradictory commands. Automatic controls need manual override where practical and should return predictably to normal operation.
+
+Submeter major end uses when project scale justifies it: space conditioning, domestic hot water, ventilation, plug loads, lighting, electric-vehicle charging and renewable generation. Trend data helps identify faults such as simultaneous heating and cooling, stuck dampers, excessive recirculation or failed sensors.
+
+Photovoltaic systems reduce imported electricity but do not repair poor envelope performance. Design first for low demand, then size generation according to roof area, orientation, shading, electrical constraints, economics and carbon goals.
+
+Annual net-zero energy does not imply zero grid impact. Seasonal and hourly mismatches remain. A building may export solar power in summer and import during winter peaks. Load shifting, thermal storage, batteries and demand response can improve alignment, but each has cost and embodied impacts.
+
+Battery storage can provide resilience and peak management. Define critical loads explicitly: refrigeration, communications, ventilation, medical equipment, pumps or limited heating. Whole-building backup may require much larger capacity.
+
+Renewable systems should be accessible for inspection, isolation and replacement. Coordinate roof penetrations, fire access, structural loads, cable routes and future maintenance. Record inverter settings, shutdown procedures and warranties.
+
+Post-occupancy monitoring should compare actual performance with a weather- and occupancy-aware expectation. A gap does not automatically mean construction failure; assumptions, schedules, plug loads and user settings may differ. Investigate systematically.

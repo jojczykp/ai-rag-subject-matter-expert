@@ -1,0 +1,18 @@
+TITLE: Building Performance Metrics
+TAGS: metrics, energy-demand, heating-load, airtightness, u-value, primary-energy
+
+Energy demand is the amount of energy needed to maintain specified indoor conditions over time. Space-heating demand is commonly expressed in kilowatt-hours per square metre per year, kWh/(m²·a). Heating load is the design power needed during demanding conditions and is expressed in watts per square metre or kilowatts. A building can have low annual demand but still experience a meaningful peak load if gains, weather and occupancy vary.
+
+Delivered or final energy is energy supplied to the building, such as electricity or gas at the meter. Primary energy accounts for upstream conversion and distribution. Renewable primary energy metrics may apply factors and boundary rules defined by a certification method. Carbon emissions are related but not identical: they depend on the emission factor of each energy source and the time period considered.
+
+U-value measures steady-state heat transfer through a component in W/(m²·K). Lower is more insulating. R-value is thermal resistance; in SI units, R equals thickness divided by thermal conductivity for a uniform layer. The U-value of an assembly is approximately the inverse of total resistance, including surface resistances, but real calculations must account for repeating bridges, fasteners, cavities and geometry.
+
+Psi-value, Ψ, measures linear thermal transmittance at a junction in W/(m·K). Chi-value, χ, measures point thermal transmittance in W/K. These values represent extra heat flow not captured by one-dimensional component U-values.
+
+Airtightness is often measured by pressurising and depressurising the building to 50 Pa. The n50 result is airflow at 50 Pa divided by internal test volume, expressed as air changes per hour. The q50 result is airflow divided by envelope area. These are test metrics, not normal infiltration rates. Natural infiltration depends on wind, stack effect, exposure, cracks and pressure distribution.
+
+Ventilation heat-recovery efficiency describes how much sensible heat is transferred from extract air to incoming outdoor air under stated conditions. Product efficiency, system efficiency and seasonal performance are not always the same. Duct losses, imbalance, frost protection, fan electricity and installation quality affect real performance.
+
+Thermal comfort should consider operative temperature, surface temperatures, air speed, vertical temperature difference, humidity, clothing and activity. Indoor air quality may be assessed using carbon dioxide as an occupancy-related indicator, but CO2 does not represent all pollutants. Particles, volatile organic compounds, moisture, combustion products and outdoor pollution also matter.
+
+Embodied carbon is usually expressed as kilograms of CO2 equivalent per unit, often kgCO2e/m² over a stated life-cycle scope. Results are meaningful only when functional unit, service life, system boundary, data source and replacement assumptions are declared.

@@ -1,0 +1,47 @@
+TITLE: Design and Construction Checklists
+TAGS: checklist, design-review, construction, commissioning
+
+CONCEPT DESIGN
+- Define conditioned envelope and treated floor area.
+- Record climate, occupancy, setpoints and internal gains.
+- Set energy, airtightness, overheating, carbon and water targets.
+- Test form factor, orientation, glazing and shading.
+- Reserve space for ducts, equipment, insulation and maintenance.
+
+ENVELOPE DESIGN
+- Trace continuous thermal and airtight lines.
+- Calculate significant thermal bridges.
+- Define window position, support, insulation and seals.
+- Coordinate rain control, vapour control and drying paths.
+- Minimise penetrations and design service entries.
+- Review fire, acoustic, structural and radon interfaces.
+
+SERVICES DESIGN
+- Calculate project-specific heating and cooling loads.
+- Size ventilation ducts for low pressure and noise.
+- Locate intake and exhaust away from pollution sources.
+- Define filtration, condensate and frost protection.
+- Minimise domestic hot-water distribution losses.
+- Define control sequence and metering.
+
+PROCUREMENT
+- Require verified product performance and installation data.
+- Review substitutions across all disciplines.
+- Obtain samples of membranes, tapes and penetrations.
+- Confirm maintenance access and replacement parts.
+
+CONSTRUCTION
+- Run envelope workshop and build mock-ups.
+- Inspect substrates before sealing.
+- Photograph concealed layers.
+- Protect completed membranes and insulation.
+- Test airtightness before finishes conceal defects.
+- Seal and test ducts; keep them clean.
+
+COMMISSIONING
+- Balance all ventilation terminals.
+- Verify fan modes, bypass, frost protection and alarms.
+- Test heating, cooling, hot water and controls.
+- Record settings and measured performance.
+- Train users and provide a concise guide.
+- Schedule seasonal follow-up.

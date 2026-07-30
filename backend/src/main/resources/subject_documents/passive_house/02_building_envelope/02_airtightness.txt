@@ -1,0 +1,18 @@
+TITLE: Airtightness Design and Execution
+TAGS: airtightness, air-barrier, blower-door, penetrations, leakage
+
+Airtightness controls unintended airflow through the envelope. It reduces heat loss and gain, limits draughts, improves acoustic separation, supports ventilation performance and reduces the risk that warm humid air will enter cold parts of an assembly and condense.
+
+Airtightness does not mean occupants cannot open windows. It means ventilation occurs intentionally through windows or a designed system rather than unpredictably through cracks. An airtight building requires reliable ventilation.
+
+Select a primary airtight layer for every envelope component. It may be plaster, a membrane, a taped sheathing board, concrete, a roof membrane or another tested layer. The material must be continuous, durable and accessible enough to connect at junctions.
+
+Draw the airtightness line on every section and detail. Typical problem areas are wall-to-roof transitions, floor zones, window perimeters, service entries, structural penetrations, balcony connections, party walls, electrical boxes and changes between construction systems.
+
+Use compatible tapes, gaskets, sealants and primers. Adhesion depends on clean, dry, stable substrates and appropriate temperature. A sealant bead should have suitable geometry and backing; it should not be expected to bridge uncontrolled gaps. Mechanical clamping or protected connections may offer greater long-term reliability than exposed adhesive alone.
+
+Create a service cavity inside the airtight layer where practical. This allows wiring and small pipes to be installed without repeated penetrations. Consolidate unavoidable penetrations and use proprietary grommets or well-detailed sleeves.
+
+Blower-door testing should occur at least once while the air barrier is accessible and again at completion if required. Test both pressurisation and depressurisation where the protocol calls for it. Smoke pencils, theatrical fog, anemometers and infrared imaging can assist leakage detection under suitable conditions.
+
+Do not use the final result as the only quality measure. A building can meet an average target while containing locally serious leakage paths. Record and repair leakage by location, then protect completed air-barrier work from later trades.

@@ -5,11 +5,19 @@ info:
 
 aisme:
   subjects:
-    default-subject-id: culinary-expert
+    default-subject-id: passive-house
     definitions:
-      culinary-expert:
+      passive-house:
         enabled: true
         display-order: 10
+        display-name: Passive House Architecture Expert
+        documents:
+          location: classpath:/subject_documents/passive_house/
+          chunk-size: 900
+          chunk-overlap: 90
+      culinary-expert:
+        enabled: true
+        display-order: 20
         display-name: Culinary Expert
         documents:
           location: classpath:/subject_documents/culinary_expert/

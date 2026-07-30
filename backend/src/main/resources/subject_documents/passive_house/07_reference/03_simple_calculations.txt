@@ -1,0 +1,42 @@
+TITLE: Simple Building-Physics Calculations
+TAGS: calculations, formulas, heat-loss, ventilation, solar, examples
+
+These simplified calculations are for screening and education. Use approved methods for design and certification.
+
+TRANSMISSION HEAT LOSS
+Heat flow through a component:
+Q_dot = U × A × ΔT
+where Q_dot is watts, U is W/(m²·K), A is m², and ΔT is kelvins or degrees Celsius difference.
+Example: U = 0.15, area = 100 m², ΔT = 20 K.
+Q_dot = 0.15 × 100 × 20 = 300 W.
+
+LINEAR THERMAL BRIDGE
+Q_dot = Ψ × L × ΔT
+where Ψ is W/(m·K) and L is junction length in metres.
+
+APPROXIMATE VENTILATION HEAT FLOW
+Q_dot ≈ 0.33 × airflow_m3_per_hour × ΔT
+The factor is an approximate volumetric heat capacity of air in Wh/(m³·K). With heat recovery, apply the effective unrecovered fraction and include fan energy and system losses separately.
+
+ASSEMBLY RESISTANCE
+For a uniform layer:
+R = thickness / conductivity
+Total U is approximately 1 divided by the sum of layer and surface resistances. Repeating bridges require area-weighted or numerical calculation.
+
+SOLAR GAIN
+Solar heat gain is approximately:
+Q_dot_solar = irradiance × glazed_area × g_value × shading_factor
+Real modelling also includes frame fraction, incidence angle, dirt and time-varying shading.
+
+ANNUAL ENERGY
+Energy = average_power × time.
+A 500 W load operating for 1,000 hours uses 500 kWh.
+
+AIR CHANGE
+n50 = airflow_at_50Pa / test_volume.
+If airflow is 600 m³/h and volume is 1,000 m³, n50 = 0.6 h⁻¹.
+
+CARBON
+Operational emissions = energy_use × emission_factor.
+Embodied result = quantity × product_emission_factor, summed across products and declared life-cycle stages.
+Always state units and boundaries.

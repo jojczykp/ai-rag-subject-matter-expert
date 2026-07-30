@@ -1,0 +1,16 @@
+TITLE: Circular Design, Adaptability and Design for Disassembly
+TAGS: circularity, adaptability, reuse, disassembly, longevity
+
+Circular design aims to keep buildings, components and materials useful for as long as possible. The hierarchy is generally to avoid new construction where feasible, retain and adapt existing buildings, reuse components, and recycle materials only after higher-value options are exhausted.
+
+Design for adaptability by using regular structural grids, generous but efficient floor-to-floor heights, accessible service zones and non-loadbearing internal partitions. Anticipate likely changes in occupancy and technology without overbuilding.
+
+Separate systems with different service lives. Structure may last many decades, while finishes, controls and equipment require earlier replacement. Accessible connections allow renewal without destroying long-lived layers.
+
+Prefer mechanical, reversible fasteners over inseparable adhesives where technically appropriate. Standard dimensions and modular components can support reuse. Record product locations, composition and disassembly instructions in a material passport or building logbook.
+
+Reuse requires verified condition and performance. Structural capacity, fire rating, contamination, moisture and warranty may need testing. Design teams should engage salvage suppliers early because available quantities and dimensions can shape the design.
+
+Future disassembly must not compromise current airtightness, waterproofing, acoustics or safety. Reversible design is a coordination challenge rather than a reason to weaken essential layers.
+
+Adaptability also supports climate resilience. Spaces that can shift use, shading that can be upgraded and services with spare connection capacity can reduce premature demolition.

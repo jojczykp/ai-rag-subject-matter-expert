@@ -1,0 +1,20 @@
+TITLE: Operation, Maintenance and the Performance Gap
+TAGS: operation, maintenance, performance-gap, occupants, filters
+
+A building remains high-performing only when systems are maintained and controls are used effectively. Design for simple operation and accessible maintenance.
+
+Replace or clean ventilation filters at intervals based on pressure drop, environment and manufacturer guidance. Dirty filters reduce airflow, increase fan energy and may create imbalance. Keep spare filters and record dates.
+
+Inspect outdoor-air and exhaust terminals, condensate drains, heat exchangers and fans. Clean accessible ducts or terminals when necessary. Verify room airflow after major alterations.
+
+Maintain window and door seals, hinges and latches. Small alignment changes can create leakage. Inspect exterior shading, flashings, sealants, roof drains and façade penetrations.
+
+Review energy data periodically. Compare monthly use with weather and occupancy. Sudden increases may indicate stuck controls, electric resistance backup, hot-water leaks, recirculation faults or ventilation changes.
+
+Avoid disabling ventilation to save energy. Diagnose noise, draught or dryness complaints and correct the cause. Adjust airflow within the design framework and maintain required indoor air quality.
+
+Summer operation may require early shading, bypass ventilation and controlled night flushing. Occupant guides should describe when outdoor air helps and when it adds heat or humidity.
+
+The performance gap is the difference between expected and measured outcomes. Causes include model assumptions, construction defects, commissioning, weather, occupancy, plug loads and behaviour. Investigate with submetering and trend data instead of blaming occupants or the model by default.
+
+Keep a building logbook containing drawings, product data, test results, settings, maintenance and alterations. Future penetrations through the envelope should follow approved details and be recorded.

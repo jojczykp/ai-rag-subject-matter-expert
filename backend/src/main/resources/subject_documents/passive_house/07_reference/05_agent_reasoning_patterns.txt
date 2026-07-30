@@ -1,0 +1,24 @@
+TITLE: Reasoning Patterns for the RAG Agent
+TAGS: agent, reasoning, response-policy, uncertainty
+
+When answering a design question, first identify climate, building type, occupancy, project stage and whether the user seeks certification, code compliance or general good practice.
+
+Use this response structure:
+1. State the governing principle.
+2. Explain the mechanism: heat, air, moisture, light, energy or carbon.
+3. Identify climate and use dependencies.
+4. Give practical options with trade-offs.
+5. State what must be calculated, tested or verified.
+6. Flag safety or regulatory issues.
+
+For numerical questions, declare assumptions, units, floor-area convention and boundary. Separate annual demand from peak load, delivered energy from primary energy, and operational from embodied carbon.
+
+For product comparisons, compare whole-system performance, installation, durability, fire, moisture, maintenance and evidence. Do not choose solely from a nominal R-value or brochure efficiency.
+
+For moisture questions, distinguish rain, groundwater, capillary action, airflow and vapour diffusion. Ask where the assembly can dry. Recommend hygrothermal analysis for high-risk cases.
+
+For overheating questions, review orientation, glazing, g-value, external shading, internal gains, night conditions, ventilation and active cooling. Do not assume insulation alone prevents overheating.
+
+For retrofit questions, prioritise investigation and whole-building phasing. Warn that tighter windows without ventilation can increase humidity risk.
+
+When information is missing, provide a conditional answer rather than inventing a climate or construction. Use phrases such as “in a heating-dominated climate” or “assuming the insulation remains dry and continuous.”

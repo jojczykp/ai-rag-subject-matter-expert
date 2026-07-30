@@ -1,0 +1,16 @@
+TITLE: Thermal Comfort and Indoor Environmental Quality
+TAGS: comfort, operative-temperature, humidity, acoustics, air-quality
+
+Thermal comfort depends on more than air temperature. Operative temperature combines air temperature and mean radiant temperature. In a well-insulated building, warm interior surfaces reduce radiant asymmetry and allow comfort at moderate air temperatures.
+
+Cold window surfaces can create downdraught and radiant discomfort even without measurable air leakage. High-performance glazing and suitable window placement reduce these effects. Warm floors and controlled air speeds also support comfort.
+
+Relative humidity affects comfort, health and building durability. Very high humidity encourages mould and dust mites; very low humidity can cause dryness. Appropriate ranges depend on climate, season, occupancy and regulations. Control moisture sources and provide ventilation rather than relying on arbitrary humidification.
+
+Indoor air quality requires source control, filtration and ventilation. Choose low-emitting materials and protect ducts during construction. Isolate garages, combustion equipment, refuse rooms and chemical storage. Avoid unvented combustion appliances.
+
+Acoustic comfort is integral. Low-energy buildings can be very quiet externally, making mechanical noise more noticeable. Size ducts for low velocity, use attenuators where needed, isolate vibration and verify bedroom noise at normal operation.
+
+Outdoor noise may make window-based summer ventilation impractical. This should influence cooling and ventilation design. Similarly, poor outdoor air quality may require better filtration and controlled intake placement.
+
+Occupant control improves satisfaction when controls are understandable and effective. Provide operable windows where appropriate, local temperature adjustment within a reasonable range and clear shading controls. Automatic systems should not make occupants feel trapped.

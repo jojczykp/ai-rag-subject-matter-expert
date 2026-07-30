@@ -1,0 +1,16 @@
+TITLE: Climate-Responsive Building Design
+TAGS: climate, orientation, form, compactness, vernacular, site
+
+Climate-responsive design starts with local weather, sun path, wind, humidity, diurnal temperature range, precipitation, ground conditions and future climate projections. A strategy that succeeds in a cold dry climate may fail in a hot humid one.
+
+Compact form generally reduces envelope area per unit of floor area and therefore transmission losses. However, compactness must be balanced with daylight, natural ventilation, urban context and program. Courtyards and articulated façades can be valuable but increase junctions and surface area.
+
+In heating-dominated climates, orienting useful glazing toward winter sun can reduce demand, provided summer shading controls overheating. In cooling-dominated climates, limiting east and west glazing is often important because low-angle sun is difficult to shade.
+
+Hot dry climates may benefit from external shading, thermal mass, night flushing and evaporative strategies when water and air quality permit. Hot humid climates prioritise solar exclusion, moisture control, air movement and efficient dehumidification; high thermal mass is not automatically beneficial when nights remain warm.
+
+Cold climates require high insulation, airtightness, high-performance windows and frost-resilient services. Mixed climates need assemblies and controls that manage seasonal reversals in heat and vapour flow.
+
+Site planning can preserve trees, reduce heat-island effects, support walking and transit, manage stormwater and provide renewable-energy access. Buildings should avoid unnecessary disturbance of high-value habitat and should respond to flooding, wildfire, wind, radon and other local hazards.
+
+Use current and future weather files for overheating and resilience studies. Historical climate alone may underestimate future cooling loads. Test passive survivability during power outages as well as annual energy performance.
