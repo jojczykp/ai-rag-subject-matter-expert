@@ -134,7 +134,7 @@ class EmbeddedLlamaInstaller(
                 "${fileName.removeSuffix(".0.dylib")}.",
             )
 
-            fileName.endsWith(".so") -> listOf("${fileName.removeSuffix(".so")}.so.")
+            fileName.endsWith(".so") -> listOf("$fileName.")
             fileName.contains(".so.") -> listOf("$fileName.")
             else -> emptyList()
         }
