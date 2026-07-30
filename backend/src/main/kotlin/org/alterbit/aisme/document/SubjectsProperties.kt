@@ -9,6 +9,7 @@ data class SubjectsProperties(
         "culinary-expert" to SubjectProperties(
             displayOrder = 10,
             displayName = "Culinary Expert",
+            defaultQuestion = "How should I cook rice?",
             documents = SubjectDocumentsProperties(
                 location = "classpath:/subject_documents/culinary_expert/",
             ),
@@ -61,6 +62,7 @@ data class SubjectsProperties(
             enabled = enabled,
             displayOrder = displayOrder,
             displayName = displayName ?: subjectId.toDisplayName(),
+            defaultQuestion = defaultQuestion,
         )
 
     private fun String.toDisplayName(): String =

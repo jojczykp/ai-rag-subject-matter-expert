@@ -16,9 +16,6 @@ type ChatMessage = {
   content: string
 }
 
-const defaultMessage =
-  'I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks'
-
 function App() {
   const [models, setModels] = useState<ChatModel[]>([])
   const [embeddingModels, setEmbeddingModels] = useState<EmbeddingModel[]>([])
@@ -31,11 +28,12 @@ function App() {
   const [selectedModelId, setSelectedModelId] = useState('')
   const [selectedEmbeddingModelId, setSelectedEmbeddingModelId] = useState('')
   const [selectedSubjectId, setSelectedSubjectId] = useState('')
-  const [message, setMessage] = useState(defaultMessage)
+  const [message, setMessage] = useState('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatError, setChatError] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
   const [requestElapsedSeconds, setRequestElapsedSeconds] = useState(0)
+  const [focusMessageAtEndRequest, setFocusMessageAtEndRequest] = useState(0)
   const messageInputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -54,6 +52,13 @@ function App() {
           const enabledEmbeddingModels = embeddingModels.filter(
             (model) => model.enabled,
           )
+          const defaultSubjectId = defaultModelId(
+            enabledSubjects,
+            subjectsResponse.defaultSubjectId,
+          )
+          const defaultSubject = enabledSubjects.find(
+            (subject) => subject.id === defaultSubjectId,
+          )
 
           setSubjects(subjects)
           setModels(chatModels)
@@ -62,9 +67,9 @@ function App() {
           setEmbeddingApiTimeoutSeconds(
             embeddingModelsResponse.embeddingApiTimeoutSeconds,
           )
-          setSelectedSubjectId(
-            defaultModelId(enabledSubjects, subjectsResponse.defaultSubjectId),
-          )
+          setSelectedSubjectId(defaultSubjectId)
+          setMessage(defaultSubject?.defaultQuestion ?? '')
+          setFocusMessageAtEndRequest((current) => current + 1)
           setSelectedModelId(
             defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
           )
@@ -103,7 +108,7 @@ function App() {
       messageInput.value.length,
       messageInput.value.length,
     )
-  }, [])
+  }, [focusMessageAtEndRequest])
 
   useEffect(() => {
     if (!sending) {
@@ -211,6 +216,14 @@ function App() {
     }
   }
 
+  function handleSubjectChange(subjectId: string) {
+    const subject = enabledSubjects.find((subject) => subject.id === subjectId)
+
+    setSelectedSubjectId(subjectId)
+    setMessage(subject?.defaultQuestion ?? '')
+    setFocusMessageAtEndRequest((current) => current + 1)
+  }
+
   return (
     <main className="app-shell">
       <section className="model-panel" aria-labelledby="model-panel-heading">
@@ -224,7 +237,7 @@ function App() {
           <select
             id="subject"
             value={selectedSubjectId}
-            onChange={(event) => setSelectedSubjectId(event.target.value)}
+            onChange={(event) => handleSubjectChange(event.target.value)}
             disabled={modelsLoading || enabledSubjects.length === 0}
           >
             {enabledSubjects.map((subject) => (

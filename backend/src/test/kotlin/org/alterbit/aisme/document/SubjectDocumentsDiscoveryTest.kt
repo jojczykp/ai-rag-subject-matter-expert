@@ -17,6 +17,7 @@ class SubjectDocumentsDiscoveryTest {
                 enabled = true,
                 displayOrder = 10,
                 displayName = "Culinary Expert",
+                defaultQuestion = "How should I cook rice?",
             ),
             documentsProperties = SubjectDocumentsProperties(
                 location = "classpath:/subject_documents/culinary_expert/",

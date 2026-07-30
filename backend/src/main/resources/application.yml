@@ -11,6 +11,7 @@ aisme:
         enabled: true
         display-order: 10
         display-name: Passive House Architecture Expert
+        default-question: I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks
         documents:
           location: classpath:/subject_documents/passive_house/
           chunk-size: 900
@@ -19,6 +20,7 @@ aisme:
         enabled: true
         display-order: 20
         display-name: Culinary Expert
+        default-question: How should I cook rice?
         documents:
           location: classpath:/subject_documents/culinary_expert/
           chunk-size: 700

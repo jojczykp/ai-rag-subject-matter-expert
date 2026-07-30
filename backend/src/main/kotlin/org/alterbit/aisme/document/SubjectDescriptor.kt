@@ -5,6 +5,7 @@ data class SubjectDescriptor(
     val enabled: Boolean,
     val displayOrder: Int,
     val displayName: String,
+    val defaultQuestion: String,
 ) {
     init {
         require(id.isNotBlank()) { "id must not be blank" }

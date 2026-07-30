@@ -7,13 +7,17 @@ import type {
   SubjectsResponse,
 } from '../api/types'
 import { apiUrl } from '../config'
-import { availableOllamaModel, culinarySubject } from './fixtures'
+import {
+  availableOllamaModel,
+  culinarySubject,
+  passiveHouseSubject,
+} from './fixtures'
 
 export const handlers = [
   http.get(apiUrl('/subjects'), () =>
     HttpResponse.json<SubjectsResponse>({
-      defaultSubjectId: culinarySubject.id,
-      subjects: [culinarySubject],
+      defaultSubjectId: passiveHouseSubject.id,
+      subjects: [culinarySubject, passiveHouseSubject],
     }),
   ),
   http.get(apiUrl('/chat-models'), () =>

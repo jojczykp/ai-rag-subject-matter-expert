@@ -21,6 +21,7 @@ class SubjectDocumentsPropertiesDefaultTest {
             subject.enabled shouldBe true
             subject.displayOrder shouldBe 10
             subject.displayName shouldBe "Culinary Expert"
+            subject.defaultQuestion shouldBe "How should I cook rice?"
             subject.documents.location shouldBe "classpath:/subject_documents/culinary_expert/"
             subject.documents.chunkSize shouldBe 700
             subject.documents.chunkOverlap shouldBe 100

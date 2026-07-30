@@ -68,6 +68,7 @@ export type Subject = {
   enabled: boolean
   displayOrder: number
   displayName: string
+  defaultQuestion: string
 }
 
 export type SubjectsResponse = {

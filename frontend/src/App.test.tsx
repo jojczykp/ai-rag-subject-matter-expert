@@ -5,11 +5,15 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import type { ChatModelsResponse, ChatRequest } from './api/types'
 import { apiUrl } from './config'
-import { availableOllamaModel } from './test/fixtures'
+import {
+  availableOllamaModel,
+  culinarySubject,
+  passiveHouseSubject,
+} from './test/fixtures'
 import { server } from './test/server'
 
-const defaultMessage =
-  'I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks'
+const defaultMessage = passiveHouseSubject.defaultQuestion
+const defaultSelectionSummary = `Subject: ${passiveHouseSubject.displayName} · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama`
 
 describe('App', () => {
   it('loads models and shows selected model details', async () => {
@@ -30,11 +34,7 @@ describe('App', () => {
     expect(screen.getAllByText('Local server')).toHaveLength(2)
     expect(screen.getAllByText('Prompts stay local')).toHaveLength(2)
     expect(screen.getAllByText('Available')).toHaveLength(2)
-    expect(
-      screen.getByText(
-        'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-      ),
-    ).toBeVisible()
+    expect(screen.getByText(defaultSelectionSummary)).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-green')).toHaveLength(
       2,
     )
@@ -78,14 +78,39 @@ describe('App', () => {
     const messageField = screen.getByLabelText('Message')
 
     expect(messageField).toHaveFocus()
+    expect(messageField).toHaveValue('')
+
+    await screen.findByText(defaultSelectionSummary)
+
     expect(messageField).toHaveValue(defaultMessage)
     expect(messageField).toHaveProperty('selectionStart', defaultMessage.length)
     expect(messageField).toHaveProperty('selectionEnd', defaultMessage.length)
+  })
 
-    await screen.findByLabelText('Chat Model')
+  it('updates the message field when changing subject', async () => {
+    const user = userEvent.setup()
 
-    expect(messageField).toHaveFocus()
+    render(<App />)
+
+    const messageField = screen.getByLabelText('Message')
+    await screen.findByText(defaultSelectionSummary)
+
     expect(messageField).toHaveValue(defaultMessage)
+
+    await user.selectOptions(
+      screen.getByLabelText('Subject'),
+      culinarySubject.id,
+    )
+
+    expect(messageField).toHaveValue(culinarySubject.defaultQuestion)
+    expect(messageField).toHaveProperty(
+      'selectionStart',
+      culinarySubject.defaultQuestion.length,
+    )
+    expect(messageField).toHaveProperty(
+      'selectionEnd',
+      culinarySubject.defaultQuestion.length,
+    )
   })
 
   it('prefills a message and still requires non-blank content', async () => {
@@ -97,9 +122,7 @@ describe('App', () => {
 
     expect(sendButton).toBeDisabled()
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
 
     expect(sendButton).toBeEnabled()
 
@@ -125,9 +148,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     expect(screen.getByText(defaultMessage)).toBeVisible()
@@ -136,7 +157,7 @@ describe('App', () => {
     ).toBeVisible()
     expect(chatRequests).toEqual([
       {
-        subjectId: 'culinary-expert',
+        subjectId: passiveHouseSubject.id,
         modelId: 'local-ollama-llama',
         embeddingModelId: 'ollama-nomic-embed',
         message: defaultMessage,
@@ -166,9 +187,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     expect(screen.getByText('Processing request: 60s remaining')).toBeVisible()
@@ -196,9 +215,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     const boldText = await screen.findByText('one cup')
@@ -213,9 +230,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
     await user.keyboard('{Enter}')
 
     expect(screen.getByText(defaultMessage)).toBeVisible()
@@ -229,9 +244,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
 
     const messageField = screen.getByLabelText('Message')
     await user.clear(messageField)
@@ -260,9 +273,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await screen.findByText(
-      'Subject: Culinary Expert · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama',
-    )
+    await screen.findByText(defaultSelectionSummary)
     await user.clear(screen.getByLabelText('Message'))
     await user.type(screen.getByLabelText('Message'), 'Will this fail?')
     await user.click(screen.getByRole('button', { name: 'Send' }))

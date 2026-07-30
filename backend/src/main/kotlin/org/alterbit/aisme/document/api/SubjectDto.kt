@@ -7,6 +7,7 @@ data class SubjectDto(
     val enabled: Boolean,
     val displayOrder: Int,
     val displayName: String,
+    val defaultQuestion: String,
 )
 
 fun SubjectDescriptor.toDto(): SubjectDto =
@@ -15,4 +16,5 @@ fun SubjectDescriptor.toDto(): SubjectDto =
         enabled = enabled,
         displayOrder = displayOrder,
         displayName = displayName,
+        defaultQuestion = defaultQuestion,
     )

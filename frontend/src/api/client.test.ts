@@ -27,13 +27,22 @@ describe('API client', () => {
   it('loads indexed subjects', async () => {
     const response = await getSubjects()
 
-    expect(response.defaultSubjectId).toBe('culinary-expert')
+    expect(response.defaultSubjectId).toBe('passive-house')
     expect(response.subjects).toEqual([
       {
         id: 'culinary-expert',
         enabled: true,
         displayOrder: 10,
         displayName: 'Culinary Expert',
+        defaultQuestion: 'How should I cook rice?',
+      },
+      {
+        id: 'passive-house',
+        enabled: true,
+        displayOrder: 20,
+        displayName: 'Passive House Architecture Expert',
+        defaultQuestion:
+          'I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks',
       },
     ])
   })
