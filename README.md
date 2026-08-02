@@ -55,23 +55,7 @@ If you want to use the bundled `embedded-qwen-0-5b`,
 chat models.
 
 Startup downloads install the matching `llama-server` archive for macOS Apple
-Silicon, macOS Intel, Linux x64, or Windows x64. The Gradle task remains
-available when you want to install or verify the runtime explicitly before
-starting the application:
-
-```bash
-./gradlew :backend:embeddedLlamaDownloadServer
-```
-
-If platform auto-detection does not match your environment, run the matching
-explicit task:
-
-```bash
-./gradlew :backend:embeddedLlamaDownloadServerMacAppleSilicon
-./gradlew :backend:embeddedLlamaDownloadServerMacIntel
-./gradlew :backend:embeddedLlamaDownloadServerLinuxUbuntuX64
-./gradlew :backend:embeddedLlamaDownloadServerWindowsX64
-```
+Silicon, macOS Intel, Linux x64, or Windows x64.
 
 ### Ollama
 
@@ -87,10 +71,8 @@ In another terminal:
 
 ```bash
 ollama pull llama3.2
-./gradlew :backend:embeddingModelPullOllamaNomicEmbed
+ollama pull nomic-embed-text:v1.5
 ```
-
-The Gradle task pulls `nomic-embed-text:v1.5`.
 
 ```bash
 ollama list
