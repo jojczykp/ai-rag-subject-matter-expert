@@ -112,9 +112,9 @@ PostgreSQL before the application becomes ready.
 
 | Area | Default |
 | --- | --- |
-| Subject | `passive-house` |
-| Embedding model | `ollama-nomic-embed` |
-| Chat model | `embedded-mistral-7b` |
+| Subject | `culinary-expert` |
+| Embedding model | `local-bge-small` |
+| Chat model | `embedded-qwen-1-5b` |
 | Database | PostgreSQL + pgvector on `localhost:5432` |
 | Backend | `http://localhost:8080` |
 | Frontend | `http://localhost:5173` |
@@ -283,10 +283,10 @@ Sample chat request:
 curl -s http://localhost:8080/chat \
   -H 'Content-Type: application/json' \
   -d '{
-    "subjectId": "passive-house",
-    "modelId": "local-ollama-llama",
-    "embeddingModelId": "ollama-nomic-embed",
-    "message": "What are the biggest Passive House design risks?"
+    "subjectId": "culinary-expert",
+    "modelId": "embedded-qwen-1-5b",
+    "embeddingModelId": "local-bge-small",
+    "message": "How should I cook rice?"
   }' | jq .
 ```
 

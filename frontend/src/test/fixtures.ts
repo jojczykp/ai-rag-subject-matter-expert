@@ -29,3 +29,20 @@ export const availableOllamaModel: ChatModel = {
   capabilities: ['CHAT'],
   runtimeRequirements: ['REQUIRES_OLLAMA_SERVER'],
 }
+
+export const availableEmbeddedQwenModel: ChatModel = {
+  id: 'embedded-qwen-1-5b',
+  displayName: 'Embedded Qwen 1.5B',
+  description:
+    'Smarter fully offline embedded model backed by a local GGUF asset.',
+  runtime: 'EMBEDDED_LLAMA',
+  mode: 'EMBEDDED_OFFLINE',
+  availability: 'AVAILABLE',
+  availableOffline: true,
+  promptsMayLeaveLocalMachine: false,
+  capabilities: ['CHAT'],
+  runtimeRequirements: [
+    'REQUIRES_LOCAL_GGUF_MODEL',
+    'REQUIRES_LLAMA_SERVER_EXECUTABLE',
+  ],
+}

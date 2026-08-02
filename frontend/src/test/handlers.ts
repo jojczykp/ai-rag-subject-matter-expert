@@ -8,6 +8,7 @@ import type {
 } from '../api/types'
 import { apiUrl } from '../config'
 import {
+  availableEmbeddedQwenModel,
   availableOllamaModel,
   culinarySubject,
   passiveHouseSubject,
@@ -16,20 +17,20 @@ import {
 export const handlers = [
   http.get(apiUrl('/subjects'), () =>
     HttpResponse.json<SubjectsResponse>({
-      defaultSubjectId: passiveHouseSubject.id,
+      defaultSubjectId: culinarySubject.id,
       subjects: [culinarySubject, passiveHouseSubject],
     }),
   ),
   http.get(apiUrl('/chat-models'), () =>
     HttpResponse.json<ChatModelsResponse>({
-      defaultChatModelId: 'local-ollama-llama',
+      defaultChatModelId: availableEmbeddedQwenModel.id,
       chatApiTimeoutSeconds: 60,
-      chatModels: [availableOllamaModel],
+      chatModels: [availableEmbeddedQwenModel, availableOllamaModel],
     }),
   ),
   http.get(apiUrl('/embedding-models'), () =>
     HttpResponse.json<EmbeddingModelsResponse>({
-      defaultEmbeddingModelId: 'ollama-nomic-embed',
+      defaultEmbeddingModelId: 'local-bge-small',
       embeddingApiTimeoutSeconds: 60,
       embeddingModels: [
         {
@@ -38,7 +39,7 @@ export const handlers = [
           displayName: 'Local BGE Small (1.5, 384d)',
           runtime: 'ONNX',
           mode: 'EMBEDDED_OFFLINE',
-          availability: 'CONFIGURED',
+          availability: 'AVAILABLE',
           version: '1.5',
           dimensions: 384,
           availableOffline: true,

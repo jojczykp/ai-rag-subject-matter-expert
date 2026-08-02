@@ -17,17 +17,17 @@ describe('API client', () => {
   it('loads configured models', async () => {
     const response = await getChatModels()
 
-    expect(response.defaultChatModelId).toBe('local-ollama-llama')
+    expect(response.defaultChatModelId).toBe('embedded-qwen-1-5b')
     expect(response.chatApiTimeoutSeconds).toBe(60)
-    expect(response.chatModels).toHaveLength(1)
-    expect(response.chatModels[0]?.id).toBe('local-ollama-llama')
+    expect(response.chatModels).toHaveLength(2)
+    expect(response.chatModels[0]?.id).toBe('embedded-qwen-1-5b')
     expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
   })
 
   it('loads indexed subjects', async () => {
     const response = await getSubjects()
 
-    expect(response.defaultSubjectId).toBe('passive-house')
+    expect(response.defaultSubjectId).toBe('culinary-expert')
     expect(response.subjects).toEqual([
       {
         id: 'culinary-expert',
@@ -50,13 +50,13 @@ describe('API client', () => {
   it('loads configured embedding models', async () => {
     const response = await getEmbeddingModels()
 
-    expect(response.defaultEmbeddingModelId).toBe('ollama-nomic-embed')
+    expect(response.defaultEmbeddingModelId).toBe('local-bge-small')
     expect(response.embeddingApiTimeoutSeconds).toBe(60)
     expect(response.embeddingModels).toHaveLength(2)
     expect(response.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(response.embeddingModels[0]?.runtime).toBe('ONNX')
     expect(response.embeddingModels[0]?.mode).toBe('EMBEDDED_OFFLINE')
-    expect(response.embeddingModels[0]?.availability).toBe('CONFIGURED')
+    expect(response.embeddingModels[0]?.availability).toBe('AVAILABLE')
     expect(response.embeddingModels[0]?.enabled).toBe(true)
     expect(response.embeddingModels[1]?.id).toBe('ollama-nomic-embed')
     expect(response.embeddingModels[1]?.runtime).toBe('OLLAMA')

@@ -31,7 +31,7 @@ class EmbeddingModelsControllerTest(
             .andExpect {
                 status { isOk() }
                 jsonPath("$.defaultEmbeddingModelId") {
-                    value("ollama-nomic-embed")
+                    value("local-bge-small")
                 }
                 jsonPath("$.embeddingApiTimeoutSeconds") {
                     value(60)

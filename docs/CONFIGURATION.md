@@ -10,7 +10,7 @@ Application properties are configured under the `aisme` prefix in
 ```yaml
 aisme:
   subjects:
-    default-subject-id: passive-house
+    default-subject-id: culinary-expert
 ```
 
 ### Change Default Models
@@ -18,9 +18,9 @@ aisme:
 ```yaml
 aisme:
   embedding:
-    default-model-id: ollama-nomic-embed
+    default-model-id: local-bge-small
   chat:
-    default-model-id: embedded-mistral-7b
+    default-model-id: embedded-qwen-1-5b
 ```
 
 ### Disable A Model
@@ -105,7 +105,7 @@ aisme:
 | Property | Default | Description |
 | --- | --- | --- |
 | `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
-| `aisme.subjects.default-subject-id` | `passive-house` | Subject preselected by API clients and the UI. |
+| `aisme.subjects.default-subject-id` | `culinary-expert` | Subject preselected by API clients and the UI. |
 | `aisme.subjects.definitions.<subject-id>.enabled` | `true` in example config | Whether this subject is indexed and selectable. |
 | `aisme.subjects.definitions.<subject-id>.display-order` | optional | Sort order for subject selectors and catalog responses. |
 | `aisme.subjects.definitions.<subject-id>.display-name` | derived from id when omitted | Human-readable subject name for API clients and the UI. |
@@ -114,7 +114,7 @@ aisme:
 | `aisme.subjects.definitions.<subject-id>.documents.chunk-size` | subject-specific | Maximum character count per indexed document chunk for this subject. |
 | `aisme.subjects.definitions.<subject-id>.documents.chunk-overlap` | subject-specific | Character overlap between adjacent chunks. Must be smaller than `chunk-size`. |
 | `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |
-| `aisme.embedding.default-model-id` | `ollama-nomic-embed` | Embedding model preselected by API clients and the UI. |
+| `aisme.embedding.default-model-id` | `local-bge-small` | Embedding model preselected by API clients and the UI. |
 | `aisme.embedding.model-availability.timeout` | `5s` | Timeout for embedding runtime availability checks. |
 | `aisme.embedding.model-availability.cache-ttl` | `5s` | Time to cache embedding availability check results. |
 | `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
@@ -134,7 +134,7 @@ aisme:
 | `aisme.embedding.models.<model-id>.runtime.model-name` | Ollama only | Provider model name for Ollama embedding models. |
 | `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
 | `aisme.chat.retrieved-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
-| `aisme.chat.default-model-id` | `embedded-mistral-7b` | Chat model preselected by API clients and the UI. |
+| `aisme.chat.default-model-id` | `embedded-qwen-1-5b` | Chat model preselected by API clients and the UI. |
 | `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
 | `aisme.chat.model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
 | `aisme.chat.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |

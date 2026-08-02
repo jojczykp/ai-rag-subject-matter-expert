@@ -5,29 +5,29 @@ info:
 
 aisme:
   subjects:
-    default-subject-id: passive-house
+    default-subject-id: culinary-expert
     definitions:
-      passive-house:
-        enabled: true
-        display-order: 10
-        display-name: Passive House Architecture Expert
-        default-question: I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks
-        documents:
-          location: classpath:/subject_documents/passive_house/
-          chunk-size: 900
-          chunk-overlap: 90
       culinary-expert:
         enabled: true
-        display-order: 20
+        display-order: 10
         display-name: Culinary Expert
         default-question: How should I cook rice?
         documents:
           location: classpath:/subject_documents/culinary_expert/
           chunk-size: 700
           chunk-overlap: 100
+      passive-house:
+        enabled: true
+        display-order: 20
+        display-name: Passive House Architecture Expert
+        default-question: I am designing a 160 m² house in southern Germany. I want to achieve Passive House certification while keeping construction costs reasonable. Recommend wall, roof, floor, window, ventilation and heating specifications, explain why each choice matters, and identify the biggest design risks
+        documents:
+          location: classpath:/subject_documents/passive_house/
+          chunk-size: 900
+          chunk-overlap: 90
   embedding:
     api-timeout: 60s
-    default-model-id: ollama-nomic-embed
+    default-model-id: local-bge-small
     model-availability:
       timeout: 5s
       cache-ttl: 5s
@@ -66,7 +66,7 @@ aisme:
           id: local-ollama
           model-name: nomic-embed-text:v1.5
   chat:
-    default-model-id: embedded-mistral-7b
+    default-model-id: embedded-qwen-1-5b
     api-timeout: 60s
     retrieved-chunk-limit: 5
     model-availability:

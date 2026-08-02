@@ -3,17 +3,21 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
-import type { ChatModelsResponse, ChatRequest } from './api/types'
+import type {
+  ChatModelsResponse,
+  ChatRequest,
+  EmbeddingModelsResponse,
+} from './api/types'
 import { apiUrl } from './config'
 import {
-  availableOllamaModel,
+  availableEmbeddedQwenModel,
   culinarySubject,
   passiveHouseSubject,
 } from './test/fixtures'
 import { server } from './test/server'
 
-const defaultMessage = passiveHouseSubject.defaultQuestion
-const defaultSelectionSummary = `${passiveHouseSubject.displayName} · Ollama Nomic Embed (v1.5, 768d) · Local Ollama Llama`
+const defaultMessage = culinarySubject.defaultQuestion
+const defaultSelectionSummary = `${culinarySubject.displayName} · Local BGE Small (1.5, 384d) · Embedded Qwen 1.5B`
 const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView
 
 afterEach(() => {
@@ -27,16 +31,16 @@ describe('App', () => {
     expect(screen.getByText('Loading configured models...')).toBeVisible()
 
     expect(await screen.findByLabelText('Embedding Model')).toHaveValue(
-      'ollama-nomic-embed',
+      'local-bge-small',
     )
     expect(screen.getByLabelText('Chat Model')).toHaveValue(
-      'local-ollama-llama',
+      'embedded-qwen-1-5b',
     )
     expect(
-      screen.getByRole('option', { name: 'Ollama Nomic Embed (v1.5, 768d)' }),
+      screen.getByRole('option', { name: 'Local BGE Small (1.5, 384d)' }),
     ).toBeVisible()
-    expect(screen.getByText('768')).toBeVisible()
-    expect(screen.getAllByText('Local server')).toHaveLength(2)
+    expect(screen.getByText('384')).toBeVisible()
+    expect(screen.getAllByText('Offline')).toHaveLength(2)
     expect(screen.getAllByText('Prompts stay local')).toHaveLength(2)
     expect(screen.getAllByText('Available')).toHaveLength(2)
     expect(screen.getByText(defaultSelectionSummary)).toBeVisible()
@@ -53,7 +57,7 @@ describe('App', () => {
     expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
     expect(
       screen.getByText(
-        `Ask about ${passiveHouseSubject.displayName}. Answers use the indexed bundled documents for this subject.`,
+        `Ask about ${culinarySubject.displayName}. Answers use the indexed bundled documents for this subject.`,
       ),
     ).toBeVisible()
   })
@@ -62,11 +66,11 @@ describe('App', () => {
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
-          defaultChatModelId: 'local-ollama-llama',
+          defaultChatModelId: 'embedded-qwen-1-5b',
           chatApiTimeoutSeconds: 60,
           chatModels: [
             {
-              ...availableOllamaModel,
+              ...availableEmbeddedQwenModel,
               availability: 'MISCONFIGURED',
             },
           ],
@@ -123,17 +127,17 @@ describe('App', () => {
 
     await user.selectOptions(
       screen.getByLabelText('Subject'),
-      culinarySubject.id,
+      passiveHouseSubject.id,
     )
 
-    expect(messageField).toHaveValue(culinarySubject.defaultQuestion)
+    expect(messageField).toHaveValue(passiveHouseSubject.defaultQuestion)
     expect(messageField).toHaveProperty(
       'selectionStart',
-      culinarySubject.defaultQuestion.length,
+      passiveHouseSubject.defaultQuestion.length,
     )
     expect(messageField).toHaveProperty(
       'selectionEnd',
-      culinarySubject.defaultQuestion.length,
+      passiveHouseSubject.defaultQuestion.length,
     )
   })
 
@@ -148,7 +152,7 @@ describe('App', () => {
     await user.type(messageField, 'Custom question')
     await user.selectOptions(
       screen.getByLabelText('Subject'),
-      culinarySubject.id,
+      passiveHouseSubject.id,
     )
 
     expect(messageField).toHaveValue('Custom question')
@@ -224,9 +228,9 @@ describe('App', () => {
     ).toBeVisible()
     expect(chatRequests).toEqual([
       {
-        subjectId: passiveHouseSubject.id,
-        modelId: 'local-ollama-llama',
-        embeddingModelId: 'ollama-nomic-embed',
+        subjectId: culinarySubject.id,
+        modelId: 'embedded-qwen-1-5b',
+        embeddingModelId: 'local-bge-small',
         message: defaultMessage,
       },
     ])
@@ -257,7 +261,7 @@ describe('App', () => {
             setTimeout(() => {
               resolve(
                 HttpResponse.json({
-                  modelId: 'local-ollama-llama',
+                  modelId: 'embedded-qwen-1-5b',
                   answer: 'Done',
                 }),
               )
@@ -290,7 +294,7 @@ describe('App', () => {
     server.use(
       http.post(apiUrl('/chat'), () =>
         HttpResponse.json({
-          modelId: 'local-ollama-llama',
+          modelId: 'embedded-qwen-1-5b',
           answer: 'Use **one cup** of rice.',
         }),
       ),
@@ -368,11 +372,11 @@ describe('App', () => {
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
-          defaultChatModelId: 'local-ollama-llama',
+          defaultChatModelId: 'embedded-qwen-1-5b',
           chatApiTimeoutSeconds: 60,
           chatModels: [
             {
-              ...availableOllamaModel,
+              ...availableEmbeddedQwenModel,
               availability: 'UNAVAILABLE',
             },
           ],
@@ -393,18 +397,32 @@ describe('App', () => {
   })
 
   it('prevents chat when selected embedding model is not available', async () => {
-    const user = userEvent.setup()
+    server.use(
+      http.get(apiUrl('/embedding-models'), () =>
+        HttpResponse.json<EmbeddingModelsResponse>({
+          defaultEmbeddingModelId: 'local-bge-small',
+          embeddingApiTimeoutSeconds: 60,
+          embeddingModels: [
+            {
+              id: 'local-bge-small',
+              enabled: true,
+              displayName: 'Local BGE Small (1.5, 384d)',
+              runtime: 'ONNX',
+              mode: 'EMBEDDED_OFFLINE',
+              availability: 'CONFIGURED',
+              version: '1.5',
+              dimensions: 384,
+              availableOffline: true,
+            },
+          ],
+        }),
+      ),
+    )
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Embedding Model'),
-      'local-bge-small',
-    )
-    await user.selectOptions(
-      await screen.findByLabelText('Chat Model'),
-      'local-ollama-llama',
-    )
+    await screen.findByLabelText('Embedding Model')
+    await screen.findByLabelText('Chat Model')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(
@@ -415,16 +433,34 @@ describe('App', () => {
   })
 
   it('prevents chat when selected chat and embedding models are not available', async () => {
-    const user = userEvent.setup()
     server.use(
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
-          defaultChatModelId: 'local-ollama-llama',
+          defaultChatModelId: 'embedded-qwen-1-5b',
           chatApiTimeoutSeconds: 60,
           chatModels: [
             {
-              ...availableOllamaModel,
+              ...availableEmbeddedQwenModel,
               availability: 'MISCONFIGURED',
+            },
+          ],
+        }),
+      ),
+      http.get(apiUrl('/embedding-models'), () =>
+        HttpResponse.json<EmbeddingModelsResponse>({
+          defaultEmbeddingModelId: 'local-bge-small',
+          embeddingApiTimeoutSeconds: 60,
+          embeddingModels: [
+            {
+              id: 'local-bge-small',
+              enabled: true,
+              displayName: 'Local BGE Small (1.5, 384d)',
+              runtime: 'ONNX',
+              mode: 'EMBEDDED_OFFLINE',
+              availability: 'CONFIGURED',
+              version: '1.5',
+              dimensions: 384,
+              availableOffline: true,
             },
           ],
         }),
@@ -433,10 +469,7 @@ describe('App', () => {
 
     render(<App />)
 
-    await user.selectOptions(
-      await screen.findByLabelText('Embedding Model'),
-      'local-bge-small',
-    )
+    await screen.findByLabelText('Embedding Model')
     await screen.findByLabelText('Chat Model')
 
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()

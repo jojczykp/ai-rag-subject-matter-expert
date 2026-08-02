@@ -323,7 +323,7 @@ aisme:
 
   embedding:
     api-timeout: 60s
-    default-model-id: ollama-nomic-embed
+    default-model-id: local-bge-small
     model-availability:
       timeout: 5s
       cache-ttl: 5s
@@ -349,24 +349,27 @@ aisme:
             url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json
 
   chat:
-    default-model-id: embedded-mistral-7b
+    default-model-id: embedded-qwen-1-5b
     api-timeout: 60s
     retrieved-chunk-limit: 5
     model-availability:
       timeout: 5s
       cache-ttl: 5s
     runtimes:
-      local-ollama:
-        type: OLLAMA
-        base-url: http://localhost:11434
+      embedded-llama:
+        type: EMBEDDED_LLAMA
+        asset-directory: ./models/llama
+        server-executable-path: ./models/llama/bin/llama-server
     models:
-      local-ollama-llama:
+      embedded-qwen-1-5b:
         enabled: true
-        display-order: 50
-        display-name: Local Ollama Llama
+        display-order: 20
+        display-name: Embedded Qwen 1.5B
         runtime:
-          id: local-ollama
-          model-name: llama3.2
+          id: embedded-llama
+          model-name: qwen2.5-1.5b-instruct-q4_k_m
+          gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+          context-size: 2048
 ```
 
 ## User Experience
