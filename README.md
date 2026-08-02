@@ -49,7 +49,7 @@ git clone <repository-url>
 ```
 Enter cloned repository folder:
 ```bash
-cd ai-subject-matter-expert
+cd ai-rag-subject-matter-expert
 ```
 
 Terminal 1 - Run database:

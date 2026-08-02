@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document tracks the planned delivery order for AI Subject Matter Expert.
+This document tracks the planned delivery order for AI RAG Subject Matter Expert.
 The plan is based on the current product requirements, architecture, and
 accepted ADRs.
 

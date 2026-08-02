@@ -12,6 +12,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ai-subject-matter-expert"
+rootProject.name = "ai-rag-subject-matter-expert"
 
 include("backend", "frontend")

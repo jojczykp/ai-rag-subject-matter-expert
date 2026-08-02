@@ -219,7 +219,7 @@ aisme:
 
 spring:
   application:
-    name: ai-subject-matter-expert
+    name: ai-rag-subject-matter-expert
   main:
     banner-mode: console
   datasource:

@@ -266,7 +266,7 @@ function App() {
     <main className="app-shell">
       <section className="model-panel" aria-labelledby="model-panel-heading">
         <div className="panel-heading">
-          <p className="eyebrow">AI Subject Matter Expert</p>
+          <p className="eyebrow">AI RAG Subject Matter Expert</p>
           <h1 id="model-panel-heading">Chat workspace</h1>
         </div>
 
