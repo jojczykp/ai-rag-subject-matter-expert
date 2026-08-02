@@ -6,80 +6,58 @@ subject, an embedding model, and a chat model, then asks questions against
 static document knowledge bundled with the application. The application is
 99% vibe coded with Codex.
 
-The codebase demonstrates:
-
-- Pragmatic Kotlin and Spring Boot backend development.
-- PostgreSQL + pgvector persistence and vector retrieval.
-- Provider-neutral chat model routing.
-- Local Ollama integration.
-- Embedded local GGUF models through a managed `llama-server` process.
-- OpenAI-compatible and Hugging Face TGI-style cloud adapter foundations.
-- An usable React frontend with tests and coverage.
-- Codex-assisted development using GPT-5.5, agents, skills, ADRs, and an
-  implementation plan kept in sync with the code.
-
-Main technologies:
-
-- Kotlin 2.4.0
-- Spring Boot 4.1.0
-- PostgreSQL + pgvector
-- Flyway
-- Spring Data JDBC and `JdbcClient`
-- Kover backend coverage
-- React, TypeScript, Vite, Vitest, React Testing Library, MSW, Playwright
-- Gradle 9.5.1 through the included Gradle Wrapper
-
 ## Quick Start
 
-### Requirements
+Required:
 
-Backend:
 - JDK 26
-- Docker for PostgreSQL, Docker Compose, and Testcontainers integration tests
-- Optional: Ollama for the configured local Ollama chat and embedding models
+- Docker
+- Node.js 25.2.1 and npm 11.12.1
 
-Frontend:
-- Node.js 25.2.1
-- npm 11.12.1
+Optional:
 
-### Run
+- Ollama, when using the configured Ollama chat or embedding models.
 
-Clone this repository:
+Clone the repository:
+
 ```bash
 git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
-```
-Enter cloned repository folder:
-```bash
 cd ai-rag-subject-matter-expert
 ```
 
-Terminal 1 - Run database:
+Terminal 1 - run PostgreSQL + pgvector:
+
 ```bash
 docker compose up
 ```
 
-Terminal 2 - Run local ollama server (optional):
+Terminal 2 - run Ollama, optional:
+
 ```bash
 ollama serve
 ```
 
-Terminal 3 - Download ollama assets (optional):
+Terminal 3 - pull Ollama models, optional:
+
 ```bash
 ollama pull llama3.2
 ollama pull nomic-embed-text:v1.5
 ```
 
-Terminal 4 - Run application:
+Terminal 4 - run the application:
+
 ```bash
 ./gradlew --parallel run
 ```
 
 Open the UI:
-```bash
-open http://localhost:5173
+
+```text
+http://localhost:5173
 ```
 
 Useful backend URLs:
+
 ```text
 http://localhost:8080/actuator/health
 http://localhost:8080/actuator/info
@@ -88,18 +66,12 @@ http://localhost:8080/embedding-models
 http://localhost:8080/chat-models
 ```
 
-The first backend startup can take noticeably longer because enabled local
-model assets and the platform-matching `llama-server` archive may be downloaded
-before Spring finishes startup. Static subject documents are also indexed into
+The first backend startup can take longer because enabled local model assets
+and the platform-matching `llama-server` archive may be downloaded before
+Spring finishes startup. Static subject documents are also indexed into
 PostgreSQL before the application becomes ready.
 
 ## First Run Notes
-
-By default, missing file-backed model assets are downloaded on startup when
-their `download-missing-assets-on-startup` flag is enabled in
-`backend/src/main/resources/application.yml`.
-
-The default local setup uses:
 
 | Area | Default |
 | --- | --- |
@@ -114,16 +86,18 @@ During startup, `/actuator/health` may temporarily report `OUT_OF_SERVICE`.
 That usually means startup indexing or runtime initialization is still in
 progress. When the application is ready, health should become `UP`.
 
-Downloaded model assets are ignored by git. To force the application to
-download them again on the next startup:
+Missing file-backed model assets are downloaded on startup when their
+`download-missing-assets-on-startup` flag is enabled in
+`backend/src/main/resources/application.yml`. Downloaded model assets are
+ignored by git.
+
+To force fresh asset downloads on the next startup:
 
 ```bash
 ./gradlew :backend:cleanDownloadedModelAssets
 ```
 
 ## What To Try
-
-In the UI:
 
 - Switch between `Passive House Architecture Expert` and `Culinary Expert`.
 - Compare `Ollama Nomic Embed` and `Local BGE Small` retrieval behavior.
@@ -134,54 +108,80 @@ In the UI:
 The application keeps chat history in browser memory only. It does not persist
 chat prompts, responses, or conversations.
 
-## Architecture at a glance
+## What This Shows
 
-- React UI.
-- Spring Boot REST API.
-- Configured static subjects.
-- Bundled `.txt` documents knowledge base.
-- Deterministic chunks.
-- PostgreSQL + pgvector embeddings.
-- Selected embedding model for retrieval.
-- Selected chat model for answer generation.
+The codebase demonstrates:
+
+- pragmatic Kotlin and Spring Boot backend development;
+- PostgreSQL + pgvector persistence and vector retrieval;
+- provider-neutral chat model routing;
+- local Ollama integration;
+- embedded local GGUF models through a managed `llama-server` process;
+- OpenAI-compatible and Hugging Face TGI-style cloud adapter foundations;
+- a usable React frontend with tests and coverage;
+- Codex-assisted development using GPT-5.5, agents, skills, ADRs, and an
+  implementation plan kept in sync with the code.
+
+Main technologies:
+
+- Kotlin 2.4.0
+- Spring Boot 4.1.0
+- Gradle 9.5.1 through the included Gradle Wrapper
+- PostgreSQL + pgvector
+- Flyway
+- Spring Data JDBC and `JdbcClient`
+- Kover backend coverage
+- React, TypeScript, Vite, Vitest, React Testing Library, MSW, Playwright
+
+## Architecture At A Glance
+
+```text
+React UI
+  -> Spring Boot REST API
+  -> configured static subjects
+  -> bundled .txt documents
+  -> deterministic chunks
+  -> PostgreSQL + pgvector embeddings
+  -> selected embedding model for retrieval
+  -> selected chat model for answer generation
+```
 
 Supported model styles:
 
-- Embedded offline chat models via local `GGUF` files and managed `llama-server`.
-- Local server models through Ollama on `localhost`.
-- OpenAI-compatible online providers.
-- Hugging Face TGI-compatible online endpoints.
-- Local ONNX and Ollama embedding models.
+- embedded offline chat models via local `GGUF` files and managed
+  `llama-server`;
+- local server models through Ollama on `localhost`;
+- OpenAI-compatible online providers;
+- Hugging Face TGI-compatible online endpoints;
+- local ONNX and Ollama embedding models.
 
 See [Architecture](docs/ARCHITECTURE.md) and
 [Model Runtime Integration](docs/ADR-003-model-runtime-integration.md) for the
 full design.
 
+## Common Commands
+
+| Command | Purpose |
+| --- | --- |
+| `docker compose up -d db` | Start PostgreSQL + pgvector in the background. |
+| `./gradlew --parallel run` | Run backend and frontend together. |
+| `./gradlew :backend:run` | Run only the backend. |
+| `./gradlew :frontend:run` | Run only the frontend. |
+| `./gradlew build` | Build and verify backend and frontend. |
+| `./gradlew check` | Run default backend and frontend verification. |
+| `./gradlew :backend:check` | Run backend tests and Kover coverage verification. |
+| `./gradlew :frontend:check` | Run frontend formatting, linting, tests, coverage, and typecheck. |
+| `./gradlew :backend:extendedIntegrationTest` | Run optional backend integration suites. |
+| `./gradlew :backend:cleanDownloadedModelAssets` | Remove downloaded local model assets. |
+
 ## Build And Run
 
 ### Database
 
-Start PostgreSQL + pgvector:
-
 ```bash
 docker compose up -d db
-```
-
-Check database container status:
-
-```bash
 docker compose ps
-```
-
-Follow database logs:
-
-```bash
 docker compose logs -f db
-```
-
-Stop the database:
-
-```bash
 docker compose stop db
 ```
 
@@ -196,15 +196,8 @@ Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 
 ### Backend
 
-Build and verify the backend:
-
 ```bash
 ./gradlew :backend:clean :backend:build
-```
-
-Run the backend:
-
-```bash
 ./gradlew :backend:run
 ```
 
@@ -212,15 +205,8 @@ The backend listens on `http://localhost:8080`.
 
 ### Frontend
 
-Build the frontend from the repository root:
-
 ```bash
 ./gradlew :frontend:clean :frontend:build
-```
-
-Run the frontend:
-
-```bash
 ./gradlew :frontend:run
 ```
 
@@ -236,15 +222,8 @@ VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 
 ### Both
 
-Build backend and frontend:
-
 ```bash
 ./gradlew build
-```
-
-Run backend and frontend together:
-
-```bash
 ./gradlew --parallel run
 ```
 
@@ -253,37 +232,15 @@ servers are both long-running processes.
 
 ## API Checks
 
-Check health:
-
 ```bash
 curl -s http://localhost:8080/actuator/health | jq .
-```
-
-View application info:
-
-```bash
 curl -s http://localhost:8080/actuator/info | jq .
-```
-
-List subjects:
-
-```bash
 curl -s http://localhost:8080/subjects | jq .
-```
-
-List embedding models:
-
-```bash
 curl -s http://localhost:8080/embedding-models | jq .
-```
-
-List chat models:
-
-```bash
 curl -s http://localhost:8080/chat-models | jq .
 ```
 
-Send a sample chat request:
+Sample chat request:
 
 ```bash
 curl -s http://localhost:8080/chat \
@@ -296,7 +253,7 @@ curl -s http://localhost:8080/chat \
   }' | jq .
 ```
 
-## Common Configuration Changes
+## Configuration
 
 Most local behavior is configured in
 `backend/src/main/resources/application.yml`.
@@ -318,24 +275,15 @@ Useful first changes:
 - `download-missing-assets-on-startup`: control startup downloads for local
   file-backed runtime and model assets.
 
-Full configuration reference:
-
-- [Configuration Reference](docs/CONFIGURATION.md)
+See [Configuration Reference](docs/CONFIGURATION.md) for all properties and
+examples.
 
 ## Development
 
-Run backend verification:
+Backend:
 
 ```bash
 ./gradlew :backend:check
-```
-
-`:backend:check` runs the backend test suite and Kover coverage verification.
-Some `*IntegrationTest` tests use Testcontainers and require Docker.
-
-Generate the backend HTML coverage report:
-
-```bash
 ./gradlew :backend:koverHtmlReport
 ```
 
@@ -345,15 +293,10 @@ Backend coverage report:
 backend/build/reports/kover/html/index.html
 ```
 
-Run frontend verification:
+Frontend:
 
 ```bash
 ./gradlew :frontend:check
-```
-
-Generate frontend coverage through the frontend check or directly:
-
-```bash
 cd frontend
 npm run test:coverage
 ```
@@ -364,7 +307,7 @@ Frontend coverage report:
 frontend/coverage/index.html
 ```
 
-Run full project verification:
+Full default verification:
 
 ```bash
 ./gradlew check
@@ -394,37 +337,28 @@ npm run e2e
 
 ## Troubleshooting
 
-### First startup is slow
+### First Startup Is Slow
 
 The backend may download local ONNX files, GGUF model files, and a
 platform-specific `llama-server` archive, then index bundled subject documents.
 Watch backend logs until startup completes.
 
-### Health is OUT_OF_SERVICE
+### Health Is OUT_OF_SERVICE
 
 `OUT_OF_SERVICE` during startup usually means the application is still indexing
 documents or initializing managed local runtimes. Retry `/actuator/health`
 after startup logs report readiness.
 
-### Docker or PostgreSQL fails
-
-Check Docker is running and port `5432` is free:
+### Docker Or PostgreSQL Fails
 
 ```bash
 docker compose ps
 docker compose logs --tail=100 db
-```
-
-If needed, restart the local database:
-
-```bash
 docker compose down
 docker compose up -d db
 ```
 
-### Ollama model is unavailable
-
-Make sure Ollama is running and the configured models are pulled:
+### Ollama Model Is Unavailable
 
 ```bash
 ollama serve
@@ -433,7 +367,7 @@ ollama pull nomic-embed-text:v1.5
 ollama list
 ```
 
-### Embedded model is unavailable
+### Embedded Model Is Unavailable
 
 Check backend logs. The model may still be downloading, the local GGUF file may
 be missing, or managed `llama-server` may have failed to start.
@@ -445,14 +379,23 @@ To force fresh local asset downloads:
 ./gradlew :backend:run
 ```
 
-### Frontend cannot call backend
+### Frontend Cannot Call Backend
 
 Make sure the backend is running on `http://localhost:8080`. If using another
-port, run the frontend with:
+port:
 
 ```bash
 VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 ```
+
+## For Reviewers
+
+- Fastest path: run [Quick Start](#quick-start), then use the UI.
+- RAG design: [Architecture](docs/ARCHITECTURE.md).
+- Technical decisions: [ADR index](docs/README.md#decision-records).
+- Database schema: [Database Schema](docs/DATABASE_SCHEMA.md).
+- Configuration details: [Configuration Reference](docs/CONFIGURATION.md).
+- Delivery history and remaining work: [Implementation Plan](docs/IMPLEMENTATION_PLAN.md).
 
 ## Project Agents
 
