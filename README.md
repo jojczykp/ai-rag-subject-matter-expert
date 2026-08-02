@@ -3,33 +3,20 @@
 AI RAG Subject Matter Expert is a RAG application with a Kotlin Spring Boot
 backend and a React, TypeScript, and Vite frontend. It lets a user choose a
 subject, an embedding model, and a chat model, then asks questions against
-static document knowledge bundled with the application.
+static document knowledge bundled with the application. The application is
+99% vibe coded with Codex.
 
 The codebase demonstrates:
 
-- pragmatic Kotlin and Spring Boot backend development;
-- PostgreSQL + pgvector persistence and vector retrieval;
-- provider-neutral chat model routing;
-- local Ollama integration;
-- embedded local GGUF models through a managed `llama-server` process;
-- OpenAI-compatible and Hugging Face TGI-style cloud adapter foundations;
-- a usable React frontend with tests and coverage;
+- Pragmatic Kotlin and Spring Boot backend development.
+- PostgreSQL + pgvector persistence and vector retrieval.
+- Provider-neutral chat model routing.
+- Local Ollama integration.
+- Embedded local GGUF models through a managed `llama-server` process.
+- OpenAI-compatible and Hugging Face TGI-style cloud adapter foundations.
+- An usable React frontend with tests and coverage.
 - Codex-assisted development using GPT-5.5, agents, skills, ADRs, and an
   implementation plan kept in sync with the code.
-
-## Requirements
-
-Backend:
-
-- JDK 26
-- Gradle 9.5.1 through the included Gradle Wrapper
-- Docker for PostgreSQL, Docker Compose, and Testcontainers integration tests
-- Optional: Ollama for the configured local Ollama chat and embedding models
-
-Frontend:
-
-- Node.js 25.2.1
-- npm 11.12.1
 
 Main technologies:
 
@@ -40,12 +27,26 @@ Main technologies:
 - Spring Data JDBC and `JdbcClient`
 - Kover backend coverage
 - React, TypeScript, Vite, Vitest, React Testing Library, MSW, Playwright
+- Gradle 9.5.1 through the included Gradle Wrapper
 
 ## Quick Start
 
+### Requirements
+
+Backend:
+- JDK 26
+- Docker for PostgreSQL, Docker Compose, and Testcontainers integration tests
+- Optional: Ollama for the configured local Ollama chat and embedding models
+
+Frontend:
+- Node.js 25.2.1
+- npm 11.12.1
+
+### Run
+
 Clone this repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
 ```
 Enter cloned repository folder:
 ```bash
