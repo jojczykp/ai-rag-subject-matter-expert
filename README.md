@@ -1,102 +1,187 @@
 # AI RAG Subject Matter Expert
 
-AI Subject Matter Expert is a Kotlin Spring Boot backend with a separate React
-and Vite frontend. The backend exposes REST endpoints for model discovery and
-chat, plus Spring Boot Actuator health and info endpoints.
+AI RAG Subject Matter Expert is a RAG application with a Kotlin Spring Boot
+backend and a React, TypeScript, and Vite frontend. It lets a user choose a
+subject, an embedding model, and a chat model, then asks questions against
+static document knowledge bundled with the application.
 
-This project is vibe-coded with Codex using GPT-5, project agents, and
-iteratively improved skills. The workflow starts by documenting requirements,
-architecture, and decisions, then implements code according to that documented
-plan.
+The codebase demonstrates:
+
+- pragmatic Kotlin and Spring Boot backend development;
+- PostgreSQL + pgvector persistence and vector retrieval;
+- provider-neutral chat model routing;
+- local Ollama integration;
+- embedded local GGUF models through a managed `llama-server` process;
+- OpenAI-compatible and Hugging Face TGI-style cloud adapter foundations;
+- a usable React frontend with tests and coverage;
+- Codex-assisted development using GPT-5.5, agents, skills, ADRs, and an
+  implementation plan kept in sync with the code.
 
 ## Requirements
 
 Backend:
 
 - JDK 26
-- Kotlin 2.4.0
-- Spring Boot 4.1.0
-- Gradle 9.5.1 through the wrapper
-- Gradle Wrapper included in this repository
-- Kover for coverage verification
+- Gradle 9.5.1 through the included Gradle Wrapper
 - Docker for PostgreSQL, Docker Compose, and Testcontainers integration tests
+- Optional: Ollama for the configured local Ollama chat and embedding models
 
 Frontend:
 
 - Node.js 25.2.1
 - npm 11.12.1
-- React, TypeScript, and Vite
 
-## Build and Run
+Main technologies:
 
-Run commands from the repository root.
+- Kotlin 2.4.0
+- Spring Boot 4.1.0
+- PostgreSQL + pgvector
+- Flyway
+- Spring Data JDBC and `JdbcClient`
+- Kover backend coverage
+- React, TypeScript, Vite, Vitest, React Testing Library, MSW, Playwright
 
-### Models
+## Quick Start
 
-By default, file-backed local models and runtimes download their missing files
-during startup when their `download-missing-assets-on-startup` flag is enabled.
-The example configuration enables it for the local ONNX embedding model, the
-embedded GGUF chat models, and the platform-matching embedded `llama-server`
-runtime archive.
-
-To force these files to be downloaded again on the next startup, remove the
-local copies first:
-
+Clone this repository:
 ```bash
-./gradlew :backend:cleanDownloadedModelAssets
+git clone <repository-url>
+```
+Enter cloned repository folder:
+```bash
+cd ai-subject-matter-expert
 ```
 
-#### Embedded local models on llama-server
+Terminal 1 - Run database:
+```bash
+docker compose up
+```
 
-If you want to use the bundled `embedded-qwen-0-5b`,
-`embedded-qwen-1-5b`, `embedded-qwen-3b`, and `embedded-mistral-7b`
-chat models.
-
-Startup downloads install the matching `llama-server` archive for macOS Apple
-Silicon, macOS Intel, Linux x64, or Windows x64.
-
-### Ollama
-
-The default configuration enables the local Ollama chat model and the
-`ollama-nomic-embed` embedding model. Start Ollama and pull the configured
-models if they are not already available:
-
+Terminal 2 - Run local ollama server (optional):
 ```bash
 ollama serve
 ```
 
-In another terminal:
-
+Terminal 3 - Download ollama assets (optional):
 ```bash
 ollama pull llama3.2
 ollama pull nomic-embed-text:v1.5
 ```
 
+Terminal 4 - Run application:
 ```bash
-ollama list
+./gradlew --parallel run
 ```
 
-To run without Ollama, disable the `local-ollama-llama` chat model and
-`ollama-nomic-embed` embedding model in `backend/src/main/resources/application.yml`.
+Open the UI:
+```bash
+open http://localhost:5173
+```
+
+Useful backend URLs:
+```text
+http://localhost:8080/actuator/health
+http://localhost:8080/actuator/info
+http://localhost:8080/subjects
+http://localhost:8080/embedding-models
+http://localhost:8080/chat-models
+```
+
+The first backend startup can take noticeably longer because enabled local
+model assets and the platform-matching `llama-server` archive may be downloaded
+before Spring finishes startup. Static subject documents are also indexed into
+PostgreSQL before the application becomes ready.
+
+## First Run Notes
+
+By default, missing file-backed model assets are downloaded on startup when
+their `download-missing-assets-on-startup` flag is enabled in
+`backend/src/main/resources/application.yml`.
+
+The default local setup uses:
+
+| Area | Default |
+| --- | --- |
+| Subject | `passive-house` |
+| Embedding model | `ollama-nomic-embed` |
+| Chat model | `embedded-mistral-7b` |
+| Database | PostgreSQL + pgvector on `localhost:5432` |
+| Backend | `http://localhost:8080` |
+| Frontend | `http://localhost:5173` |
+
+During startup, `/actuator/health` may temporarily report `OUT_OF_SERVICE`.
+That usually means startup indexing or runtime initialization is still in
+progress. When the application is ready, health should become `UP`.
+
+Downloaded model assets are ignored by git. To force the application to
+download them again on the next startup:
+
+```bash
+./gradlew :backend:cleanDownloadedModelAssets
+```
+
+## What To Try
+
+In the UI:
+
+- Switch between `Passive House Architecture Expert` and `Culinary Expert`.
+- Compare `Ollama Nomic Embed` and `Local BGE Small` retrieval behavior.
+- Compare `Local Ollama Llama` with embedded `Qwen` or `Mistral` chat models.
+- Inspect model availability, mode, privacy, and runtime details.
+- Use the default subject question, then edit it and send your own.
+
+The application keeps chat history in browser memory only. It does not persist
+chat prompts, responses, or conversations.
+
+## Architecture at a glance
+
+- React UI.
+- Spring Boot REST API.
+- Configured static subjects.
+- Bundled `.txt` documents knowledge base.
+- Deterministic chunks.
+- PostgreSQL + pgvector embeddings.
+- Selected embedding model for retrieval.
+- Selected chat model for answer generation.
+
+Supported model styles:
+
+- Embedded offline chat models via local `GGUF` files and managed `llama-server`.
+- Local server models through Ollama on `localhost`.
+- OpenAI-compatible online providers.
+- Hugging Face TGI-compatible online endpoints.
+- Local ONNX and Ollama embedding models.
+
+See [Architecture](docs/ARCHITECTURE.md) and
+[Model Runtime Integration](docs/ADR-003-model-runtime-integration.md) for the
+full design.
+
+## Build And Run
 
 ### Database
 
-Make sure previous instance is no longer running:
+Start PostgreSQL + pgvector:
+
+```bash
+docker compose up -d db
+```
+
+Check database container status:
 
 ```bash
 docker compose ps
 ```
 
-Remove if necessary:
+Follow database logs:
 
 ```bash
-docker compose down
+docker compose logs -f db
 ```
 
-Start the database:
+Stop the database:
 
 ```bash
-docker compose up -d db
+docker compose stop db
 ```
 
 The default local database connection is:
@@ -108,306 +193,38 @@ jdbc:postgresql://localhost:5432/aisme
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
 
-To view logs (i.e. last 100 lines):
-
-```bash
-docker compose logs --tail=100 db
-```
-
-To follow logs:
-
-```bash
-docker compose logs -f db
-```
-
-To stop:
-
-```bash
-docker compose stop db
-```
-
-To restart later:
-
-```bash
-docker compose start db
-```
-
 ### Backend
 
-#### Build
-
-Docker must be running for the backend integration tests executed by the
-backend build.
+Build and verify the backend:
 
 ```bash
 ./gradlew :backend:clean :backend:build
 ```
 
-#### Run
+Run the backend:
 
 ```bash
 ./gradlew :backend:run
 ```
 
-#### Check API
-
-The backend API and actuator endpoints are served on port `8080`.
-
-Check application health:
-
-```bash
-curl -s http://localhost:8080/actuator/health | jq .
-```
-
-Expected response:
-
-```json
-{
-  "status": "UP",
-  "groups": ["liveness", "readiness"],
-  "components": {
-    "db": {
-      "status": "UP",
-      "details": {
-        "database": "PostgreSQL",
-        "validationQuery": "isValid()"
-      }
-    }
-  },
-  ...
-}
-```
-
-For some period of time you may notice `OUT_OF_SERVICE` status, this means indexing is still in progress.
-
-View application info:
-
-```bash
-curl -s http://localhost:8080/actuator/info | jq .
-```
-
-Expected response:
-
-```json
-{
-  "app": {
-    "name": "AI RAG Subject Matter Expert",
-    "description": "Backend RAG application for subject-matter chat."
-  }
-}
-```
-
-View the configured models:
-
-```bash
-curl -s http://localhost:8080/chat-models | jq .
-```
-
-The response includes each model's availability, capabilities, runtime
-requirements, and whether prompts may leave the local machine.
-
-View indexed bundled subjects:
-
-```bash
-curl -s http://localhost:8080/subjects | jq .
-```
-
-Subjects are defined in `aisme.subjects`. Each enabled subject points to its
-own bundled document resource folder and is indexed during startup.
-
-View the configured embedding models:
-
-```bash
-curl -s http://localhost:8080/embedding-models | jq .
-```
-
-The response includes configured embedding model ids, runtime type, dimensions,
-and whether the model is currently enabled for indexing.
-
-Send a sample chat request:
-
-```bash
-curl -s http://localhost:8080/chat \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "subjectId": "culinary-expert",
-    "modelId": "local-ollama-llama",
-    "embeddingModelId": "local-bge-small",
-    "message": "How should I cook rice?"
-  }' | jq .
-```
+The backend listens on `http://localhost:8080`.
 
 ### Frontend
 
-#### Build
-
-Install frontend dependencies and build the production assets:
-
-```bash
-cd frontend
-npm run clean
-npm ci
-npm run format:check
-npm run lint
-npm run test:coverage
-npm run build
-```
-
-Or build the frontend from the repository root through Gradle:
+Build the frontend from the repository root:
 
 ```bash
 ./gradlew :frontend:clean :frontend:build
 ```
 
-#### Run
-
-```bash
-cd frontend
-npm ci
-npm run dev
-```
-
-Or run the frontend from the repository root through Gradle:
+Run the frontend:
 
 ```bash
 ./gradlew :frontend:run
 ```
 
-### Both
-
-#### Build
-
-Alternatively, having models downloaded, build both backend and frontend from the repository root:
-
-```bash
-./gradlew build
-```
-
-The root `build` task depends on `:backend:build` and `:frontend:build`.
-
-#### Run
-
-Run backend and frontend together from the repository root:
-
-```bash
-./gradlew --parallel run
-```
-
-This starts `:backend:run` and `:frontend:run` in parallel. The frontend Vite
-server usually serves the UI at `http://localhost:5173` and calls the backend
-API at `http://localhost:8080`.
-
-## Development
-
-### Backend
-
-Run normal backend verification:
-
-```bash
-./gradlew :backend:check
-```
-
-`:backend:check` runs the backend test suite and Kover coverage verification.
-Some tests named `*IntegrationTest` use Testcontainers and require Docker.
-
-Docker is required to execute PostgreSQL/pgvector Testcontainers tests.
-
-When debugging, run focused backend verification tasks directly:
-
-```bash
-./gradlew :backend:test
-./gradlew :backend:koverVerify
-```
-
-Generate the backend HTML coverage report when a local report is useful:
-
-```bash
-./gradlew :backend:koverHtmlReport
-```
-
-The generated backend coverage report is available at
-[backend/build/reports/kover/html/index.html](backend/build/reports/kover/html/index.html):
-
-```text
-backend/build/reports/kover/html/index.html
-```
-
-Optional Ollama container tests are tagged separately because they pull and
-start the Ollama Docker image and may pull a small model for the model-backed
-chat-flow test. Run them explicitly:
-
-```bash
-./gradlew :backend:ollamaTest
-```
-
-Optional OpenAI-compatible adapter flow tests are also tagged separately. They
-use a local mock HTTP server, not a real cloud provider:
-
-```bash
-./gradlew :backend:openAiCompatibleTest
-```
-
-Optional Hugging Face TGI adapter flow tests are tagged the same way. They use
-a local mock HTTP server, not a real Hugging Face endpoint:
-
-```bash
-./gradlew :backend:huggingFaceTgiTest
-```
-
-Optional real ONNX embedding model tests require local ONNX model assets. Run
-them explicitly after startup download has populated `backend/models`:
-
-```bash
-./gradlew :backend:onnxModelTest
-```
-
-The default test image is `ollama/ollama:latest`, and the default model-backed
-test model is `tinyllama:latest`. Override them when needed:
-
-```bash
-./gradlew :backend:ollamaTest \
-  -Daisme.ollama.test.image=ollama/ollama:latest \
-  -Daisme.ollama.test.model=tinyllama:latest
-```
-
-Run full project verification before final handoff when practical. The Gradle
-root `check` task depends on `:backend:check` and `:frontend:check`:
-
-```bash
-./gradlew check
-```
-
-Playwright browser end-to-end tests are not part of the default Gradle `check`
-task yet. Run them explicitly from `frontend/`:
-
-```bash
-cd frontend
-npm run e2e
-```
-
-### Frontend
-
-The frontend is a React, TypeScript, and Vite application in `frontend/`.
-
-Run the development UI from the repository root:
-
-```bash
-./gradlew :frontend:run
-```
-
-The Gradle task installs dependencies with `npm ci` when needed and starts the
-Vite development server.
-
-Alternatively, run frontend npm commands directly from `frontend/`:
-
-```bash
-cd frontend
-npm ci
-npm run dev
-```
-
-The Vite development server serves the UI on the printed local URL, usually
-`http://localhost:5173`. The frontend calls the Spring Boot backend through
+The Vite development server usually serves the UI at
+`http://localhost:5173`. The frontend calls the backend through
 `VITE_BACKEND_API_BASE_URL`, which defaults to `http://localhost:8080`.
 
 Override the backend URL when needed:
@@ -416,370 +233,219 @@ Override the backend URL when needed:
 VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 ```
 
-Run frontend-only verification:
+### Both
+
+Build backend and frontend:
 
 ```bash
-cd frontend
-npm run clean
-npm run format:check
-npm run lint
-npm run test
-npm run test:coverage
-npm run typecheck
-npm run build
+./gradlew build
 ```
 
-From the project root, run the frontend verification aggregate:
+Run backend and frontend together:
+
+```bash
+./gradlew --parallel run
+```
+
+The root `run` task must use `--parallel` because backend and frontend dev
+servers are both long-running processes.
+
+## API Checks
+
+Check health:
+
+```bash
+curl -s http://localhost:8080/actuator/health | jq .
+```
+
+View application info:
+
+```bash
+curl -s http://localhost:8080/actuator/info | jq .
+```
+
+List subjects:
+
+```bash
+curl -s http://localhost:8080/subjects | jq .
+```
+
+List embedding models:
+
+```bash
+curl -s http://localhost:8080/embedding-models | jq .
+```
+
+List chat models:
+
+```bash
+curl -s http://localhost:8080/chat-models | jq .
+```
+
+Send a sample chat request:
+
+```bash
+curl -s http://localhost:8080/chat \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "subjectId": "passive-house",
+    "modelId": "local-ollama-llama",
+    "embeddingModelId": "ollama-nomic-embed",
+    "message": "What are the biggest Passive House design risks?"
+  }' | jq .
+```
+
+## Common Configuration Changes
+
+Most local behavior is configured in
+`backend/src/main/resources/application.yml`.
+
+Useful first changes:
+
+- `aisme.subjects.default-subject-id`: choose the subject preselected by the UI.
+- `aisme.embedding.default-model-id`: choose the default embedding model.
+- `aisme.chat.default-model-id`: choose the default chat model.
+- `aisme.subjects.definitions.<subject-id>.documents.chunk-size`: tune chunk
+  size per subject.
+- `aisme.subjects.definitions.<subject-id>.documents.chunk-overlap`: tune chunk
+  overlap per subject.
+- `aisme.chat.retrieved-chunk-limit`: tune how many chunks are sent to the
+  selected chat model.
+- `aisme.chat.models.<model-id>.enabled`: show or hide a chat model.
+- `aisme.embedding.models.<model-id>.enabled`: enable or disable an embedding
+  model for indexing and retrieval.
+- `download-missing-assets-on-startup`: control startup downloads for local
+  file-backed runtime and model assets.
+
+Full configuration reference:
+
+- [Configuration Reference](docs/CONFIGURATION.md)
+
+## Development
+
+Run backend verification:
+
+```bash
+./gradlew :backend:check
+```
+
+`:backend:check` runs the backend test suite and Kover coverage verification.
+Some `*IntegrationTest` tests use Testcontainers and require Docker.
+
+Generate the backend HTML coverage report:
+
+```bash
+./gradlew :backend:koverHtmlReport
+```
+
+Backend coverage report:
+
+```text
+backend/build/reports/kover/html/index.html
+```
+
+Run frontend verification:
 
 ```bash
 ./gradlew :frontend:check
 ```
 
-`npm run clean` empties `frontend/dist`, and `npm run build` also empties it
-before writing production frontend assets. Generated frontend assets remain
-build output and are not committed to source control.
+Generate frontend coverage through the frontend check or directly:
 
-Run browser end-to-end tests explicitly:
+```bash
+cd frontend
+npm run test:coverage
+```
+
+Frontend coverage report:
+
+```text
+frontend/coverage/index.html
+```
+
+Run full project verification:
+
+```bash
+./gradlew check
+```
+
+Optional backend integration tests:
+
+```bash
+./gradlew :backend:ollamaTest
+./gradlew :backend:openAiCompatibleTest
+./gradlew :backend:huggingFaceTgiTest
+./gradlew :backend:onnxModelTest
+```
+
+Playwright browser end-to-end tests are run explicitly:
 
 ```bash
 cd frontend
 npm run e2e
 ```
 
-After `npm run test:coverage`, the frontend coverage report is generated at
-[frontend/coverage/index.html](frontend/coverage/index.html):
+## Troubleshooting
 
-```text
-frontend/coverage/index.html
+### First startup is slow
+
+The backend may download local ONNX files, GGUF model files, and a
+platform-specific `llama-server` archive, then index bundled subject documents.
+Watch backend logs until startup completes.
+
+### Health is OUT_OF_SERVICE
+
+`OUT_OF_SERVICE` during startup usually means the application is still indexing
+documents or initializing managed local runtimes. Retry `/actuator/health`
+after startup logs report readiness.
+
+### Docker or PostgreSQL fails
+
+Check Docker is running and port `5432` is free:
+
+```bash
+docker compose ps
+docker compose logs --tail=100 db
 ```
 
-The initial frontend coverage threshold is 70%.
+If needed, restart the local database:
 
-## Configuration
-
-### Reference
-
-Application properties are configured under the `aisme` prefix.
-
-| Property | Default | Description |
-| --- | --- | --- |
-| `aisme.api.cors.allowed-origins` | `http://localhost:5173` | Browser origins allowed to call the backend API. |
-| `aisme.subjects.default-subject-id` | `culinary-expert` | Subject preselected by API clients and the UI. |
-| `aisme.subjects.definitions.<subject-id>.enabled` | `true` in example config | Whether this subject is indexed and selectable. |
-| `aisme.subjects.definitions.<subject-id>.display-order` | optional | Sort order for subject selectors and catalog responses. |
-| `aisme.subjects.definitions.<subject-id>.display-name` | derived from id when omitted | Human-readable subject name for API clients and the UI. |
-| `aisme.subjects.definitions.<subject-id>.documents.location` | required | Bundled document resource folder for this subject. |
-| `aisme.subjects.definitions.<subject-id>.documents.chunk-size` | `700` | Maximum character count per indexed document chunk for this subject. |
-| `aisme.subjects.definitions.<subject-id>.documents.chunk-overlap` | `100` | Character overlap between adjacent chunks for this subject. Must be smaller than `chunk-size`. |
-| `aisme.embedding.runtimes.<runtime-id>.type` | required | Embedding runtime adapter: `ONNX` or `OLLAMA`. |
-| `aisme.embedding.runtimes.<runtime-id>.base-url` | Ollama only | Ollama server base URL for embedding generation. |
-| `aisme.embedding.api-timeout` | `60s` | Timeout for embedding generation provider calls. |
-| `aisme.embedding.default-model-id` | `ollama-nomic-embed` | Embedding model preselected by API clients and the UI. |
-| `aisme.embedding.models.<model-id>.enabled` | `true` in example config | Whether this embedding model is indexed and selectable for retrieval. |
-| `aisme.embedding.models.<model-id>.download-missing-assets-on-startup` | `true` in example ONNX config | Whether missing local files for this embedding model are downloaded during application startup. |
-| `aisme.embedding.models.<model-id>.display-order` | optional | Sort order for embedding model selectors and catalog responses. |
-| `aisme.embedding.models.<model-id>.display-name` | optional | Human-readable embedding model name for API clients. |
-| `aisme.embedding.models.<model-id>.version` | required when enabled | Embedding model version stored with embeddings. |
-| `aisme.embedding.models.<model-id>.dimensions` | required when enabled | Embedding vector dimension. |
-| `aisme.embedding.models.<model-id>.assets[].label` | local assets only | Human-readable asset label used in startup download logs. |
-| `aisme.embedding.models.<model-id>.assets[].path` | local assets only | Local file path for a downloadable model asset. |
-| `aisme.embedding.models.<model-id>.assets[].url` | local assets only | Source URL used when startup download is enabled and the asset file is missing. |
-| `aisme.embedding.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.embedding.runtimes`. |
-| `aisme.embedding.models.<model-id>.runtime.model-path` | ONNX only | ONNX model file path. |
-| `aisme.embedding.models.<model-id>.runtime.tokenizer-path` | ONNX only | tokenizer file path. |
-| `aisme.embedding.models.<model-id>.runtime.model-name` | Ollama only | Provider model name for Ollama embedding models. |
-| `aisme.embedding.model-availability.timeout` | `5s` | Timeout for embedding runtime availability checks. |
-| `aisme.embedding.model-availability.cache-ttl` | `5s` | Time to cache embedding availability check results. |
-| `aisme.chat.api-timeout` | `60s` | Timeout for model chat generation. |
-| `aisme.chat.retrieved-chunk-limit` | `5` | Maximum number of retrieved chunks sent as chat context. |
-| `aisme.chat.default-model-id` | `embedded-mistral-7b` | Chat model preselected by API clients and the UI. |
-| `aisme.chat.model-availability.timeout` | `5s` | Timeout for runtime availability checks. |
-| `aisme.chat.model-availability.cache-ttl` | `5s` | Time to cache availability check results. |
-| `aisme.chat.runtimes.<runtime-id>.type` | required | Runtime adapter: `OLLAMA`, `OPENAI_COMPATIBLE`, `HUGGING_FACE_TGI`, `EMBEDDED_LLAMA`, or `SPRING_AI`. |
-| `aisme.chat.runtimes.<runtime-id>.base-url` | runtime-specific | Provider base URL for Ollama, OpenAI-compatible, and Hugging Face endpoint runtimes. |
-| `aisme.chat.runtimes.<runtime-id>.api-key` | runtime-specific | Provider API key. OpenAI-compatible online models are `MISCONFIGURED` when this is missing. |
-| `aisme.chat.runtimes.<runtime-id>.asset-directory` | embedded only | Base directory for local embedded llama assets. |
-| `aisme.chat.runtimes.<runtime-id>.server-executable-path` | embedded only | Path to the managed `llama-server` executable. |
-| `aisme.chat.runtimes.<runtime-id>.download-missing-assets-on-startup` | `true` in embedded example | Whether missing local runtime files are downloaded during application startup. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].label` | local runtime assets only | Human-readable runtime asset label used in startup download logs. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].path` | local runtime assets only | Local file path expected after download or archive installation. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].url` | local runtime assets only | Source URL used when startup download is enabled and the asset file is missing. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].os` | optional | Normalized OS selector: `macos`, `linux`, or `windows`. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].arch` | optional | Normalized CPU selector: `aarch64` or `x86_64`. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].archive.format` | archive assets only | Archive type: `TAR_GZ` or `ZIP`. |
-| `aisme.chat.runtimes.<runtime-id>.assets[].archive.executable-name` | archive assets only | Executable file name inside the downloaded archive. |
-| `aisme.chat.models.<model-id>` | required | Map entry whose key is the user-selected chat model id used in `/chat` requests. |
-| `aisme.chat.models.<model-id>.enabled` | `true` in example config | Whether the chat model is visible and selectable. |
-| `aisme.chat.models.<model-id>.download-missing-assets-on-startup` | `true` in embedded examples | Whether missing local files for this chat model are downloaded during application startup. |
-| `aisme.chat.models.<model-id>.display-order` | optional | Sort order for API and UI display. Lower values appear first. |
-| `aisme.chat.models.<model-id>.display-name` | required when enabled | Human-readable model name. |
-| `aisme.chat.models.<model-id>.description` | optional | Short model description for clients and selection UIs. |
-| `aisme.chat.models.<model-id>.assets[].label` | local assets only | Human-readable asset label used in startup download logs. |
-| `aisme.chat.models.<model-id>.assets[].path` | local assets only | Local file path for a downloadable model asset. |
-| `aisme.chat.models.<model-id>.assets[].url` | local assets only | Source URL used when startup download is enabled and the asset file is missing. |
-| `aisme.chat.models.<model-id>.runtime.id` | required when enabled | Runtime id from `aisme.chat.runtimes`. |
-| `aisme.chat.models.<model-id>.runtime.model-name` | runtime-specific | Provider model name for Ollama, OpenAI-compatible, and embedded llama models. |
-| `aisme.chat.models.<model-id>.runtime.gguf-file` | embedded only | GGUF file path relative to the embedded runtime `asset-directory`. |
-| `aisme.chat.models.<model-id>.runtime.context-size` | embedded only | Context size passed to `llama-server`. |
-| `aisme.chat.models.<model-id>.runtime.runtime-arguments` | `[]` | Extra arguments passed to `llama-server` for embedded models. |
-
-Runtime and mode combinations are intentionally narrow in the initial scope:
-`OLLAMA` uses `LOCAL_SERVER`, `OPENAI_COMPATIBLE` and `HUGGING_FACE_TGI`
-use `ONLINE`, `EMBEDDED_LLAMA` uses `EMBEDDED_OFFLINE`, and `SPRING_AI` uses
-`ONLINE`.
-
-### Local Embedding Model
-
-The default embedding runtime is local ONNX. Model files are configured outside
-the application JAR and are ignored by git:
-
-```yaml
-aisme:
-  embedding:
-    runtimes:
-      local-onnx:
-        type: ONNX
-    models:
-      local-bge-small:
-        enabled: true
-        version: "1.5"
-        dimensions: 384
-        runtime:
-          id: local-onnx
-          model-path: ./models/bge-small-en-v1.5/model.onnx
-          tokenizer-path: ./models/bge-small-en-v1.5/tokenizer.json
-        download-missing-assets-on-startup: true
-        assets:
-          - label: ONNX model
-            path: ./models/bge-small-en-v1.5/model.onnx
-            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/onnx/model.onnx
-          - label: tokenizer
-            path: ./models/bge-small-en-v1.5/tokenizer.json
-            url: https://huggingface.co/BAAI/bge-small-en-v1.5/resolve/main/tokenizer.json
+```bash
+docker compose down
+docker compose up -d db
 ```
 
-The example uses [BAAI/bge-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
-See `Models` for startup-download behavior.
+### Ollama model is unavailable
 
-These files are local runtime assets. They are intentionally excluded from git
-because model binaries are large and can be replaced independently from
-application code.
+Make sure Ollama is running and the configured models are pulled:
 
-The ONNX client loads these files during startup. When startup download is
-disabled, the application fails fast if the configured model or tokenizer file
-is missing.
-
-### Embedded Llama Assets
-
-Embedded offline chat will use local llama.cpp assets. The default models are
-Qwen2.5 Instruct and Mistral 7B Instruct in GGUF format. The default asset
-configuration points to external files outside the application JAR:
-
-```yaml
-aisme:
-  chat:
-    runtimes:
-      embedded-llama:
-        type: EMBEDDED_LLAMA
-        asset-directory: ./models/llama
-        server-executable-path: ./models/llama/bin/llama-server
-        download-missing-assets-on-startup: true
-        assets:
-          - label: llama-server macOS Apple Silicon
-            path: ./models/llama/bin/llama-server
-            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-arm64.tar.gz
-            os: macos
-            arch: aarch64
-            archive:
-              format: TAR_GZ
-              executable-name: llama-server
-          - label: llama-server macOS Intel
-            path: ./models/llama/bin/llama-server
-            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-macos-x64.tar.gz
-            os: macos
-            arch: x86_64
-            archive:
-              format: TAR_GZ
-              executable-name: llama-server
-          - label: llama-server Linux Ubuntu x64
-            path: ./models/llama/bin/llama-server
-            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-ubuntu-x64.tar.gz
-            os: linux
-            arch: x86_64
-            archive:
-              format: TAR_GZ
-              executable-name: llama-server
-          - label: llama-server Windows x64
-            path: ./models/llama/bin/llama-server
-            url: https://github.com/ggml-org/llama.cpp/releases/download/b9892/llama-b9892-bin-win-cpu-x64.zip
-            os: windows
-            arch: x86_64
-            archive:
-              format: ZIP
-              executable-name: llama-server.exe
-    models:
-      embedded-qwen-0-5b:
-        enabled: true
-        display-order: 10
-        display-name: Embedded Qwen 0.5B
-        description: Fully offline embedded model backed by a local GGUF asset.
-        runtime:
-          id: embedded-llama
-          model-name: qwen2.5-0.5b-instruct-q4_k_m
-          gguf-file: models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-          context-size: 2048
-          runtime-arguments: []
-        download-missing-assets-on-startup: true
-        assets:
-          - label: GGUF model
-            path: ./models/llama/models/qwen2.5-0.5b-instruct-q4_k_m.gguf
-            url: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf
-      embedded-qwen-1-5b:
-        enabled: true
-        display-order: 20
-        display-name: Embedded Qwen 1.5B
-        description: Smarter fully offline embedded model backed by a local GGUF asset.
-        runtime:
-          id: embedded-llama
-          model-name: qwen2.5-1.5b-instruct-q4_k_m
-          gguf-file: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-          context-size: 2048
-          runtime-arguments: []
-        download-missing-assets-on-startup: true
-        assets:
-          - label: GGUF model
-            path: ./models/llama/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
-            url: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf
-      embedded-qwen-3b:
-        enabled: true
-        display-order: 30
-        display-name: Embedded Qwen 3B
-        description: Larger fully offline embedded model backed by a local GGUF asset.
-        runtime:
-          id: embedded-llama
-          model-name: qwen2.5-3b-instruct-q4_k_m
-          gguf-file: models/qwen2.5-3b-instruct-q4_k_m.gguf
-          context-size: 2048
-          runtime-arguments: []
-        download-missing-assets-on-startup: true
-        assets:
-          - label: GGUF model
-            path: ./models/llama/models/qwen2.5-3b-instruct-q4_k_m.gguf
-            url: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf
-      embedded-mistral-7b:
-        enabled: true
-        display-order: 40
-        display-name: Embedded Mistral 7B
-        description: Heavier fully offline embedded model for stronger local answers.
-        runtime:
-          id: embedded-llama
-          model-name: mistral-7b-instruct-v0.3-q4_k_m
-          gguf-file: models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-          context-size: 2048
-          runtime-arguments: []
-        download-missing-assets-on-startup: true
-        assets:
-          - label: GGUF model
-            path: ./models/llama/models/mistral-7b-instruct-v0.3-q4_k_m.gguf
-            url: https://huggingface.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf
+```bash
+ollama serve
+ollama pull llama3.2
+ollama pull nomic-embed-text:v1.5
+ollama list
 ```
 
-Embedded models are enabled by default. Each becomes selectable
-only when its local llama.cpp runtime assets are installed and pass startup
-availability checks. `asset-directory` is the base directory for local GGUF
-model files and related metadata. `server-executable-path` points to the local
-`llama-server` binary. For enabled embedded models, the application starts one
-managed llama-server process per model on an ephemeral loopback port and sends
-chat requests to its `/completion` endpoint. Model
-metadata describes GGUF files relative to `asset-directory` and runtime
-arguments.
+### Embedded model is unavailable
 
-Embedded offline asset availability is checked when the application starts.
-After changing local GGUF files or the configured `llama-server` binary, restart
-the application to refresh embedded offline availability. The managed local
-`llama-server` health endpoint must become ready before an embedded model is
-reported as available.
-Managed `llama-server` lifecycle events and process stdout/stderr are written
-to the application logs.
+Check backend logs. The model may still be downloading, the local GGUF file may
+be missing, or managed `llama-server` may have failed to start.
 
-### Local Ollama Model
+To force fresh local asset downloads:
 
-The default chat model entry points to Ollama at `http://localhost:11434`:
-
-```yaml
-aisme:
-  chat:
-    runtimes:
-      local-ollama:
-        type: OLLAMA
-        base-url: http://localhost:11434
-    models:
-      local-ollama-llama:
-        enabled: true
-        display-order: 50
-        display-name: Local Ollama Llama
-        description: Local Ollama model for chat requests when Ollama is running on this machine.
-        runtime:
-          id: local-ollama
-          model-name: llama3.2
+```bash
+./gradlew :backend:cleanDownloadedModelAssets
+./gradlew :backend:run
 ```
 
-The application-owned `aisme.chat.models` configuration is the source of truth
-for selectable chat models. Spring AI Ollama settings are handled by the Ollama
-adapter instead of duplicated in a separate Spring profile.
+### Frontend cannot call backend
 
-### OpenAI-Compatible Cloud Model
+Make sure the backend is running on `http://localhost:8080`. If using another
+port, run the frontend with:
 
-OpenAI-compatible chat providers can be configured as selectable online models:
-
-```yaml
-aisme:
-  chat:
-    runtimes:
-      openai-compatible:
-        type: OPENAI_COMPATIBLE
-        base-url: https://api.openai.com/v1
-        api-key: ${OPENAI_API_KEY}
-    models:
-      cloud-gpt:
-        enabled: true
-        display-order: 60
-        display-name: Cloud GPT
-        description: Online OpenAI-compatible model for cloud-hosted chat requests.
-        runtime:
-          id: openai-compatible
-          model-name: gpt-4.1-mini
+```bash
+VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 ```
-
-The adapter sends non-streaming chat-completion requests to
-`/chat/completions` with bearer-token authentication. If `OPENAI_API_KEY` is
-not set, the application still starts, but the model is reported as
-`MISCONFIGURED` and cannot be used for chat.
-
-### Hugging Face Inference Endpoint / TGI Model
-
-Hugging Face Inference Endpoints can be configured as selectable online models:
-
-```yaml
-aisme:
-  chat:
-    runtimes:
-      hugging-face-tgi:
-        type: HUGGING_FACE_TGI
-        base-url: https://example.endpoints.huggingface.cloud
-        api-key: ${HF_API_KEY}
-    models:
-      hf-mistral:
-        enabled: true
-        display-order: 70
-        display-name: Hugging Face Mistral
-        description: Online Hugging Face endpoint using the TGI-compatible generate API.
-        runtime:
-          id: hugging-face-tgi
-```
-
-The adapter sends non-streaming TGI-compatible requests to `/generate`.
-If `HF_API_KEY` is not set, no bearer token is sent.
 
 ## Project Agents
 
@@ -794,18 +460,14 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 - `tester` creates tests, runs verification, and triages failures.
 - `documenter` keeps Markdown documentation and project guidance in sync.
 
-## Design Documents
+## Documentation
+
+Start with [Documentation Index](docs/README.md).
+
+Key documents:
 
 - [Product Requirements Document](docs/PRD.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Configuration Reference](docs/CONFIGURATION.md)
 - [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
-- [ADR-001: Embedding Generation Strategy](docs/ADR-001-embedding-generation-strategy.md)
-- [ADR-002: Persistence And Vector Search](docs/ADR-002-persistence-and-vector-search.md)
-- [ADR-003: Model Runtime Integration](docs/ADR-003-model-runtime-integration.md)
-- [ADR-004: Integration Testing Strategy](docs/ADR-004-integration-testing-strategy.md)
-- [ADR-005: Subject Document Scope](docs/ADR-005-subject-document-scope.md)
-- [ADR-006: Local Embedding Runtime](docs/ADR-006-local-embedding-runtime.md)
-- [ADR-007: Embedded Llama](docs/ADR-007-embedded-llama.md)
-- [ADR-008: Operational Logging](docs/ADR-008-operational-logging.md)
-- [ADR-009: Frontend UI Architecture](docs/ADR-009-frontend-ui-architecture.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)

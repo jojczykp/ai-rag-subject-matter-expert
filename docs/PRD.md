@@ -2,135 +2,141 @@
 
 ## Product Summary
 
-AI Subject Matter Expert is a backend service that answers questions about
-predefined subjects. Each subject's knowledge base is built from static
-document resources bundled with the application. The first supported content
-format is plain text.
+AI RAG Subject Matter Expert answers questions about predefined subjects using
+static bundled `.txt` documents as the knowledge base. The application exposes
+REST APIs and a lightweight browser UI. Users choose a subject, an embedding
+model for retrieval, and a chat model for answer generation.
 
-The initial product provides REST APIs for chatting with an AI model using
-bundled documents as the reasoning base.
-
-All requirements are TODO until implemented and verified.
+The product supports multiple model runtime styles: local Ollama models,
+embedded offline GGUF chat models through managed `llama-server`, and
+configurable online provider adapters.
 
 ## Problem
 
-Users need a backend application that can answer questions using a curated set
-of domain-specific documents. At this stage, the content is maintained by the
-application owner and bundled with the application, rather than uploaded or
-managed dynamically by API users.
+Users need a small backend-oriented RAG application that can answer questions
+from curated domain documents while making model choice, local/offline behavior,
+and provider availability visible. For this project stage, documents are owned
+by the application and bundled as static resources rather than uploaded at
+runtime.
 
-## Initial Scope
+## Current Scope
 
 - [x] Support multiple predefined static subjects.
-- [ ] Load subject source documents bundled with the application.
-- [ ] Support static bundled `.txt` documents.
-- [ ] Provide a REST endpoint for chatting with the predefined subject.
-- [ ] Use bundled subject documents as the basis for AI reasoning.
-- [ ] Allow the user to choose which configured model to use for a given chat
-      request.
-- [ ] Keep implementation testable with at least 80% unit test coverage.
+- [x] Load subject source documents bundled with the application.
+- [x] Support static bundled `.txt` documents.
+- [x] Provide REST endpoints for subjects, embedding models, chat models, and
+      chat.
+- [x] Provide a React UI for selecting subject, embedding model, and chat model.
+- [x] Use bundled subject documents as the basis for RAG context retrieval.
+- [x] Allow the user to choose which configured chat model to use.
+- [x] Allow the user to choose which configured embedding model to use.
+- [x] Keep implementation testable with backend Kover coverage at or above 80%.
 
 ## Future Scope
 
-- [ ] Let users create, update, and delete subjects.
-- [ ] Let users upload content to subjects at runtime.
-- [ ] Support user authentication and authorization.
-- [ ] Support collaborative multi-user permissions.
-- [ ] Support dynamic document ingestion pipelines.
+- [ ] Add Docker image and container-level acceptance testing.
+- [ ] Let users create, update, and delete subjects at runtime.
+- [ ] Let users upload and delete content at runtime.
+- [ ] Add first-class structured CSV document support.
 - [ ] Support Markdown documents.
 - [ ] Support PDF documents.
 - [ ] Support Word documents.
 - [ ] Support citations and source references in chat answers.
 - [ ] Support streaming chat responses.
-- [ ] Support persisted chat history when there is a clear product need and
-      retention policy.
-- [ ] Build a frontend UI.
+- [ ] Support persisted chat history when there is a clear retention policy.
+- [ ] Support user authentication and authorization.
+- [ ] Add per-model embedded llama prompt mode configuration.
 
 ## Non-Goals
 
-- [ ] Do not provide runtime subject creation in the initial scope.
-- [ ] Do not provide runtime document upload in the initial scope.
-- [ ] Do not expose original bundled files for download in the initial scope.
-- [ ] Do not include document citations or source references in chat responses
-      in the initial scope.
-- [ ] Do not support streaming chat responses in the initial scope.
-- [ ] Do not persist chat prompts, responses, or conversation history in the
-      initial scope.
-- [ ] Do not require user authentication in the initial scope unless requested
-      separately.
-- [ ] Do not guarantee perfect factual accuracy from model responses.
-- [ ] Do not hide when the model lacks enough document context to answer.
-- [ ] Do not couple the product to a single model provider.
+- [x] Do not provide runtime subject creation in the current scope.
+- [x] Do not provide runtime document upload in the current scope.
+- [x] Do not expose original bundled files for download in the current scope.
+- [x] Do not include document citations or source references in chat responses
+      in the current scope.
+- [x] Do not support streaming chat responses in the current scope.
+- [x] Do not persist chat prompts, responses, or conversation history by default.
+- [x] Do not require user authentication in the current scope.
+- [x] Do not guarantee perfect factual accuracy from model responses.
+- [x] Do not couple the product to a single model provider.
 
 ## Users
 
+### Application User
+
+Uses the frontend to choose a subject and model combination, then asks
+questions against the selected subject.
+
+Needs:
+
+- [x] See available subjects.
+- [x] See available embedding and chat models.
+- [x] Understand whether selected models are available.
+- [x] Understand whether prompts stay local or may leave the machine.
+- [x] Send a question and receive a generated answer.
+
 ### API Consumer
 
-An API consumer integrates with the backend to ask questions. This may be a
-future frontend, script, internal tool, or another backend service.
+Integrates directly with the backend REST API.
 
 Needs:
 
 - [x] Ask questions against a selected predefined subject.
-- [ ] Receive predictable JSON responses and errors.
+- [x] Receive predictable JSON responses and errors.
+- [x] Discover configured subjects and models.
 
 ## Core Concepts
 
 ### Subject
 
-The initial application has predefined static subjects. Subjects are configured
-by application owners, and each enabled subject points to a bundled document
-resource folder.
+Subjects are configured by application owners. Each enabled subject has a
+display name, display order, default question, and bundled document folder.
 
 Requirements:
 
 - [x] A subject has a configured id.
 - [x] A subject has a configured display name.
 - [x] A subject has a configured display order for API and UI selectors.
+- [x] A subject has a configured default question.
 - [x] A subject can be enabled or disabled in configuration.
-- [ ] The initial API does not create, update, or delete subjects.
+- [x] The initial API does not create, update, or delete subjects.
 
 ### Static Source Documents
 
 Static source documents are files bundled with the application. They are
 maintained by the application owner and packaged with the service.
 
-Supported initial document types:
-
-- [ ] Plain text `.txt` files.
-
 Requirements:
 
+- [x] Plain text `.txt` files are supported.
 - [x] Each bundled document belongs to one predefined subject.
-- [ ] Each bundled document has a stable id or resource path.
-- [ ] The service fails startup when configured documents cannot be loaded.
-- [ ] The service fails startup when no supported documents are found.
-- [ ] The initial API does not upload, update, or delete documents at runtime.
-- [ ] The initial API does not expose document-management endpoints.
+- [x] Each bundled document has a stable resource path identity.
+- [x] The service fails startup when configured documents cannot be loaded.
+- [x] The service fails startup when no supported documents are found.
+- [x] The initial API does not upload, update, or delete documents at runtime.
+- [x] The initial API does not expose document-management endpoints.
 
 ### Chat
 
 Chat lets a user ask a question against a selected predefined subject. The
-answer should be generated using relevant context retrieved from that subject's
-bundled documents.
+answer is generated using relevant chunks retrieved from that subject's bundled
+documents.
 
 Requirements:
 
 - [x] A chat request includes a selected subject id.
-- [x] A chat request includes a user message.
-- [x] A chat request includes a selected model id.
+- [x] A chat request includes a selected chat model id.
+- [x] A chat request includes a selected embedding model id when more than one
+      embedding model is enabled.
+- [x] A chat request includes a non-empty user message.
 - [x] The service retrieves only relevant indexed document chunks for the
       request.
 - [x] The service sends the user message and retrieved chunks to the selected
       model.
-- [ ] The response includes the generated answer.
-- [ ] The response identifies the model used.
-- [ ] The response should indicate when there is not enough document context to
-      answer confidently.
+- [x] The response includes the generated answer.
+- [x] The response identifies the chat model used.
 
 ## REST API Requirements
-
-Endpoint names are proposed and may be refined during technical design.
 
 ### Chat API
 
@@ -143,11 +149,11 @@ Endpoint names are proposed and may be refined during technical design.
 - [x] Response body includes `answer`.
 - [x] Response body includes `modelId`.
 - [x] Response is returned as a single non-streaming JSON response.
-- [ ] The initial API does not create or update persisted chat history.
+- [x] The initial API does not create or update persisted chat history.
 
 ### Model API
 
-- [x] `GET /chat-models` lists available models.
+- [x] `GET /chat-models` lists configured chat models.
 - [x] `GET /embedding-models` lists configured embedding models.
 - [x] Model list indicates online, local server, or embedded offline mode.
 - [x] Model list indicates availability status.
@@ -157,7 +163,7 @@ Endpoint names are proposed and may be refined during technical design.
 
 ### Error Responses
 
-Errors should use a consistent JSON shape:
+Errors use a consistent JSON shape:
 
 ```json
 {
@@ -167,104 +173,70 @@ Errors should use a consistent JSON shape:
 }
 ```
 
-## Functional Requirements
-
-### Static Document Loading
-
-- [ ] Discover configured documents bundled with the application.
-- [ ] Validate configured document files at startup or during indexing.
-- [ ] Reject empty documents.
-- [ ] Extract or load text from supported document types.
-- [ ] Split extracted text into searchable chunks.
-- [ ] Use configurable chunking behavior.
-- [ ] Index bundled documents once at startup or application initialization.
-- [ ] Preserve enough metadata for audit and retrieval.
-- [ ] Prepare document chunks for retrieval-augmented generation.
-
-### Subject-Aware Chat
-
-- [x] Require a non-empty user message.
-- [ ] Use only bundled documents from the predefined subject.
-- [ ] Retrieve only the chunks relevant to the user's message.
-- [ ] Return a useful response when no documents are configured.
-- [ ] Return a useful response when the selected model is unavailable.
-- [ ] Avoid exposing internal resource paths unnecessarily.
-
-### Model Selection
-
-- [x] Require `modelId` for chat requests.
-- [x] Validate requested `modelId`.
-- [x] Return a validation error when `modelId` is missing.
-- [ ] Allow model availability to vary by environment.
-- [ ] Support future online, local server, and embedded offline model runtimes.
-
 ## Non-Functional Requirements
 
 ### Reliability
 
 - [x] Return consistent error response shapes.
-- [x] Error responses include `code`, `message`, and optional `details`.
-- [ ] Handle model provider failures gracefully.
-- [ ] Keep service health independent from model availability.
+- [x] Handle unavailable or misconfigured models gracefully.
+- [x] Keep service health independent from optional model availability.
+- [x] Use startup validation for bundled document configuration.
 
 ### Security And Privacy
 
-- [ ] Do not log raw document content by default.
-- [ ] Do not log raw chat prompts or model responses by default.
-- [ ] Do not store raw chat prompts, model responses, or conversation history
+- [x] Do not log raw document content by default.
+- [x] Do not log raw chat prompts or model responses by default.
+- [x] Do not store raw chat prompts, model responses, or conversation history
       by default.
-- [ ] Clearly distinguish online models from offline models.
-- [ ] Keep API credentials out of source control.
-- [ ] Avoid exposing full internal file paths in API responses.
+- [x] Clearly distinguish online models from local and embedded offline models.
+- [x] Keep API credentials out of source control.
 
 ### Performance
 
-- [ ] Non-chat endpoints should respond without invoking AI models.
-- [x] Chat APIs should have configurable timeouts.
-- [x] Do not retry chat generation automatically in the initial scope.
-- [ ] Document extraction and indexing should avoid repeated expensive work per
-      chat request.
-- [ ] Chat requests should not send all bundled document content to the model by
-      default.
-- [ ] Large bundled documents should be designed for future asynchronous
-      indexing if needed.
+- [x] Non-chat endpoints do not invoke chat generation.
+- [x] Chat APIs have configurable timeouts.
+- [x] Chat generation is not retried automatically in the current scope.
+- [x] Document extraction and indexing avoid repeated work per chat request.
+- [x] Chat requests send retrieved chunks rather than all bundled document
+      content.
 
 ### Observability
 
-- [ ] Expose health information through Actuator.
-- [ ] Track request failures by endpoint.
-- [ ] Track document loading or indexing failures.
-- [ ] Track model runtime failures without exposing prompt content.
-- [ ] Track selected model id where safe.
+- [x] Expose health and info through Spring Boot Actuator.
+- [x] Log startup asset downloads, indexing, model runtime lifecycle, and
+      provider failures without logging prompt bodies.
 
 ### Testability
 
-- [ ] Unit test static document discovery.
-- [ ] Unit test chat routing behavior.
-- [ ] Unit test error handling.
-- [ ] Add integration tests for REST endpoints and the static document
+- [x] Unit test static document discovery and chunking.
+- [x] Unit test chat routing behavior.
+- [x] Unit test error handling.
+- [x] Add integration tests for REST endpoints and static document
       indexing/chat flow.
-- [ ] Add integration tests covering persistence and retrieval behavior.
+- [x] Add integration tests covering persistence and retrieval behavior.
 - [x] Use fake model clients in tests.
-- [ ] Maintain at least 80% unit test coverage.
+- [x] Maintain at least 80% backend coverage through Kover verification.
 
 ## Acceptance Criteria
 
-### Minimum Backend API
+### Minimum Application
 
-- [ ] A user can ask a question against the configured subject.
-- [ ] The chat answer uses only bundled documents for the configured subject.
-- [ ] Tests cover static document loading and chat flow.
-- [ ] Kover coverage verification passes.
+- [x] A user can ask a question against a configured subject.
+- [x] The chat answer uses retrieved chunks from the selected subject.
+- [x] The UI can select subject, embedding model, and chat model.
+- [x] Tests cover static document loading, indexing, retrieval, and chat flow.
+- [x] Kover coverage verification passes.
 
 ### Model Runtime Readiness
 
-- [ ] The API can list configured models.
-- [ ] The chat endpoint can reject an unknown model id.
-- [ ] The system design allows online, local server, and embedded offline
-      models.
-- [ ] Embedded offline model support uses llama.cpp with GGUF model files.
+- [x] The API can list configured chat and embedding models.
+- [x] The chat endpoint rejects unknown or unavailable model ids.
+- [x] The system supports online, local server, and embedded offline model
+      runtime patterns.
+- [x] Embedded offline model support uses llama.cpp with GGUF model files.
 
 ## Related Documents
 
 - [Architecture](ARCHITECTURE.md)
+- [Configuration Reference](CONFIGURATION.md)
+- [Implementation Plan](IMPLEMENTATION_PLAN.md)

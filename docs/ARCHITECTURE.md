@@ -284,6 +284,9 @@ refreshes missing or stale embeddings when enabled embedding model metadata or
 chunking strategy changes. The schema diagram is maintained in
 [Database Schema](DATABASE_SCHEMA.md).
 
+Configuration details and common local customization examples are maintained in
+[Configuration Reference](CONFIGURATION.md).
+
 ## Configuration
 
 Configuration should make model availability and runtime mode explicit.
@@ -300,7 +303,7 @@ Configuration should make model availability and runtime mode explicit.
 - [x] Add validation for missing required provider settings.
 - [x] Report missing OpenAI-compatible credentials as model misconfiguration
       instead of failing application startup.
-- [x] Document all configuration properties in README.md.
+- [x] Document all configuration properties in `docs/CONFIGURATION.md`.
 
 Example model catalog configuration:
 
@@ -424,8 +427,9 @@ for the accepted integration testing decision.
 - [x] Document where bundled subject documents live.
 - [x] Document supported model runtimes in README.md.
 - [x] Document local Ollama setup in README.md.
-- [x] Document cloud provider environment variables in README.md.
-- [x] Document embedded offline model installation in README.md.
+- [x] Document cloud provider environment variables in `docs/CONFIGURATION.md`.
+- [x] Document embedded offline model startup asset handling in README.md and
+      `docs/CONFIGURATION.md`.
 - [x] Document model selection behavior in README.md.
 - [x] Keep this design document updated as implementation progresses.
 
