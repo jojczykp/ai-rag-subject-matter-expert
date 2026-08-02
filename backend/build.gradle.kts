@@ -140,6 +140,16 @@ tasks.register("run") {
     dependsOn(tasks.bootRun)
 }
 
+tasks.register("cleanDownloadedModelAssets") {
+    group = "model management"
+    description = "Deletes locally downloaded model and runtime assets so startup can download them again."
+    dependsOn(
+        "cleanLocalEmbeddingModelAssets",
+        "cleanEmbeddedLlamaModel",
+        "cleanEmbeddedLlamaServer",
+    )
+}
+
 kover {
     reports {
         filters {

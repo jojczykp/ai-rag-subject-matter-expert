@@ -43,9 +43,7 @@ To force these files to be downloaded again on the next startup, remove the
 local copies first:
 
 ```bash
-./gradlew :backend:cleanLocalEmbeddingModelAssets
-./gradlew :backend:cleanEmbeddedLlamaModel
-./gradlew :backend:cleanEmbeddedLlamaServer
+./gradlew :backend:cleanDownloadedModelAssets
 ```
 
 #### Embedded local models on llama-server
