@@ -31,7 +31,7 @@ Run Ollama (optional):
 ollama serve
 ```
 
-**Terminal 2** 
+**Terminal 2**
 
 Pull Ollama models (optional):
 
@@ -50,6 +50,9 @@ Run PostgreSQL + pgvector:
 
 ```bash
 cd ai-rag-subject-matter-expert
+```
+
+```bash
 docker compose up
 ```
 
@@ -59,6 +62,9 @@ Run backend:
 
 ```bash
 cd ai-rag-subject-matter-expert
+```
+
+```bash
 ./gradlew :backend:run
 ```
 
@@ -72,6 +78,9 @@ Run frontend:
 
 ```bash
 cd ai-rag-subject-matter-expert
+```
+
+```bash
 ./gradlew :frontend:run
 ```
 
