@@ -11,12 +11,13 @@ static document knowledge bundled with the application. The application is
 Required:
 
 - JDK 26
-- Docker
 - Node.js 25.2.1 and npm 11.12.1
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 Optional:
 
-- Ollama, when using the configured Ollama chat or embedding models.
+- [Ollama](https://ollama.com/), when using the configured Ollama chat or
+  embedding models.
 
 Clone the repository:
 
