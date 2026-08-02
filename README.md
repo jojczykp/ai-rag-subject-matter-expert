@@ -8,6 +8,8 @@ static document knowledge bundled with the application. The application is
 
 ## Quick Start
 
+### Dependencies
+
 Required:
 
 - JDK 26
@@ -19,39 +21,61 @@ Optional:
 - [Ollama](https://ollama.com/), when using the configured Ollama chat or
   embedding models.
 
-Clone the repository:
+### Run
 
-```bash
-git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
-cd ai-rag-subject-matter-expert
-```
+**Terminal 1**
 
-Terminal 1 - run PostgreSQL + pgvector:
-
-```bash
-docker compose up
-```
-
-Terminal 2 - run Ollama, optional:
+Run Ollama (optional):
 
 ```bash
 ollama serve
 ```
 
-Terminal 3 - pull Ollama models, optional:
+**Terminal 2** 
+
+Pull Ollama models (optional):
 
 ```bash
 ollama pull llama3.2
 ollama pull nomic-embed-text:v1.5
 ```
 
-Terminal 4 - run the application:
+Clone the repository:
 
 ```bash
-./gradlew --parallel run
+git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
 ```
 
-Open the UI:
+Run PostgreSQL + pgvector:
+
+```bash
+cd ai-rag-subject-matter-expert
+docker compose up
+```
+
+**Terminal 3**
+
+Run backend:
+
+```bash
+cd ai-rag-subject-matter-expert
+./gradlew :backend:run
+```
+
+It took ~10 minutes on my Mac at first time, downloading local model assets.
+Progress can be watched following console logs until `-----<[ R E A D Y ]>-----`
+is logged.
+
+**Terminal 4**
+
+Run frontend:
+
+```bash
+cd ai-rag-subject-matter-expert
+./gradlew :frontend:run
+```
+
+After backend startup completed, open the UI:
 
 ```text
 http://localhost:5173
@@ -59,12 +83,24 @@ http://localhost:5173
 
 Useful backend URLs:
 
-```text
-http://localhost:8080/actuator/health
-http://localhost:8080/actuator/info
-http://localhost:8080/subjects
-http://localhost:8080/embedding-models
-http://localhost:8080/chat-models
+```bash
+curl -s http://localhost:8080/actuator/health | jq .
+```
+
+```bash
+curl -s http://localhost:8080/actuator/info | jq .
+```
+
+```bash
+curl -s http://localhost:8080/subjects | jq .
+```
+
+```bash
+curl -s http://localhost:8080/embedding-models | jq .
+```
+
+```bash
+curl -s http://localhost:8080/chat-models | jq .
 ```
 
 The first backend startup can take longer because enabled local model assets
