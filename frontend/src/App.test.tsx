@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import type { ChatModelsResponse, ChatRequest } from './api/types'
 import { apiUrl } from './config'
@@ -13,7 +13,12 @@ import {
 import { server } from './test/server'
 
 const defaultMessage = passiveHouseSubject.defaultQuestion
-const defaultSelectionSummary = `Subject: ${passiveHouseSubject.displayName} · Embedding: Ollama Nomic Embed (v1.5, 768d) · Chat: Local Ollama Llama`
+const defaultSelectionSummary = `${passiveHouseSubject.displayName} · Ollama Nomic Embed (v1.5, 768d) · Local Ollama Llama`
+const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView
+
+afterEach(() => {
+  window.HTMLElement.prototype.scrollIntoView = originalScrollIntoView
+})
 
 describe('App', () => {
   it('loads models and shows selected model details', async () => {
@@ -46,6 +51,11 @@ describe('App', () => {
       screen.queryByRole('option', { name: 'Select a chat model' }),
     ).not.toBeInTheDocument()
     expect(screen.queryByText('Runtime requirements')).not.toBeInTheDocument()
+    expect(
+      screen.getByText(
+        `Ask about ${passiveHouseSubject.displayName}. Answers use the indexed bundled documents for this subject.`,
+      ),
+    ).toBeVisible()
   })
 
   it('shows misconfigured availability with a gray status dot', async () => {
@@ -70,6 +80,20 @@ describe('App', () => {
 
     expect(screen.getByText('Misconfigured')).toBeVisible()
     expect(container.querySelectorAll('.availability-dot-gray')).toHaveLength(1)
+  })
+
+  it('identifies which configuration area failed to load', async () => {
+    server.use(
+      http.get(apiUrl('/embedding-models'), () =>
+        HttpResponse.json({ message: 'Failed' }, { status: 500 }),
+      ),
+    )
+
+    render(<App />)
+
+    expect(
+      await screen.findByText('Could not load embedding models.'),
+    ).toHaveAttribute('role', 'alert')
   })
 
   it('focuses the message field on load', async () => {
@@ -113,6 +137,41 @@ describe('App', () => {
     )
   })
 
+  it('preserves edited message when changing subject', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const messageField = screen.getByLabelText('Message')
+    await screen.findByText(defaultSelectionSummary)
+    await user.clear(messageField)
+    await user.type(messageField, 'Custom question')
+    await user.selectOptions(
+      screen.getByLabelText('Subject'),
+      culinarySubject.id,
+    )
+
+    expect(messageField).toHaveValue('Custom question')
+  })
+
+  it('restores selected subject question on request', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const messageField = screen.getByLabelText('Message')
+    await screen.findByText(defaultSelectionSummary)
+    await user.clear(messageField)
+    await user.type(messageField, 'Custom question')
+    await user.click(
+      screen.getByRole('button', { name: 'Use subject question' }),
+    )
+
+    expect(messageField).toHaveValue(defaultMessage)
+    expect(messageField).toHaveProperty('selectionStart', defaultMessage.length)
+    expect(messageField).toHaveProperty('selectionEnd', defaultMessage.length)
+  })
+
   it('prefills a message and still requires non-blank content', async () => {
     const user = userEvent.setup()
 
@@ -121,6 +180,10 @@ describe('App', () => {
     const sendButton = screen.getByRole('button', { name: 'Send' })
 
     expect(sendButton).toBeDisabled()
+    expect(screen.getByText('Models are still loading.')).toHaveAttribute(
+      'role',
+      'status',
+    )
 
     await screen.findByText(defaultSelectionSummary)
 
@@ -129,6 +192,10 @@ describe('App', () => {
     await user.clear(screen.getByLabelText('Message'))
 
     expect(sendButton).toBeDisabled()
+    expect(screen.getByText('Enter a message.')).toHaveAttribute(
+      'role',
+      'status',
+    )
   })
 
   it('sends chat messages with the selected model', async () => {
@@ -163,6 +230,22 @@ describe('App', () => {
         message: defaultMessage,
       },
     ])
+  })
+
+  it('scrolls to new chat messages', async () => {
+    const scrollIntoView = vi.fn()
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoView
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await screen.findByText(defaultSelectionSummary)
+    scrollIntoView.mockClear()
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    await screen.findByText(`Mock answer for: ${defaultMessage}`)
+
+    expect(scrollIntoView).toHaveBeenCalled()
   })
 
   it('shows request countdown while waiting for a response', async () => {
@@ -306,7 +389,7 @@ describe('App', () => {
       screen.getByText(
         'Selected chat model is unavailable and cannot be used.',
       ),
-    ).toBeVisible()
+    ).toHaveAttribute('role', 'alert')
   })
 
   it('prevents chat when selected embedding model is not available', async () => {
@@ -328,7 +411,7 @@ describe('App', () => {
       screen.getByText(
         'Selected embedding model is configured and cannot be used.',
       ),
-    ).toBeVisible()
+    ).toHaveAttribute('role', 'alert')
   })
 
   it('prevents chat when selected chat and embedding models are not available', async () => {
@@ -359,6 +442,6 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
     expect(
       screen.getByText('Selected chat and embedding models are not available.'),
-    ).toBeVisible()
+    ).toHaveAttribute('role', 'alert')
   })
 })

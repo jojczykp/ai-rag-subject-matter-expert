@@ -57,6 +57,13 @@
   font-weight: 650;
 }
 
+.field-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
 .model-panel .field + .field {
   margin-top: 16px;
 }
@@ -105,6 +112,16 @@ button:disabled {
   border-color: var(--border-strong);
   background: var(--disabled-bg);
   color: var(--text-muted);
+}
+
+.secondary-button {
+  min-height: 32px;
+  border-color: var(--border-strong);
+  background: var(--surface);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 650;
+  padding: 0 10px;
 }
 
 select:focus-visible,
@@ -243,6 +260,20 @@ button:focus-visible {
   align-items: end;
 }
 
+.send-actions {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+}
+
+.send-guidance {
+  max-width: 220px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: right;
+}
+
 .status {
   margin-top: 14px;
   color: var(--text-muted);
@@ -280,6 +311,15 @@ button:focus-visible {
   .chat-header,
   .chat-form {
     grid-template-columns: 1fr;
+  }
+
+  .send-actions {
+    justify-items: stretch;
+  }
+
+  .send-guidance {
+    max-width: none;
+    text-align: left;
   }
 
   .chat-header {

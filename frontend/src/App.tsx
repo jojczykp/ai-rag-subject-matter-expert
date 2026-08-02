@@ -35,72 +35,90 @@ function App() {
   const [requestElapsedSeconds, setRequestElapsedSeconds] = useState(0)
   const [focusMessageAtEndRequest, setFocusMessageAtEndRequest] = useState(0)
   const messageInputRef = useRef<HTMLTextAreaElement>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let active = true
 
-    Promise.all([getSubjects(), getEmbeddingModels(), getChatModels()])
-      .then(
-        ([subjectsResponse, embeddingModelsResponse, chatModelsResponse]) => {
-          if (!active) {
-            return
-          }
-          const subjects = subjectsResponse.subjects
-          const enabledSubjects = subjects.filter((subject) => subject.enabled)
-          const chatModels = chatModelsResponse.chatModels
-          const embeddingModels = embeddingModelsResponse.embeddingModels
-          const enabledEmbeddingModels = embeddingModels.filter(
-            (model) => model.enabled,
-          )
-          const defaultSubjectId = defaultModelId(
-            enabledSubjects,
-            subjectsResponse.defaultSubjectId,
-          )
-          const defaultSubject = enabledSubjects.find(
-            (subject) => subject.id === defaultSubjectId,
-          )
+    async function loadConfiguration() {
+      const [subjectsResult, embeddingModelsResult, chatModelsResult] =
+        await Promise.allSettled([
+          getSubjects(),
+          getEmbeddingModels(),
+          getChatModels(),
+        ])
 
-          setSubjects(subjects)
-          setModels(chatModels)
-          setEmbeddingModels(embeddingModels)
-          setChatApiTimeoutSeconds(chatModelsResponse.chatApiTimeoutSeconds)
-          setEmbeddingApiTimeoutSeconds(
-            embeddingModelsResponse.embeddingApiTimeoutSeconds,
-          )
-          setSelectedSubjectId(defaultSubjectId)
-          setMessage(defaultSubject?.defaultQuestion ?? '')
-          setFocusMessageAtEndRequest((current) => current + 1)
-          setSelectedModelId(
-            defaultModelId(chatModels, chatModelsResponse.defaultChatModelId),
-          )
-          setSelectedEmbeddingModelId(
-            defaultModelId(
-              enabledEmbeddingModels,
-              embeddingModelsResponse.defaultEmbeddingModelId,
-            ),
-          )
-          setModelsError(null)
-        },
-      )
-      .catch((error: unknown) => {
-        if (!active) {
-          return
-        }
-        setModelsError(
-          errorMessage(error, 'Could not load configured subjects and models.'),
+      if (!active) {
+        return
+      }
+
+      const failedConfigurationAreas: string[] = []
+
+      if (subjectsResult.status === 'fulfilled') {
+        const subjects = subjectsResult.value.subjects
+        const enabledSubjects = subjects.filter((subject) => subject.enabled)
+        const defaultSubjectId = defaultModelId(
+          enabledSubjects,
+          subjectsResult.value.defaultSubjectId,
         )
-      })
-      .finally(() => {
-        if (active) {
-          setModelsLoading(false)
-        }
-      })
+        const defaultSubject = enabledSubjects.find(
+          (subject) => subject.id === defaultSubjectId,
+        )
+
+        setSubjects(subjects)
+        setSelectedSubjectId(defaultSubjectId)
+        setMessage(defaultSubject?.defaultQuestion ?? '')
+        setFocusMessageAtEndRequest((current) => current + 1)
+      } else {
+        failedConfigurationAreas.push('subjects')
+      }
+
+      if (embeddingModelsResult.status === 'fulfilled') {
+        const embeddingModels = embeddingModelsResult.value.embeddingModels
+        const enabledEmbeddingModels = embeddingModels.filter(
+          (model) => model.enabled,
+        )
+
+        setEmbeddingModels(embeddingModels)
+        setEmbeddingApiTimeoutSeconds(
+          embeddingModelsResult.value.embeddingApiTimeoutSeconds,
+        )
+        setSelectedEmbeddingModelId(
+          defaultModelId(
+            enabledEmbeddingModels,
+            embeddingModelsResult.value.defaultEmbeddingModelId,
+          ),
+        )
+      } else {
+        failedConfigurationAreas.push('embedding models')
+      }
+
+      if (chatModelsResult.status === 'fulfilled') {
+        const chatModels = chatModelsResult.value.chatModels
+
+        setModels(chatModels)
+        setChatApiTimeoutSeconds(chatModelsResult.value.chatApiTimeoutSeconds)
+        setSelectedModelId(
+          defaultModelId(chatModels, chatModelsResult.value.defaultChatModelId),
+        )
+      } else {
+        failedConfigurationAreas.push('chat models')
+      }
+
+      setModelsError(
+        failedConfigurationAreas.length > 0
+          ? `Could not load ${formatList(failedConfigurationAreas)}.`
+          : null,
+      )
+      setModelsLoading(false)
+    }
+
+    void loadConfiguration()
 
     return () => {
       active = false
     }
   }, [])
-
   useEffect(() => {
     const messageInput = messageInputRef.current
     messageInput?.focus()
@@ -121,6 +139,10 @@ function App() {
 
     return () => window.clearInterval(intervalId)
   }, [sending])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView?.({ block: 'end' })
+  }, [chatMessages, sending])
 
   const selectedModel = useMemo(
     () => models.find((model) => model.id === selectedModelId),
@@ -154,6 +176,14 @@ function App() {
     selectedModel,
     selectedEmbeddingModel,
   )
+  const sendBlockingMessage = sendDisabledReason({
+    modelsLoading,
+    selectedSubject,
+    selectedModel,
+    selectedEmbeddingModel,
+    trimmedMessage,
+    modelBlockingMessage,
+  })
   const sendDisabled =
     sending ||
     !selectedSubject ||
@@ -163,7 +193,7 @@ function App() {
     !modelCanChat
   const selectionSummary =
     selectedSubject && selectedModel && selectedEmbeddingModel
-      ? `Subject: ${selectedSubject.displayName} · Embedding: ${selectedEmbeddingModel.displayName} · Chat: ${selectedModel.displayName}`
+      ? `${selectedSubject.displayName} · ${selectedEmbeddingModel.displayName} · ${selectedModel.displayName}`
       : null
 
   async function submitChat() {
@@ -217,10 +247,18 @@ function App() {
   }
 
   function handleSubjectChange(subjectId: string) {
+    const previousDefaultQuestion = selectedSubject?.defaultQuestion ?? ''
     const subject = enabledSubjects.find((subject) => subject.id === subjectId)
 
     setSelectedSubjectId(subjectId)
-    setMessage(subject?.defaultQuestion ?? '')
+    if (message === previousDefaultQuestion) {
+      setMessage(subject?.defaultQuestion ?? '')
+      setFocusMessageAtEndRequest((current) => current + 1)
+    }
+  }
+
+  function useSubjectQuestion() {
+    setMessage(selectedSubject?.defaultQuestion ?? '')
     setFocusMessageAtEndRequest((current) => current + 1)
   }
 
@@ -285,21 +323,29 @@ function App() {
         </label>
 
         {modelsLoading && (
-          <p className="status">Loading configured models...</p>
+          <p className="status" role="status">
+            Loading configured models...
+          </p>
         )}
-        {modelsError && <p className="status status-error">{modelsError}</p>}
+        {modelsError && (
+          <p className="status status-error" role="alert">
+            {modelsError}
+          </p>
+        )}
         {!modelsLoading && !modelsError && models.length === 0 && (
-          <p className="status status-error">No chat models are configured.</p>
+          <p className="status status-error" role="alert">
+            No chat models are configured.
+          </p>
         )}
         {!modelsLoading && !modelsError && enabledSubjects.length === 0 && (
-          <p className="status status-error">
+          <p className="status status-error" role="alert">
             No enabled subjects are configured.
           </p>
         )}
         {!modelsLoading &&
           !modelsError &&
           enabledEmbeddingModels.length === 0 && (
-            <p className="status status-error">
+            <p className="status status-error" role="alert">
               No enabled embedding models are configured.
             </p>
           )}
@@ -323,8 +369,9 @@ function App() {
         <div className="messages" aria-live="polite">
           {chatMessages.length === 0 ? (
             <div className="empty-state">
-              Ask a question and the answer will use the indexed bundled
-              documents as context.
+              {selectedSubject
+                ? `Ask about ${selectedSubject.displayName}. Answers use the indexed bundled documents for this subject.`
+                : 'Ask a question and the answer will use the indexed bundled documents as context.'}
             </div>
           ) : (
             chatMessages.map((chatMessage) => (
@@ -344,13 +391,14 @@ function App() {
               chatApiTimeoutSeconds={chatApiTimeoutSeconds}
             />
           )}
+          <div ref={messagesEndRef} />
         </div>
 
-        {chatError && <p className="status status-error">{chatError}</p>}
-        {modelBlockingMessage && (
-          <p className="status status-error">{modelBlockingMessage}</p>
+        {chatError && (
+          <p className="status status-error" role="alert">
+            {chatError}
+          </p>
         )}
-
         <form
           className="chat-form"
           onSubmit={(event) => {
@@ -358,8 +406,18 @@ function App() {
             void submitChat()
           }}
         >
-          <label className="field" htmlFor="message">
-            <span>Message</span>
+          <div className="field">
+            <span className="field-heading">
+              <label htmlFor="message">Message</label>
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={useSubjectQuestion}
+                disabled={!selectedSubject || sending}
+              >
+                Use subject question
+              </button>
+            </span>
             <textarea
               id="message"
               ref={messageInputRef}
@@ -369,10 +427,20 @@ function App() {
               placeholder="Ask about the bundled subject documents..."
               rows={4}
             />
-          </label>
-          <button type="submit" disabled={sendDisabled}>
-            {sending ? 'Sending...' : 'Send'}
-          </button>
+          </div>
+          <div className="send-actions">
+            <button type="submit" disabled={sendDisabled}>
+              {sending ? 'Sending...' : 'Send'}
+            </button>
+            {sendBlockingMessage && !sending && (
+              <p
+                className={`send-guidance ${modelBlockingMessage ? 'status-error' : ''}`}
+                role={modelBlockingMessage ? 'alert' : 'status'}
+              >
+                {sendBlockingMessage}
+              </p>
+            )}
+          </div>
         </form>
       </section>
     </main>
@@ -495,6 +563,14 @@ function remainingSeconds(timeoutSeconds: number, elapsedSeconds: number) {
   return Math.max(timeoutSeconds - elapsedSeconds, 0)
 }
 
+function formatList(items: string[]): string {
+  if (items.length <= 1) {
+    return items.join('')
+  }
+
+  return `${items.slice(0, -1).join(', ')} or ${items[items.length - 1]}`
+}
+
 function AvailabilityValue({ availability }: { availability: string }) {
   return (
     <strong className="availability-value">
@@ -590,6 +666,48 @@ function modelAvailabilityBlockingMessage(
 
   if (embeddingBlocked && embeddingModel) {
     return `Selected embedding model is ${formatModelAvailability(embeddingModel.availability).toLowerCase()} and cannot be used.`
+  }
+
+  return null
+}
+
+function sendDisabledReason({
+  modelsLoading,
+  selectedSubject,
+  selectedModel,
+  selectedEmbeddingModel,
+  trimmedMessage,
+  modelBlockingMessage,
+}: {
+  modelsLoading: boolean
+  selectedSubject: Subject | undefined
+  selectedModel: ChatModel | undefined
+  selectedEmbeddingModel: EmbeddingModel | undefined
+  trimmedMessage: string
+  modelBlockingMessage: string | null
+}): string | null {
+  if (modelsLoading) {
+    return 'Models are still loading.'
+  }
+
+  if (!selectedSubject) {
+    return 'Select a subject.'
+  }
+
+  if (!selectedEmbeddingModel) {
+    return 'Select an embedding model.'
+  }
+
+  if (!selectedModel) {
+    return 'Select a chat model.'
+  }
+
+  if (modelBlockingMessage) {
+    return modelBlockingMessage
+  }
+
+  if (!trimmedMessage) {
+    return 'Enter a message.'
   }
 
   return null
