@@ -2,10 +2,11 @@
 
 ## Repository Agents
 
-This repository defines five project-scoped Codex custom agents in `.codex/agents/`:
+This repository defines six project-scoped Codex custom agents in `.codex/agents/`:
 
 - `orchestrator`: coordinates end-to-end feature development across the other agents.
 - `architect`: proposes system design changes and implementation plans.
+- `ux`: proposes user flows, frontend interaction design, accessibility checks, and user-facing copy.
 - `developer`: implements production code and fixes production defects.
 - `tester`: creates tests, runs verification, and triages test failures.
 - `documenter`: keeps Markdown documentation and project guidance in sync with the codebase.
@@ -27,10 +28,11 @@ accepted decisions, implementation order, and testing expectations.
 
 - Use `orchestrator` as the default coordinator for end-to-end feature work, especially when a request includes refactoring, extra tests, design changes, or multiple implementation steps.
 - Use `architect` for non-trivial feature design, architecture changes, API boundaries, data flow, or migration planning.
+- Use `ux` when a request affects frontend user flows, screen structure, interaction behavior, accessibility, labels, empty states, validation text, or error copy.
 - Use `developer` to implement production code according to the accepted design or requested behavior.
 - Use `tester` to create or update tests and run the relevant verification command.
 - Use `documenter` when project setup, commands, dependencies, agents, architecture, behavior, or verification requirements change.
-- `orchestrator` should preserve detailed user constraints and route work to `architect`, `developer`, `tester`, and `documenter` as needed.
+- `orchestrator` should preserve detailed user constraints and route work to `architect`, `ux`, `developer`, `tester`, and `documenter` as needed.
 - If tests fail, `tester` should determine whether the failure is caused by production code or test code.
 - If production code is defective, `tester` should hand the failure details to `developer`, and `developer` should fix production code.
 - If the test is incorrect, stale, or brittle, `tester` should fix the test.

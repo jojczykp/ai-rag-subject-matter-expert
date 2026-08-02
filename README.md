@@ -808,6 +808,8 @@ Project-scoped Codex agents live in `.codex/agents/` and are described in
 
 - `orchestrator` coordinates end-to-end feature work across the other agents.
 - `architect` proposes system design changes and implementation plans.
+- `ux` proposes user flows, frontend interaction design, accessibility checks,
+  and user-facing copy.
 - `developer` implements production code and fixes production defects.
 - `tester` creates tests, runs verification, and triages failures.
 - `documenter` keeps Markdown documentation and project guidance in sync.
