@@ -372,6 +372,12 @@ Run full project verification:
 Optional backend integration tests:
 
 ```bash
+./gradlew :backend:extendedIntegrationTest
+```
+
+Run individual optional suites when debugging a specific integration:
+
+```bash
 ./gradlew :backend:ollamaTest
 ./gradlew :backend:openAiCompatibleTest
 ./gradlew :backend:huggingFaceTgiTest

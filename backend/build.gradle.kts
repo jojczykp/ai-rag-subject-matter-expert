@@ -129,6 +129,17 @@ tasks.register<Test>("huggingFaceTgiTest") {
     }
 }
 
+tasks.register("extendedIntegrationTest") {
+    group = "verification"
+    description = "Runs optional backend integration tests that are excluded from default verification."
+    dependsOn(
+        "ollamaTest",
+        "openAiCompatibleTest",
+        "huggingFaceTgiTest",
+        "onnxModelTest",
+    )
+}
+
 tasks.bootRun {
     workingDir = projectDir
     jvmArgs("--enable-native-access=ALL-UNNAMED")
