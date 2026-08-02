@@ -164,7 +164,7 @@ describe('App', () => {
     await user.clear(messageField)
     await user.type(messageField, 'Custom question')
     await user.click(
-      screen.getByRole('button', { name: 'Use subject question' }),
+      screen.getByRole('button', { name: 'Use default question' }),
     )
 
     expect(messageField).toHaveValue(defaultMessage)

@@ -415,7 +415,7 @@ function App() {
                 onClick={useSubjectQuestion}
                 disabled={!selectedSubject || sending}
               >
-                Use subject question
+                Use default question
               </button>
             </span>
             <textarea
