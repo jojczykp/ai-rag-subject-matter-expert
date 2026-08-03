@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("aisme.embedding-model")
@@ -145,10 +146,13 @@ tasks.bootRun {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
-tasks.register("run") {
+tasks.register<BootRun>("run") {
     group = "application"
     description = "Runs the backend Spring Boot application."
-    dependsOn(tasks.bootRun)
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set(tasks.bootRun.flatMap { it.mainClass })
+    workingDir = projectDir
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
 tasks.register("cleanDownloadedModelAssets") {

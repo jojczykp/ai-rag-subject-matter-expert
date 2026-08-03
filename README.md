@@ -64,11 +64,23 @@ Run backend:
 cd ai-rag-subject-matter-expert
 ```
 
+For a faster first run, start with only the default subject, default embedding
+model, and default chat model enabled:
+
+```bash
+./gradlew :backend:run --args='--spring.profiles.active=minimal'
+```
+
+To run with all configured models enabled:
+
 ```bash
 ./gradlew :backend:run
 ```
 
-It took ~10 minutes on my Mac at first time, downloading local model assets.
+The full run offers several chat and embedding models, so first startup can take
+longer while local model assets are downloaded. It took ~10 minutes on my laptop
+the first time with all models enabled.
+
 Progress can be watched following console logs until `-----<[ R E A D Y ]>-----`
 is logged.
 

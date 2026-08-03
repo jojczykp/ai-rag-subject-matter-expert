@@ -1,0 +1,19 @@
+aisme:
+  embedding:
+    models:
+      ollama-nomic-embed:
+        enabled: false
+  chat:
+    models:
+      embedded-qwen-0-5b:
+        enabled: false
+      embedded-qwen-3b:
+        enabled: false
+      embedded-mistral-7b:
+        enabled: false
+      local-ollama-llama:
+        enabled: false
+      openai-compatible-example:
+        enabled: false
+      hugging-face-tgi-example:
+        enabled: false
