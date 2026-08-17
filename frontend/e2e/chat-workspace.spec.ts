@@ -7,7 +7,7 @@ test('user can select a model and receive a chat response', async ({ page }) => 
   await page.goto('/')
 
   await expect(
-    page.getByRole('heading', { name: 'Chat workspace' }),
+    page.getByRole('heading', { name: 'Ask a question' }),
   ).toBeVisible()
   await expect(page.getByLabel('Subject')).toHaveValue('passive-house')
   await expect(page.getByLabel('Embedding Model')).toHaveValue(

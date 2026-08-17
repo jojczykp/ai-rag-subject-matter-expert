@@ -138,10 +138,14 @@
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  align-items: end;
-  padding: 20px 28px;
+  align-items: center;
+  padding: 10px 28px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-muted);
+}
+
+.theme-bar .eyebrow {
+  margin: 0;
 }
 
 .theme-bar .theme-field {

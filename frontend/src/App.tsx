@@ -329,7 +329,6 @@ function App() {
       <header className="theme-bar">
         <div className="theme-heading">
           <p className="eyebrow">AI RAG Subject Matter Expert</p>
-          <h1 id="model-panel-heading">Chat workspace</h1>
         </div>
         <label className="field theme-field" htmlFor="theme">
           <span>Theme</span>
@@ -350,7 +349,7 @@ function App() {
       </header>
 
       <div className="workspace">
-        <section className="model-panel" aria-labelledby="model-panel-heading">
+        <section className="model-panel" aria-label="Configuration">
           <label className="field" htmlFor="subject">
             <span>Subject</span>
             <select
