@@ -242,6 +242,44 @@ describe('App', () => {
     ])
   })
 
+  it('clears current chat content without changing selections', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    const clearButton = screen.getByRole('button', { name: 'Clear chat' })
+
+    expect(clearButton).toBeDisabled()
+
+    await screen.findByText(defaultSelectionSummary)
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(
+      await screen.findByText(`Mock answer for: ${defaultMessage}`),
+    ).toBeVisible()
+    expect(clearButton).toBeEnabled()
+
+    await user.click(clearButton)
+
+    expect(screen.queryByText(defaultMessage)).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(`Mock answer for: ${defaultMessage}`),
+    ).not.toBeInTheDocument()
+    expect(clearButton).toBeDisabled()
+    expect(screen.getByLabelText('Subject')).toHaveValue(culinarySubject.id)
+    expect(screen.getByLabelText('Embedding Model')).toHaveValue(
+      'local-bge-small',
+    )
+    expect(screen.getByLabelText('Chat Model')).toHaveValue(
+      'embedded-qwen-1-5b',
+    )
+    expect(
+      screen.getByText(
+        `Ask about ${culinarySubject.displayName}. Answers use the indexed bundled documents for this subject.`,
+      ),
+    ).toBeVisible()
+  })
+
   it('restores selected subject question on request', async () => {
     const user = userEvent.setup()
 
@@ -453,6 +491,32 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
     expect(await screen.findByText('Provider failed.')).toBeVisible()
+  })
+
+  it('clears chat errors from the transcript area', async () => {
+    const user = userEvent.setup()
+    server.use(
+      http.post(apiUrl('/chat'), () =>
+        HttpResponse.json(
+          {
+            code: 'PROVIDER_ERROR',
+            message: 'Provider failed.',
+          },
+          { status: 502 },
+        ),
+      ),
+    )
+
+    render(<App />)
+
+    await screen.findByText(defaultSelectionSummary)
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+    expect(await screen.findByText('Provider failed.')).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Clear chat' }))
+
+    expect(screen.queryByText(defaultMessage)).not.toBeInTheDocument()
+    expect(screen.queryByText('Provider failed.')).not.toBeInTheDocument()
   })
 
   it('prevents chat when selected chat model is unavailable', async () => {

@@ -54,6 +54,12 @@
   text-align: right;
 }
 
+.chat-header-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
 .field {
   display: grid;
   gap: 8px;
@@ -342,6 +348,10 @@ button:focus-visible {
 
   .chat-summary {
     text-align: left;
+  }
+
+  .chat-header-actions {
+    justify-items: stretch;
   }
 
   .messages {

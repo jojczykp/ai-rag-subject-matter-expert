@@ -299,6 +299,11 @@ function App() {
     setFocusMessageAtEndRequest((current) => current + 1)
   }
 
+  function clearChat() {
+    setChatMessages([])
+    setChatError(null)
+  }
+
   return (
     <main className="app-shell">
       <section className="model-panel" aria-labelledby="model-panel-heading">
@@ -398,9 +403,19 @@ function App() {
             </p>
             <h2 id="chat-heading">Ask a question</h2>
           </div>
-          {selectionSummary && (
-            <p className="chat-summary">{selectionSummary}</p>
-          )}
+          <div className="chat-header-actions">
+            {selectionSummary && (
+              <p className="chat-summary">{selectionSummary}</p>
+            )}
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={clearChat}
+              disabled={sending || (!chatError && chatMessages.length === 0)}
+            >
+              Clear chat
+            </button>
+          </div>
         </div>
 
         <div className="messages" aria-live="polite">
