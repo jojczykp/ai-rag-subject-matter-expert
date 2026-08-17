@@ -29,6 +29,11 @@ describe('App', () => {
     const { container } = render(<App />)
 
     expect(screen.getByText('Loading configured models...')).toBeVisible()
+    expect(screen.getByLabelText('Theme')).toHaveValue('light')
+    expect(container.querySelector('.app-shell')).toHaveAttribute(
+      'data-theme',
+      'light',
+    )
 
     expect(await screen.findByLabelText('Embedding Model')).toHaveValue(
       'local-bge-small',
@@ -60,6 +65,32 @@ describe('App', () => {
         `Ask about ${culinarySubject.displayName}. Answers use the indexed bundled documents for this subject.`,
       ),
     ).toBeVisible()
+  })
+
+  it('changes the selected theme', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+
+    const themeField = screen.getByLabelText('Theme')
+
+    expect(themeField).toHaveValue('light')
+    expect(
+      screen.getByRole('option', { name: 'Forest' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('option', { name: 'Sunrise' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Clay' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Rose' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Night' })).toBeInTheDocument()
+
+    await user.selectOptions(themeField, 'sunrise')
+
+    expect(themeField).toHaveValue('sunrise')
+    expect(container.querySelector('.app-shell')).toHaveAttribute(
+      'data-theme',
+      'sunrise',
+    )
   })
 
   it('shows misconfigured availability with a gray status dot', async () => {
