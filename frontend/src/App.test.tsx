@@ -34,6 +34,19 @@ describe('App', () => {
       'data-theme',
       'light',
     )
+    expect(
+      screen.getByRole('link', {
+        name: 'View application source code on GitHub',
+      }),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/jojczykp/ai-rag-subject-matter-expert',
+    )
+    expect(
+      screen.getByRole('link', {
+        name: 'View application source code on GitHub',
+      }),
+    ).toHaveAttribute('target', '_blank')
 
     expect(await screen.findByLabelText('Embedding Model')).toHaveValue(
       'local-bge-small',

@@ -155,6 +155,12 @@
   margin: 0;
 }
 
+.theme-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .theme-bar .theme-field {
   width: min(220px, 100%);
   display: flex;
@@ -168,6 +174,42 @@
   min-width: 150px;
   padding: 0 10px;
   font-size: 14px;
+}
+
+.repository-link {
+  min-height: 34px;
+  min-width: 158px;
+  display: inline-flex;
+  box-sizing: border-box;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--control-bg);
+  color: var(--text-h);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+  padding: 0 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.repository-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.repository-link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.repository-link-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
 }
 
 .workspace {
@@ -494,6 +536,11 @@ button:focus-visible {
     width: 100%;
     display: grid;
     gap: 8px;
+  }
+
+  .theme-actions {
+    display: grid;
+    gap: 10px;
   }
 
   .workspace {
