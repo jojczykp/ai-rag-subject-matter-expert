@@ -15,6 +15,7 @@
   --bg: #f8fafc;
   --surface: #ffffff;
   --surface-muted: #f3f4f6;
+  --control-bg: #f8fafc;
   --border: #e5e7eb;
   --border-strong: #d1d5db;
   --accent: #2563eb;
@@ -33,6 +34,7 @@
   --bg: #f4f8f2;
   --surface: #ffffff;
   --surface-muted: #e8f0e8;
+  --control-bg: #f4f8f2;
   --border: #d4ded4;
   --border-strong: #abbcac;
   --accent: #2f6f4e;
@@ -51,6 +53,7 @@
   --bg: #f1f7fd;
   --surface: #ffffff;
   --surface-muted: #e5f0fa;
+  --control-bg: #eef7ff;
   --border: #c9ddf0;
   --border-strong: #97b9d9;
   --accent: #1d5f99;
@@ -69,6 +72,7 @@
   --bg: #fff7ed;
   --surface: #ffffff;
   --surface-muted: #ffedd5;
+  --control-bg: #fff7ed;
   --border: #fed7aa;
   --border-strong: #f2b277;
   --accent: #c2410c;
@@ -87,6 +91,7 @@
   --bg: #faf5f2;
   --surface: #ffffff;
   --surface-muted: #efe5df;
+  --control-bg: #faf1ec;
   --border: #dfcec5;
   --border-strong: #b99d91;
   --accent: #9f4f3f;
@@ -105,6 +110,7 @@
   --bg: #fff5f8;
   --surface: #ffffff;
   --surface-muted: #f9e8ee;
+  --control-bg: #fff5f8;
   --border: #f1cbd8;
   --border-strong: #d99bb0;
   --accent: #be3455;
@@ -123,6 +129,7 @@
   --bg: #111827;
   --surface: #1f2937;
   --surface-muted: #17202e;
+  --control-bg: #1f2937;
   --border: #374151;
   --border-strong: #4b5563;
   --accent: #3b82f6;
@@ -258,6 +265,7 @@ textarea {
 }
 
 select {
+  background: var(--control-bg);
   min-height: 42px;
   padding: 0 12px;
 }
