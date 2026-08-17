@@ -6,6 +6,8 @@ subject, an embedding model, and a chat model, then asks questions against
 static document knowledge bundled with the application. The application is
 99% vibe coded with Codex.
 
+![AI RAG Subject Matter Expert chat workspace with subject, embedding model, chat model, and theme controls](docs/screenshot.webp)
+
 ## Quick Start
 
 ### Dependencies
