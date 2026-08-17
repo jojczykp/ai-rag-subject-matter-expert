@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import type {
   ChatModelsResponse,
   ChatRequest,
   EmbeddingModelsResponse,
+  SubjectsResponse,
 } from './api/types'
 import { apiUrl } from './config'
 import {
@@ -80,25 +81,39 @@ describe('App', () => {
     ).toBeVisible()
   })
 
-  it('changes the selected theme', async () => {
+  it('preserves a theme selected while configuration is loading', async () => {
     const user = userEvent.setup()
+    server.use(
+      http.get(apiUrl('/subjects'), async () => {
+        await delay(100)
+
+        return HttpResponse.json<SubjectsResponse>({
+          defaultSubjectId: culinarySubject.id,
+          subjects: [culinarySubject, passiveHouseSubject],
+        })
+      }),
+    )
     const { container } = render(<App />)
 
     const themeField = screen.getByLabelText('Theme')
 
     expect(themeField).toHaveValue('light')
-    expect(
-      screen.getByRole('option', { name: 'Forest' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Forest' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Ocean' })).toBeInTheDocument()
-    expect(
-      screen.getByRole('option', { name: 'Sunrise' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Sunrise' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Clay' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Rose' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Night' })).toBeInTheDocument()
 
     await user.selectOptions(themeField, 'sunrise')
+
+    expect(themeField).toHaveValue('sunrise')
+    expect(container.querySelector('.app-shell')).toHaveAttribute(
+      'data-theme',
+      'sunrise',
+    )
+
+    await screen.findByText(defaultSelectionSummary)
 
     expect(themeField).toHaveValue('sunrise')
     expect(container.querySelector('.app-shell')).toHaveAttribute(

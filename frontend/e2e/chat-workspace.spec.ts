@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
-test('user can select a model and receive a chat response', async ({ page }) => {
+test('user can select a model and receive a chat response', async ({
+  page,
+}) => {
   await routeWorkspaceApi(page)
 
   await page.goto('/')
