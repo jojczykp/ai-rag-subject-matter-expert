@@ -158,6 +158,90 @@ describe('App', () => {
     expect(messageField).toHaveValue('Custom question')
   })
 
+  it('records selection changes in the chat transcript', async () => {
+    const user = userEvent.setup()
+    const chatRequests: ChatRequest[] = []
+    server.use(
+      http.post(apiUrl('/chat'), async ({ request }) => {
+        const body = (await request.json()) as ChatRequest
+        chatRequests.push(body)
+
+        return HttpResponse.json({
+          modelId: body.modelId,
+          answer: `Mock answer for: ${body.message}`,
+        })
+      }),
+    )
+
+    const { container } = render(<App />)
+
+    await screen.findByText(defaultSelectionSummary)
+    expect(screen.queryByText('Selection changed')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+    await screen.findByText(`Mock answer for: ${defaultMessage}`)
+
+    await user.selectOptions(
+      screen.getByLabelText('Subject'),
+      passiveHouseSubject.id,
+    )
+    await user.selectOptions(
+      screen.getByLabelText('Embedding Model'),
+      'ollama-nomic-embed',
+    )
+    await user.selectOptions(
+      screen.getByLabelText('Chat Model'),
+      'local-ollama-llama',
+    )
+    await user.type(screen.getByLabelText('Message'), 'Second question')
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(
+      await screen.findByText('Mock answer for: Second question'),
+    ).toBeVisible()
+    expect(
+      screen.getByText(
+        `Subject changed to ${passiveHouseSubject.displayName}.`,
+      ),
+    ).toBeVisible()
+    expect(
+      screen.getByText(
+        'Embedding model changed to Ollama Nomic Embed (v1.5, 768d).',
+      ),
+    ).toBeVisible()
+    expect(
+      screen.getByText('Chat model changed to Local Ollama Llama.'),
+    ).toBeVisible()
+    expect(container.querySelectorAll('.message-system')).toHaveLength(3)
+    expect(
+      Array.from(container.querySelectorAll('.message')).map((element) =>
+        element.textContent?.trim(),
+      ),
+    ).toEqual([
+      `You${defaultMessage}`,
+      `AssistantMock answer for: ${defaultMessage}`,
+      `Selection changedSubject changed to ${passiveHouseSubject.displayName}.`,
+      'Selection changedEmbedding model changed to Ollama Nomic Embed (v1.5, 768d).',
+      'Selection changedChat model changed to Local Ollama Llama.',
+      'YouSecond question',
+      'AssistantMock answer for: Second question',
+    ])
+    expect(chatRequests).toEqual([
+      {
+        subjectId: culinarySubject.id,
+        modelId: 'embedded-qwen-1-5b',
+        embeddingModelId: 'local-bge-small',
+        message: defaultMessage,
+      },
+      {
+        subjectId: passiveHouseSubject.id,
+        modelId: 'local-ollama-llama',
+        embeddingModelId: 'ollama-nomic-embed',
+        message: 'Second question',
+      },
+    ])
+  })
+
   it('restores selected subject question on request', async () => {
     const user = userEvent.setup()
 
@@ -277,6 +361,9 @@ describe('App', () => {
     await screen.findByText(defaultSelectionSummary)
     await user.click(screen.getByRole('button', { name: 'Send' }))
 
+    expect(screen.getByLabelText('Subject')).toBeDisabled()
+    expect(screen.getByLabelText('Embedding Model')).toBeDisabled()
+    expect(screen.getByLabelText('Chat Model')).toBeDisabled()
     expect(screen.getByText('Processing request: 60s remaining')).toBeVisible()
     expect(
       screen.getByText(

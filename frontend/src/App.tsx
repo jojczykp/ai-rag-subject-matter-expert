@@ -12,7 +12,7 @@ import type { ChatModel, EmbeddingModel, Subject } from './api/types'
 
 type ChatMessage = {
   id: number
-  role: 'user' | 'assistant'
+  role: 'user' | 'assistant' | 'system'
   content: string
 }
 
@@ -36,6 +36,7 @@ function App() {
   const [focusMessageAtEndRequest, setFocusMessageAtEndRequest] = useState(0)
   const messageInputRef = useRef<HTMLTextAreaElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const nextMessageIdRef = useRef(0)
 
   useEffect(() => {
     let active = true
@@ -207,7 +208,7 @@ function App() {
     }
 
     const userMessage: ChatMessage = {
-      id: Date.now(),
+      id: nextMessageId(),
       role: 'user',
       content: trimmedMessage,
     }
@@ -227,7 +228,7 @@ function App() {
       setChatMessages((current) => [
         ...current,
         {
-          id: Date.now() + 1,
+          id: nextMessageId(),
           role: 'assistant',
           content: response.answer,
         },
@@ -250,11 +251,47 @@ function App() {
     const previousDefaultQuestion = selectedSubject?.defaultQuestion ?? ''
     const subject = enabledSubjects.find((subject) => subject.id === subjectId)
 
+    appendSelectionChangeMessage('Subject', subject?.displayName, subjectId)
     setSelectedSubjectId(subjectId)
     if (message === previousDefaultQuestion) {
       setMessage(subject?.defaultQuestion ?? '')
       setFocusMessageAtEndRequest((current) => current + 1)
     }
+  }
+
+  function handleEmbeddingModelChange(modelId: string) {
+    const model = enabledEmbeddingModels.find((model) => model.id === modelId)
+
+    appendSelectionChangeMessage('Embedding model', model?.displayName, modelId)
+    setSelectedEmbeddingModelId(modelId)
+  }
+
+  function handleChatModelChange(modelId: string) {
+    const model = models.find((model) => model.id === modelId)
+
+    appendSelectionChangeMessage('Chat model', model?.displayName, modelId)
+    setSelectedModelId(modelId)
+  }
+
+  function appendSelectionChangeMessage(label: string, name = '', id = '') {
+    if (!name && !id) {
+      return
+    }
+
+    setChatMessages((current) => [
+      ...current,
+      {
+        id: nextMessageId(),
+        role: 'system',
+        content: `${label} changed to ${name || id}.`,
+      },
+    ])
+    setChatError(null)
+  }
+
+  function nextMessageId() {
+    nextMessageIdRef.current += 1
+    return nextMessageIdRef.current
   }
 
   function useSubjectQuestion() {
@@ -276,7 +313,7 @@ function App() {
             id="subject"
             value={selectedSubjectId}
             onChange={(event) => handleSubjectChange(event.target.value)}
-            disabled={modelsLoading || enabledSubjects.length === 0}
+            disabled={modelsLoading || sending || enabledSubjects.length === 0}
           >
             {enabledSubjects.map((subject) => (
               <option key={subject.id} value={subject.id}>
@@ -291,10 +328,10 @@ function App() {
           <select
             id="embedding-model"
             value={selectedEmbeddingModelId}
-            onChange={(event) =>
-              setSelectedEmbeddingModelId(event.target.value)
+            onChange={(event) => handleEmbeddingModelChange(event.target.value)}
+            disabled={
+              modelsLoading || sending || enabledEmbeddingModels.length === 0
             }
-            disabled={modelsLoading || enabledEmbeddingModels.length === 0}
           >
             {enabledEmbeddingModels.map((model) => (
               <option key={model.id} value={model.id}>
@@ -311,8 +348,8 @@ function App() {
           <select
             id="chat-model"
             value={selectedModelId}
-            onChange={(event) => setSelectedModelId(event.target.value)}
-            disabled={modelsLoading || models.length === 0}
+            onChange={(event) => handleChatModelChange(event.target.value)}
+            disabled={modelsLoading || sending || models.length === 0}
           >
             {models.map((model) => (
               <option key={model.id} value={model.id}>
@@ -379,7 +416,7 @@ function App() {
                 key={chatMessage.id}
                 className={`message message-${chatMessage.role}`}
               >
-                <span>{chatMessage.role === 'user' ? 'You' : 'Assistant'}</span>
+                <span>{messageRoleLabel(chatMessage.role)}</span>
                 <p>{renderMessageContent(chatMessage.content)}</p>
               </article>
             ))
@@ -469,6 +506,18 @@ function renderMessageContent(content: string): ReactNode[] {
   }
 
   return nodes
+}
+
+function messageRoleLabel(role: ChatMessage['role']) {
+  if (role === 'user') {
+    return 'You'
+  }
+
+  if (role === 'assistant') {
+    return 'Assistant'
+  }
+
+  return 'Selection changed'
 }
 
 function defaultModelId<T extends { id: string }>(

@@ -245,6 +245,14 @@ button:focus-visible {
   background: var(--message-assistant-bg);
 }
 
+.message-system {
+  align-self: center;
+  max-width: min(680px, 100%);
+  border-style: dashed;
+  background: var(--surface-muted);
+  text-align: center;
+}
+
 .message span {
   display: block;
   margin-bottom: 4px;
