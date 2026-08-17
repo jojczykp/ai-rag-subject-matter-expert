@@ -44,6 +44,24 @@
   --message-assistant-bg: #fffdf8;
 }
 
+.app-shell[data-theme='ocean'] {
+  --text: #435466;
+  --text-muted: #64768a;
+  --text-h: #102033;
+  --bg: #f1f7fd;
+  --surface: #ffffff;
+  --surface-muted: #e5f0fa;
+  --border: #c9ddf0;
+  --border-strong: #97b9d9;
+  --accent: #1d5f99;
+  --button-text: #ffffff;
+  --focus: #256ea8;
+  --disabled-bg: #edf4fb;
+  --error: #b91c1c;
+  --message-user-bg: #dcecff;
+  --message-assistant-bg: #fbfdff;
+}
+
 .app-shell[data-theme='sunrise'] {
   --text: #5a4a3f;
   --text-muted: #76665a;

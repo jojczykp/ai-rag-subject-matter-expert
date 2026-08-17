@@ -77,6 +77,7 @@ describe('App', () => {
     expect(
       screen.getByRole('option', { name: 'Forest' }),
     ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Ocean' })).toBeInTheDocument()
     expect(
       screen.getByRole('option', { name: 'Sunrise' }),
     ).toBeInTheDocument()
@@ -90,6 +91,14 @@ describe('App', () => {
     expect(container.querySelector('.app-shell')).toHaveAttribute(
       'data-theme',
       'sunrise',
+    )
+
+    await user.selectOptions(themeField, 'ocean')
+
+    expect(themeField).toHaveValue('ocean')
+    expect(container.querySelector('.app-shell')).toHaveAttribute(
+      'data-theme',
+      'ocean',
     )
   })
 

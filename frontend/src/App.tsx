@@ -16,11 +16,19 @@ type ChatMessage = {
   content: string
 }
 
-type ThemeId = 'light' | 'forest' | 'sunrise' | 'clay' | 'rose' | 'night'
+type ThemeId =
+  | 'light'
+  | 'forest'
+  | 'ocean'
+  | 'sunrise'
+  | 'clay'
+  | 'rose'
+  | 'night'
 
 const themes: { id: ThemeId; label: string }[] = [
   { id: 'light', label: 'Light' },
   { id: 'forest', label: 'Forest' },
+  { id: 'ocean', label: 'Ocean' },
   { id: 'sunrise', label: 'Sunrise' },
   { id: 'clay', label: 'Clay' },
   { id: 'rose', label: 'Rose' },
