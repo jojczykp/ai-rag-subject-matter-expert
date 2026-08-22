@@ -34,7 +34,7 @@ class EmbeddingModelsControllerTest(
                     value("local-bge-small")
                 }
                 jsonPath("$.embeddingApiTimeoutSeconds") {
-                    value(60)
+                    value(180)
                 }
                 jsonPath("$.embeddingModels.length()") {
                     value(2)

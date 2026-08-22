@@ -14,7 +14,7 @@ describe('MSW backend API mocks', () => {
 
     expect(response.ok).toBe(true)
     expect(body.defaultChatModelId).toBe('embedded-qwen-1-5b')
-    expect(body.chatApiTimeoutSeconds).toBe(60)
+    expect(body.chatApiTimeoutSeconds).toBe(180)
     expect(body.chatModels).toHaveLength(2)
     expect(body.chatModels[0]?.id).toBe('embedded-qwen-1-5b')
     expect(body.chatModels[0]?.availability).toBe('AVAILABLE')
@@ -51,7 +51,7 @@ describe('MSW backend API mocks', () => {
 
     expect(response.ok).toBe(true)
     expect(body.defaultEmbeddingModelId).toBe('local-bge-small')
-    expect(body.embeddingApiTimeoutSeconds).toBe(60)
+    expect(body.embeddingApiTimeoutSeconds).toBe(180)
     expect(body.embeddingModels).toHaveLength(2)
     expect(body.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(body.embeddingModels[0]?.availability).toBe('AVAILABLE')

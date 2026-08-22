@@ -92,7 +92,7 @@ async function routeWorkspaceApi(
       contentType: 'application/json',
       body: JSON.stringify({
         defaultEmbeddingModelId: 'ollama-nomic-embed',
-        embeddingApiTimeoutSeconds: 60,
+        embeddingApiTimeoutSeconds: 180,
         embeddingModels: [
           {
             id: 'ollama-nomic-embed',
@@ -114,7 +114,7 @@ async function routeWorkspaceApi(
       contentType: 'application/json',
       body: JSON.stringify({
         defaultChatModelId: 'local-ollama-llama',
-        chatApiTimeoutSeconds: 60,
+        chatApiTimeoutSeconds: 180,
         chatModels: [
           {
             id: 'local-ollama-llama',

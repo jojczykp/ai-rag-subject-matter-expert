@@ -60,7 +60,7 @@ class ChatModelsControllerTest(
                     value("local-ollama-llama")
                 }
                 jsonPath("$.chatApiTimeoutSeconds") {
-                    value(60)
+                    value(180)
                 }
                 jsonPath("$.chatModels.length()") {
                     value(2)

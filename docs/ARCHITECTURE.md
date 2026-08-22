@@ -322,7 +322,7 @@ aisme:
           chunk-overlap: 100
 
   embedding:
-    api-timeout: 60s
+    api-timeout: 180s
     default-model-id: local-bge-small
     model-availability:
       timeout: 5s
@@ -350,7 +350,7 @@ aisme:
 
   chat:
     default-model-id: embedded-qwen-1-5b
-    api-timeout: 60s
+    api-timeout: 180s
     retrieved-chunk-limit: 5
     model-availability:
       timeout: 5s

@@ -24,14 +24,14 @@ export const handlers = [
   http.get(apiUrl('/chat-models'), () =>
     HttpResponse.json<ChatModelsResponse>({
       defaultChatModelId: availableEmbeddedQwenModel.id,
-      chatApiTimeoutSeconds: 60,
+      chatApiTimeoutSeconds: 180,
       chatModels: [availableEmbeddedQwenModel, availableOllamaModel],
     }),
   ),
   http.get(apiUrl('/embedding-models'), () =>
     HttpResponse.json<EmbeddingModelsResponse>({
       defaultEmbeddingModelId: 'local-bge-small',
-      embeddingApiTimeoutSeconds: 60,
+      embeddingApiTimeoutSeconds: 180,
       embeddingModels: [
         {
           id: 'local-bge-small',

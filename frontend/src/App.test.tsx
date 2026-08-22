@@ -135,7 +135,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'embedded-qwen-1-5b',
-          chatApiTimeoutSeconds: 60,
+          chatApiTimeoutSeconds: 180,
           chatModels: [
             {
               ...availableEmbeddedQwenModel,
@@ -470,7 +470,7 @@ describe('App', () => {
     expect(screen.getByLabelText('Subject')).toBeDisabled()
     expect(screen.getByLabelText('Embedding Model')).toBeDisabled()
     expect(screen.getByLabelText('Chat Model')).toBeDisabled()
-    expect(screen.getByText('Processing request: 60s remaining')).toBeVisible()
+    expect(screen.getByText('Processing request: 180s remaining')).toBeVisible()
     expect(
       screen.getByText(
         'This includes embedding-based retrieval and chat model generation.',
@@ -478,7 +478,7 @@ describe('App', () => {
     ).toBeVisible()
 
     expect(
-      await screen.findByText('Processing request: 59s remaining'),
+      await screen.findByText('Processing request: 179s remaining'),
     ).toBeVisible()
   })
 
@@ -592,7 +592,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'embedded-qwen-1-5b',
-          chatApiTimeoutSeconds: 60,
+          chatApiTimeoutSeconds: 180,
           chatModels: [
             {
               ...availableEmbeddedQwenModel,
@@ -620,7 +620,7 @@ describe('App', () => {
       http.get(apiUrl('/embedding-models'), () =>
         HttpResponse.json<EmbeddingModelsResponse>({
           defaultEmbeddingModelId: 'local-bge-small',
-          embeddingApiTimeoutSeconds: 60,
+          embeddingApiTimeoutSeconds: 180,
           embeddingModels: [
             {
               id: 'local-bge-small',
@@ -656,7 +656,7 @@ describe('App', () => {
       http.get(apiUrl('/chat-models'), () =>
         HttpResponse.json<ChatModelsResponse>({
           defaultChatModelId: 'embedded-qwen-1-5b',
-          chatApiTimeoutSeconds: 60,
+          chatApiTimeoutSeconds: 180,
           chatModels: [
             {
               ...availableEmbeddedQwenModel,
@@ -668,7 +668,7 @@ describe('App', () => {
       http.get(apiUrl('/embedding-models'), () =>
         HttpResponse.json<EmbeddingModelsResponse>({
           defaultEmbeddingModelId: 'local-bge-small',
-          embeddingApiTimeoutSeconds: 60,
+          embeddingApiTimeoutSeconds: 180,
           embeddingModels: [
             {
               id: 'local-bge-small',

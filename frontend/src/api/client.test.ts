@@ -18,7 +18,7 @@ describe('API client', () => {
     const response = await getChatModels()
 
     expect(response.defaultChatModelId).toBe('embedded-qwen-1-5b')
-    expect(response.chatApiTimeoutSeconds).toBe(60)
+    expect(response.chatApiTimeoutSeconds).toBe(180)
     expect(response.chatModels).toHaveLength(2)
     expect(response.chatModels[0]?.id).toBe('embedded-qwen-1-5b')
     expect(response.chatModels[0]?.availability).toBe('AVAILABLE')
@@ -51,7 +51,7 @@ describe('API client', () => {
     const response = await getEmbeddingModels()
 
     expect(response.defaultEmbeddingModelId).toBe('local-bge-small')
-    expect(response.embeddingApiTimeoutSeconds).toBe(60)
+    expect(response.embeddingApiTimeoutSeconds).toBe(180)
     expect(response.embeddingModels).toHaveLength(2)
     expect(response.embeddingModels[0]?.id).toBe('local-bge-small')
     expect(response.embeddingModels[0]?.runtime).toBe('ONNX')

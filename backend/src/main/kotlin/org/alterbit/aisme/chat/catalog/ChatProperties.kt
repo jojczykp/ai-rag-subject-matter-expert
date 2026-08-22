@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "aisme.chat")
 data class ChatProperties(
-    val apiTimeout: Duration = Duration.ofSeconds(60),
+    val apiTimeout: Duration = Duration.ofSeconds(180),
     val retrievedChunkLimit: Int = 5,
 ) {
     init {

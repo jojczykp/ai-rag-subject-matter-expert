@@ -18,7 +18,7 @@ class ChatPropertiesDefaultTest {
         contextRunner.run { context ->
             val properties = context.getBean<ChatProperties>()
 
-            properties.apiTimeout shouldBe Duration.ofSeconds(60)
+            properties.apiTimeout shouldBe Duration.ofSeconds(180)
             properties.retrievedChunkLimit shouldBe 5
         }
     }

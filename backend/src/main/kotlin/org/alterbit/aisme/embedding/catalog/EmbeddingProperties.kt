@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.bind.Name
 
 @ConfigurationProperties(prefix = "aisme.embedding")
 data class EmbeddingProperties(
-    val apiTimeout: Duration = Duration.ofSeconds(60),
+    val apiTimeout: Duration = Duration.ofSeconds(180),
     @param:Name("default-model-id")
     val defaultModelId: String? = null,
     @param:Name("runtimes")
