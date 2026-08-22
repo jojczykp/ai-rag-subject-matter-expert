@@ -10,6 +10,9 @@ static document knowledge bundled with the application. The application is
 
 ## Quick Start
 
+Verified on MacOS Tahoe 26.6.2 and Linux Fedora 44 x86_64.
+Likely to work on Windows 11 as well.
+
 ### Dependencies
 
 Required:
