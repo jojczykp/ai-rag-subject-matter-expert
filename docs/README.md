@@ -28,6 +28,7 @@ Start here when restoring project context or reviewing the design.
 - [ADR-007: Embedded Llama](ADR-007-embedded-llama.md)
 - [ADR-008: Operational Logging](ADR-008-operational-logging.md)
 - [ADR-009: Frontend UI Architecture](ADR-009-frontend-ui-architecture.md)
+- [ADR-010: Container Packaging](ADR-010-container-packaging.md)
 
 ## Repository Entry Points
 

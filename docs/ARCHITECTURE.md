@@ -21,6 +21,7 @@ checklist items as complete.
 - [ADR-007: Embedded Llama](ADR-007-embedded-llama.md)
 - [ADR-008: Operational Logging](ADR-008-operational-logging.md)
 - [ADR-009: Frontend UI Architecture](ADR-009-frontend-ui-architecture.md)
+- [ADR-010: Container Packaging](ADR-010-container-packaging.md)
 
 ## Current Product Scope
 
@@ -304,6 +305,32 @@ Configuration should make model availability and runtime mode explicit.
 - [x] Report missing OpenAI-compatible credentials as model misconfiguration
       instead of failing application startup.
 - [x] Document all configuration properties in `docs/CONFIGURATION.md`.
+
+## Container Deployment
+
+The production container topology packages the compiled React UI, Spring Boot
+API, ONNX embedding runtime, and managed `llama-server` boundary into one
+non-root application image. PostgreSQL + pgvector and optional Ollama run as
+separate services on the Compose network. The application publishes port `8080`,
+and PostgreSQL publishes port `5432` for convenient demo and local development
+access. Ollama remains internal.
+
+```text
+Browser
+  -> application:8080
+       -> Spring Boot API
+       -> packaged React static assets
+       -> embedded ONNX runtime
+       -> managed llama-server child processes
+       -> db:5432
+       -> ollama:11434 when enabled
+```
+
+The image owns executable runtime code, including the platform-specific
+`llama-server`. Named volumes own mutable model weights, Ollama models, and
+PostgreSQL data. The default `container,minimal` profile downloads only the
+minimal model set. Full mode enables the base catalog and the optional Ollama
+services. See [ADR-010: Container Packaging](ADR-010-container-packaging.md).
 
 Example model catalog configuration:
 

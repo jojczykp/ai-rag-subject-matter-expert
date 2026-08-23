@@ -10,12 +10,62 @@ static document knowledge bundled with the application. The application is
 
 ## Quick Start
 
-Verified on MacOS Tahoe 26.6.2 and Linux Fedora 44 x86_64.
+Verified on macOS Tahoe 26.6.2 and Linux Fedora 44 x86_64.
 Likely to work on Windows 11 as well.
 
-### Dependencies
+### Option 1: Docker (for easy demo)
 
-Required:
+#### Dependencies
+
+- Docker with Docker Compose (e.g.
+  [Docker Desktop](https://www.docker.com/products/docker-desktop/))
+
+#### Run
+
+```bash
+git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
+```
+
+```bash
+cd ai-rag-subject-matter-expert
+```
+
+**Variant 1**: Minimal/quickest configuration (one embedding and one chat
+model, no Ollama):
+
+```bash
+docker compose up --build
+```
+
+**Variant 2**: Full configuration (download several models and run local Ollama):
+
+```bash
+AISME_MODEL_PROFILE=full docker compose --profile ollama up --build
+```
+
+Regardless of variant, open the application after startup finishes:
+
+```text
+http://localhost:8080
+```
+
+#### Stop
+
+Without deleting database or downloaded model data:
+
+```bash
+docker compose down
+```
+
+Deleting database and downloaded model data:
+
+```bash
+docker compose down --volumes
+```
+
+### Option 2: Local (for development)
+
+#### Dependencies
 
 - JDK 26
 - Node.js 25.2.1 and npm 11.12.1
@@ -26,7 +76,7 @@ Optional:
 - [Ollama](https://ollama.com/), when using the configured Ollama chat or
   embedding models.
 
-### Run
+#### Run
 
 **Terminal 1**
 
@@ -58,7 +108,7 @@ cd ai-rag-subject-matter-expert
 ```
 
 ```bash
-docker compose up
+docker compose up -d db
 ```
 
 **Terminal 3**
@@ -69,14 +119,13 @@ Run backend:
 cd ai-rag-subject-matter-expert
 ```
 
-For a faster first run, start with only the default subject, default embedding
-model, and default chat model enabled:
+**Variant 1**: With minimal configuration (one embedding and one chat model):
 
 ```bash
 ./gradlew :backend:run --args='--spring.profiles.active=minimal'
 ```
 
-To run with all configured models enabled:
+**Variant 2**: With all configured models enabled:
 
 ```bash
 ./gradlew :backend:run
@@ -129,21 +178,24 @@ curl -s http://localhost:8080/embedding-models | jq .
 curl -s http://localhost:8080/chat-models | jq .
 ```
 
-The first backend startup can take longer because enabled local model assets
-and the platform-matching `llama-server` archive may be downloaded before
-Spring finishes startup. Static subject documents are also indexed into
-PostgreSQL before the application becomes ready.
+The first local backend startup can take longer because enabled local model
+assets and the platform-matching `llama-server` archive may be downloaded before
+Spring finishes startup. When running with Docker, the container image already
+includes `llama-server`, but still downloads enabled model weights. Static
+subject documents are also indexed into PostgreSQL before the application
+becomes ready.
 
 ## First Run Notes
 
-| Area | Default |
-| --- | --- |
-| Subject | `culinary-expert` |
-| Embedding model | `local-bge-small` |
-| Chat model | `embedded-qwen-1-5b` |
-| Database | PostgreSQL + pgvector on `localhost:5432` |
-| Backend | `http://localhost:8080` |
-| Frontend | `http://localhost:5173` |
+| Area                          | Default                                   |
+|-------------------------------|-------------------------------------------|
+| Subject                       | `culinary-expert`                         |
+| Embedding model               | `local-bge-small`                         |
+| Chat model                    | `embedded-qwen-1-5b`                      |
+| Database                      | PostgreSQL + pgvector on `localhost:5432` |
+| Backend (local dev)           | `http://localhost:8080`                   |
+| Frontend (local dev)          | `http://localhost:5173`                   |
+| Backend and Frontend (docker) | `http://localhost:8080`                   |
 
 During startup, `/actuator/health` may temporarily report `OUT_OF_SERVICE`.
 That usually means startup indexing or runtime initialization is still in
@@ -154,7 +206,7 @@ Missing file-backed model assets are downloaded on startup when their
 `backend/src/main/resources/application.yml`. Downloaded model assets are
 ignored by git.
 
-To force fresh asset downloads on the next startup:
+To force fresh asset downloads on the next local startup:
 
 ```bash
 ./gradlew :backend:cleanDownloadedModelAssets
@@ -163,8 +215,10 @@ To force fresh asset downloads on the next startup:
 ## What To Try
 
 - Switch between `Passive House Architecture Expert` and `Culinary Expert`.
-- Compare `Ollama Nomic Embed` and `Local BGE Small` retrieval behavior.
-- Compare `Local Ollama Llama` with embedded `Qwen` or `Mistral` chat models.
+- With the full configuration, compare `Ollama Nomic Embed` and `Local BGE
+  Small` retrieval behavior.
+- With the full configuration, compare `Local Ollama Llama` with embedded
+  `Qwen` or `Mistral` chat models.
 - Inspect model availability, mode, privacy, and runtime details.
 - Use the default subject question, then edit it and send your own.
 
@@ -213,7 +267,7 @@ Supported model styles:
 
 - embedded offline chat models via local `GGUF` files and managed
   `llama-server`;
-- local server models through Ollama on `localhost`;
+- local server models through Ollama;
 - OpenAI-compatible online providers;
 - Hugging Face TGI-compatible online endpoints;
 - local ONNX and Ollama embedding models.
@@ -224,9 +278,20 @@ full design.
 
 ## Common Commands
 
+### For Docker Compose
+
 | Command | Purpose |
 | --- | --- |
-| `docker compose up -d db` | Start PostgreSQL + pgvector in the background. |
+| `docker compose up --build` | Build and run the minimal containerized application. |
+| `AISME_MODEL_PROFILE=full docker compose --profile ollama up --build` | Run the full catalog with containerized Ollama. |
+| `docker compose down` | Stop containers while preserving database and model volumes. |
+| `docker compose logs -f app` | Follow the containerized application logs. |
+| `docker compose up -d db` | Start PostgreSQL + pgvector for host-based development. |
+
+### For local development run
+
+| Command | Purpose |
+| --- | --- |
 | `./gradlew --parallel run` | Run backend and frontend together. |
 | `./gradlew :backend:run` | Run only the backend. |
 | `./gradlew :frontend:run` | Run only the frontend. |
@@ -239,7 +304,23 @@ full design.
 
 ## Build And Run
 
-### Database
+### For Docker Compose
+
+The multi-stage `Dockerfile` builds the React UI and Spring Boot application,
+then copies only the necessary binaries into the final image. The runtime image does not
+contain build tools nor sources.
+
+Model weights are not baked into it; they are downloaded into the `model-data` volume.
+
+Build only the application image when needed:
+
+```bash
+docker build -t aisme .
+```
+
+### For local development run
+
+#### Database
 
 ```bash
 docker compose up -d db
@@ -257,7 +338,7 @@ jdbc:postgresql://localhost:5432/aisme
 Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 `AISME_DATASOURCE_PASSWORD` when needed.
 
-### Backend
+#### Backend
 
 ```bash
 ./gradlew :backend:clean :backend:build
@@ -266,7 +347,7 @@ Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
 
 The backend listens on `http://localhost:8080`.
 
-### Frontend
+#### Frontend
 
 ```bash
 ./gradlew :frontend:clean :frontend:build
@@ -283,7 +364,7 @@ Override the backend URL when needed:
 VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 ```
 
-### Both
+#### Both
 
 ```bash
 ./gradlew build
@@ -405,6 +486,13 @@ npm run e2e
 The backend may download local ONNX files, GGUF model files, and a
 platform-specific `llama-server` archive, then index bundled subject documents.
 Watch backend logs until startup completes.
+
+In Docker, the platform-specific `llama-server` is already part of the image;
+only model weights are downloaded. Watch progress with:
+
+```bash
+docker compose logs -f app
+```
 
 ### Health Is OUT_OF_SERVICE
 

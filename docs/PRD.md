@@ -31,10 +31,15 @@ runtime.
 - [x] Allow the user to choose which configured chat model to use.
 - [x] Allow the user to choose which configured embedding model to use.
 - [x] Keep implementation testable with backend Kover coverage at or above 80%.
+- [x] Provide a runtime-only Docker image that serves the UI and API through one
+      HTTP port.
+- [x] Provide a Compose workflow with PostgreSQL and persistent model and
+      database volumes.
 
 ## Future Scope
 
-- [ ] Add Docker image and container-level acceptance testing.
+- [ ] Expand container-level acceptance testing across supported architectures
+      and first-start model download flows.
 - [ ] Let users create, update, and delete subjects at runtime.
 - [ ] Let users upload and delete content at runtime.
 - [ ] Add first-class structured CSV document support.

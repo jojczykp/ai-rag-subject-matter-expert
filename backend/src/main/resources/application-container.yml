@@ -1,0 +1,14 @@
+aisme:
+  embedding:
+    runtimes:
+      local-ollama:
+        base-url: http://ollama:11434
+  chat:
+    runtimes:
+      embedded-llama:
+        asset-directory: ./models/llama
+        server-executable-path: /opt/aisme/bin/llama-server
+        download-missing-assets-on-startup: false
+        assets: []
+      local-ollama:
+        base-url: http://ollama:11434

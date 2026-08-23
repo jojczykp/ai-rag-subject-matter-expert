@@ -1,0 +1,17 @@
+.git
+.github
+.gradle
+.idea
+.kotlin
+**/build
+**/coverage
+**/dist
+**/node_modules
+frontend/e2e
+frontend/playwright-report
+frontend/test-results
+logs
+**/models
+*.iml
+*.log
+.DS_Store

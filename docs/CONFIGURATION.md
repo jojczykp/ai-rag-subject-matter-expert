@@ -100,6 +100,45 @@ aisme:
           id: hugging-face-tgi
 ```
 
+## Container Profiles And Volumes
+
+The Compose application sets:
+
+```text
+SPRING_PROFILES_ACTIVE=container,${AISME_MODEL_PROFILE:-minimal}
+```
+
+`container` changes filesystem and service addresses for the Compose network.
+`minimal` enables local BGE embeddings and one embedded Qwen chat model. The
+explicit value `full` does not need a separate overlay; it leaves the complete
+catalog from `application.yml` enabled.
+
+| Setting | Default | Purpose |
+| --- | --- | --- |
+| `AISME_MODEL_PROFILE` | `minimal` | Selects `minimal` or `full` container model configuration. |
+| `SPRING_PROFILES_ACTIVE` | `container,minimal` in the image | Active Spring configuration profiles. Compose supplies its own value. |
+| `AISME_DATASOURCE_URL` | `jdbc:postgresql://db:5432/aisme` in Compose | Internal PostgreSQL connection. |
+| `AISME_DATASOURCE_USERNAME` | `aisme` in Compose | PostgreSQL user. |
+| `AISME_DATASOURCE_PASSWORD` | `aisme` in local Compose | PostgreSQL password; override for non-local deployments. |
+
+The `model-data` volume is mounted at `/var/lib/aisme/models`. ONNX, tokenizer,
+and GGUF weights download there and survive image replacement. The pinned
+`llama-server` executable is stored under `/opt/aisme/bin` in the image and is
+not part of the volume. `db-data` persists PostgreSQL, while `ollama-data`
+persists models managed by the optional Ollama service.
+
+Full mode must be started with the Ollama Compose profile because the full base
+catalog enables an Ollama embedding model used during document indexing:
+
+```bash
+AISME_MODEL_PROFILE=full docker compose --profile ollama up --build
+```
+
+The `ollama-models` initialization service pulls `llama3.2` and
+`nomic-embed-text:v1.5` before the application proceeds. Ollama remains internal
+to Compose. The application is published on host port `8080`. PostgreSQL is
+published on host port `5432` for demo and local development access.
+
 ## Property Reference
 
 | Property | Default | Description |

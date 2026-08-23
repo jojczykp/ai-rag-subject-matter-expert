@@ -129,10 +129,8 @@ All implementation items are TODO until delivered and verified.
 - [x] Document that embedded offline availability requires static asset
       validation and managed `llama-server` readiness.
 
-## Future Milestone: Docker Packaging And Acceptance
+## Future Milestone: Embedded Runtime Follow-Ups
 
-- [ ] Add Docker image and container-level acceptance test for embedded offline
-      runtime with bundled or mounted model assets.
 - [ ] Add per-model embedded llama prompt mode configuration, keeping
       plain `/completion` as the default and allowing `/v1/chat/completions`
       only for GGUF models with reliable chat-template metadata.
@@ -166,6 +164,27 @@ All implementation items are TODO until delivered and verified.
 - [x] Add frontend verification to the default project verification workflow
       once the frontend project exists.
 - [x] Document frontend development and production packaging in `README.md`.
+
+## Milestone: Container Packaging
+
+- [x] Add a multi-stage Dockerfile that leaves Node.js, npm, Gradle, the JDK,
+      source code, and build caches out of the runtime image.
+- [x] Package the production React build into Spring Boot static resources.
+- [x] Serve the UI and API through the same application port.
+- [x] Add native Linux AMD64 and ARM64 `llama-server` image handling with pinned
+      checksums.
+- [x] Run the application image as a non-root user.
+- [x] Keep model weights in a persistent application volume and executable
+      runtime files in the image.
+- [x] Add application and PostgreSQL health checks and publish the database port
+      for demo and local development access.
+- [x] Make the minimal model profile the default container mode.
+- [x] Add full model mode and optional containerized Ollama services with
+      persistent model initialization.
+- [x] Add Docker build-context, Compose configuration, runtime-content, and
+      same-origin frontend verification.
+- [ ] Add clean-volume startup and chat acceptance tests for Linux AMD64 and
+      Linux ARM64 container images.
 
 ## Future Milestone: Dynamic Subjects And Documents
 

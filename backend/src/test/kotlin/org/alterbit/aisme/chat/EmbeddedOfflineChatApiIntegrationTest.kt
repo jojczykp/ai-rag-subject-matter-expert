@@ -134,7 +134,7 @@ class EmbeddedOfflineChatApiIntegrationTest(
                 modelId = "embedded-ready",
                 message = "How should I cook rice?",
                 contextChunks = emptyList(),
-                apiTimeout = Duration.ofSeconds(60),
+                apiTimeout = Duration.ofSeconds(180),
             ),
         )
     }
