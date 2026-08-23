@@ -35,11 +35,7 @@ To download several models and run Ollama in Docker, use the full configuration:
 AISME_MODEL_PROFILE=full docker compose --profile ollama up --build
 ```
 
-After startup finishes, open:
-
-```text
-http://localhost:8080
-```
+After startup finishes, open: [http://localhost:8080](http://localhost:8080).
 
 Stop the application while preserving database and downloaded model data:
 
@@ -80,11 +76,13 @@ SPRING_PROFILES_ACTIVE=minimal ./gradlew --parallel run
 ```
 
 The root `run` task needs `--parallel` because both development servers are
-long-running. After the backend reports `-----<[ R E A D Y ]>-----`, open:
+long-running.
 
-```text
-http://localhost:5173
+After the backend reports:
 ```
+-----<[ R E A D Y ]>-----
+```
+open: [http://localhost:5173](http://localhost:5173)
 
 To enable the full model catalog, prepare Ollama as described below and run
 `./gradlew --parallel run` without the minimal profile.
