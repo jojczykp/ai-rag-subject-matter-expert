@@ -15,6 +15,7 @@ Likely to work on Windows 11 as well.
 
 This is the recommended way to run the demo. It requires Docker with Docker
 Compose, for example [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+Allocate 10 GB of memory to Docker when using the full configuration.
 
 ```bash
 git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
@@ -360,6 +361,14 @@ ollama list
 
 Check backend logs. The model may still be downloading, the local GGUF file may
 be missing, or managed `llama-server` may have failed to start.
+
+In full mode, a connection reset followed by `did not become ready` usually
+means Docker ran out of memory. Increase its memory allocation or use minimal
+mode. Check current usage with:
+
+```bash
+docker stats
+```
 
 To force fresh local asset downloads:
 
