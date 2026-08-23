@@ -8,182 +8,88 @@ static document knowledge bundled with the application. The application is
 
 ![AI RAG Subject Matter Expert chat workspace with subject, embedding model, chat model, and theme controls](docs/screenshot.webp)
 
-## Quick Start
+## Quick Start With Docker Compose
 
 Verified on macOS Tahoe 26.6.2 and Linux Fedora 44 x86_64.
 Likely to work on Windows 11 as well.
 
-### Option 1: Docker (for easy demo)
-
-#### Dependencies
-
-- Docker with Docker Compose (e.g.
-  [Docker Desktop](https://www.docker.com/products/docker-desktop/))
-
-#### Run
+This is the recommended way to run the demo. It requires Docker with Docker
+Compose, for example [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ```bash
 git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
-```
-
-```bash
 cd ai-rag-subject-matter-expert
 ```
 
-**Variant 1**: Minimal/quickest configuration (one embedding and one chat
-model, no Ollama):
+For the quickest startup, run the minimal configuration with one embedding and
+one chat model and no Ollama:
 
 ```bash
 docker compose up --build
 ```
 
-**Variant 2**: Full configuration (download several models and run local Ollama):
+To download several models and run Ollama in Docker, use the full configuration:
 
 ```bash
 AISME_MODEL_PROFILE=full docker compose --profile ollama up --build
 ```
 
-Regardless of variant, open the application after startup finishes:
+After startup finishes, open:
 
 ```text
 http://localhost:8080
 ```
 
-#### Stop
-
-Without deleting database or downloaded model data:
+Stop the application while preserving database and downloaded model data:
 
 ```bash
 docker compose down
 ```
 
-Deleting database and downloaded model data:
+Add `--volumes` to delete that data as well:
 
 ```bash
 docker compose down --volumes
 ```
 
-### Option 2: Local (for development)
+## Local Development
 
-#### Dependencies
+Use this path for hot reload, debugging, or direct access to Gradle and npm.
+
+Dependencies:
 
 - JDK 26
 - Node.js 25.2.1 and npm 11.12.1
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-Optional:
+[Ollama](https://ollama.com/) is optional and only needed for configured Ollama
+chat or embedding models. See [Ollama Model Is Unavailable](#ollama-model-is-unavailable)
+for setup commands.
 
-- [Ollama](https://ollama.com/), when using the configured Ollama chat or
-  embedding models.
-
-#### Run
-
-**Terminal 1**
-
-Run Ollama (optional):
-
-```bash
-ollama serve
-```
-
-**Terminal 2**
-
-Pull Ollama models (optional):
-
-```bash
-ollama pull llama3.2
-ollama pull nomic-embed-text:v1.5
-```
-
-Clone the repository:
-
-```bash
-git clone https://github.com/jojczykp/ai-rag-subject-matter-expert
-```
-
-Run PostgreSQL + pgvector:
-
-```bash
-cd ai-rag-subject-matter-expert
-```
+From the repository root, start PostgreSQL:
 
 ```bash
 docker compose up -d db
 ```
 
-**Terminal 3**
-
-Run backend:
+Run the backend and frontend together:
 
 ```bash
-cd ai-rag-subject-matter-expert
+SPRING_PROFILES_ACTIVE=minimal ./gradlew --parallel run
 ```
 
-**Variant 1**: With minimal configuration (one embedding and one chat model):
-
-```bash
-./gradlew :backend:run --args='--spring.profiles.active=minimal'
-```
-
-**Variant 2**: With all configured models enabled:
-
-```bash
-./gradlew :backend:run
-```
-
-The full run offers several chat and embedding models, so first startup can take
-longer while local model assets are downloaded. It took ~10 minutes on my laptop
-the first time with all models enabled.
-
-Progress can be watched following console logs until `-----<[ R E A D Y ]>-----`
-is logged.
-
-**Terminal 4**
-
-Run frontend:
-
-```bash
-cd ai-rag-subject-matter-expert
-```
-
-```bash
-./gradlew :frontend:run
-```
-
-After backend startup completed, open the UI:
+The root `run` task needs `--parallel` because both development servers are
+long-running. After the backend reports `-----<[ R E A D Y ]>-----`, open:
 
 ```text
 http://localhost:5173
 ```
 
-Useful backend URLs:
+To enable the full model catalog, prepare Ollama as described below and run
+`./gradlew --parallel run` without the minimal profile.
 
-```bash
-curl -s http://localhost:8080/actuator/health | jq .
-```
-
-```bash
-curl -s http://localhost:8080/actuator/info | jq .
-```
-
-```bash
-curl -s http://localhost:8080/subjects | jq .
-```
-
-```bash
-curl -s http://localhost:8080/embedding-models | jq .
-```
-
-```bash
-curl -s http://localhost:8080/chat-models | jq .
-```
-
-The first local backend startup can take longer because enabled local model
-assets and the platform-matching `llama-server` archive may be downloaded before
-Spring finishes startup. When running with Docker, the container image already
-includes `llama-server`, but still downloads enabled model weights. Static
-subject documents are also indexed into PostgreSQL before the application
-becomes ready.
+Run only one application component when needed with `./gradlew :backend:run` or
+`./gradlew :frontend:run`.
 
 ## First Run Notes
 
@@ -205,6 +111,11 @@ Missing file-backed model assets are downloaded on startup when their
 `download-missing-assets-on-startup` flag is enabled in
 `backend/src/main/resources/application.yml`. Downloaded model assets are
 ignored by git.
+
+Local startup can take longer while model assets and the platform-matching
+`llama-server` archive are downloaded. The Docker image already includes
+`llama-server`, but still downloads enabled model weights. Both paths index
+static subject documents into PostgreSQL before the application becomes ready.
 
 To force fresh asset downloads on the next local startup:
 
@@ -276,103 +187,24 @@ See [Architecture](docs/ARCHITECTURE.md) and
 [Model Runtime Integration](docs/ADR-003-model-runtime-integration.md) for the
 full design.
 
-## Common Commands
+## Build
 
-### For Docker Compose
+Build and verify the backend and frontend:
 
-| Command | Purpose |
-| --- | --- |
-| `docker compose up --build` | Build and run the minimal containerized application. |
-| `AISME_MODEL_PROFILE=full docker compose --profile ollama up --build` | Run the full catalog with containerized Ollama. |
-| `docker compose down` | Stop containers while preserving database and model volumes. |
-| `docker compose logs -f app` | Follow the containerized application logs. |
-| `docker compose up -d db` | Start PostgreSQL + pgvector for host-based development. |
+```bash
+./gradlew build
+```
 
-### For local development run
-
-| Command | Purpose |
-| --- | --- |
-| `./gradlew --parallel run` | Run backend and frontend together. |
-| `./gradlew :backend:run` | Run only the backend. |
-| `./gradlew :frontend:run` | Run only the frontend. |
-| `./gradlew build` | Build and verify backend and frontend. |
-| `./gradlew check` | Run default backend and frontend verification. |
-| `./gradlew :backend:check` | Run backend tests and Kover coverage verification. |
-| `./gradlew :frontend:check` | Run frontend formatting, linting, tests, coverage, and typecheck. |
-| `./gradlew :backend:extendedIntegrationTest` | Run optional backend integration suites. |
-| `./gradlew :backend:cleanDownloadedModelAssets` | Remove downloaded local model assets. |
-
-## Build And Run
-
-### For Docker Compose
-
-The multi-stage `Dockerfile` builds the React UI and Spring Boot application,
-then copies only the necessary binaries into the final image. The runtime image does not
-contain build tools nor sources.
-
-Model weights are not baked into it; they are downloaded into the `model-data` volume.
-
-Build only the application image when needed:
+Build only the application image:
 
 ```bash
 docker build -t aisme .
 ```
 
-### For local development run
-
-#### Database
-
-```bash
-docker compose up -d db
-docker compose ps
-docker compose logs -f db
-docker compose stop db
-```
-
-The default local database connection is:
-
-```text
-jdbc:postgresql://localhost:5432/aisme
-```
-
-Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
-`AISME_DATASOURCE_PASSWORD` when needed.
-
-#### Backend
-
-```bash
-./gradlew :backend:clean :backend:build
-./gradlew :backend:run
-```
-
-The backend listens on `http://localhost:8080`.
-
-#### Frontend
-
-```bash
-./gradlew :frontend:clean :frontend:build
-./gradlew :frontend:run
-```
-
-The Vite development server usually serves the UI at
-`http://localhost:5173`. The frontend calls the backend through
-`VITE_BACKEND_API_BASE_URL`, which defaults to `http://localhost:8080`.
-
-Override the backend URL when needed:
-
-```bash
-VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
-```
-
-#### Both
-
-```bash
-./gradlew build
-./gradlew --parallel run
-```
-
-The root `run` task must use `--parallel` because backend and frontend dev
-servers are both long-running processes.
+The multi-stage `Dockerfile` builds the React UI and Spring Boot application.
+The final image contains the required runtime binaries but no build tools or
+source code. Model weights are downloaded into the `model-data` volume instead
+of being baked into the image.
 
 ## API Checks
 
@@ -401,6 +233,12 @@ curl -s http://localhost:8080/chat \
 
 Most local behavior is configured in
 `backend/src/main/resources/application.yml`.
+
+The local database defaults to `jdbc:postgresql://localhost:5432/aisme`.
+Override it with `AISME_DATASOURCE_URL`, `AISME_DATASOURCE_USERNAME`, and
+`AISME_DATASOURCE_PASSWORD`. The Vite frontend calls
+`http://localhost:8080` by default; set `VITE_BACKEND_API_BASE_URL` to use a
+different backend URL.
 
 Useful first changes:
 
@@ -541,7 +379,8 @@ VITE_BACKEND_API_BASE_URL=http://localhost:8081 ./gradlew :frontend:run
 
 ## For Reviewers
 
-- Fastest path: run [Quick Start](#quick-start), then use the UI.
+- Fastest path: run [Quick Start](#quick-start-with-docker-compose), then use
+  the UI.
 - RAG design: [Architecture](docs/ARCHITECTURE.md).
 - Technical decisions: [ADR index](docs/README.md#decision-records).
 - Database schema: [Database Schema](docs/DATABASE_SCHEMA.md).
